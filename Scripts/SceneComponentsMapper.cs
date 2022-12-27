@@ -1,29 +1,33 @@
 using SPACS.SDK.Extensions;
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "AnotheReality/Virtuademy/SceneComponentsMapper", fileName = "SceneComponentsMapper")]
-public class SceneComponentsMapper : ScriptableObject
+namespace Virtuademy.Placeholders
 {
-    [SerializeField] private TextAsset teleportationComponent;
-
-    public Type TeleportationComponent => GetType(teleportationComponent.name);
-
-    public Type GetType(string typeName)
+    [CreateAssetMenu(menuName = "AnotheReality/Virtuademy/SceneComponentsMapper", fileName = "SceneComponentsMapper")]
+    public class SceneComponentsMapper : ScriptableObject
     {
-        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        [SerializeField] private TextAsset teleportationComponent;
+        [SerializeField] private TextAsset playerListPanelComponent;
+
+        public Type TeleportationComponent => GetType(teleportationComponent.name);
+        public Type PlayerListPanelComponent => GetType(playerListPanelComponent.name);
+
+        public Type GetType(string typeName)
         {
-            foreach (Type type in assembly.GetTypes())
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (type.LastPartOfTypeName() == typeName)
+                foreach (Type type in assembly.GetTypes())
                 {
-                    return type;
+                    if (type.LastPartOfTypeName() == typeName)
+                    {
+                        return type;
+                    }
                 }
             }
+            return null;
         }
-        return null;
     }
 }
