@@ -1,19 +1,46 @@
+using Sirenix.OdinInspector;
+
 using SPACS.SDK.Extensions;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using UnityEngine;
 
 namespace Virtuademy.Placeholders
 {
     [CreateAssetMenu(menuName = "AnotheReality/Virtuademy/SceneComponentsMapper", fileName = "SceneComponentsMapper")]
-    public class SceneComponentsMapper : ScriptableObject
+    public class SceneComponentsMapper : SerializedScriptableObject
     {
-        [SerializeField] private TextAsset teleportationComponent;
-        [SerializeField] private TextAsset playerListPanelComponent;
+        public enum ERuntimeComponentId
+        {
+            Teleportation,
+            PlayerListPanel,
+            DrawableBoard,
+            MediaPlayer,
+            VoiceChannel,
+            TutorialPanel,
+        }
 
-        public Type TeleportationComponent => GetType(teleportationComponent.name);
-        public Type PlayerListPanelComponent => GetType(playerListPanelComponent.name);
+        // This Dictionary will be serialized by Odin.
+        [SerializeField] private Dictionary<ERuntimeComponentId, List<TextAsset>> componentsMap = new();
+
+        public List<Type> GetComponentsTypes(ERuntimeComponentId id) => componentsMap[id].Select(x => GetType(x.name)).ToList();
+
+
+        //[SerializeField] private SceneComponentsDictionary sceneComponentsMap;
+
+        //public SceneComponentsDictionary SceneComponentsMap => sceneComponentsMap;
+
+
+        //[SerializeField] private List<TextAsset> teleportationComponent = new();
+        //[SerializeField] private List<TextAsset> playerListPanelComponent = new();
+        //[SerializeField] private List<TextAsset> drawableBoardComponent = new();
+
+        //public List<Type> TeleportationComponent => teleportationComponent.Select(x => GetType(x.name)).ToList();
+        //public List<Type> PlayerListPanelComponent => playerListPanelComponent.Select(x => GetType(x.name)).ToList();
+        //public List<Type> DrawableBoardComponent => drawableBoardComponent.Select(x => GetType(x.name)).ToList();
 
         public Type GetType(string typeName)
         {

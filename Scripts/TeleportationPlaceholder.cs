@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 
 namespace Virtuademy.Placeholders
@@ -14,10 +16,5 @@ namespace Virtuademy.Placeholders
         public Collider TeleportCollider => teleportCollider;
         public Transform TeleportDestination => teleportDestination;
         public GameObject CustomReticleVR => customReticleVR;
-
-        public override void Init(SceneComponentsMapper mapper)
-        {
-            gameObject.AddComponent(mapper.TeleportationComponent);
-        }
     }
 }

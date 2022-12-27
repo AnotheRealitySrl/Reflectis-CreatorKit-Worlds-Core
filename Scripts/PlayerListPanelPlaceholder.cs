@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 
 using TMPro;
 
@@ -13,16 +12,9 @@ namespace Virtuademy.Placeholders
         [SerializeField] private PlayerListPanelTile playerEntryTemplate;
         [SerializeField] private GameObject muteButton;
 
-        public override void Init(SceneComponentsMapper mapper)
-        {
-            gameObject.AddComponent(mapper.PlayerListPanelComponent);
-
-            PlayerListPanel playerListPanel = gameObject.AddComponent<PlayerListPanel>();
-            playerListPanel.NumberOfParticipants = numberOfParticipants;
-            playerListPanel.PlayerEntryTemplate = playerEntryTemplate;
-            playerListPanel.MuteButton = muteButton;
-            playerListPanel.Init();
-        }
+        public TextMeshProUGUI NumberOfParticipants => numberOfParticipants;
+        public PlayerListPanelTile PlayerEntryTemplate => playerEntryTemplate;
+        public GameObject MuteButton => muteButton;
     }
 }
 
