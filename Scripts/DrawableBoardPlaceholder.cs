@@ -12,7 +12,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private Transform drawingProjectionTransform;
         [SerializeField] private Role ownershipMask;
 
-        public int InstantiationId => instantiationId;
+        public int InitializationId => instantiationId;
         public Collider DrawableArea => drawableArea;
         public Transform DrawingProjectionTransform => drawingProjectionTransform;
         public Role OwnershipMask => ownershipMask;
