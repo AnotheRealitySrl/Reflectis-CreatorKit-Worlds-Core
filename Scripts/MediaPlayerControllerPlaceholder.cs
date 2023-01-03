@@ -43,7 +43,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private ConfirmationPopupLocalizedText closeMediaLocalizedText;
         [SerializeField] private ConfirmationPopupLocalizedText sendMediaToScreenLocalizedText;
 
-        public Role OwnerhsipMask => OwnerhsipMask;
+        public Role OwnershipMask => ownershipMask;
         public int InitializationId => initializationId;
 
         public bool IsBigScreen => isBigScreen;
