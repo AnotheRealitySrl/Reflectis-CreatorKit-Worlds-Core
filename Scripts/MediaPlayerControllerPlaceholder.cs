@@ -34,7 +34,7 @@ namespace Virtuademy.Placeholders
         [Header("Media player graphics")]
         [SerializeField] private GameObject buttonsPanel;
         [SerializeField] private List<Sprite> controllerSprites = new();
-        [SerializeField] private List<UnityEvent> controllerCallbacks = new();
+        [SerializeField] private List<string> controllerCallbacks = new();
         [SerializeField] private Button controllerButtonTemplate;
         [SerializeField] private GameObject controllerButtonSeparator;
 
@@ -58,7 +58,7 @@ namespace Virtuademy.Placeholders
 
         public GameObject ButtonsPanel => buttonsPanel;
         public List<Sprite> ControllerSprites => controllerSprites;
-        public List<UnityEvent> ControllerCallbacks => controllerCallbacks;
+        public List<string> ControllerCallbacks => controllerCallbacks;
         public Button ControllerButtonTemplate => controllerButtonTemplate;
         public GameObject ControllerButtonSeparator => controllerButtonSeparator;
 
