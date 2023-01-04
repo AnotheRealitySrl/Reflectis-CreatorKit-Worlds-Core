@@ -6,7 +6,7 @@ namespace Virtuademy.Placeholders
 {
     public class PresentationPlayerPlaceholder : SceneComponentPlaceholderBase
     {
-        private int initializationId;
+        [SerializeField] private int initializationId;
 
         public int InitializationId => initializationId;
     }

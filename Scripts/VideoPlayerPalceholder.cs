@@ -6,7 +6,7 @@ namespace Virtuademy.Placeholders
 {
     public class VideoPlayerPalceholder : SceneComponentPlaceholderBase
     {
-        private int initializationId;
+        [SerializeField] private int initializationId;
 
         public int InitializationId => initializationId;
     }
