@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Virtuademy.Placeholders
 {
-    public class PresentationPlayerPlaceholder : SceneComponentPlaceholderBase
+    public class MediaContainerPlaceholder : SceneComponentPlaceholderBase
     {
         [SerializeField] private int initializationId;
         [SerializeField] private string addressableKey;
