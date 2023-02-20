@@ -7,11 +7,12 @@ namespace Virtuademy.Placeholders
 {
     public class MediaContainerPlaceholder : SceneComponentPlaceholderBase
     {
+        [Header("Instantiation")]
+        [SerializeField] private string addressableKey;
+        [SerializeField] private bool instantiateOnInit;
+
         [Header("Networking")]
         [SerializeField] private int initializationId;
-
-        [Header("Component id")]
-        [SerializeField] private string addressableKey;
 
         [Header("Asset data")]
         [SerializeField] private string url;
@@ -22,11 +23,12 @@ namespace Virtuademy.Placeholders
         [SerializeField] private List<Sprite> controllerSprites;
         [SerializeField] private List<string> controllerCallbacks;
 
+        // Instantiation
+        public string AddressableKey => addressableKey;
+        public bool InstantiateOnInit => instantiateOnInit;
+
         // Networking
         public int InitializationId => initializationId;
-
-        // Component id
-        public string AddressableKey => addressableKey;
 
         // Asset data
         public string Url => url;
