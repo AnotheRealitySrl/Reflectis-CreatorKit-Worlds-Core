@@ -10,6 +10,7 @@ namespace Virtuademy.Placeholders
     public abstract class SceneComponentPlaceholderBase : MonoBehaviour
     {
         [SerializeField] protected ERuntimeComponentId componentId;
+        [SerializeField] protected bool isNetworked = true;
 
         public virtual void Init(SceneComponentsMapper mapper)
         {

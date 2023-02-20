@@ -66,7 +66,6 @@ public static class AddressablesBuildScript
         return success;
     }
 
-    [MenuItem("Reflectis/Build Addressables")]
     public static bool BuildAddressables(string profile)
     {
         GetSettingsObject(settings_asset);
