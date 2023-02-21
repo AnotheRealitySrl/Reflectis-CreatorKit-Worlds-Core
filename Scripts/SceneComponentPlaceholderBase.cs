@@ -18,7 +18,7 @@ namespace Virtuademy.Placeholders
         {
             foreach (Type type in mapper.GetComponentsTypes(componentId))
             {
-                if (type is not INetworkRuntimeComponent || (type is INetworkRuntimeComponent && isNetworked))
+                if (!typeof(INetworkRuntimeComponent).IsAssignableFrom(type) || (typeof(INetworkRuntimeComponent).IsAssignableFrom(type) && isNetworked))
                 {
                     ((IRuntimeComponent)gameObject.AddComponent(type)).Init(this);
                 }
