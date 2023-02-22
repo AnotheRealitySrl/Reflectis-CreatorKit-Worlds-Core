@@ -82,6 +82,10 @@ public static class AddressablesBuildScript
         return BuildAddressableContent();
     }
 
+
+    public static void RemoteBuildAddressablesSandbox() => BuildAddressables("Sandbox");
+    public static void RemoteBuildAddressablesProduction() => BuildAddressables("Default");
+
     [MenuItem("Reflectis/Build Addressables - Sandbox")]
     public static void BuildAddressablesSandbox()
     {
