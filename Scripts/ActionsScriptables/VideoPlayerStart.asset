@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: VideoPlayerStart
   m_EditorClassIdentifier: 
   InteractableObjectReference: {fileID: 0}
-  placeholderReference: {fileID: 0}
+  goName: Monitor1
   componentReference: VideoPlayerControllerBase
   methodName: Play

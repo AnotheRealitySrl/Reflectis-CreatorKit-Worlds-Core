@@ -10,13 +10,12 @@ using Virtuademy.Placeholders;
 [CreateAssetMenu(menuName = "AnotheReality/Utilities/ParametricScriptableAction", fileName = "ParametricScriptableAction")]
 public class ParametricScriptableAction : ActionScriptable
 {
-    [SerializeField] private SceneComponentPlaceholderBase placeholderReference;
+    [SerializeField] private string goName;
     [SerializeField] private string componentReference;
     [SerializeField] private string methodName;
 
     public override void Action(Action completedCallback)
     {
-        Component component = placeholderReference.GetComponent(componentReference);
-        component.gameObject.SendMessage(methodName);
+        GameObject.Find(goName).SendMessage(methodName);
     }
 }
