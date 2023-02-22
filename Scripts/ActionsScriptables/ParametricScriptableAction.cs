@@ -7,7 +7,8 @@ using UnityEngine;
 
 using Virtuademy.Placeholders;
 
-public class ParametricActionScriptable : ActionScriptable
+[CreateAssetMenu(menuName = "AnotheReality/Utilities/ParametricScriptableAction", fileName = "ParametricScriptableAction")]
+public class ParametricScriptableAction : ActionScriptable
 {
     [SerializeField] private SceneComponentPlaceholderBase placeholderReference;
     [SerializeField] private string componentReference;
