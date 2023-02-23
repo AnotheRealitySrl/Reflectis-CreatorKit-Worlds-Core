@@ -23,7 +23,8 @@ namespace Virtuademy.Placeholders
             TutorialPanel,
             VideoPlayer,
             PresentationPlayer,
-            Floor
+            Floor,
+            WebView
         }
 
         // This Dictionary will be serialized by Odin.
