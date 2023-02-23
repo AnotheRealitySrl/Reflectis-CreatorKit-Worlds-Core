@@ -14,8 +14,8 @@ namespace Virtuademy.Placeholders
         [SerializeField] private RenderMode renderMode = RenderMode.ScreenSpaceOverlay;
 
         [Header("Canvas Scaler settings")]
-        [SerializeField] private int rectWidth = 192;
-        [SerializeField] private int rectHeight = 108;
+        [SerializeField] private int rectWidth;
+        [SerializeField] private int rectHeight;
         [SerializeField] private CanvasScaler.ScaleMode uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
         [SerializeField] private CanvasScaler.Unit physicalUnit = CanvasScaler.Unit.Points;
         [SerializeField] private float fallbackScreenDPI = 96f;
