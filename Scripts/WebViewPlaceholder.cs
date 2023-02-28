@@ -17,8 +17,8 @@ namespace Virtuademy.Placeholders
         [SerializeField] private int rectWidth;
         [SerializeField] private int rectHeight;
         [SerializeField] private CanvasScaler.ScaleMode uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
-        [SerializeField] private float referenceResolutionX = 1920f;
-        [SerializeField] private float referenceResolutionY = 1080f;
+        [SerializeField] private float referenceResolutionX = 1280f;
+        [SerializeField] private float referenceResolutionY = 720f;
         [SerializeField] private CanvasScaler.ScreenMatchMode screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
         [SerializeField] private float match = 0.5f;
         [SerializeField] private CanvasScaler.Unit physicalUnit = CanvasScaler.Unit.Points;
