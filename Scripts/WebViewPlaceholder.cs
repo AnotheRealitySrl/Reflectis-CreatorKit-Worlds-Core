@@ -45,6 +45,10 @@ namespace Virtuademy.Placeholders
         public int RectHeight => rectHeight;
         public RenderMode RenderMode => renderMode;
         public CanvasScaler.ScaleMode UiScaleMode => uiScaleMode;
+        public float ReferenceResolutionX => referenceResolutionX;
+        public float ReferenceResolutionY => referenceResolutionY;
+        public CanvasScaler.ScreenMatchMode ScreenMatchMode => screenMatchMode;
+        public float Match => match;
         public CanvasScaler.Unit PhysicalUnit => physicalUnit;
         public float FallbackScreenDPI => fallbackScreenDPI;
         public float DefaultSpriteDPI => defaultSpriteDPI;
