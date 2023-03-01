@@ -9,10 +9,9 @@ using UnityEngine;
 public class CharacterActivationScriptableAction : ActionScriptable
 {
     [SerializeField] private bool activate;
-    [SerializeField] private float activationTime;
 
     public override void Action(Action completedCallback)
     {
-        SM.GetSystem<AvatarSystem>().EnableAvatarInstanceMeshes(activate, activationTime);
+        SM.GetSystem<AvatarSystem>().EnableAvatarInstanceMeshes(activate);
     }
 }
