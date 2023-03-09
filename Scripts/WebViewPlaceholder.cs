@@ -1,10 +1,22 @@
-using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 
+using Virtuademy.DTO;
+
 namespace Virtuademy.Placeholders
 {
+    public enum QuerystringParameter
+    {
+        UserId,
+        NickName,
+        Role,
+        ExperienceID,
+        ExperienceLabel,
+        TrackID
+    }
+
     public class WebViewPlaceholder : SceneComponentPlaceholderBase
     {
         [Header("Prefab instantiation")]
@@ -38,6 +50,10 @@ namespace Virtuademy.Placeholders
         [Header("Canvas Group settings")]
         [SerializeField] private bool ignoreParentGroups = true;
 
+        [Header("Querystring formation")]
+        [SerializeField] private Dictionary<QuerystringParameter, string> querystringKeyMappings = new();
+        [SerializeField] private Dictionary<Role, string> rolesMapping = new();
+
 
         public string AddressableKey => addressableKey;
 
@@ -62,6 +78,10 @@ namespace Virtuademy.Placeholders
         public bool StartWebViewVisible => startWebViewVisible;
 
         public bool IgnoreParentGroups => ignoreParentGroups;
+
+        public Dictionary<QuerystringParameter, string> QuerystringKeyMappings => querystringKeyMappings;
+        public Dictionary<Role, string> RolesMapping => rolesMapping;
     }
 }
+
 
