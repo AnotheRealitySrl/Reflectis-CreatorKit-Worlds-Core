@@ -51,8 +51,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private bool ignoreParentGroups = true;
 
         [Header("Querystring formation")]
-        [SerializeField] private Dictionary<QuerystringParameter, string> querystringKeyMappings = new();
-        [SerializeField] private Dictionary<Role, string> rolesMapping = new();
+        [SerializeField] private WebViewQuerystringScriptable querystringMappings;
 
 
         public string AddressableKey => addressableKey;
@@ -79,8 +78,7 @@ namespace Virtuademy.Placeholders
 
         public bool IgnoreParentGroups => ignoreParentGroups;
 
-        public Dictionary<QuerystringParameter, string> QuerystringKeyMappings => querystringKeyMappings;
-        public Dictionary<Role, string> RolesMapping => rolesMapping;
+        public WebViewQuerystringScriptable QuerystringMappings => querystringMappings;
     }
 }
 
