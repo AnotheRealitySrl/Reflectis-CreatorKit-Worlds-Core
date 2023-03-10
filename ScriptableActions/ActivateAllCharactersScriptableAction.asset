@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9ae6217e50df8040a28ea054d76af59, type: 3}
-  m_Name: ActivateAllCharactersScriptableAction 1
+  m_Name: ActivateAllCharactersScriptableAction
   m_EditorClassIdentifier: 
   InteractableObjectReference: {fileID: 0}
   activate: 1
