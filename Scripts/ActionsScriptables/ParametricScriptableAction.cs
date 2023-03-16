@@ -10,8 +10,8 @@ using Virtuademy.Placeholders;
 [CreateAssetMenu(menuName = "AnotheReality/Utilities/ParametricScriptableAction", fileName = "ParametricScriptableAction")]
 public class ParametricScriptableAction : ActionScriptable
 {
-    [SerializeField] private string goName;
     [SerializeField] private bool isChildObject;
+    [SerializeField] private string goName;
     [SerializeField] private string methodName;
 
     public override void Action(Action completedCallback)
