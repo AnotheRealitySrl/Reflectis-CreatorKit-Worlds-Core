@@ -11,11 +11,18 @@ using Virtuademy.Placeholders;
 public class ParametricScriptableAction : ActionScriptable
 {
     [SerializeField] private string goName;
-    [SerializeField] private string componentReference;
+    [SerializeField] private bool isChildObject;
     [SerializeField] private string methodName;
 
     public override void Action(Action completedCallback)
     {
-        GameObject.Find(goName).SendMessage(methodName);
+        if (isChildObject)
+        {
+            InteractableObjectReference.transform.Find(goName).gameObject.SendMessage(methodName);
+        }
+        else
+        {
+            GameObject.Find(goName).SendMessage(methodName);
+        }
     }
 }
