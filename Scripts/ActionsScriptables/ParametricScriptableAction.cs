@@ -1,11 +1,9 @@
 using SPACS.Core;
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 
-using Virtuademy.Placeholders;
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "AnotheReality/Utilities/ParametricScriptableAction", fileName = "ParametricScriptableAction")]
 public class ParametricScriptableAction : ActionScriptable
@@ -18,7 +16,8 @@ public class ParametricScriptableAction : ActionScriptable
     {
         if (isChildObject)
         {
-            InteractableObjectReference.transform.Find(goName).gameObject.SendMessage(methodName);
+            Transform[] allChildren = InteractableObjectReference.GetComponentsInChildren<Transform>(true);
+            allChildren.FirstOrDefault(x => x.name == goName)?.gameObject.SendMessage(methodName);
         }
         else
         {
