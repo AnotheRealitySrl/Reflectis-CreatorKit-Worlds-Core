@@ -61,7 +61,7 @@ MonoBehaviour:
       Data: 1
     - Name: $v
       Entry: 1
-      Data: Username
+      Data: UserName
     - Name: 
       Entry: 8
       Data: 

@@ -1,5 +1,6 @@
 using SPACS.Core;
 using SPACS.SDK.Avatars;
+using SPACS.SDK.Transitions;
 
 using System;
 using System.Collections;
@@ -17,6 +18,14 @@ public class ActivateGameObjectScriptableAction : ActionScriptable
     public override void Action(Action completedCallback)
     {
         Transform[] allChildren = InteractableObjectReference.GetComponentsInChildren<Transform>(true);
-        allChildren.FirstOrDefault(x => x.name == objectName)?.gameObject.SetActive(activate);
+        GameObject targetObject = allChildren.FirstOrDefault(x => x.name == objectName)?.gameObject;
+        if (targetObject && targetObject.GetComponent<AbstractTransitionProvider>() is AbstractTransitionProvider transitionProvider)
+        {
+            transitionProvider.DoTransition(activate);
+        }
+        else
+        {
+            targetObject.SetActive(activate);
+        }
     }
 }
