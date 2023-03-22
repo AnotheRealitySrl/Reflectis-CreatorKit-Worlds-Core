@@ -1,3 +1,5 @@
+using SPACS.Core;
+
 using System.Collections;
 using System.Collections.Generic;
 
@@ -24,6 +26,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private Sprite mediaSprite;
         [SerializeField] private List<Sprite> controllerSprites;
         [SerializeField] private List<string> controllerCallbacks;
+        [SerializeField] private List<ActionScriptable> controllerScriptableCallbacks;
         [SerializeField] private GameObject externalController;
         [SerializeField] private GameObject buttonTemplate;
         [SerializeField] private GameObject separatorTemplate;
@@ -48,6 +51,7 @@ namespace Virtuademy.Placeholders
         public Sprite MediaSprite => mediaSprite;
         public List<Sprite> ControllerSprites => controllerSprites;
         public List<string> ControllerCallbacks => controllerCallbacks;
+        public List<ActionScriptable> ControllerScriptableCallbacks => controllerScriptableCallbacks;
         public GameObject ExternalController => externalController;
         public GameObject ButtonTemplate => buttonTemplate;
         public GameObject SeparatorTemplate => separatorTemplate;
