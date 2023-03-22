@@ -1,13 +1,12 @@
 #if UNITY_EDITOR
+using System;
+using System.Runtime.InteropServices;
+
 using UnityEditor;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Settings;
-using System;
+
 using UnityEngine;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEditor.Build.Reporting;
 
 public static class AddressablesBuildScript
 {
@@ -83,8 +82,17 @@ public static class AddressablesBuildScript
     }
 
 
-    public static void RemoteBuildAddressablesSandbox() => BuildAddressables("Sandbox");
-    public static void RemoteBuildAddressablesProduction() => BuildAddressables("Default");
+    public static void RemoteBuildAddressablesSandbox()
+    {
+        SetProjectVersionEnvironmentVariable();
+        BuildAddressables("Sandbox");
+    }
+
+    public static void RemoteBuildAddressablesProduction()
+    {
+        SetProjectVersionEnvironmentVariable();
+        BuildAddressables("Default"); 
+    }
 
     [MenuItem("Reflectis/Build Addressables - Sandbox")]
     public static void BuildAddressablesSandbox()
@@ -111,5 +119,7 @@ public static class AddressablesBuildScript
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
         BuildAddressables("Default");
     }
+
+    private static void SetProjectVersionEnvironmentVariable() => Environment.SetEnvironmentVariable("projectVersion", Application.version);
 }
 #endif
