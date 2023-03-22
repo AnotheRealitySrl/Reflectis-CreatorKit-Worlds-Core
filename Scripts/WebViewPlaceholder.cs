@@ -39,7 +39,8 @@ namespace Virtuademy.Placeholders
         [SerializeField] private float referencePixelPerUnit = 100f;
 
         [Header("WebView settings")]
-        [SerializeField] private string initialUrl;
+        [SerializeField] private string urlSandbox;
+        [SerializeField] private string urlProduction;
         [SerializeField] private float resolution = 1.5f;
         [SerializeField] private bool native2DMode = true;
         [SerializeField] private float pixelDensity = 2f;
@@ -69,7 +70,8 @@ namespace Virtuademy.Placeholders
         public float DefaultSpriteDPI => defaultSpriteDPI;
         public float ReferencePixelPerUnit => referencePixelPerUnit;
 
-        public string InitialUrl => initialUrl;
+        public string UrlSandbox => urlSandbox;
+        public string UrlProduction => urlProduction;
         public float Resolution => resolution;
         public bool Native2DMode => native2DMode;
         public float PixelDensity => pixelDensity;
