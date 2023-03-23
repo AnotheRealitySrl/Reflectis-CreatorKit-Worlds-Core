@@ -33,7 +33,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private Sprite mediaSprite;
         [SerializeField] private List<Sprite> controllerSprites;
         [SerializeField] private List<string> controllerCallbacks;
-        [SerializeField] private ActionScriptablesContainer controllerScriptableActions;
+        [SerializeField] private List<ActionScriptablesContainer> controllerScriptableActions;
         [SerializeField] private GameObject externalController;
         [SerializeField] private GameObject buttonTemplate;
         [SerializeField] private GameObject separatorTemplate;
@@ -58,7 +58,7 @@ namespace Virtuademy.Placeholders
         public Sprite MediaSprite => mediaSprite;
         public List<Sprite> ControllerSprites => controllerSprites;
         public List<string> ControllerCallbacks => controllerCallbacks;
-        public ActionScriptablesContainer ControllerScriptableActions => controllerScriptableActions;
+        public List<ActionScriptablesContainer> ControllerScriptableActions => controllerScriptableActions;
         public GameObject ExternalController => externalController;
         public GameObject ButtonTemplate => buttonTemplate;
         public GameObject SeparatorTemplate => separatorTemplate;
