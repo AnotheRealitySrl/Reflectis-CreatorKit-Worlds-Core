@@ -1,5 +1,6 @@
 using SPACS.Core;
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -10,6 +11,12 @@ namespace Virtuademy.Placeholders
 {
     public class MediaContainerPlaceholder : SceneComponentPlaceholderBase
     {
+        [Serializable]
+        public class ActionScriptablesContainer
+        {
+            public List<ActionScriptable> scriptableActionsList = new();
+        }
+
         [Header("Instantiation")]
         [SerializeField] private string addressableKey;
         [SerializeField] private bool instantiateOnInit;
@@ -26,7 +33,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private Sprite mediaSprite;
         [SerializeField] private List<Sprite> controllerSprites;
         [SerializeField] private List<string> controllerCallbacks;
-        [SerializeField] private List<ActionScriptable> controllerScriptableCallbacks;
+        [SerializeField] private ActionScriptablesContainer controllerScriptableActions;
         [SerializeField] private GameObject externalController;
         [SerializeField] private GameObject buttonTemplate;
         [SerializeField] private GameObject separatorTemplate;
@@ -51,7 +58,7 @@ namespace Virtuademy.Placeholders
         public Sprite MediaSprite => mediaSprite;
         public List<Sprite> ControllerSprites => controllerSprites;
         public List<string> ControllerCallbacks => controllerCallbacks;
-        public List<ActionScriptable> ControllerScriptableCallbacks => controllerScriptableCallbacks;
+        public ActionScriptablesContainer ControllerScriptableActions => controllerScriptableActions;
         public GameObject ExternalController => externalController;
         public GameObject ButtonTemplate => buttonTemplate;
         public GameObject SeparatorTemplate => separatorTemplate;
