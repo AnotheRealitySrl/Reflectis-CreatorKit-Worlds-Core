@@ -118,6 +118,9 @@ public static class AddressablesBuildScript
 
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
         BuildAddressables("Default");
+
+        // Resets the profile - default is Sandbox
+        SetProfile("Sandbox");
     }
 
     private static void SetProjectVersionEnvironmentVariable() => Environment.SetEnvironmentVariable("projectVersion", Application.version);
