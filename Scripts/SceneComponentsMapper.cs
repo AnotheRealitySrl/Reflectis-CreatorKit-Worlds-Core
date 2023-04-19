@@ -25,7 +25,8 @@ namespace Virtuademy.Placeholders
             PresentationPlayer,
             Floor,
             WebView,
-            ObjectActivator
+            ObjectActivator,
+            TeleportPoint
         }
 
         // This Dictionary will be serialized by Odin.
