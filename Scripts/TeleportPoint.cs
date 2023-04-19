@@ -20,11 +20,6 @@ public class TeleportPoint : MonoBehaviour, IRuntimeComponent
 
     private void OnTriggerEnter(Collider other)
     {
-        LoadNext();
-    }
-
-    private async void LoadNext()
-    {
         AppManager.Instance.LoadAddressableScene(sceneName);
     }
 }
