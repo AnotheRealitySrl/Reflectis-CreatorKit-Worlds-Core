@@ -49,7 +49,7 @@ public class TeleportPoint : MonoBehaviour, IRuntimeComponent
         {
             InstituteId = AppManager.Instance.CurrentAssignment.Id,
             Label = $"#public#{new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 5).Select(s => s[rnd.Next(s.Length)]).ToArray())}",
-            Environment = new EnvironmentData { Template = template, ThumbnailPath = thumbnailPath },
+            Environment = new EnvironmentData { Template = template, ThumbnailKey = thumbnailPath },
         };
         Debug.Log(newExperience.Environment.Template);
 
