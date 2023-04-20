@@ -7,8 +7,8 @@ namespace Virtuademy.Placeholders
     public class TeleportPointPlaceholder : SceneComponentPlaceholderBase
     {
         [SerializeField]
-        private string sceneName;
+        private string sceneAddressableName;
 
-        public string SceneName => sceneName;
+        public string SceneAddressableName => sceneAddressableName;
     }
 }
