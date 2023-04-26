@@ -22,7 +22,6 @@ public class TeleportPoint : MonoBehaviour, IRuntimeComponent
         TeleportPointPlaceholder teleportPointPlaceholer = placeholder as TeleportPointPlaceholder;
         sceneAddressableName = teleportPointPlaceholer.SceneAddressableName;
         isLoading = false;
-        Debug.LogError($"inited {sceneAddressableName}");
     }
     #endregion
 
@@ -40,10 +39,8 @@ public class TeleportPoint : MonoBehaviour, IRuntimeComponent
 
     private async void Load()
     {
-        Debug.LogError(sceneAddressableName);
         var template = /*templatesDictionary[0];*/sceneAddressableName;
         var thumbnailPath = /*thumbnailPathsDictionary[0];*/string.Empty;
-        Debug.Log(template);
         System.Random rnd = new();
         Experience newExperience = new()
         {
@@ -51,7 +48,6 @@ public class TeleportPoint : MonoBehaviour, IRuntimeComponent
             Label = $"#public#{new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 5).Select(s => s[rnd.Next(s.Length)]).ToArray())}",
             Environment = new EnvironmentData { Template = template, ThumbnailKey = thumbnailPath },
         };
-        Debug.Log(newExperience.Environment.Template);
 
         ApiResponse<Experience> newPublicExperienceReq = await SM.GetSystem<VirtuademyApiSystem>().PostPublicExperience(newExperience, 15, AppManager.Instance.CurrentAssignment.Id);
         //AppManager.Instance.LoadAddressableScene(sceneAddressableName);
@@ -59,7 +55,7 @@ public class TeleportPoint : MonoBehaviour, IRuntimeComponent
         {
             Debug.Log($"New public experience created: {JsonConvert.SerializeObject(newPublicExperienceReq.Content)}");
 
-            await AppManager.Instance.JoinExperience(newExperience);
+            await AppManager.Instance.JoinExperience(newPublicExperienceReq.Content);
         }
         else
         {
