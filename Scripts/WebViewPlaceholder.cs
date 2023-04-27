@@ -14,7 +14,8 @@ namespace Virtuademy.Placeholders
         Role,
         ExperienceID,
         ExperienceLabel,
-        TrackID
+        TrackID,
+        TrackLabel
     }
 
     public class WebViewPlaceholder : SceneComponentPlaceholderBase
