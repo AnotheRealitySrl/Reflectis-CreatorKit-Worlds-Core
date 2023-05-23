@@ -23,10 +23,8 @@ namespace Virtuademy.Placeholders
         [Header("Prefab instantiation")]
         [SerializeField] private string addressableKey;
 
-        [Header("Canvas settings")]
+        [Header("2D WebView settings")]
         [SerializeField] private RenderMode renderMode = RenderMode.ScreenSpaceOverlay;
-
-        [Header("Canvas Scaler settings")]
         [SerializeField] private int rectWidth;
         [SerializeField] private int rectHeight;
         [SerializeField] private CanvasScaler.ScaleMode uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
@@ -39,7 +37,12 @@ namespace Virtuademy.Placeholders
         [SerializeField] private float defaultSpriteDPI = 96f;
         [SerializeField] private float referencePixelPerUnit = 100f;
 
-        [Header("WebView settings")]
+        [Header("3D WebView settings")]
+        [SerializeField] private Transform targetTransform;
+        [SerializeField] private RectTransform canvasTransform;
+        [SerializeField] private RectTransform uiTransform;
+
+        [Header("General settings")]
         [SerializeField] private string urlSandbox;
         [SerializeField] private string urlProduction;
         [SerializeField] private float resolution = 1.5f;
@@ -58,9 +61,9 @@ namespace Virtuademy.Placeholders
 
         public string AddressableKey => addressableKey;
 
+        public RenderMode RenderMode => renderMode;
         public int RectWidth => rectWidth;
         public int RectHeight => rectHeight;
-        public RenderMode RenderMode => renderMode;
         public CanvasScaler.ScaleMode UiScaleMode => uiScaleMode;
         public float ReferenceResolutionX => referenceResolutionX;
         public float ReferenceResolutionY => referenceResolutionY;
@@ -70,6 +73,11 @@ namespace Virtuademy.Placeholders
         public float FallbackScreenDPI => fallbackScreenDPI;
         public float DefaultSpriteDPI => defaultSpriteDPI;
         public float ReferencePixelPerUnit => referencePixelPerUnit;
+
+
+        public Transform TargetTransform => targetTransform;
+        public RectTransform CanvasTransform => canvasTransform;
+        public RectTransform UiTransform => uiTransform;
 
         public string UrlSandbox => urlSandbox;
         public string UrlProduction => urlProduction;
