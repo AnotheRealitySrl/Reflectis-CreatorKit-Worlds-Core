@@ -20,9 +20,9 @@ namespace Virtuademy.Placeholders
         [Header("General settings")]
         [SerializeField] private string urlSandbox;
         [SerializeField] private string urlProduction;
-        [SerializeField] private float resolution = 1.5f;
-        [SerializeField] private bool native2DMode = true;
-        [SerializeField] private float pixelDensity = 2f;
+        //[SerializeField] private float resolution = 1.5f;
+        //[SerializeField] private bool native2DMode = true;
+        //[SerializeField] private float pixelDensity = 2f;
 
         //[Header("WebView controller settings")]
         //[SerializeField] private bool startWebViewVisible;
@@ -42,9 +42,9 @@ namespace Virtuademy.Placeholders
 
         public string UrlSandbox => urlSandbox;
         public string UrlProduction => urlProduction;
-        public float Resolution => resolution;
-        public bool Native2DMode => native2DMode;
-        public float PixelDensity => pixelDensity;
+        //public float Resolution => resolution;
+        //public bool Native2DMode => native2DMode;
+        //public float PixelDensity => pixelDensity;
 
         //public bool StartWebViewVisible => startWebViewVisible;
 
