@@ -1,11 +1,9 @@
-using SPACS.Core;
-
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-using UnityEngine.UI;
+
+using SPACS.SDK.Interaction;
 
 namespace Virtuademy.Placeholders
 {

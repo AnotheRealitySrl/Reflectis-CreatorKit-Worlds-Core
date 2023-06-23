@@ -1,9 +1,9 @@
-using SPACS.Core;
-
 using System;
 using System.Linq;
 
 using UnityEngine;
+
+using SPACS.SDK.Interaction;
 
 [CreateAssetMenu(menuName = "AnotheReality/Utilities/ParametricScriptableAction", fileName = "ParametricScriptableAction")]
 public class ParametricScriptableAction : ActionScriptable

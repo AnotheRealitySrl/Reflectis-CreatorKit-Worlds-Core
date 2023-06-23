@@ -1,12 +1,12 @@
-using Sirenix.OdinInspector;
-
-using SPACS.SDK.Extensions;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
+
+using Sirenix.OdinInspector;
+
+using SPACS.SDK.Utilities.Extensions;
 
 namespace Virtuademy.Placeholders
 {

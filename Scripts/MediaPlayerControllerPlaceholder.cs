@@ -1,15 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-
-using UnityEditor.Rendering;
 
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
+using TMPro;
+
+using SPACS.SDK.UIKit.UIComponents;
+
 using Virtuademy.DTO;
-using Virtuademy.UI;
 
 namespace Virtuademy.Placeholders
 {

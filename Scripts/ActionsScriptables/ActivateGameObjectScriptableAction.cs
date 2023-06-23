@@ -1,13 +1,10 @@
-using SPACS.Core;
-using SPACS.SDK.Avatars;
-using SPACS.SDK.Transitions;
-
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
+
+using SPACS.SDK.Interaction;
+using SPACS.SDK.Transitions;
 
 [CreateAssetMenu(menuName = "AnotheReality/Utilities/ActivateGameObjectScriptableAction", fileName = "ActivateGameObjectScriptableAction")]
 public class ActivateGameObjectScriptableAction : ActionScriptable

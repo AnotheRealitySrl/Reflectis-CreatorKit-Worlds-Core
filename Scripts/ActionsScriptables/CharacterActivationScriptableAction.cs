@@ -1,10 +1,10 @@
+using System;
+
+using UnityEngine;
+
 using SPACS.Core;
 using SPACS.SDK.Avatars;
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using SPACS.SDK.Interaction;
 
 [CreateAssetMenu(menuName = "AnotheReality/Utilities/ActivateCharacterScriptableAction", fileName = "ActivateCharacterScriptableAction")]
 public class CharacterActivationScriptableAction : ActionScriptable
