@@ -1,19 +1,21 @@
+using System.Linq;
+
 using Newtonsoft.Json;
-using Photon.Realtime;
+
+using UnityEngine;
+
 using SPACS.Core;
 using SPACS.SDK.Utilities.API;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+
 using Virtuademy.Core;
-using Virtuademy.Core.SceneManagement;
 using Virtuademy.DTO;
 using Virtuademy.Placeholders;
+using System.Collections;
 
 public class TeleportPoint : MonoBehaviour, IRuntimeComponent
 {
     private string sceneAddressableName;
+    private bool enterGenericInstance = false;
     private bool isLoading = false;
 
     #region Interfaces implementation
@@ -21,6 +23,7 @@ public class TeleportPoint : MonoBehaviour, IRuntimeComponent
     {
         TeleportPointPlaceholder teleportPointPlaceholer = placeholder as TeleportPointPlaceholder;
         sceneAddressableName = teleportPointPlaceholer.SceneAddressableName;
+        enterGenericInstance = teleportPointPlaceholer.EnterGenericInstance;
         isLoading = false;
     }
     #endregion
@@ -37,8 +40,81 @@ public class TeleportPoint : MonoBehaviour, IRuntimeComponent
         }
     }
 
-    private async void Load()
+    private void Load()
     {
+        // ToDo: All this code must be refactored when Shards and other similar stuff is
+        // designed and defined!
+
+        if (enterGenericInstance)
+            LoadGenericInstance();
+        else
+            LoadNewRandomInstance();
+    }
+
+    private void LoadGenericInstance()
+    {
+        // We want to enter into a generic instance in order to see other people, such as this instance
+        // is a sort of "lobby" space.
+
+        Experience newExperience = JsonConvert.DeserializeObject<Experience>(
+        @"{
+            ""id"":-1,
+            ""templateId"":-1,
+            ""label"":""" + sceneAddressableName.ToLower() + @"#public#123456-inst" + AppManager.Instance.CurrentAssignment.Id + @""",
+            ""description"":"""",
+            ""details"":"""",
+            ""scope"":[
+                ""VR""
+            ],
+            ""status"":[
+                ""Draft""
+            ],
+            ""teacherId"":-1,
+            ""instituteId"":" + AppManager.Instance.CurrentAssignment.Id + @",
+            ""instituteLabel"":""" + AppManager.Instance.CurrentAssignment.Label + @""",
+            ""trackId"":-1,
+            ""trackLabel"":""" + sceneAddressableName + @""",
+            ""timeSlot"":""1900-01-01T00:00:00.000"",
+            ""duration"":-1,
+            ""capacity"":30,
+            ""environment"":{
+                ""template"":""" + sceneAddressableName.ToLower() + @"""
+            },
+            ""sceneObjs"":[],
+            ""features"":[]
+        }");
+
+        // Attempt to connect to network if the connection is never started.
+        if (AppManager.Instance.NetworkingManager.ConnectionState == NetworkingManager.EConnectionState.PeerCreated)
+        {
+            AppManager.Instance.NetworkingManager.ConnectUsingSettings();
+
+            StartCoroutine(Co_WaitAndJoinExperience());
+        }
+        else
+        {
+            DoJoinExperience();
+        }
+
+        IEnumerator Co_WaitAndJoinExperience()
+        {
+            while (AppManager.Instance.NetworkingManager.ConnectionState != NetworkingManager.EConnectionState.JoinedLobby)
+            {
+                yield return null;
+            }
+            DoJoinExperience();
+        }
+
+        async void DoJoinExperience()
+        {
+            await AppManager.Instance.JoinExperience(newExperience);
+        }
+    }
+
+    private async void LoadNewRandomInstance()
+    {
+        // We don't want to enter into a generic instance, so a new random Experience is created.
+
         var template = /*templatesDictionary[0];*/sceneAddressableName;
         var thumbnailPath = /*thumbnailPathsDictionary[0];*/string.Empty;
         System.Random rnd = new();
