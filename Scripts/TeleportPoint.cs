@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 using UnityEngine;
 
-using SPACS.Core;
+using SPACS.SDK.Core;
 using SPACS.SDK.Utilities.API;
 
 using Virtuademy.Core;

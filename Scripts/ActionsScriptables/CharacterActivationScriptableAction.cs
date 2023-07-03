@@ -2,7 +2,7 @@ using System;
 
 using UnityEngine;
 
-using SPACS.Core;
+using SPACS.SDK.Core;
 using SPACS.SDK.Avatars;
 using SPACS.SDK.Interaction;
 
