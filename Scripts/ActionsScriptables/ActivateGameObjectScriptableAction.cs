@@ -3,8 +3,8 @@ using System.Linq;
 
 using UnityEngine;
 
-using SPACS.SDK.Interaction;
-using SPACS.SDK.Transitions;
+using Reflectis.SDK.Interaction;
+using Reflectis.SDK.Transitions;
 
 [CreateAssetMenu(menuName = "AnotheReality/Utilities/ActivateGameObjectScriptableAction", fileName = "ActivateGameObjectScriptableAction")]
 public class ActivateGameObjectScriptableAction : ActionScriptable

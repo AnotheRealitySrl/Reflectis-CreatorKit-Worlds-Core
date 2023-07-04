@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 using TMPro;
 
-using SPACS.SDK.UIKit.UIComponents;
+using Reflectis.SDK.UIKit.UIComponents;
 
 using Virtuademy.DTO;
 

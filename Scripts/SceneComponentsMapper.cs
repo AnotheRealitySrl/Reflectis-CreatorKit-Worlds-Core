@@ -6,7 +6,7 @@ using UnityEngine;
 
 using Sirenix.OdinInspector;
 
-using SPACS.SDK.Utilities.Extensions;
+using Reflectis.SDK.Utilities.Extensions;
 
 namespace Virtuademy.Placeholders
 {

@@ -4,8 +4,8 @@ using Newtonsoft.Json;
 
 using UnityEngine;
 
-using SPACS.SDK.Core;
-using SPACS.SDK.Utilities.API;
+using Reflectis.SDK.Core;
+using Reflectis.SDK.Utilities.API;
 
 using Virtuademy.Core;
 using Virtuademy.DTO;
@@ -33,7 +33,7 @@ public class TeleportPoint : MonoBehaviour, IRuntimeComponent
         if (!isLoading)
         {
             isLoading = true;
-            //prima di questo va creata experience (c'è api) da joinare. Checkare magari prima se ce ne sono già create
+            //prima di questo va creata experience (c'ï¿½ api) da joinare. Checkare magari prima se ce ne sono giï¿½ create
             //In caso mettere nel placeholder i preset sul come crearla
             //AppManager.Instance.LoadAddressableScene(sceneName);
             Load();

@@ -2,8 +2,8 @@ using System;
 
 using UnityEngine;
 
-using SPACS.SDK.Interaction;
-using SPACS.SDK.RPMAvatars;
+using Reflectis.SDK.Interaction;
+using Reflectis.SDK.RPMAvatars;
 
 [CreateAssetMenu(menuName = "AnotheReality/Utilities/AllCharactersActivationScriptableAction", fileName = "AllCharactersActivationScriptableAction")]
 public class AllCharactersActivationScriptableAction : ActionScriptable
@@ -16,7 +16,7 @@ public class AllCharactersActivationScriptableAction : ActionScriptable
         {
             avatarConfigVR.EnableAvatarMeshes(activate);
         }
-        
+
         foreach (var avatarConfigDesktop in FindObjectsOfType<RPMAvatarConfigManagerDesktop>())
         {
             avatarConfigDesktop.EnableAvatarMeshes(activate);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using SPACS.SDK.Interaction;
+using Reflectis.SDK.Interaction;
 
 namespace Virtuademy.Placeholders
 {

@@ -2,9 +2,9 @@ using System;
 
 using UnityEngine;
 
-using SPACS.SDK.Core;
-using SPACS.SDK.Avatars;
-using SPACS.SDK.Interaction;
+using Reflectis.SDK.Core;
+using Reflectis.SDK.Avatars;
+using Reflectis.SDK.Interaction;
 
 [CreateAssetMenu(menuName = "AnotheReality/Utilities/ActivateCharacterScriptableAction", fileName = "ActivateCharacterScriptableAction")]
 public class CharacterActivationScriptableAction : ActionScriptable

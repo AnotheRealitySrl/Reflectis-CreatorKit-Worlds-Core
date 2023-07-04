@@ -3,7 +3,7 @@ using System.Linq;
 
 using UnityEngine;
 
-using SPACS.SDK.Interaction;
+using Reflectis.SDK.Interaction;
 
 [CreateAssetMenu(menuName = "AnotheReality/Utilities/ParametricScriptableAction", fileName = "ParametricScriptableAction")]
 public class ParametricScriptableAction : ActionScriptable
