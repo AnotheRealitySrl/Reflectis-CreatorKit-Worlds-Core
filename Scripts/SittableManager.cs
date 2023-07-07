@@ -1,3 +1,5 @@
+using Lightbug.CharacterControllerPro.Demo;
+using Lightbug.CharacterControllerPro.Implementation;
 using Reflectis.SDK.CharacterController;
 using Reflectis.SDK.CharacterControllerPro;
 using Reflectis.SDK.Core;
@@ -7,29 +9,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Virtuademy.Placeholders;
+using static Lightbug.CharacterControllerPro.Demo.NormalMovement;
 
-public class SittableManager : MonoBehaviour, IRuntimeComponent
+public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
 {
     [SerializeField] private Transform sitTransform;
     [SerializeField] private Transform stepUpTransform;
 
     [SerializeField] private Collider interactableArea;
-    [SerializeField] private bool isInteractable;
-    [SerializeField] private bool isInRangeToInteract = false;
 
     [SerializeField] Canvas canvasButton;
 
-
     CharacterControllerProSystem characterControllerSystem;
+
+    public bool isInteractable { get; set; }
 
     public void Init(SceneComponentPlaceholderBase placeholder)
     {
         SittablePlaceholder sittablePlaceholder = placeholder as SittablePlaceholder;
-        sitTransform = sittablePlaceholder.SitPosition;
-        stepUpTransform = sittablePlaceholder.StepUpPosition;
+        sitTransform = sittablePlaceholder.SitTransform;
+        stepUpTransform = sittablePlaceholder.StepUpTransform;
 
         interactableArea = sittablePlaceholder.InteractableArea;
-        isInteractable = sittablePlaceholder.IsInteractable;
+        isInteractable = true;
 
         canvasButton.gameObject.SetActive(false);
     }
@@ -37,9 +39,13 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent
     private void Update()
     {
         //TODO change the update and input with the new input system delegate action.
-        if (isInRangeToInteract && Input.GetKeyDown(KeyCode.E))
+        if (characterControllerSystem.CharacterControllerInstance.IsInRangeToInteract && Input.GetKeyDown(KeyCode.E))
         {
             SitAction(characterControllerSystem.CharacterControllerInstance);
+        }
+        else if (characterControllerSystem.CharacterControllerInstance.GetComponentInChildren<CharacterStateController>().CurrentState is Sitting sitting && sitting.SittingState == Sitting.SittingAnimationStates.Idling && Input.GetKeyDown(KeyCode.E))
+        {
+            StepUpAction(characterControllerSystem.CharacterControllerInstance);
         }
     }
 
@@ -62,13 +68,15 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent
 
     private void OnTriggerExit(Collider other)
     {
-        isInRangeToInteract = false;
+        
         canvasButton.gameObject.SetActive(false);
 
         if(other.GetComponentInChildren<CharacterControllerBase>() is CharacterControllerBase characterController &&
             characterControllerSystem.CharacterControllerInstance == characterController)
         {
             characterControllerSystem = null;
+
+            characterController.IsInRangeToInteract = false;
         }
     }
 
@@ -78,34 +86,33 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent
     private void CheckSitAction(CharacterControllerBase characterController)
     {
         if (!isInteractable) return;
-        //if(characterController) //Checkare lo stato del character per controllare se è in un possibile stato per potersi sedere. 
 
-        canvasButton.gameObject.SetActive(true);
-        isInRangeToInteract = true;
+        if(characterController.GetComponentInChildren<CharacterStateController>() is CharacterStateController characterState && characterState.CurrentState is NormalMovement normalState && normalState.CurrentMovingState == NormalState.Idlemoving)
+        {
+            canvasButton.gameObject.SetActive(true);
+            characterController.IsInRangeToInteract = true;
+        }
     }
 
     /// <summary>
     /// Function to trigger the sit action in case is possible to sit.
     /// </summary>
-    private void SitAction(CharacterControllerBase characterController)
+    public void SitAction(CharacterControllerBase characterController)
     {
         if (!isInteractable) return;
 
-        //Cambiare lo stato del character che si sta sedendo.
         isInteractable = false;
         canvasButton.gameObject.SetActive(false);
-        isInRangeToInteract = false;
+        characterController.IsInRangeToInteract = false;
 
         characterController.transform.position = sitTransform.position;
         characterController.transform.rotation = sitTransform.rotation;
-
-        //TODO triggerare l'animazione di seduta 
     }
 
     /// <summary>
     /// Function to trigger the step up action.
     /// </summary>
-    private void StepUpAction(CharacterControllerBase characterController)
+    public void StepUpAction(CharacterControllerBase characterController)
     {
         //Cambiare lo stato del character che si sta alzando.
         isInteractable = true;
@@ -113,6 +120,6 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent
         characterController.transform.position = stepUpTransform.position;
         characterController.transform.rotation = stepUpTransform.rotation;
 
-        //TODO triggerare l'animazione di alzata
+        characterController.IsInRangeToInteract = false;
     }
 }
