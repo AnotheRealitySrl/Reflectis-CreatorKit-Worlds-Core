@@ -19,6 +19,6 @@ namespace Virtuademy.Placeholders
         public Transform SitPosition => sitPosition;
         public Transform StepUpPosition => stepUpPosition;
         public Collider InteractableArea => interactableArea;
-        public bool IsInteractable => isInteractable;
+        public bool IsInteractable { get => isInteractable; set => isInteractable = value; }
     }
 }
