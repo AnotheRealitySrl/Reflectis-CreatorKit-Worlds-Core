@@ -1,3 +1,4 @@
+using Lightbug.CharacterControllerPro.Core;
 using Lightbug.CharacterControllerPro.Demo;
 using Lightbug.CharacterControllerPro.Implementation;
 using Reflectis.SDK.CharacterController;
@@ -7,6 +8,7 @@ using Reflectis.SDK.Fade;
 using Reflectis.SDK.UIKit.ToastSystem;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using Virtuademy.Placeholders;
 using static Lightbug.CharacterControllerPro.Demo.NormalMovement;
@@ -17,8 +19,6 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
     [SerializeField] private Transform stepUpTransform;
 
     [SerializeField] private Collider interactableArea;
-
-    [SerializeField] Canvas canvasButton;
 
     CharacterControllerProSystem characterControllerSystem;
 
@@ -32,13 +32,12 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
 
         interactableArea = sittablePlaceholder.InteractableArea;
         isInteractable = true;
-
-        canvasButton.gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        //TODO change the update and input with the new input system delegate action.
+        if (characterControllerSystem == null) return;
+
         if (characterControllerSystem.CharacterControllerInstance.IsInRangeToInteract && Input.GetKeyDown(KeyCode.E))
         {
             SitAction(characterControllerSystem.CharacterControllerInstance);
@@ -68,8 +67,7 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
 
     private void OnTriggerExit(Collider other)
     {
-        
-        canvasButton.gameObject.SetActive(false);
+        other.GetComponent<CharacterControllerBase>().CanvasInteraction.transform.Find("PressButtonText").gameObject.SetActive(false);
 
         if(other.GetComponentInChildren<CharacterControllerBase>() is CharacterControllerBase characterController &&
             characterControllerSystem.CharacterControllerInstance == characterController)
@@ -89,7 +87,10 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
 
         if(characterController.GetComponentInChildren<CharacterStateController>() is CharacterStateController characterState && characterState.CurrentState is NormalMovement normalState && normalState.CurrentMovingState == NormalState.Idlemoving)
         {
-            canvasButton.gameObject.SetActive(true);
+            var text = characterController.CanvasInteraction.transform.Find("PressButtonText");
+            text.gameObject.SetActive(true);
+            text.GetComponent<TextMeshProUGUI>().text = "Press 'E' to interact ";
+
             characterController.IsInRangeToInteract = true;
         }
     }
@@ -102,10 +103,12 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
         if (!isInteractable) return;
 
         isInteractable = false;
-        canvasButton.gameObject.SetActive(false);
+        var text = characterController.CanvasInteraction.transform.Find("PressButtonText");
+        text.GetComponent<TextMeshProUGUI>().text = "Press 'E' to step up ";
+
         characterController.IsInRangeToInteract = false;
 
-        characterController.transform.position = sitTransform.position;
+        characterController.transform.position = new Vector3(sitTransform.position.x, characterController.transform.position.y, sitTransform.position.z);
         characterController.transform.rotation = sitTransform.rotation;
     }
 
@@ -114,12 +117,13 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
     /// </summary>
     public void StepUpAction(CharacterControllerBase characterController)
     {
-        //Cambiare lo stato del character che si sta alzando.
         isInteractable = true;
 
         characterController.transform.position = stepUpTransform.position;
         characterController.transform.rotation = stepUpTransform.rotation;
 
-        characterController.IsInRangeToInteract = false;
+        characterController.IsInRangeToInteract = true;
+        var text = characterController.CanvasInteraction.transform.Find("PressButtonText");
+        text.GetComponent<TextMeshProUGUI>().text = "Press 'E' to interact ";
     }
 }
