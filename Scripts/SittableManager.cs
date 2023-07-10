@@ -1,19 +1,16 @@
-using Lightbug.CharacterControllerPro.Core;
-using Lightbug.CharacterControllerPro.Demo;
 using Lightbug.CharacterControllerPro.Implementation;
 using Reflectis.SDK.CharacterController;
 using Reflectis.SDK.CharacterControllerPro;
 using Reflectis.SDK.Core;
-using Reflectis.SDK.Fade;
 using Reflectis.SDK.UIKit.ToastSystem;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Virtuademy.Placeholders;
-using static Lightbug.CharacterControllerPro.Demo.NormalMovement;
+using static Reflectis.SDK.CharacterControllerPro.ReflectisNormalMovement;
 
-public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
+public class SittableManager : MonoBehaviour, IRuntimeComponent, ISeatable
 {
     [SerializeField] private Transform sitTransform;
     [SerializeField] private Transform stepUpTransform;
@@ -42,7 +39,7 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
         {
             SitAction(characterControllerSystem.CharacterControllerInstance);
         }
-        else if (characterControllerSystem.CharacterControllerInstance.GetComponentInChildren<CharacterStateController>().CurrentState is Sitting sitting && sitting.SittingState == Sitting.SittingAnimationStates.Idling && Input.GetKeyDown(KeyCode.E))
+        else if (!characterControllerSystem.CharacterControllerInstance.IsInRangeToInteract && Input.GetKeyDown(KeyCode.E))
         {
             StepUpAction(characterControllerSystem.CharacterControllerInstance);
         }
@@ -50,11 +47,7 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
 
     private void OnTriggerEnter(Collider other)
     {
-        //Al posto dell on trigger probabilmente un raycast o spherecast per controllare se stai colpendo la sedia
-        //Se stai colpendo con lo spherecast triggerare un canvas ui dove devi premere un tasto per poterti sedere
-        //UI che deve apparire solo se non c'è gia un altra persona seduta (Rimandare un check dopo aver premuto il tasto di ricontrollare se non c'è
-        //qualcuno che ha triggerato l'animazione di seduta eludendo il gioco)
-        //Delegare al tasto di seduta la funzione SitAction per potersi sedere (e gestire la variabile del check di seduta non solo sull'init ma ogni qualc volta uno hitta con il raycast e quando si preme l'azione di sit).
+        if (other.GetComponentInChildren<CharacterStateController>().CurrentState is ReflectisSittingState sitting) return;
 
         characterControllerSystem = SM.GetSystem<CharacterControllerProSystem>();
         if (other.GetComponentInChildren<CharacterControllerBase>() is CharacterControllerBase characterController &&
@@ -67,15 +60,17 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
 
     private void OnTriggerExit(Collider other)
     {
-        other.GetComponent<CharacterControllerBase>().CanvasInteraction.transform.Find("PressButtonText").gameObject.SetActive(false);
+        if (other.GetComponentInChildren<CharacterStateController>().CurrentState is ReflectisSittingState sitting) return;
+        
+        //other.GetComponent<CharacterControllerBase>().CanvasInteraction.transform.Find("PressButtonText").gameObject.SetActive(false);
 
-        if(other.GetComponentInChildren<CharacterControllerBase>() is CharacterControllerBase characterController &&
+        if (other.GetComponentInChildren<CharacterControllerBase>() is CharacterControllerBase characterController &&
             characterControllerSystem.CharacterControllerInstance == characterController)
         {
             characterControllerSystem = null;
 
             characterController.IsInRangeToInteract = false;
-        }
+        }        
     }
 
     /// <summary>
@@ -85,11 +80,11 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
     {
         if (!isInteractable) return;
 
-        if(characterController.GetComponentInChildren<CharacterStateController>() is CharacterStateController characterState && characterState.CurrentState is NormalMovement normalState && normalState.CurrentMovingState == NormalState.Idlemoving)
+        if (characterController.GetComponentInChildren<CharacterStateController>() is CharacterStateController characterState && characterState.CurrentState is ReflectisNormalMovement normalState && normalState.CurrentMovingState == NormalState.Idlemoving)
         {
-            var text = characterController.CanvasInteraction.transform.Find("PressButtonText");
-            text.gameObject.SetActive(true);
-            text.GetComponent<TextMeshProUGUI>().text = "Press 'E' to interact ";
+            //var text = characterController.CanvasInteraction.transform.Find("PressButtonText");
+            //text.gameObject.SetActive(true);
+            //text.GetComponent<TextMeshProUGUI>().text = "Press 'E' to interact ";
 
             characterController.IsInRangeToInteract = true;
         }
@@ -103,13 +98,19 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
         if (!isInteractable) return;
 
         isInteractable = false;
-        var text = characterController.CanvasInteraction.transform.Find("PressButtonText");
-        text.GetComponent<TextMeshProUGUI>().text = "Press 'E' to step up ";
-
+        //var text = characterController.CanvasInteraction.transform.Find("PressButtonText");
+        //text.GetComponent<TextMeshProUGUI>().text = "Press 'E' to step up ";
+        StartCoroutine(ToastStepUpPanel());
         characterController.IsInRangeToInteract = false;
 
-        characterController.transform.position = new Vector3(sitTransform.position.x, characterController.transform.position.y, sitTransform.position.z);
-        characterController.transform.rotation = sitTransform.rotation;
+        characterControllerSystem.MoveCharacter(new Pose(new Vector3(sitTransform.position.x, characterController.transform.position.y, sitTransform.position.z), sitTransform.rotation));
+    }
+
+    private IEnumerator ToastStepUpPanel()
+    {
+        yield return new WaitForSeconds(1);
+
+        GetComponentInChildren<ToastActivatorController>().ToastActivator();
     }
 
     /// <summary>
@@ -119,11 +120,28 @@ public class SittableManager : MonoBehaviour, IRuntimeComponent,ISeatable
     {
         isInteractable = true;
 
-        characterController.transform.position = stepUpTransform.position;
-        characterController.transform.rotation = stepUpTransform.rotation;
+        characterControllerSystem.MoveCharacter(new Pose(stepUpTransform.position, stepUpTransform.rotation));
 
         characterController.IsInRangeToInteract = true;
-        var text = characterController.CanvasInteraction.transform.Find("PressButtonText");
-        text.GetComponent<TextMeshProUGUI>().text = "Press 'E' to interact ";
+
+        GetComponentInChildren<ToastActivatorController>().ToastDeactivator();
+
+        //var text = characterController.CanvasInteraction.transform.Find("PressButtonText");
+        //text.GetComponent<TextMeshProUGUI>().text = "Press 'E' to interact ";
+    }
+
+    private void ToastAction()
+    {
+        //SM.GetSystem<ToastSystem>().CurrentToast.GetComponentInChildren<Toggle>().onValueChanged 
+        if (characterControllerSystem == null) return;
+
+        if (characterControllerSystem.CharacterControllerInstance.IsInRangeToInteract)
+        {
+            SitAction(characterControllerSystem.CharacterControllerInstance);
+        }
+        else if (!characterControllerSystem.CharacterControllerInstance.IsInRangeToInteract)
+        {
+            StepUpAction(characterControllerSystem.CharacterControllerInstance);
+        }
     }
 }
