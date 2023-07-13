@@ -29,6 +29,7 @@ namespace Virtuademy.Placeholders
             TeleportPoint,
             SpawnAddressablePrefab,
             WebView3D,
+            SpawnableObj,
             Sitting
         }
 

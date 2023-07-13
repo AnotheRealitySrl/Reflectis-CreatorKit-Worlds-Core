@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 
 using Reflectis.SDK.Interaction;
-using Reflectis.SDK.RPMAvatars;
+using Reflectis.SDK.Avatars;
 
 [CreateAssetMenu(menuName = "AnotheReality/Utilities/AllCharactersActivationScriptableAction", fileName = "AllCharactersActivationScriptableAction")]
 public class AllCharactersActivationScriptableAction : ActionScriptable
@@ -12,14 +12,9 @@ public class AllCharactersActivationScriptableAction : ActionScriptable
 
     public override void Action(Action completedCallback)
     {
-        foreach (var avatarConfigVR in FindObjectsOfType<RPMAvatarConfigManagerVR>())
+        foreach (var avatarConfigVR in FindObjectsOfType<AvatarConfigControllerBase>())
         {
             avatarConfigVR.EnableAvatarMeshes(activate);
-        }
-
-        foreach (var avatarConfigDesktop in FindObjectsOfType<RPMAvatarConfigManagerDesktop>())
-        {
-            avatarConfigDesktop.EnableAvatarMeshes(activate);
         }
     }
 }
