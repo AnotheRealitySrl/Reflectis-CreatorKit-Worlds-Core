@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Virtuademy.DTO;
 
 namespace Virtuademy.Placeholders
 {
@@ -12,7 +13,8 @@ namespace Virtuademy.Placeholders
         [SerializeField] private Transform stepUpTransform;
 
         [SerializeField] private Collider interactableArea;
-        [SerializeField] private bool isInteractable;
+        [SerializeField] private bool isInteractable = true;
+        [SerializeField] private Role ownershipMask;
 
 
         public int InstantiationId => instantiationId;
@@ -20,5 +22,6 @@ namespace Virtuademy.Placeholders
         public Transform StepUpTransform => stepUpTransform;
         public Collider InteractableArea => interactableArea;
         public bool IsInteractable { get => isInteractable; set => isInteractable = value; }
+        public Role OwnershipMask  => ownershipMask;
     }
 }
