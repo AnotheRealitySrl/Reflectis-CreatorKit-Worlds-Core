@@ -30,7 +30,8 @@ namespace Virtuademy.Placeholders
             SpawnAddressablePrefab,
             WebView3D,
             SpawnableObj,
-            Sitting
+            Sitting,
+            Speaker
         }
 
         // This Dictionary will be serialized by Odin.
