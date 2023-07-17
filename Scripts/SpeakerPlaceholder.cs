@@ -16,7 +16,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private bool isSpatialized;
         [SerializeField] private bool isLooping;
         [SerializeField] private bool isOn = false;
-        [SerializeField] private List<IConnectable> connectables; 
+        [SerializeField] private List<GameObject> connectables; 
 
 
         public int InstantiationId => instantiationId;
@@ -26,6 +26,6 @@ namespace Virtuademy.Placeholders
         public bool IsSpatialized => isSpatialized;
         public bool IsLooping => isLooping;
         public bool IsOn => isOn;
-        public List<IConnectable> Connectables  => connectables;
+        public List<GameObject> Connectables  => connectables;
     }
 }
