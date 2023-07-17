@@ -1,6 +1,4 @@
-using System;
-
-using TMPro;
+using Reflectis.SDK.UIKit.ToastSystem;
 
 using UnityEngine;
 
@@ -8,13 +6,22 @@ namespace Virtuademy.Placeholders
 {
     public class PlayerListPanelPlaceholder : SceneComponentPlaceholderBase
     {
-        [SerializeField] private TextMeshProUGUI numberOfParticipants;
-        [SerializeField] private PlayerListPanelTile playerEntryTemplate;
-        [SerializeField] private GameObject muteButton;
+        [Header("Addressable settings")]
+        [SerializeField] private string addressableKey;
 
-        public TextMeshProUGUI NumberOfParticipants => numberOfParticipants;
-        public PlayerListPanelTile PlayerEntryTemplate => playerEntryTemplate;
-        public GameObject MuteButton => muteButton;
+        [Header("Toast system")]
+        [SerializeField] private InteractableByToast interactableByToast;
+
+        public string AddressableKey => addressableKey;
+        public InteractableByToast InteractableByToast => interactableByToast;
+
+        //[SerializeField] private TextMeshProUGUI numberOfParticipants;
+        //[SerializeField] private PlayerListPanelTile playerEntryTemplate;
+        //[SerializeField] private GameObject muteButton;
+
+        //public TextMeshProUGUI NumberOfParticipants => numberOfParticipants;
+        //public PlayerListPanelTile PlayerEntryTemplate => playerEntryTemplate;
+        //public GameObject MuteButton => muteButton;
     }
 }
 
