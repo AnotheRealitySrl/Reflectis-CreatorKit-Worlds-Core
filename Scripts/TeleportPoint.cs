@@ -1,16 +1,17 @@
-using System.Linq;
-
 using Newtonsoft.Json;
-
-using UnityEngine;
 
 using Reflectis.SDK.Core;
 using Reflectis.SDK.Utilities.API;
 
+using System.Collections;
+using System.Linq;
+using System.Threading.Tasks;
+
+using UnityEngine;
+
 using Virtuademy.Core;
 using Virtuademy.DTO;
 using Virtuademy.Placeholders;
-using System.Collections;
 
 public class TeleportPoint : MonoBehaviour, IRuntimeComponent
 {
@@ -19,13 +20,17 @@ public class TeleportPoint : MonoBehaviour, IRuntimeComponent
     private bool isLoading = false;
 
     #region Interfaces implementation
-    public void Init(SceneComponentPlaceholderBase placeholder)
+
+    public Task Init(SceneComponentPlaceholderBase placeholder)
     {
         TeleportPointPlaceholder teleportPointPlaceholer = placeholder as TeleportPointPlaceholder;
         sceneAddressableName = teleportPointPlaceholer.SceneAddressableName;
         enterGenericInstance = teleportPointPlaceholer.EnterGenericInstance;
         isLoading = false;
+
+        return Task.CompletedTask;
     }
+
     #endregion
 
     private void OnTriggerEnter(Collider other)

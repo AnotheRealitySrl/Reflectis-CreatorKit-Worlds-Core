@@ -11,13 +11,13 @@ namespace Virtuademy.Placeholders
         [SerializeField] protected ERuntimeComponentId componentId;
         [SerializeField] protected bool isNetworked = true;
 
-        public virtual void Init(SceneComponentsMapper mapper)
+        public virtual async void Init(SceneComponentsMapper mapper)
         {
             foreach (Type type in mapper.GetComponentsTypes(componentId))
             {
                 if (!typeof(INetworkRuntimeComponent).IsAssignableFrom(type) || (typeof(INetworkRuntimeComponent).IsAssignableFrom(type) && isNetworked))
                 {
-                    ((IRuntimeComponent)gameObject.AddComponent(type)).Init(this);
+                    await ((IRuntimeComponent)gameObject.AddComponent(type)).Init(this);
                 }
             }
         }
