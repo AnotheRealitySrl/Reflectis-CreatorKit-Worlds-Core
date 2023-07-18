@@ -29,8 +29,8 @@ namespace Virtuademy.Placeholders
             }
         }
 
-        [ContextMenu("Set Personal ID")]
-        private void SetPersonalID()
+        [ContextMenu("Set All Placeholder New ID")]
+        private void SetAllPlaceholderNewID()
         {
             var placeholders = FindObjectsOfType<SceneComponentPlaceholderBase>();
 
