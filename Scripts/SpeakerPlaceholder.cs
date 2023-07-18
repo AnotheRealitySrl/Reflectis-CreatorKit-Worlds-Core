@@ -7,7 +7,6 @@ namespace Virtuademy.Placeholders
     public class SpeakerPlaceholder : SceneComponentPlaceholderBase
     {
         [Header("Network settings")]
-        [SerializeField] private int instantiationId;
         [SerializeField] private Role ownershipMask;
 
         [Header("Speaker audio references")]
@@ -19,7 +18,6 @@ namespace Virtuademy.Placeholders
         [SerializeField] private List<GameObject> connectables; 
 
 
-        public int InstantiationId => instantiationId;
         public Role OwnershipMask => ownershipMask;
         public AudioClip AudioToInstantiate => audioToInstantiate;
         public float AudioListenRange => audioListenRange;
@@ -27,5 +25,20 @@ namespace Virtuademy.Placeholders
         public bool IsLooping => isLooping;
         public bool IsOn => isOn;
         public List<GameObject> Connectables  => connectables;
+
+
+        [ContextMenu("Set Personal ID")]
+        private void SetPersonalID()
+        {
+            var placeholders = FindObjectsOfType<SceneComponentPlaceholderBase>();
+
+            for (var i = 0; i < placeholders.Length; i++)
+            {
+                if (placeholders[i].IsNetworked)
+                {
+                    placeholders[i].InstantiationId = i + 1;
+                }
+            }
+        }
     }
 }
