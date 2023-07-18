@@ -8,7 +8,6 @@ namespace Virtuademy.Placeholders
     public class SittablePlaceholder : SceneComponentPlaceholderBase
     {
         [Header("Network settings")]
-        [SerializeField] private int instantiationId;
         [SerializeField] private Role ownershipMask;
 
         [Header("Sittable references")]
@@ -18,7 +17,6 @@ namespace Virtuademy.Placeholders
         
 
 
-        public int InstantiationId => instantiationId;
         public Transform SitTransform => sitTransform;
         public Transform StepUpTransform => stepUpTransform;
         public bool IsInteractable  => isInteractable;

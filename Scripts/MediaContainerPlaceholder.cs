@@ -20,9 +20,6 @@ namespace Virtuademy.Placeholders
         [SerializeField] private bool instantiateOnInit;
         [SerializeField] private bool activateOnInit = true;
 
-        [Header("Networking")]
-        [SerializeField] private int initializationId;
-
         [Header("Asset data")]
         [SerializeField] private string url;
         [SerializeField] private bool videoPlayOnAwake;
@@ -44,9 +41,6 @@ namespace Virtuademy.Placeholders
         public string AddressableKey => addressableKey;
         public bool InstantiateOnInit => instantiateOnInit;
         public bool ActivateOnInit => activateOnInit;
-
-        // Networking
-        public int InitializationId => initializationId;
 
         // Asset data
         public string Url => url;

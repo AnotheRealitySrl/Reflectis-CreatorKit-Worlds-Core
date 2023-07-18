@@ -13,10 +13,10 @@ namespace Virtuademy.Placeholders
     {
         [SerializeField] protected ERuntimeComponentId componentId;
         [SerializeField] protected bool isNetworked = true;
-        [SerializeField] protected int instantiationId;
+        [SerializeField] protected int initializationId;
 
         public bool IsNetworked => isNetworked;
-        public int InstantiationId { get => instantiationId; set => instantiationId = value; }
+        public int InitializationId { get => initializationId; set => initializationId = value; }
 
         public virtual void Init(SceneComponentsMapper mapper)
         {
@@ -38,7 +38,7 @@ namespace Virtuademy.Placeholders
             {
                 if (placeholders[i].IsNetworked)
                 {
-                    placeholders[i].InstantiationId = i + 1;
+                    placeholders[i].InitializationId = i + 1;
                 }
             }
         }

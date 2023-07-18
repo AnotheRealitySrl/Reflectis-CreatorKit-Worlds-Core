@@ -15,7 +15,6 @@ namespace Virtuademy.Placeholders
     {
         [Header("Network settings")]
         [SerializeField] private Role ownershipMask;
-        [SerializeField] private int initializationId;
 
         [Header("Big screen")]
         [SerializeField] private bool isBigScreen;
@@ -42,7 +41,6 @@ namespace Virtuademy.Placeholders
         [SerializeField] private ConfirmationPopupLocalizedText sendMediaToScreenLocalizedText;
 
         public Role OwnershipMask => ownershipMask;
-        public int InitializationId => initializationId;
 
         public bool IsBigScreen => isBigScreen;
 
