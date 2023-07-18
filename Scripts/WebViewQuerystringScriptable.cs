@@ -1,16 +1,10 @@
 using Sirenix.OdinInspector;
 
-using Reflectis.SDK.CharacterController;
-
-using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
 
-using Virtuademy.DTO;
 using Virtuademy.Placeholders;
-
-using static Virtuademy.Core.AppManager;
 
 [CreateAssetMenu(menuName = "AnotheReality/Utils/WebViewQuerystringScriptable", fileName = "WebViewQuerystringScriptable")]
 public class WebViewQuerystringScriptable : SerializedScriptableObject

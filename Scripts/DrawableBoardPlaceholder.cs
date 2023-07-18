@@ -1,7 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
-
-using Virtuademy.DTO;
 
 namespace Virtuademy.Placeholders
 {
