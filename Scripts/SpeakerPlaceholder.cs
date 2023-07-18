@@ -25,20 +25,5 @@ namespace Virtuademy.Placeholders
         public bool IsLooping => isLooping;
         public bool IsOn => isOn;
         public List<GameObject> Connectables  => connectables;
-
-
-        [ContextMenu("Set Personal ID")]
-        private void SetPersonalID()
-        {
-            var placeholders = FindObjectsOfType<SceneComponentPlaceholderBase>();
-
-            for (var i = 0; i < placeholders.Length; i++)
-            {
-                if (placeholders[i].IsNetworked)
-                {
-                    placeholders[i].InstantiationId = i + 1;
-                }
-            }
-        }
     }
 }
