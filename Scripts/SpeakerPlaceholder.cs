@@ -14,7 +14,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private float audioListenRange;
         [SerializeField] private bool isSpatialized;
         [SerializeField] private bool isLooping;
-        [SerializeField] private bool isOn = false;
+        [SerializeField] private BaseSpeakerController.SpeakerState state;
         [SerializeField] private List<GameObject> connectables; 
 
 
@@ -23,7 +23,7 @@ namespace Virtuademy.Placeholders
         public float AudioListenRange => audioListenRange;
         public bool IsSpatialized => isSpatialized;
         public bool IsLooping => isLooping;
-        public bool IsOn => isOn;
+        public BaseSpeakerController.SpeakerState State => state;
         public List<GameObject> Connectables  => connectables;
     }
 }
