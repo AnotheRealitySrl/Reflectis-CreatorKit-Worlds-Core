@@ -31,7 +31,8 @@ namespace Virtuademy.Placeholders
             WebView3D,
             SpawnableObj,
             Sitting,
-            Speaker
+            Speaker,
+            Animation
         }
 
         // This Dictionary will be serialized by Odin.
