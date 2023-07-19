@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1feb554db0c0774a88a99650884cf55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  componentId: 12
-  isNetworked: 1
+  componentId: 16
+  isNetworked: 0
   addressableKey: TutorialPanel
   interactableByToast: {fileID: 7549613150111127082}
 --- !u!1 &6793896071635384530
