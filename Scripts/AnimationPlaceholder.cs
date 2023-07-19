@@ -17,6 +17,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private Animator animator;
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private string animationToTrigger;
+        [SerializeField] private string animationToResetTrigger;
 
 
         public Role OwnershipMask => ownershipMask;
@@ -25,5 +26,6 @@ namespace Virtuademy.Placeholders
         public Animator Animator  => animator;
         public List<GameObject> Connectables  => connectables;
         public string AnimationToTrigger  => animationToTrigger;
+        public string AnimationToResetTrigger => animationToResetTrigger;
     }
 }
