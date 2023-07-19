@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] protected ERuntimeComponentId componentId;
         [SerializeField] protected bool isNetworked = true;
 
-        public virtual async void Init(SceneComponentsMapper mapper)
+        public virtual async Task Init(SceneComponentsMapper mapper)
         {
             foreach (Type type in mapper.GetComponentsTypes(componentId))
             {

@@ -1,12 +1,12 @@
+using Reflectis.SDK.Utilities.Extensions;
+
+using Sirenix.OdinInspector;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
-
-using Sirenix.OdinInspector;
-
-using Reflectis.SDK.Utilities.Extensions;
 
 namespace Virtuademy.Placeholders
 {
@@ -30,7 +30,8 @@ namespace Virtuademy.Placeholders
             SpawnAddressablePrefab,
             WebView3D,
             SpawnableObj,
-            Sitting
+            Sitting,
+            UIAddressablePrefab
         }
 
         // This Dictionary will be serialized by Odin.

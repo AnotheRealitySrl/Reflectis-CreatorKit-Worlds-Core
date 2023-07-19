@@ -21,5 +21,11 @@ namespace Virtuademy.Placeholders
         [SerializeField] protected EAppState appState;
 
         #endregion
+
+        #region Properties 
+
+        public EAppState AppState => appState;
+
+        #endregion
     }
 }
