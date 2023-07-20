@@ -1,3 +1,4 @@
+using GLTFast.Schema;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,21 +12,21 @@ namespace Virtuademy.Placeholders
         [SerializeField] private Role ownershipMask;
 
         [Header("Asset Spawner references")]
-        [SerializeField] private GameObject prefabToInstantiate;
-        [SerializeField] private Transform posToSpawn;
+        [SerializeField] private List<GameObject> prefabsToInstantiate;
+        [SerializeField] private List<Transform>  posToSpawn;
         [SerializeField] private float spawnRate;
         [SerializeField] private bool haveToWait = false;
-        [SerializeField] private bool prefabAlreadySpawned = false;
+        [SerializeField] private bool prefabsAlreadySpawned = false;
         [SerializeField] private float timerToSpawn;
         [SerializeField] private List<GameObject> connectables;
 
         public Role OwnershipMask  => ownershipMask;
-        public GameObject PrefabToInstantiate  => prefabToInstantiate; 
-        public Transform PosToSpawn => posToSpawn; 
+        public List<GameObject> PrefabsToInstantiate  => prefabsToInstantiate; 
+        public List<Transform> PosToSpawn => posToSpawn; 
         public float SpawnRate => spawnRate; 
         public bool HaveToWait  => haveToWait;
         public float TimerToSpawn => timerToSpawn;
         public List<GameObject> Connectables => connectables;
-        public bool PrefabAlreadySpawned => prefabAlreadySpawned; 
+        public bool PrefabsAlreadySpawned => prefabsAlreadySpawned; 
     }
 }
