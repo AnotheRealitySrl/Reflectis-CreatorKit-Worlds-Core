@@ -87,6 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2410904960982696950}
   - component: {fileID: 213800502220154595}
+  - component: {fileID: 7730842670905374311}
   m_Layer: 0
   m_Name: TutorialPanelPlaceholder
   m_TagString: Untagged
@@ -139,6 +140,22 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &7730842670905374311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4987470522046697463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1feb554db0c0774a88a99650884cf55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  componentId: 16
+  isNetworked: 0
+  addressableKey: TutorialPanel
+  interactableByToast: {fileID: 7549613150111127082}
 --- !u!1 &6793896071635384530
 GameObject:
   m_ObjectHideFlags: 0
