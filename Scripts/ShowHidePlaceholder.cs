@@ -20,6 +20,8 @@ namespace Virtuademy.Placeholders
         [SerializeField] private HideShowState state = HideShowState.Hiding;
         [SerializeField] private float timeToTriggerAction;
         [SerializeField] private GameObject fatherConnecter;
+        [SerializeField] private MeshRenderer mesh;
+        [SerializeField] private Collider colliderArea;
 
         public Role OwnershipMask  => ownershipMask;
 
@@ -31,5 +33,7 @@ namespace Virtuademy.Placeholders
         public bool HaveToWait  => haveToWait;
         public bool HaveToDisableAtStart => haveToDisableAtStart;
         public GameObject FatherConnecter  => fatherConnecter;
+        public MeshRenderer Mesh => mesh;
+        public Collider ColliderArea => colliderArea;
     }
 }
