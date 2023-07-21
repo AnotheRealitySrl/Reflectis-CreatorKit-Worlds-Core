@@ -33,7 +33,8 @@ namespace Virtuademy.Placeholders
             Sitting,
             Speaker,
             Animation,
-            AssetSpawner
+            AssetSpawner,
+            ShowHide
         }
 
         // This Dictionary will be serialized by Odin.
