@@ -19,6 +19,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private bool haveToDisableAtStart = false;
         [SerializeField] private HideShowState state = HideShowState.Hiding;
         [SerializeField] private float timeToTriggerAction;
+        [SerializeField] private GameObject fatherConnecter;
 
         public Role OwnershipMask  => ownershipMask;
 
@@ -29,5 +30,6 @@ namespace Virtuademy.Placeholders
         public float TimeToTriggerAction => timeToTriggerAction;
         public bool HaveToWait  => haveToWait;
         public bool HaveToDisableAtStart => haveToDisableAtStart;
+        public GameObject FatherConnecter  => fatherConnecter;
     }
 }

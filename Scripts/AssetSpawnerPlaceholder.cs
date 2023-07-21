@@ -20,6 +20,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private float timerToSpawn;
         [SerializeField] private SpawnerState spawnerState = SpawnerState.NotSpawned;
         [SerializeField] private List<GameObject> connectables;
+        [SerializeField] private GameObject fatherConnecter;
 
         public Role OwnershipMask  => ownershipMask;
         public List<GameObject> PrefabsToInstantiate  => prefabsToInstantiate; 
@@ -29,5 +30,6 @@ namespace Virtuademy.Placeholders
         public float TimerToSpawn => timerToSpawn;
         public List<GameObject> Connectables => connectables;
         public SpawnerState SpawnerState => spawnerState;
+        public GameObject FatherConnecter => fatherConnecter;
     }
 }
