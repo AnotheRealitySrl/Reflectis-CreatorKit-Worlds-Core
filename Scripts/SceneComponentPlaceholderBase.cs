@@ -11,6 +11,14 @@ namespace Virtuademy.Placeholders
     {
         [SerializeField] protected ERuntimeComponentId componentId;
         [SerializeField] protected bool isNetworked = true;
+        [SerializeField] protected GameObject referenceObject;
+
+        public GameObject ReferenceObject { get => referenceObject; set => referenceObject = value; }
+
+        private void Awake()
+        {
+            referenceObject = gameObject;
+        }
 
         public virtual async Task Init(SceneComponentsMapper mapper)
         {
@@ -18,7 +26,7 @@ namespace Virtuademy.Placeholders
             {
                 if (!typeof(INetworkRuntimeComponent).IsAssignableFrom(type) || (typeof(INetworkRuntimeComponent).IsAssignableFrom(type) && isNetworked))
                 {
-                    await ((IRuntimeComponent)gameObject.AddComponent(type)).Init(this);
+                    await ((IRuntimeComponent)referenceObject.AddComponent(type)).Init(this);
                 }
             }
         }

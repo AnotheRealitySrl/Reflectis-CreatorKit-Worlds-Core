@@ -257,11 +257,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   componentId: 3
-  isNetworked: 1
+  isNetworked: 0
+  referenceObject: {fileID: 0}
   addressableKey: BigScreen
   interactableByToast: {fileID: 9043373686516467352}
+  mediaTypesDictionary: {fileID: 11400000, guid: 0e0b7ad42003c6e40999ce2d463921d6,
+    type: 2}
   ownershipMask: 30
-  initializationId: 6
 --- !u!1 &7915416680680222965
 GameObject:
   m_ObjectHideFlags: 0
