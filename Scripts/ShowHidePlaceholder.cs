@@ -16,6 +16,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private bool canBeInteractable;
         [SerializeField] private bool haveToWait;
+        [SerializeField] private bool haveToDisableAtStart = false;
         [SerializeField] private HideShowState state = HideShowState.Hiding;
         [SerializeField] private float timeToTriggerAction;
 
@@ -26,6 +27,7 @@ namespace Virtuademy.Placeholders
         public bool CanBeInteractable => canBeInteractable;
         public HideShowState State  => state;
         public float TimeToTriggerAction => timeToTriggerAction;
-        public bool HaveToWait  => haveToWait; 
+        public bool HaveToWait  => haveToWait;
+        public bool HaveToDisableAtStart => haveToDisableAtStart;
     }
 }
