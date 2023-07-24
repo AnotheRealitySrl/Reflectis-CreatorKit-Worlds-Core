@@ -9,7 +9,7 @@ namespace Virtuademy.Placeholders
         #region Enums
 
         /// <summary>
-        /// Available media types managed by the MediaPlayerController.
+        /// Available media types managed by the <see cref="MediaPlayerController"/>.
         /// </summary>
         [Flags]
         public enum MediaType

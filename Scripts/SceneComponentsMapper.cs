@@ -13,31 +13,10 @@ namespace Virtuademy.Placeholders
     [CreateAssetMenu(menuName = "AnotheReality/Virtuademy/SceneComponentsMapper", fileName = "SceneComponentsMapper")]
     public class SceneComponentsMapper : SerializedScriptableObject
     {
-        public enum ERuntimeComponentId
-        {
-            Teleportation,
-            PlayerListPanel,
-            DrawableBoard,
-            MediaPlayer,
-            VoiceChannel,
-            TutorialPanel,
-            VideoPlayer,
-            PresentationPlayer,
-            Floor,
-            WebView,
-            ObjectActivator,
-            TeleportPoint,
-            SpawnAddressablePrefab,
-            WebView3D,
-            SpawnableObj,
-            Sitting,
-            UIAddressablePrefab
-        }
-
         // This Dictionary will be serialized by Odin.
-        [SerializeField] private Dictionary<ERuntimeComponentId, List<TextAsset>> componentsMap = new();
+        [SerializeField] private Dictionary<TextAsset, List<TextAsset>> componentsMap = new();
 
-        public List<Type> GetComponentsTypes(ERuntimeComponentId id) => componentsMap[id].Select(x => GetType(x.name)).ToList();
+        public List<Type> GetComponentsTypes(string id) => componentsMap[componentsMap.Keys.First(x => x.name == id)].Select(x => GetType(x.name)).ToList();
 
         private Type GetType(string typeName)
         {

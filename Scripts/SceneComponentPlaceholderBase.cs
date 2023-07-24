@@ -3,31 +3,15 @@ using System.Threading.Tasks;
 
 using UnityEngine;
 
-using static Virtuademy.Placeholders.SceneComponentsMapper;
-
 namespace Virtuademy.Placeholders
 {
     public abstract class SceneComponentPlaceholderBase : MonoBehaviour
     {
-        [SerializeField] protected ERuntimeComponentId componentId;
-        [SerializeField] protected bool isNetworked = true;
-        [SerializeField] protected GameObject referenceObject;
-
-        public GameObject ReferenceObject { get => referenceObject; set => referenceObject = value; }
-
-        private void Awake()
-        {
-            referenceObject = gameObject;
-        }
-
         public virtual async Task Init(SceneComponentsMapper mapper)
         {
-            foreach (Type type in mapper.GetComponentsTypes(componentId))
+            foreach (Type type in mapper.GetComponentsTypes(GetType().ToString().Split('.')[^1]))
             {
-                if (!typeof(INetworkRuntimeComponent).IsAssignableFrom(type) || (typeof(INetworkRuntimeComponent).IsAssignableFrom(type) && isNetworked))
-                {
-                    await ((IRuntimeComponent)referenceObject.AddComponent(type)).Init(this);
-                }
+                await ((IRuntimeComponent)gameObject.AddComponent(type)).Init(this);
             }
         }
     }
