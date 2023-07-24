@@ -8,7 +8,7 @@ public class ToastInteractablePlaceholder : SceneComponentPlaceholderBase
     [SerializeField] private Collider proximityActivatorCollider;
     [SerializeField] private Collider mouseActivatorCollider;
 
-    public Transform PanTargetTransform => PanTargetTransform;
+    public Transform PanTargetTransform => panTargetTransform;
     public Collider ProximityActivatorCollider => proximityActivatorCollider;
     public Collider MouseActivatorCollider => mouseActivatorCollider;
 }
