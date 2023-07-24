@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 4174191176252260024}
   - component: {fileID: 8687752186879981114}
   - component: {fileID: 2197893277382530783}
-  - component: {fileID: 5626202722405227805}
+  - component: {fileID: 6260427859833912064}
   m_Layer: 0
   m_Name: BigScreenPlaceholder
   m_TagString: Untagged
@@ -297,13 +297,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ea0492fa9bed7d4abeb5b2ed4d323f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceObject: {fileID: 0}
   addressableKey: BigScreen
   interactableByToast: {fileID: 9043373686516467352}
   mediaTypesDictionary: {fileID: 11400000, guid: 0e0b7ad42003c6e40999ce2d463921d6,
     type: 2}
   ownershipMask: 30
---- !u!114 &5626202722405227805
+--- !u!114 &6260427859833912064
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -312,12 +311,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7260596705339213385}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b47676e4fcea4b04dab6dcb1af7c7808, type: 3}
+  m_Script: {fileID: 11500000, guid: 84e161334e891d64db7372a277bcac2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceObject: {fileID: 0}
-  prefabAddressableName: InteractableByToast
-  parent: {fileID: 1057632236951264438}
+  panTargetTransform: {fileID: 6664410119489261644}
+  proximityActivatorCollider: {fileID: 1156642441936816915}
+  mouseActivatorCollider: {fileID: 0}
 --- !u!1 &7915416680680222965
 GameObject:
   m_ObjectHideFlags: 0
