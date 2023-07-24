@@ -171,7 +171,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   addressableKey: BigScreen
-  interactableByToast: {fileID: 0}
   mediaTypesDictionary: {fileID: 11400000, guid: 0e0b7ad42003c6e40999ce2d463921d6,
     type: 2}
   ownershipMask: 30
@@ -258,9 +257,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Big screen
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2720046404449b34c9e27bd7167ae6e7, type: 2}
-  m_sharedMaterial: {fileID: 3100832505358550490, guid: 2720046404449b34c9e27bd7167ae6e7,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
