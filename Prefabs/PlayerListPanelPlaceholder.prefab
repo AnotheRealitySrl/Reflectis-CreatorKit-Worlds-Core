@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 6915777607370782776}
   - component: {fileID: 7872848605788885168}
   - component: {fileID: 8161154713340758956}
+  - component: {fileID: 6044888381944369685}
   m_Layer: 5
   m_Name: PlayerListPanelPlaceholder
   m_TagString: Untagged
@@ -306,10 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1feb554db0c0774a88a99650884cf55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  componentId: 16
-  isNetworked: 1
   addressableKey: PlayerListPanel
-  interactableByToast: {fileID: 0}
 --- !u!222 &8161154713340758956
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -318,3 +316,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8778374552810577936}
   m_CullTransparentMesh: 1
+--- !u!114 &6044888381944369685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8778374552810577936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84e161334e891d64db7372a277bcac2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panTargetTransform: {fileID: 0}
+  proximityActivatorCollider: {fileID: 0}
+  mouseActivatorCollider: {fileID: 0}
