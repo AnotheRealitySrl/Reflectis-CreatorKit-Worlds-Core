@@ -1,9 +1,9 @@
+using Reflectis.SDK.Interaction;
+
 using System;
 using System.Collections.Generic;
 
 using UnityEngine;
-
-using Reflectis.SDK.Interaction;
 
 namespace Virtuademy.Placeholders
 {
@@ -19,9 +19,6 @@ namespace Virtuademy.Placeholders
         [SerializeField] private string addressableKey;
         [SerializeField] private bool instantiateOnInit;
         [SerializeField] private bool activateOnInit = true;
-
-        [Header("Networking")]
-        [SerializeField] private int initializationId;
 
         [Header("Asset data")]
         [SerializeField] private string url;
@@ -44,9 +41,6 @@ namespace Virtuademy.Placeholders
         public string AddressableKey => addressableKey;
         public bool InstantiateOnInit => instantiateOnInit;
         public bool ActivateOnInit => activateOnInit;
-
-        // Networking
-        public int InitializationId => initializationId;
 
         // Asset data
         public string Url => url;

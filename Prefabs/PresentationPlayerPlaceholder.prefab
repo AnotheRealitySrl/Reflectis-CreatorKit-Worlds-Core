@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 1818975952821023630}
   - component: {fileID: 5735515943731711135}
   m_Layer: 0
-  m_Name: VideoPlayerPlaceholder
+  m_Name: PresentationPlayerPlaceholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -440,18 +440,18 @@ MonoBehaviour:
   componentId: 6
   isNetworked: 0
   referenceObject: {fileID: 0}
-  addressableKey: VideoPlayer
+  addressableKey: PresentationPlayer
   instantiateOnInit: 1
   activateOnInit: 0
-  url: https://spacsglobal.blob.core.windows.net/reflectis-public/VirtuademyPoliMi.mp4
+  url: 
   videoPlayOnAwake: 0
   mediaSprite: {fileID: 0}
   controllerSprites:
-  - {fileID: -677904298, guid: 818fc62bf42426545b7abb878b8a588b, type: 3}
-  - {fileID: 660720341, guid: 818fc62bf42426545b7abb878b8a588b, type: 3}
+  - {fileID: -655449139, guid: 818fc62bf42426545b7abb878b8a588b, type: 3}
+  - {fileID: 225385720, guid: 818fc62bf42426545b7abb878b8a588b, type: 3}
   controllerCallbacks:
-  - Previous
-  - Next
+  - Play
+  - Pause
   controllerScriptableActions:
   - scriptableActionsList:
     - {fileID: 11400000, guid: 3b3680d30396adf4f92c96d05ab1d674, type: 2}

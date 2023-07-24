@@ -1,5 +1,131 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2848353770679643145
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6664410119489261644}
+  m_Layer: 0
+  m_Name: Target
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6664410119489261644
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2848353770679643145}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -1000}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8129044600688285352}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 500}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &4259337961075829948
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8129044600688285352}
+  - component: {fileID: 1156642441936816915}
+  - component: {fileID: 9043373686516467352}
+  m_Layer: 0
+  m_Name: BigScreenToastActivator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8129044600688285352
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4259337961075829948}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -400}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6664410119489261644}
+  m_Father: {fileID: 1057632236951264438}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -580}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!65 &1156642441936816915
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4259337961075829948}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1500, y: 150, z: 500}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &9043373686516467352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4259337961075829948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3968c67b2d42ba043b05963aeeb4cbc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InteractAction: {fileID: 11400000, guid: 6c3da7fe9fa9862448e53304d6ac836a, type: 2}
+  StopInteractAction: {fileID: 11400000, guid: 6c230e673b03c8246b2a6d458fd4167e, type: 2}
+  _interactionTarget: {fileID: 2848353770679643145}
+  toastReference: InteractionByPan
+  activatorCollider: {fileID: 1156642441936816915}
+  mouseActivatorCollider: {fileID: 0}
+  mouseLookAtCamera: 0
+  interactOnClick: 0
+  enableOnBeforeStartInteract: 0
+  onBeforeStartInteractActions: []
+  enableOnAfterInteract: 1
+  onAfterInteractActions:
+  - {fileID: 0}
+  enableOnBeforeStopInteract: 1
+  onBeforeStopInteractActions:
+  - {fileID: 0}
+  enableOnAfterStopInteract: 0
+  onAfterStopInteractActions: []
 --- !u!1 &4376516327760610965
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,6 +215,7 @@ GameObject:
   - component: {fileID: 4174191176252260024}
   - component: {fileID: 8687752186879981114}
   - component: {fileID: 2197893277382530783}
+  - component: {fileID: 6260427859833912064}
   m_Layer: 0
   m_Name: BigScreenPlaceholder
   m_TagString: Untagged
@@ -109,6 +236,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6475871612027156816}
+  - {fileID: 8129044600688285352}
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -169,12 +297,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ea0492fa9bed7d4abeb5b2ed4d323f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  componentId: 3
-  isNetworked: 1
   addressableKey: BigScreen
-  interactableByToast: {fileID: 0}
+  interactableByToast: {fileID: 9043373686516467352}
+  mediaTypesDictionary: {fileID: 11400000, guid: 0e0b7ad42003c6e40999ce2d463921d6,
+    type: 2}
   ownershipMask: 30
-  initializationId: 6
+--- !u!114 &6260427859833912064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7260596705339213385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84e161334e891d64db7372a277bcac2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panTargetTransform: {fileID: 6664410119489261644}
+  proximityActivatorCollider: {fileID: 1156642441936816915}
+  mouseActivatorCollider: {fileID: 0}
 --- !u!1 &7915416680680222965
 GameObject:
   m_ObjectHideFlags: 0
