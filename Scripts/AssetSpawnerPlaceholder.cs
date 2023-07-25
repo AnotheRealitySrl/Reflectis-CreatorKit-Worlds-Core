@@ -17,6 +17,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private List<Transform>  posToSpawn;
         [SerializeField] private float spawnRate;
         [SerializeField] private bool haveToWait = false;
+        [SerializeField] private bool canMultipleSpawn = false;
         [SerializeField] private float timerToSpawn;
         [SerializeField] private SpawnerState spawnerState = SpawnerState.NotSpawned;
         [SerializeField] private List<GameObject> connectables;
@@ -27,6 +28,7 @@ namespace Virtuademy.Placeholders
         public List<Transform> PosToSpawn => posToSpawn; 
         public float SpawnRate => spawnRate; 
         public bool HaveToWait  => haveToWait;
+        public bool CanMultipleSpawn=> canMultipleSpawn;
         public float TimerToSpawn => timerToSpawn;
         public List<GameObject> Connectables => connectables;
         public SpawnerState SpawnerState => spawnerState;
