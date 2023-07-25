@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Virtuademy.Placeholders
 {
-    public class ToastInteractablePlaceholder : SceneComponentPlaceholderBase
+    public class ToastInteractablePlaceholder : SpawnAddressablePlaceholder
     {
         [SerializeField] private Transform panTargetTransform;
         [SerializeField] private Collider proximityActivatorCollider;

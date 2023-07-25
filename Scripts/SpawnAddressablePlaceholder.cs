@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Virtuademy.Placeholders
 {
-    public class SpawnAddressable : SceneComponentPlaceholderBase
+    public class SpawnAddressablePlaceholder : SceneComponentPlaceholderBase
     {
         [SerializeField]
         private string prefabAddressableName;
