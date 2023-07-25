@@ -16,7 +16,10 @@ namespace Virtuademy.Placeholders
         // This Dictionary will be serialized by Odin.
         [SerializeField] private Dictionary<TextAsset, List<TextAsset>> componentsMap = new();
 
-        public List<Type> GetComponentsTypes(string id) => componentsMap[componentsMap.Keys.First(x => x.name == id)].Select(x => GetType(x.name)).ToList();
+        public List<Type> GetComponentsTypes(string id)
+        {
+            return componentsMap[componentsMap.Keys.First(x => x.name == id)].Select(x => GetType(x.name)).ToList();
+        }
 
         private Type GetType(string typeName)
         {
