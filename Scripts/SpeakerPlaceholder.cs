@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+
 using UnityEngine;
-using Virtuademy.DTO;
 
 namespace Virtuademy.Placeholders
 {
-    public class SpeakerPlaceholder : SceneComponentPlaceholderBase
+    public class SpeakerPlaceholder : SceneComponentPlaceholderNetwork
     {
         [Header("Network settings")]
         [SerializeField] private Role ownershipMask;
