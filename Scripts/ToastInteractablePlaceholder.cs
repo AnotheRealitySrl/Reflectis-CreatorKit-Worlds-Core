@@ -1,8 +1,6 @@
 using UnityEngine;
 
-using Virtuademy.Placeholders;
-
-public class ToastInteractablePlaceholder : SceneComponentPlaceholderBase
+public class ToastInteractablePlaceholder : SpawnAddressablePrefabPlaceholder
 {
     [SerializeField] private Transform panTargetTransform;
     [SerializeField] private Collider proximityActivatorCollider;
