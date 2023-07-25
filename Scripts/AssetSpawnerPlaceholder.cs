@@ -2,12 +2,16 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using static BaseAssetSpawnerController;
-
 namespace Virtuademy.Placeholders
 {
     public class AssetSpawnerPlaceholder : SceneComponentPlaceholderNetwork
     {
+        public enum ESpawnerState
+        {
+            NotSpawned = 1,
+            Spawned = 2
+        }
+
         [Header("Network settings")]
         [SerializeField] private Role ownershipMask;
 
@@ -17,7 +21,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private float spawnRate;
         [SerializeField] private bool haveToWait = false;
         [SerializeField] private float timerToSpawn;
-        [SerializeField] private SpawnerState spawnerState = SpawnerState.NotSpawned;
+        [SerializeField] private ESpawnerState spawnerState = ESpawnerState.NotSpawned;
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private GameObject fatherConnecter;
 
@@ -28,7 +32,7 @@ namespace Virtuademy.Placeholders
         public bool HaveToWait => haveToWait;
         public float TimerToSpawn => timerToSpawn;
         public List<GameObject> Connectables => connectables;
-        public SpawnerState SpawnerState => spawnerState;
+        public ESpawnerState SpawnerState => spawnerState;
         public GameObject FatherConnecter => fatherConnecter;
     }
 }

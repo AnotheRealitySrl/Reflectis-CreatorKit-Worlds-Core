@@ -2,12 +2,17 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using static BaseAnimationController;
-
 namespace Virtuademy.Placeholders
 {
     public class AnimationPlaceholder : SceneComponentPlaceholderNetwork
     {
+        public enum AnimationStates
+        {
+            Playing = 1,
+            Paused = 2,
+            Stopped = 3
+        }
+
         [Header("Network settings")]
         [SerializeField] private Role ownershipMask;
 

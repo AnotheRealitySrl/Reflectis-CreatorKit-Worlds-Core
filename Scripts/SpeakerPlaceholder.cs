@@ -6,6 +6,13 @@ namespace Virtuademy.Placeholders
 {
     public class SpeakerPlaceholder : SceneComponentPlaceholderNetwork
     {
+        public enum SpeakerState
+        {
+            Playing = 1,
+            Paused = 2,
+            Stopped = 3
+        }
+
         [Header("Network settings")]
         [SerializeField] private Role ownershipMask;
 
@@ -14,7 +21,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private float audioListenRange;
         [SerializeField] private bool isSpatialized;
         [SerializeField] private bool isLooping;
-        [SerializeField] private BaseSpeakerController.SpeakerState state = BaseSpeakerController.SpeakerState.Stopped;
+        [SerializeField] private SpeakerState state = SpeakerState.Stopped;
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private GameObject fatherConnecter;
 
@@ -24,7 +31,7 @@ namespace Virtuademy.Placeholders
         public float AudioListenRange => audioListenRange;
         public bool IsSpatialized => isSpatialized;
         public bool IsLooping => isLooping;
-        public BaseSpeakerController.SpeakerState State => state;
+        public SpeakerState State => state;
         public List<GameObject> Connectables => connectables;
         public GameObject FatherConnecter => fatherConnecter;
     }

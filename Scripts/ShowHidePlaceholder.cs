@@ -2,12 +2,16 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using static BaseShowHideController;
-
 namespace Virtuademy.Placeholders
 {
     public class ShowHidePlaceholder : SceneComponentPlaceholderNetwork
     {
+        public enum HideShowState
+        {
+            Hiding,
+            Showing
+        }
+
         [Header("Network settings")]
         [SerializeField] private Role ownershipMask;
 
