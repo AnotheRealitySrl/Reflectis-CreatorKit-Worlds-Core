@@ -1,24 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Virtuademy.DTO;
 
 namespace Virtuademy.Placeholders
 {
     public class SittablePlaceholder : SceneComponentPlaceholderBase
     {
-        [SerializeField] private int instantiationId;
-
-        [SerializeField] private Transform sitTransform;
-        [SerializeField] private Transform stepUpTransform;
-
-        [SerializeField] private Collider interactableArea;
-        [SerializeField] private bool isInteractable = true;
+        [Header("Network settings")]
         [SerializeField] private Role ownershipMask;
 
+        [Header("Sittable references")]
+        [SerializeField] private Transform sitTransform;
+        [SerializeField] private Transform stepUpTransform;
+        [SerializeField] private bool isInteractable = true;
+        
 
-        public int InstantiationId => instantiationId;
+
         public Transform SitTransform => sitTransform;
         public Transform StepUpTransform => stepUpTransform;
-        public Collider InteractableArea => interactableArea;
-        public bool IsInteractable { get => isInteractable; set => isInteractable = value; }
-        public Role OwnershipMask => ownershipMask;
+        public bool IsInteractable  => isInteractable;
+        public Role OwnershipMask  => ownershipMask;
     }
 }
