@@ -19,6 +19,8 @@ namespace Virtuademy.Placeholders
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private string animationToTrigger;
         [SerializeField] private string animationToResetTrigger;
+        [SerializeField] private string changeAnimStateToPlay;
+        [SerializeField] private string changeAnimStateToIdle;
         [SerializeField] private GameObject fatherConnecter;
 
         public UnityEvent onEndAnim;
@@ -30,7 +32,9 @@ namespace Virtuademy.Placeholders
         public List<GameObject> Connectables  => connectables;
         public string AnimationToTrigger  => animationToTrigger;
         public string AnimationToResetTrigger => animationToResetTrigger;
-        public GameObject FatherConnecter  => fatherConnecter; 
+        public string ChangeAnimStateToPlay  => changeAnimStateToPlay;
+        public string ChangeAnimStateToIdle => changeAnimStateToIdle;
+        public GameObject FatherConnecter  => fatherConnecter;
 
         public void AnimationEndEvent()
         {
