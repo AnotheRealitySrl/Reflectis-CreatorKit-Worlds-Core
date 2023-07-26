@@ -10,9 +10,11 @@ namespace Virtuademy.Placeholders
         [Header("Network settings")]
         [SerializeField] private bool isNetworked;
         [SerializeField] private int initializationId;
+        [SerializeField] private Role ownership;
 
         public bool IsNetworked => isNetworked;
         public int InitializationId { get => initializationId; set => initializationId = value; }
+        public Role Ownership { get => ownership; set => ownership = value; }
 
         public override async Task Init(SceneComponentsMapper mapper)
         {
