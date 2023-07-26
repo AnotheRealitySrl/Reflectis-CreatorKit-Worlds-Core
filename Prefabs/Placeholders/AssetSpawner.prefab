@@ -103,10 +103,10 @@ MonoBehaviour:
   initializationId: 17
   ownershipMask: 31
   prefabsToInstantiate:
-  - {fileID: 6483667429082407128, guid: c91d1726b32c0ee4fbc398f5593cce61, type: 3}
+  - {fileID: 0}
   posToSpawn:
   - {fileID: 4832357130861598868}
-  spawnRate: 100
+  spawnChance: 100
   haveToWait: 0
   timerToSpawn: 3
   spawnerState: 1

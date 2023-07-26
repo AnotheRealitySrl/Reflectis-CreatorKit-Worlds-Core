@@ -15,7 +15,7 @@ namespace Virtuademy.Placeholders
         [Header("Asset Spawner references")]
         [SerializeField] private List<GameObject> prefabsToInstantiate;
         [SerializeField] private List<Transform>  posToSpawn;
-        [SerializeField] private float spawnRate;
+        [SerializeField] private float spawnChance;
         [SerializeField] private bool haveToWait = false;
         //[SerializeField] private bool canMultipleSpawn = false;
         [SerializeField] private float timerToSpawn;
@@ -26,7 +26,7 @@ namespace Virtuademy.Placeholders
         public Role OwnershipMask  => ownershipMask;
         public List<GameObject> PrefabsToInstantiate  => prefabsToInstantiate; 
         public List<Transform> PosToSpawn => posToSpawn; 
-        public float SpawnRate => spawnRate; 
+        public float SpawnChance => spawnChance; 
         public bool HaveToWait  => haveToWait;
         //public bool CanMultipleSpawn=> canMultipleSpawn;
         public float TimerToSpawn => timerToSpawn;
