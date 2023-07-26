@@ -22,11 +22,21 @@ namespace Virtuademy.Placeholders
 
         [Header("Media components")]
         [SerializeField] private MediaTypesAddressablesDictionary mediaTypesDictionary;
+        [SerializeField] private bool isBigScreen = true;
+        [SerializeField] private bool headerVisibility = true;
+        [SerializeField] private string defaultMedia;
+        [SerializeField] private MediaType type;
+
+        public MediaTypesAddressablesDictionary MediaTypesDictionary => mediaTypesDictionary;
+        public bool IsBigScreen => isBigScreen;
+        public bool HeaderVisibility => headerVisibility;
+        public string DefaultMedia => defaultMedia;
+        public MediaType Type => type;
+
 
         [Header("Network settings")]
         [SerializeField] private Role ownershipMask;
 
         public Role OwnershipMask => ownershipMask;
-        public MediaTypesAddressablesDictionary MediaTypesDictionary => mediaTypesDictionary;
     }
 }
