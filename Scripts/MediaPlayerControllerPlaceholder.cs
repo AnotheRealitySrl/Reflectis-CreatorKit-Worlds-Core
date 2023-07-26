@@ -1,3 +1,5 @@
+using Sirenix.OdinInspector;
+
 using System;
 
 using UnityEngine;
@@ -23,14 +25,26 @@ namespace Virtuademy.Placeholders
         [Header("Media components")]
         [SerializeField] private MediaTypesAddressablesDictionary mediaTypesDictionary;
         [SerializeField] private bool isBigScreen = true;
+
+        [Header("Header settings")]
         [SerializeField] private bool headerVisibility = true;
-        [SerializeField] private string defaultMedia;
-        [SerializeField] private MediaType type;
+        [SerializeField, ShowIf("headerVisibility")] private GameObject headerContainer;
+
+        [Header("Controller settings")]
+        [SerializeField] private bool buttonsVisibility = true;
+        [SerializeField, ShowIf("buttonsVisibility")] private GameObject buttonsContainer;
+        [SerializeField, ShowIf("buttonsVisibility")] private string buttonsAddressable;
+
+        [Header("Preloaded media")]
+        [SerializeField] private bool defaultMedia;
+        [SerializeField, ShowIf("defaultMedia")] private string mediaUrl;
+        [SerializeField, ShowIf("defaultMedia")] private MediaType type;
 
         public MediaTypesAddressablesDictionary MediaTypesDictionary => mediaTypesDictionary;
         public bool IsBigScreen => isBigScreen;
         public bool HeaderVisibility => headerVisibility;
-        public string DefaultMedia => defaultMedia;
+        public bool DefaultMedia => defaultMedia;
+        public string MediaUrl => mediaUrl;
         public MediaType Type => type;
 
 
