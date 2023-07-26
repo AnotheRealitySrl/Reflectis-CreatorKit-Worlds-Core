@@ -327,6 +327,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84e161334e891d64db7372a277bcac2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabAddressableName: ToastActivator
+  parent: {fileID: 0}
   panTargetTransform: {fileID: 0}
   proximityActivatorCollider: {fileID: 0}
   mouseActivatorCollider: {fileID: 0}
