@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Virtuademy.DTO;
 using static BaseAnimationController;
 
@@ -20,6 +21,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private string animationToResetTrigger;
         [SerializeField] private GameObject fatherConnecter;
 
+        public UnityEvent onEndAnim;
 
         public Role OwnershipMask => ownershipMask;
         public bool IsLooping => isLooping;
@@ -29,5 +31,13 @@ namespace Virtuademy.Placeholders
         public string AnimationToTrigger  => animationToTrigger;
         public string AnimationToResetTrigger => animationToResetTrigger;
         public GameObject FatherConnecter  => fatherConnecter; 
+
+        public void AnimationEndEvent()
+        {
+            if(!isLooping)
+            {
+                onEndAnim?.Invoke();
+            }
+        }
     }
 }
