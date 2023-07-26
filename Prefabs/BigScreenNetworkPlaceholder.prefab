@@ -21,7 +21,7 @@ PrefabInstance:
     - target: {fileID: 1057632236951264438, guid: 08ba8e4c209df40408f22cf113b491ea,
         type: 3}
       propertyPath: m_RootOrder
-      value: 35
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1057632236951264438, guid: 08ba8e4c209df40408f22cf113b491ea,
         type: 3}
@@ -117,6 +117,11 @@ PrefabInstance:
         type: 3}
       propertyPath: isNetworked
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2197893277382530783, guid: 08ba8e4c209df40408f22cf113b491ea,
+        type: 3}
+      propertyPath: addressableKey
+      value: BigScreenNetwork
       objectReference: {fileID: 0}
     - target: {fileID: 2197893277382530783, guid: 08ba8e4c209df40408f22cf113b491ea,
         type: 3}
