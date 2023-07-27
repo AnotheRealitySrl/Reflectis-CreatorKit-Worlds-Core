@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Virtuademy.Placeholders
 {
-    public class TeleportPointPlaceholder : SceneComponentPlaceholderBase
+    public class SceneChangerPlaceholder : SceneComponentPlaceholderBase
     {
         [SerializeField]
         private string sceneAddressableName;
