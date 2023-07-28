@@ -19,9 +19,10 @@ namespace Virtuademy.Placeholders
 
         [Header("Pickable references")]
         [SerializeField] private PickState state = PickState.Dropped;
-
+        [SerializeField] private BaseUsableController usableController;
 
         public Role OwnershipMask => ownershipMask;
         public PickState State => state;
+        public BaseUsableController UsableController => usableController;
     }
 }
