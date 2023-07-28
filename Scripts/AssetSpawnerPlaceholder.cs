@@ -4,16 +4,13 @@ using UnityEngine;
 
 namespace Virtuademy.Placeholders
 {
-    public class AssetSpawnerPlaceholder : SceneComponentPlaceholderBase
+    public class AssetSpawnerPlaceholder : SceneComponentPlaceholderNetwork
     {
         public enum ESpawnerState
         {
             NotSpawned = 1,
             Spawned = 2
         }
-
-        [Header("Network settings")]
-        [SerializeField] private Role ownershipMask;
 
         [Header("Asset Spawner references")]
         [SerializeField] private List<GameObject> prefabsToInstantiate;
@@ -26,7 +23,6 @@ namespace Virtuademy.Placeholders
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private GameObject fatherConnecter;
 
-        public Role OwnershipMask => ownershipMask;
         public List<GameObject> PrefabsToInstantiate => prefabsToInstantiate;
         public List<Transform> PosToSpawn => posToSpawn;
         public float SpawnChance => spawnChance;

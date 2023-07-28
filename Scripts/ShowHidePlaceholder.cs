@@ -12,9 +12,6 @@ namespace Virtuademy.Placeholders
             Showing
         }
 
-        [Header("Network settings")]
-        [SerializeField] private Role ownershipMask;
-
         [Header("Show Hide references")]
         [SerializeField] private bool haveToToggle;
         [SerializeField] private List<GameObject> connectables;
@@ -26,8 +23,6 @@ namespace Virtuademy.Placeholders
         [SerializeField] private GameObject fatherConnecter;
         [SerializeField] private MeshRenderer mesh;
         [SerializeField] private Collider colliderArea;
-
-        public Role OwnershipMask => ownershipMask;
 
         public bool HaveToToggle => haveToToggle;
         public List<GameObject> Connectables => connectables;

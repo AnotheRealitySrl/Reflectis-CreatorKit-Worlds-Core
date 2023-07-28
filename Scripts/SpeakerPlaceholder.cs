@@ -13,9 +13,6 @@ namespace Virtuademy.Placeholders
             Stopped = 3
         }
 
-        [Header("Network settings")]
-        [SerializeField] private Role ownershipMask;
-
         [Header("Speaker audio references")]
         [SerializeField] private AudioClip audioToInstantiate;
         [SerializeField] private float audioListenRange;
@@ -25,8 +22,6 @@ namespace Virtuademy.Placeholders
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private GameObject fatherConnecter;
 
-
-        public Role OwnershipMask => ownershipMask;
         public AudioClip AudioToInstantiate => audioToInstantiate;
         public float AudioListenRange => audioListenRange;
         public bool IsSpatialized => isSpatialized;

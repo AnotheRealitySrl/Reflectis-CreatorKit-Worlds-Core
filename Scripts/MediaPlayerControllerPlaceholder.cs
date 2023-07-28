@@ -46,11 +46,5 @@ namespace Virtuademy.Placeholders
         public bool DefaultMedia => defaultMedia;
         public string MediaUrl => mediaUrl;
         public MediaType Type => type;
-
-
-        [Header("Network settings")]
-        [SerializeField] private Role ownershipMask;
-
-        public Role OwnershipMask => ownershipMask;
     }
 }

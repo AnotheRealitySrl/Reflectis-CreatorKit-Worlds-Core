@@ -1,17 +1,14 @@
-using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.Events;
-using Virtuademy.DTO;
+
 using static BaseAnimationController;
 
 namespace Virtuademy.Placeholders
 {
-    public class AnimationPlaceholder : SceneComponentPlaceholderBase
+    public class AnimationPlaceholder : SceneComponentPlaceholderNetwork
     {
-        [Header("Network settings")]
-        [SerializeField] private Role ownershipMask;
-
         [Header("Animation references")]
         [SerializeField] private bool isLooping;
         [SerializeField] private AnimationStates animationState;
@@ -25,20 +22,19 @@ namespace Virtuademy.Placeholders
 
         public UnityEvent onEndAnim;
 
-        public Role OwnershipMask => ownershipMask;
         public bool IsLooping => isLooping;
         public AnimationStates AnimationState => animationState;
-        public Animator Animator  => animator;
-        public List<GameObject> Connectables  => connectables;
-        public string AnimationToTrigger  => animationToTrigger;
+        public Animator Animator => animator;
+        public List<GameObject> Connectables => connectables;
+        public string AnimationToTrigger => animationToTrigger;
         public string AnimationToResetTrigger => animationToResetTrigger;
-        public string ChangeAnimStateToPlay  => changeAnimStateToPlay;
+        public string ChangeAnimStateToPlay => changeAnimStateToPlay;
         public string ChangeAnimStateToIdle => changeAnimStateToIdle;
-        public GameObject FatherConnecter  => fatherConnecter;
+        public GameObject FatherConnecter => fatherConnecter;
 
         public void AnimationEndEvent()
         {
-            if(!isLooping)
+            if (!isLooping)
             {
                 onEndAnim?.Invoke();
             }
