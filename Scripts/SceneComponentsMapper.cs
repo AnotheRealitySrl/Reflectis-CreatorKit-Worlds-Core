@@ -18,6 +18,7 @@ namespace Virtuademy.Placeholders
 
         public List<Type> GetComponentsTypes(string id)
         {
+            Debug.Log(id);
             return componentsMap[componentsMap.Keys.First(x => x.name == id)].Select(x => GetType(x.name)).ToList();
         }
 
