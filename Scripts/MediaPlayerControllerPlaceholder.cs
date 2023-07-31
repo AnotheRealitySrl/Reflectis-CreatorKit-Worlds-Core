@@ -24,9 +24,11 @@ namespace Virtuademy.Placeholders
 
         #endregion
 
-        [Header("Media components")]
-        [SerializeField] private MediaTypesAddressablesDictionary mediaTypesDictionary;
+        [Header("Media player configuration")]
         [SerializeField] private bool isBigScreen = true;
+
+        [Header("Media player references")]
+        [SerializeField] private Transform screenContainer;
 
         [Header("Header settings")]
         [SerializeField] private bool headerVisibility = true;
@@ -42,8 +44,8 @@ namespace Virtuademy.Placeholders
         [SerializeField, ShowIf("defaultMedia")] private string mediaUrl;
         [SerializeField, ShowIf("defaultMedia")] private MediaType type;
 
-        public MediaTypesAddressablesDictionary MediaTypesDictionary => mediaTypesDictionary;
         public bool IsBigScreen => isBigScreen;
+        public Transform ScreenContainer => screenContainer;
         public bool HeaderVisibility => headerVisibility;
         public bool DefaultMedia => defaultMedia;
         public string MediaUrl => mediaUrl;
