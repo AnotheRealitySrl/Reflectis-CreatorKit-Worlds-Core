@@ -5,7 +5,7 @@ using Virtuademy.DTO;
 
 namespace Virtuademy.Placeholders
 {
-    public class PickablePlaceholder : SceneComponentPlaceholderBase
+    public class PickablePlaceholder : SceneComponentPlaceholderNetwork
     {
         public enum PickState
         {
