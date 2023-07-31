@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-using static BaseAnimationController;
-
 namespace Virtuademy.Placeholders
 {
     public class AnimationPlaceholder : SceneComponentPlaceholderNetwork
     {
+        public enum AnimationStates
+        {
+            Playing = 1,
+            Paused = 2,
+            Stopped = 3
+        }
+
         [Header("Animation references")]
         [SerializeField] private bool isLooping;
         [SerializeField] private AnimationStates animationState;
