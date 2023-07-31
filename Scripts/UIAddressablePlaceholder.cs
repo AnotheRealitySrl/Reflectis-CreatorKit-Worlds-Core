@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Virtuademy.Placeholders
 {
-    public class UIAddressablePlaceholder : SceneComponentPlaceholderBase
+    public class UIAddressablePlaceholder : SceneComponentPlaceholderNetwork
     {
         [Header("Addressable settings")]
         [SerializeField] private string addressableKey;
