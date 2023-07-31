@@ -171,6 +171,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   addressableKey: BigScreen
+  parent: {fileID: 0}
+  isNetworked: 0
+  addressableKeyNetwork: 
   mediaTypesDictionary: {fileID: 11400000, guid: 0e0b7ad42003c6e40999ce2d463921d6,
     type: 2}
   isBigScreen: 1
@@ -182,7 +185,6 @@ MonoBehaviour:
   defaultMedia: 0
   mediaUrl: 
   type: 0
-  ownershipMask: 30
 --- !u!114 &6260427859833912064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,7 +197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84e161334e891d64db7372a277bcac2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabAddressableName: ToastActivator
+  addressableKey: ToastActivator
   parent: {fileID: 1057632236951264438}
   panTargetTransform: {fileID: 0}
   proximityActivatorCollider: {fileID: 0}

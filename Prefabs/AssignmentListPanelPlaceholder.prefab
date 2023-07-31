@@ -284,7 +284,7 @@ RectTransform:
   - {fileID: 1303690958621885181}
   - {fileID: 8954670366899442386}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -336,7 +336,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &5615529687943686203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,6 +350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   addressableKey: AssignmentListPanel
+  parent: {fileID: 0}
 --- !u!114 &4561373672130507396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,7 +380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84e161334e891d64db7372a277bcac2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabAddressableName: ToastActivator
+  addressableKey: AssignmentListPanel
   parent: {fileID: 3945634324243714973}
   panTargetTransform: {fileID: 8954670366899442386}
   proximityActivatorCollider: {fileID: 0}

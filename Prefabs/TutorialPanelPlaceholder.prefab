@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   addressableKey: TutorialPanel
+  parent: {fileID: 0}
 --- !u!114 &8838895107797820821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84e161334e891d64db7372a277bcac2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabAddressableName: ToastActivator
+  addressableKey: TutorialPanel
   parent: {fileID: 0}
   panTargetTransform: {fileID: 0}
   proximityActivatorCollider: {fileID: 0}

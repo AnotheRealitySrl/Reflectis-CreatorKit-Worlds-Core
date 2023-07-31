@@ -4,9 +4,11 @@ using System;
 
 using UnityEngine;
 
+using Virtuademy.DTO;
+
 namespace Virtuademy.Placeholders
 {
-    public class MediaPlayerControllerPlaceholder : UIAddressablePlaceholder
+    public class MediaPlayerControllerPlaceholder : SpawnNetworkedAddressablePlaceholder
     {
         #region Enums
 
