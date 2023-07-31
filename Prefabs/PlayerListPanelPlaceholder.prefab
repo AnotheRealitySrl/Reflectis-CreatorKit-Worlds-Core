@@ -308,6 +308,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   addressableKey: PlayerListPanel
   parent: {fileID: 0}
+  objsToDeactivate:
+  - {fileID: 4769971576701615700}
+  isUI: 1
 --- !u!222 &8161154713340758956
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -328,8 +331,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84e161334e891d64db7372a277bcac2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addressableKey: PlayerList
+  addressableKey: ToastActivator
   parent: {fileID: 0}
+  objsToDeactivate: []
+  isUI: 1
   panTargetTransform: {fileID: 0}
   proximityActivatorCollider: {fileID: 0}
   mouseActivatorCollider: {fileID: 0}

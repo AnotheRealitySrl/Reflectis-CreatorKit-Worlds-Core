@@ -129,10 +129,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: e72524908449a2541bb1e3ba4d00f24f,
         type: 2}
+    - target: {fileID: 3206746378823476226, guid: 08ba8e4c209df40408f22cf113b491ea,
+        type: 3}
+      propertyPath: isNetworked
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7260596705339213385, guid: 08ba8e4c209df40408f22cf113b491ea,
         type: 3}
       propertyPath: m_Name
       value: BigScreenNetworkPlaceholder
+      objectReference: {fileID: 0}
+    - target: {fileID: 8320850286801669643, guid: 08ba8e4c209df40408f22cf113b491ea,
+        type: 3}
+      propertyPath: isNetworked
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

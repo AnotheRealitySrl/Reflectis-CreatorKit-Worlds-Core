@@ -55,7 +55,7 @@ MonoBehaviour:
   objsToDeactivate: []
   isUI: 0
   isNetworked: 0
-  addressableKeyNetwork: 
+  addressableKeyNetwork: VideoPlayerNetwork
   initializationId: 0
   mediaUrl: 
   isActive: 0
@@ -79,7 +79,7 @@ MonoBehaviour:
   objsToDeactivate: []
   isUI: 0
   isNetworked: 0
-  addressableKeyNetwork: 
+  addressableKeyNetwork: PresentationPlayerNetwork
   initializationId: 0
   mediaUrl: 
   isActive: 0
@@ -263,7 +263,7 @@ MonoBehaviour:
   - {fileID: 4376516327760610965}
   isUI: 1
   isNetworked: 0
-  addressableKeyNetwork: 
+  addressableKeyNetwork: BigScreenNetwork
   initializationId: 0
   isBigScreen: 1
   screenContainer: {fileID: 0}

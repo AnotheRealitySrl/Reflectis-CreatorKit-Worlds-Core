@@ -351,8 +351,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   addressableKey: AssignmentListPanel
   parent: {fileID: 0}
-  objsToDeactivate: []
-  isUI: 0
+  objsToDeactivate:
+  - {fileID: 5857449029346149387}
+  isUI: 1
 --- !u!114 &4561373672130507396
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -189,7 +189,7 @@ MonoBehaviour:
   addressableKey: ToastActivator
   parent: {fileID: 2485627422554312423}
   objsToDeactivate: []
-  isUI: 0
+  isUI: 1
   panTargetTransform: {fileID: 1619867610709655551}
   proximityActivatorCollider: {fileID: 0}
   mouseActivatorCollider: {fileID: 0}
