@@ -351,6 +351,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   addressableKey: AssignmentListPanel
   parent: {fileID: 0}
+  objsToDeactivate: []
+  isUI: 0
 --- !u!114 &4561373672130507396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,8 +382,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84e161334e891d64db7372a277bcac2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addressableKey: AssignmentListPanel
+  addressableKey: ToastActivator
   parent: {fileID: 3945634324243714973}
+  objsToDeactivate: []
+  isUI: 0
   panTargetTransform: {fileID: 8954670366899442386}
   proximityActivatorCollider: {fileID: 0}
   mouseActivatorCollider: {fileID: 0}
