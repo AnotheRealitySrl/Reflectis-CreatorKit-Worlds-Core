@@ -1,9 +1,4 @@
-using System.Collections.Generic;
-
 using UnityEngine;
-using UnityEngine.UI;
-
-using Virtuademy.DTO;
 
 namespace Virtuademy.Placeholders
 {

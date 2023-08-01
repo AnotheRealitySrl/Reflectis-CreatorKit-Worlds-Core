@@ -1,15 +1,16 @@
-using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
-using Virtuademy.DTO;
-using static BaseShowHideController;
 
 namespace Virtuademy.Placeholders
 {
-    public class ShowHidePlaceholder : SceneComponentPlaceholderBase
+    public class ShowHidePlaceholder : SceneComponentPlaceholderNetwork
     {
-        [Header("Network settings")]
-        [SerializeField] private Role ownershipMask;
+        public enum HideShowState
+        {
+            Hiding,
+            Showing
+        }
 
         [Header("Show Hide references")]
         [SerializeField] private bool haveToToggle;
@@ -23,16 +24,14 @@ namespace Virtuademy.Placeholders
         [SerializeField] private MeshRenderer mesh;
         [SerializeField] private Collider colliderArea;
 
-        public Role OwnershipMask  => ownershipMask;
-
-        public bool HaveToToggle  => haveToToggle;
+        public bool HaveToToggle => haveToToggle;
         public List<GameObject> Connectables => connectables;
         public bool CanBeInteractable => canBeInteractable;
-        public HideShowState State  => state;
+        public HideShowState State => state;
         public float TimeToTriggerAction => timeToTriggerAction;
-        public bool HaveToWait  => haveToWait;
+        public bool HaveToWait => haveToWait;
         public bool HaveToDisableAtStart => haveToDisableAtStart;
-        public GameObject FatherConnecter  => fatherConnecter;
+        public GameObject FatherConnecter => fatherConnecter;
         public MeshRenderer Mesh => mesh;
         public Collider ColliderArea => colliderArea;
     }

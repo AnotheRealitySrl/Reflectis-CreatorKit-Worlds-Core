@@ -1,65 +1,54 @@
-using System.Collections.Generic;
+using Sirenix.OdinInspector;
+
+using System;
 
 using UnityEngine;
-using UnityEngine.UI;
-
-using TMPro;
-
-using Reflectis.SDK.UIKit.UIComponents;
 
 using Virtuademy.DTO;
 
 namespace Virtuademy.Placeholders
 {
-    public class MediaPlayerControllerPlaceholder : SceneComponentPlaceholderBase
+    public class MediaPlayerControllerPlaceholder : SpawnNetworkedAddressablePlaceholder
     {
-        [Header("Network settings")]
-        [SerializeField] private Role ownershipMask;
+        #region Enums
 
-        [Header("Big screen")]
-        [SerializeField] private bool isBigScreen;
+        /// <summary>
+        /// Available media types managed by the <see cref="MediaPlayerController"/>.
+        /// </summary>
+        [Flags]
+        public enum MediaType
+        {
+            Video = 1,
+            Presentation = 2,
+        }
+
+        #endregion
+
+        [Header("Media player configuration")]
+        [SerializeField] private bool isBigScreen = true;
 
         [Header("Media player references")]
-        [SerializeField] private GameObject header;
         [SerializeField] private Transform screenContainer;
-        [SerializeField] private GameObject loadingIcon;
-        [SerializeField] private TextMeshProUGUI mediaLabel;
-        [SerializeField] private TextMeshProUGUI mediaOwner;
-        [SerializeField] private Image mediaTypeIcon;
-        [SerializeField] private GameObject closeButton;
 
-        [Header("Media player graphics")]
-        [SerializeField] private GameObject buttonsPanel;
-        [SerializeField] private List<Sprite> controllerSprites = new();
-        [SerializeField] private List<string> controllerCallbacks = new();
-        [SerializeField] private Button controllerButtonTemplate;
-        [SerializeField] private GameObject controllerButtonSeparator;
+        [Header("Header settings")]
+        [SerializeField] private bool headerVisibility = true;
+        [SerializeField, ShowIf("headerVisibility")] private GameObject headerContainer;
 
-        [Header("Confirmation popup")]
-        [SerializeField] private ConfirmationPopupPanel popup;
-        [SerializeField] private ConfirmationPopupLocalizedText closeMediaLocalizedText;
-        [SerializeField] private ConfirmationPopupLocalizedText sendMediaToScreenLocalizedText;
+        [Header("Controller settings")]
+        [SerializeField] private bool buttonsVisibility = true;
+        [SerializeField, ShowIf("buttonsVisibility")] private GameObject buttonsContainer;
+        [SerializeField, ShowIf("buttonsVisibility")] private string buttonsAddressable;
 
-        public Role OwnershipMask => ownershipMask;
+        [Header("Preloaded media")]
+        [SerializeField] private bool defaultMedia;
+        [SerializeField, ShowIf("defaultMedia")] private string mediaUrl;
+        [SerializeField, ShowIf("defaultMedia")] private MediaType type;
 
         public bool IsBigScreen => isBigScreen;
-
-        public GameObject Header => header;
         public Transform ScreenContainer => screenContainer;
-        public GameObject LoadingIcon => loadingIcon;
-        public TextMeshProUGUI MediaLabel => mediaLabel;
-        public TextMeshProUGUI MediaOwner => mediaOwner;
-        public Image MediaTypeIcon => mediaTypeIcon;
-        public GameObject CloseButton => closeButton;
-
-        public GameObject ButtonsPanel => buttonsPanel;
-        public List<Sprite> ControllerSprites => controllerSprites;
-        public List<string> ControllerCallbacks => controllerCallbacks;
-        public Button ControllerButtonTemplate => controllerButtonTemplate;
-        public GameObject ControllerButtonSeparator => controllerButtonSeparator;
-
-        public ConfirmationPopupPanel Popup => popup;
-        public ConfirmationPopupLocalizedText CloseMediaLocalizedText => closeMediaLocalizedText;
-        public ConfirmationPopupLocalizedText SendMediaToScreenLocalizedText => sendMediaToScreenLocalizedText;
+        public bool HeaderVisibility => headerVisibility;
+        public bool DefaultMedia => defaultMedia;
+        public string MediaUrl => mediaUrl;
+        public MediaType Type => type;
     }
 }

@@ -1,4 +1,7 @@
 using Reflectis.SDK.ObjectSpawner;
+
+using System.Threading.Tasks;
+
 using UnityEngine;
 
 namespace Virtuademy.Placeholders
@@ -9,10 +12,12 @@ namespace Virtuademy.Placeholders
 
         public SpawnableData Data { get => data; }
 
-        public void Init(SceneComponentPlaceholderBase placeholder)
+        public Task Init(SceneComponentPlaceholderBase placeholder)
         {
             SpawnableObjPlaceholder spawnableObjPlaceholder = placeholder as SpawnableObjPlaceholder;
             data = spawnableObjPlaceholder.Data;
+
+            return Task.CompletedTask;
         }
     }
 }

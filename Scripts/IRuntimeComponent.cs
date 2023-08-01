@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Threading.Tasks;
 
 using Virtuademy.Placeholders;
 
 public interface IRuntimeComponent
 {
-    void Init(SceneComponentPlaceholderBase placeholder);
+    Task Init(SceneComponentPlaceholderBase placeholder);
 }
