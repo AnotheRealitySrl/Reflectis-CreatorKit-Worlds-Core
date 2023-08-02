@@ -18,9 +18,11 @@ namespace Virtuademy.Placeholders
 
         [Header("Pickable references")]
         [SerializeField] private UseInteractionState state = UseInteractionState.SingleUse;
+        [SerializeField] private List<GameObject> connectables;
 
 
         public Role OwnershipMask => ownershipMask;
         public UseInteractionState State => state;
+        public List<GameObject> Connectables => connectables;
     }
 }
