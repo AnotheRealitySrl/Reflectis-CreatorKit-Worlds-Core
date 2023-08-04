@@ -21,6 +21,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private SpeakerState state = SpeakerState.Stopped;
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private GameObject fatherConnecter;
+        [SerializeField] private bool isInteractable = true;
 
         public AudioClip AudioToInstantiate => audioToInstantiate;
         public float AudioListenRange => audioListenRange;
@@ -29,5 +30,6 @@ namespace Virtuademy.Placeholders
         public SpeakerState State => state;
         public List<GameObject> Connectables => connectables;
         public GameObject FatherConnecter => fatherConnecter;
+        public bool IsInteractable => isInteractable;
     }
 }

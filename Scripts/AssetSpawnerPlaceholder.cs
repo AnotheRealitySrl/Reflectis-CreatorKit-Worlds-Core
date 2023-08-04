@@ -22,6 +22,9 @@ namespace Virtuademy.Placeholders
         [SerializeField] private ESpawnerState spawnerState = ESpawnerState.NotSpawned;
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private GameObject fatherConnecter;
+        [SerializeField] private string addressableNameToInstantiate = "";
+        [SerializeField] private bool isInteractable = true;
+
 
         public List<GameObject> PrefabsToInstantiate => prefabsToInstantiate;
         public List<Transform> PosToSpawn => posToSpawn;
@@ -32,5 +35,7 @@ namespace Virtuademy.Placeholders
         public List<GameObject> Connectables => connectables;
         public ESpawnerState SpawnerState => spawnerState;
         public GameObject FatherConnecter => fatherConnecter;
+        public string AddressableNameToInstantiate => addressableNameToInstantiate;
+        public bool IsInteractable => isInteractable;
     }
 }

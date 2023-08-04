@@ -24,6 +24,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private string changeAnimStateToPlay;
         [SerializeField] private string changeAnimStateToIdle;
         [SerializeField] private GameObject fatherConnecter;
+        [SerializeField] private bool isInteractable = true;
 
         public UnityEvent onEndAnim;
 
@@ -36,6 +37,7 @@ namespace Virtuademy.Placeholders
         public string ChangeAnimStateToPlay => changeAnimStateToPlay;
         public string ChangeAnimStateToIdle => changeAnimStateToIdle;
         public GameObject FatherConnecter => fatherConnecter;
+        public bool IsInteractable => isInteractable;
 
         public void AnimationEndEvent()
         {

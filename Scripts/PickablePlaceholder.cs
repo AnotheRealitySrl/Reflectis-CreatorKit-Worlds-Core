@@ -9,9 +9,9 @@ namespace Virtuademy.Placeholders
     {
         public enum PickState
         {
-            Picked,
-            Used,
-            Dropped
+            Dropped = 1,
+            Picked = 2,
+            Used = 3
         }
 
         [Header("Network settings")]
