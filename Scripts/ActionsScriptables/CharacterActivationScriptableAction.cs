@@ -14,5 +14,6 @@ public class CharacterActivationScriptableAction : ActionScriptable
     public override void Action(Action completedCallback)
     {
         SM.GetSystem<AvatarSystem>().EnableAvatarInstanceMeshes(activate);
+        completedCallback();
     }
 }
