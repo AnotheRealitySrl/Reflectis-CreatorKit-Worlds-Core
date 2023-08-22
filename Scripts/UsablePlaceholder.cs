@@ -13,11 +13,17 @@ namespace Virtuademy.Placeholders
             MultipleUse
         }
 
+        public enum UseType
+        {
+            ChangeColor,
+        }
+
         [Header("Network settings")]
         [SerializeField] private Role ownershipMask;
 
         [Header("Pickable references")]
         [SerializeField] private UseInteractionState state = UseInteractionState.SingleUse;
+        [SerializeField] private UseType usableType;
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private bool canBeUsed;
 
@@ -27,5 +33,6 @@ namespace Virtuademy.Placeholders
         public UseInteractionState State => state;
         public List<GameObject> Connectables => connectables;
         public bool CanBeUsed => canBeUsed;
+        public UseType UsableType => usableType;
     }
 }
