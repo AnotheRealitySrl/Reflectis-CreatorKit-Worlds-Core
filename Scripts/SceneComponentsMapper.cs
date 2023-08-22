@@ -18,8 +18,16 @@ namespace Virtuademy.Placeholders
 
         public List<Type> GetComponentsTypes(string id)
         {
-            Debug.Log(id);
-            return componentsMap[componentsMap.Keys.First(x => x.name == id)].Select(x => GetType(x.name)).ToList();
+            if (componentsMap.Keys.Count(x => x.name == id) > 0)
+            {
+                Debug.Log("Mapping for component \"" + id + "\": Mapped");
+                return componentsMap[componentsMap.Keys.FirstOrDefault(x => x.name == id)].Select(x => GetType(x.name)).ToList();
+            }
+            else
+            { 
+                Debug.LogWarning("Mapping for component \"" + id + "\": Not mapped");
+                return new List<Type>() { };
+            }
         }
 
         private Type GetType(string typeName)
