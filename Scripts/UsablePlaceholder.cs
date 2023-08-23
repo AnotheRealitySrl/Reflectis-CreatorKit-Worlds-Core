@@ -15,6 +15,8 @@ namespace Virtuademy.Placeholders
 
         public enum UseType
         {
+            NotPickable,
+            NotUsable,
             ChangeColor,
         }
 
