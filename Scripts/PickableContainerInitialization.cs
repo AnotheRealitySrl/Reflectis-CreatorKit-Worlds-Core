@@ -5,7 +5,6 @@ using UnityEngine;
 public class PickableContainerInitialization : MonoBehaviour
 {
     public List<PickableInitializationEnv> EnvList { get; private set; }
-    public Dictionary<PickableInitializationEnv,PickableDownloaded> EnvDict { get; set; }
 
     private void Awake()
     {
