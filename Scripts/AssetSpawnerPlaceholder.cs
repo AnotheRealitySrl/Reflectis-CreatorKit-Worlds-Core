@@ -39,8 +39,7 @@ namespace Virtuademy.Placeholders
         public GameObject FatherConnecter => fatherConnecter;
         public UseType UsableType => usableType;
         public bool IsInteractable => isInteractable;
-
-
+        public Dictionary<UseType, string> UsableMapper => usableMapper; 
 
         private void InitMapper()
         {
