@@ -26,7 +26,6 @@ namespace Virtuademy.Placeholders
         [SerializeField] private UseType usableType;
         [SerializeField] private bool isInteractable = true;
 
-        private Dictionary<UseType, string> usableMapper;
 
         public List<GameObject> PrefabsToInstantiate => prefabsToInstantiate;
         public List<Transform> PosToSpawn => posToSpawn;
@@ -39,15 +38,6 @@ namespace Virtuademy.Placeholders
         public GameObject FatherConnecter => fatherConnecter;
         public UseType UsableType => usableType;
         public bool IsInteractable => isInteractable;
-        public Dictionary<UseType, string> UsableMapper => usableMapper; 
 
-        private void InitMapper()
-        {
-            usableMapper = new Dictionary<UsablePlaceholder.UseType, string>
-            {
-                { UsablePlaceholder.UseType.ChangeColor, "Downloaded3DPickable" },
-            };
-
-        }
     }
 }
