@@ -24,7 +24,7 @@ public class PickableInitializationEnv : MonoBehaviour
     {
         usableMapper = new Dictionary<UsablePlaceholder.UseType, string>
         {
-            { UsablePlaceholder.UseType.ChangeColor, "Download3DPickable" },
+            { UsablePlaceholder.UseType.ChangeColor, "Downloaded3DPickable" },
         };
     }
 }
