@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 
 using UnityEngine;
+using static Virtuademy.Placeholders.UsablePlaceholder;
 
 namespace Virtuademy.Placeholders
 {
@@ -22,9 +23,10 @@ namespace Virtuademy.Placeholders
         [SerializeField] private ESpawnerState spawnerState = ESpawnerState.NotSpawned;
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private GameObject fatherConnecter;
-        [SerializeField] private string addressableNameToInstantiate = "";
+        [SerializeField] private UseType usableType;
         [SerializeField] private bool isInteractable = true;
 
+        private Dictionary<UseType, string> usableMapper;
 
         public List<GameObject> PrefabsToInstantiate => prefabsToInstantiate;
         public List<Transform> PosToSpawn => posToSpawn;
@@ -35,7 +37,18 @@ namespace Virtuademy.Placeholders
         public List<GameObject> Connectables => connectables;
         public ESpawnerState SpawnerState => spawnerState;
         public GameObject FatherConnecter => fatherConnecter;
-        public string AddressableNameToInstantiate => addressableNameToInstantiate;
+        public UseType UsableType => usableType;
         public bool IsInteractable => isInteractable;
+
+
+
+        private void InitMapper()
+        {
+            usableMapper = new Dictionary<UsablePlaceholder.UseType, string>
+            {
+                { UsablePlaceholder.UseType.ChangeColor, "Download3DPickable" },
+            };
+
+        }
     }
 }
