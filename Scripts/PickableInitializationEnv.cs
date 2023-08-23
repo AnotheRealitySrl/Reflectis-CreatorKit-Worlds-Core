@@ -7,11 +7,8 @@ public class PickableInitializationEnv : MonoBehaviour
 {
     private Dictionary<UsablePlaceholder.UseType, string> usableMapper;
     private string addressableNameToInstantiate;
-    private InstantiatedCMTemplateObj instantiatedCMTemplateObj;
 
     public string AddressableNameToInstantiate => addressableNameToInstantiate;
-
-    public InstantiatedCMTemplateObj InstantiatedCMTemplateObj { get => instantiatedCMTemplateObj; set => instantiatedCMTemplateObj = value; }
 
     private void Awake()
     {
