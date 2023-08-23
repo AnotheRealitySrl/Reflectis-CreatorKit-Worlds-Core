@@ -20,7 +20,7 @@ namespace Virtuademy.Placeholders
         [Header("Pickable references")]
         [SerializeField] private PickState state = PickState.Dropped;
 
-        public Role OwnershipMask => ownershipMask;
-        public PickState State => state;
+        public Role OwnershipMask { get => ownershipMask; set => ownershipMask = value; }
+        public PickState State { get => state; set => state = value; }
     }
 }

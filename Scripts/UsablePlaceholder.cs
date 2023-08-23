@@ -29,12 +29,10 @@ namespace Virtuademy.Placeholders
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private bool canBeUsed;
 
-
-
-        public Role OwnershipMask => ownershipMask;
-        public UseInteractionState State => state;
-        public List<GameObject> Connectables => connectables;
-        public bool CanBeUsed => canBeUsed;
-        public UseType UsableType => usableType;
+        public Role OwnershipMask { get => ownershipMask; set => ownershipMask = value; }
+        public UseInteractionState State { get => state; set => state = value; }
+        public UseType UsableType { get => usableType; set => usableType = value; }
+        public List<GameObject> Connectables { get => connectables; set => connectables = value; }
+        public bool CanBeUsed { get => canBeUsed; set => canBeUsed = value; }
     }
 }
