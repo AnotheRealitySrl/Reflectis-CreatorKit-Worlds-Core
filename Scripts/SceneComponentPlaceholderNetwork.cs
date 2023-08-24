@@ -11,7 +11,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private bool isNetworked;
         [SerializeField] private int initializationId;
 
-        public bool IsNetworked => isNetworked;
+        public bool IsNetworked { get => isNetworked; set => isNetworked = value; }
         public int InitializationId { get => initializationId; set => initializationId = value; }
 
         public override async Task Init(SceneComponentsMapper mapper)
