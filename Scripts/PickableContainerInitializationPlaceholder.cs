@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Virtuademy.Placeholders;
 
-public class PickableContainerInitialization : MonoBehaviour
+public class PickableContainerInitializationPlaceholder : SceneComponentPlaceholderNetwork
 {
     public List<PickableInitializationEnv> EnvList { get; private set; }
 
