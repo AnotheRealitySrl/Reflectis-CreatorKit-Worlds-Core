@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Virtuademy.Placeholders;
 
-public class PickableContainerInitializationPlaceholder : SceneComponentPlaceholderNetwork
+public class PickableContainerInitializationPlaceholder : SceneComponentPlaceholderBase
 
 {
     public List<PickableInitializationEnv> EnvList { get; private set; }

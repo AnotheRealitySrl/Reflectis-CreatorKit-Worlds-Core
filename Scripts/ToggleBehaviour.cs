@@ -21,8 +21,6 @@ public class ToggleBehaviour : MonoBehaviour,IInteractable
     {
         behaviourComponentsReference = BehaviourComponents;
 
-        if (behaviourComponentsReference.Count == 0) return;
-
         foreach (var behaviour in behaviourComponentsReference)
         {
             try
