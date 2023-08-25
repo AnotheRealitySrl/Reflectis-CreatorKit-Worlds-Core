@@ -1,9 +1,6 @@
-using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Virtuademy.Core;
-using Virtuademy.Placeholders;
 
 public class PickableContainerInitialization : MonoBehaviour
 {
@@ -18,27 +15,6 @@ public class PickableContainerInitialization : MonoBehaviour
         foreach(var pickable in childPickables)
         {
             EnvList.Add(pickable);
-        }
-    }
-
-    private void Start()
-    {
-        MapCallBack();   
-    }
-
-    private void MapCallBack()
-    {
-        if (!PhotonNetwork.IsMasterClient)
-        {
-            var pickableContInit = GetComponent<PickableContainerInitialization>();
-
-            var list = FindObjectsOfType<PickableDownloaded>();
-
-            for (var i = 0; i < EnvList.Count; i++)
-            {
-                var pickableEnvInit = EnvList[i];
-                AppManager.Instance.MapOtherPickablesClient(list[i], pickableEnvInit);
-            }
         }
     }
 }
