@@ -7,10 +7,12 @@ public class PickableContainerInitializationPlaceholder : SceneComponentPlacehol
 
 {
     public List<PickableInitializationEnv> EnvList { get; private set; }
+    public List<PickablePlaceholder> DownloadedList { get; private set; }
 
     private void Awake()
     {
         EnvList = new List<PickableInitializationEnv>();
+        DownloadedList = new List<PickablePlaceholder>();
 
         var childPickables = GetComponentsInChildren<PickableInitializationEnv>();
 
