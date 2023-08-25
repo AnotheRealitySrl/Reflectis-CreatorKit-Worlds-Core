@@ -8,7 +8,7 @@ public class ToggleBehaviour : MonoBehaviour,IInteractable
 {
     [SerializeField] List<GameObject> behaviourComponents;
 
-    List<GameObject> behaviourComponentsReference;
+    List<GameObject> behaviourComponentsReference = new List<GameObject>();
 
     int currentBehaviourCycle;
 
@@ -20,6 +20,8 @@ public class ToggleBehaviour : MonoBehaviour,IInteractable
     private void Start()
     {
         behaviourComponentsReference = BehaviourComponents;
+
+        if (behaviourComponentsReference.Count == 0) return;
 
         foreach (var behaviour in behaviourComponentsReference)
         {
