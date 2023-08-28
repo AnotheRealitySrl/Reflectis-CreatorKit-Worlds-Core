@@ -18,11 +18,10 @@ namespace Virtuademy.Placeholders
         [SerializeField] private List<Transform> posToSpawn;
         [SerializeField] private float spawnChance;
         [SerializeField] private bool haveToWait = false;
-        [SerializeField] private bool canMultipleSpawn = false;
         [SerializeField] private float timerToSpawn;
+        [SerializeField] private bool canMultipleSpawn = false;
         [SerializeField] private ESpawnerState spawnerState = ESpawnerState.NotSpawned;
         [SerializeField] private List<GameObject> connectables;
-        [SerializeField] private GameObject fatherConnecter;
         [SerializeField] private UseType usableType;
         [SerializeField] private bool isInteractable = true;
 
@@ -35,7 +34,6 @@ namespace Virtuademy.Placeholders
         public float TimerToSpawn => timerToSpawn;
         public List<GameObject> Connectables => connectables;
         public ESpawnerState SpawnerState => spawnerState;
-        public GameObject FatherConnecter => fatherConnecter;
         public UseType UsableType => usableType;
         public bool IsInteractable => isInteractable;
 

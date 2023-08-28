@@ -17,10 +17,9 @@ namespace Virtuademy.Placeholders
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private bool canBeInteractable;
         [SerializeField] private bool haveToWait;
+        [SerializeField] private float timeToTriggerAction;
         [SerializeField] private bool haveToDisableAtStart = false;
         [SerializeField] private HideShowState state = HideShowState.Hiding;
-        [SerializeField] private float timeToTriggerAction;
-        [SerializeField] private GameObject fatherConnecter;
         [SerializeField] private MeshRenderer mesh;
         [SerializeField] private Collider colliderArea;
 
@@ -31,7 +30,6 @@ namespace Virtuademy.Placeholders
         public float TimeToTriggerAction => timeToTriggerAction;
         public bool HaveToWait => haveToWait;
         public bool HaveToDisableAtStart => haveToDisableAtStart;
-        public GameObject FatherConnecter => fatherConnecter;
         public MeshRenderer Mesh => mesh;
         public Collider ColliderArea => colliderArea;
     }
