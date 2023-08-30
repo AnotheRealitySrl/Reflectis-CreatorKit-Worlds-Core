@@ -18,6 +18,7 @@ namespace Reflectis.SDK.CreatorKit
             NotPickable,
             NotUsable,
             ChangeColor,
+            Empty,
         }
 
         //[Header("Network settings")]
