@@ -14,13 +14,12 @@ namespace Virtuademy.Placeholders
             Used = 3
         }
 
-        [Header("Network settings")]
-        [SerializeField] private Role ownershipMask;
+        //[Header("Network settings")]
+        //[SerializeField] private Role ownershipMask;
 
-        [Header("Pickable references")]
-        [SerializeField] private PickState state = PickState.Dropped;
+        private PickState state = PickState.Dropped;
 
-        public Role OwnershipMask { get => ownershipMask; set => ownershipMask = value; }
+        //public Role OwnershipMask { get => ownershipMask; set => ownershipMask = value; }
         public PickState State { get => state; set => state = value; }
     }
 }

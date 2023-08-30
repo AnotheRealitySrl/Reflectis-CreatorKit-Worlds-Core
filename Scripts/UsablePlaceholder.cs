@@ -20,8 +20,8 @@ namespace Virtuademy.Placeholders
             ChangeColor,
         }
 
-        [Header("Network settings")]
-        [SerializeField] private Role ownershipMask;
+        //[Header("Network settings")]
+        //[SerializeField] private Role ownershipMask;
 
         [Header("Pickable references")]
         [SerializeField] private UseInteractionState state = UseInteractionState.SingleUse;
@@ -29,7 +29,7 @@ namespace Virtuademy.Placeholders
         [SerializeField] private List<GameObject> connectables;
         [SerializeField] private bool canBeUsed;
 
-        public Role OwnershipMask { get => ownershipMask; set => ownershipMask = value; }
+        //public Role OwnershipMask { get => ownershipMask; set => ownershipMask = value; }
         public UseInteractionState State { get => state; set => state = value; }
         public UseType UsableType { get => usableType; set => usableType = value; }
         public List<GameObject> Connectables { get => connectables; set => connectables = value; }
