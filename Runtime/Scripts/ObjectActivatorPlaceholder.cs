@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Virtuademy.Placeholders 
+namespace Reflectis.SDK.CreatorKit
 {
     public class ObjectActivatorPlaceholder : SceneComponentPlaceholderBase
     {

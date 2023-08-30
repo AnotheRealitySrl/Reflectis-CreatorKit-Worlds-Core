@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace Virtuademy.Placeholders
+namespace Reflectis.SDK.CreatorKit
 {
     public class ShowHidePlaceholder : SceneComponentPlaceholderNetwork
     {

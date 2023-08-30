@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Virtuademy.Placeholders;
+using Reflectis.SDK.CreatorKit;
 
 public class PickableContainerInitializationPlaceholder : SceneComponentPlaceholderBase
 
@@ -16,7 +16,7 @@ public class PickableContainerInitializationPlaceholder : SceneComponentPlacehol
 
         var childPickables = GetComponentsInChildren<PickableInitializationEnv>();
 
-        foreach(var pickable in childPickables)
+        foreach (var pickable in childPickables)
         {
             EnvList.Add(pickable);
         }

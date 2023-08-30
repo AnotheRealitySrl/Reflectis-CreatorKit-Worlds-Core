@@ -2,7 +2,7 @@ using Reflectis.SDK.ObjectSpawner;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Virtuademy.Placeholders
+namespace Reflectis.SDK.CreatorKit
 {
     public class SpawnableObjPlaceholder : SceneComponentPlaceholderBase
     {

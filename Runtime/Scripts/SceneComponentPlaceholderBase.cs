@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using UnityEngine;
 
-namespace Virtuademy.Placeholders
+namespace Reflectis.SDK.CreatorKit
 {
     public abstract class SceneComponentPlaceholderBase : MonoBehaviour
     {

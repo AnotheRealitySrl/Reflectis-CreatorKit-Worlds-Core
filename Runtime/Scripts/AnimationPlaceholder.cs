@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Virtuademy.Placeholders
+namespace Reflectis.SDK.CreatorKit
 {
     public class AnimationPlaceholder : SceneComponentPlaceholderNetwork
     {

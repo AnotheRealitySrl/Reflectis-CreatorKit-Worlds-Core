@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 
 using UnityEngine;
-using static Virtuademy.Placeholders.UsablePlaceholder;
+using static Reflectis.SDK.CreatorKit.UsablePlaceholder;
 
-namespace Virtuademy.Placeholders
+namespace Reflectis.SDK.CreatorKit
 {
     public class AssetSpawnerPlaceholder : SceneComponentPlaceholderNetwork
     {
@@ -30,7 +30,7 @@ namespace Virtuademy.Placeholders
         public List<Transform> PosToSpawn => posToSpawn;
         public float SpawnChance => spawnChance;
         public bool HaveToWait => haveToWait;
-        public bool CanMultipleSpawn=> canMultipleSpawn;
+        public bool CanMultipleSpawn => canMultipleSpawn;
         public float TimerToSpawn => timerToSpawn;
         public List<GameObject> Connectables => connectables;
         public ESpawnerState SpawnerState => spawnerState;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 using Virtuademy.DTO;
 
-namespace Virtuademy.Placeholders
+namespace Reflectis.SDK.CreatorKit
 {
     public class MediaContainerPlaceholder : SpawnNetworkedAddressablePlaceholder
     {

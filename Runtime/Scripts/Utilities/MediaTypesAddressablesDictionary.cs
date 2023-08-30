@@ -1,12 +1,14 @@
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 
 using System.Collections.Generic;
 
 using UnityEngine;
 
-using static Virtuademy.Placeholders.MediaPlayerControllerPlaceholder;
+using static Reflectis.SDK.CreatorKit.MediaPlayerControllerPlaceholder;
 
-[CreateAssetMenu(menuName = "Reflectis/SDK-WorldEditor/MediaTypesAddressablesDictionary", fileName = "MediaTypesAddressablesDictionary")]
+[CreateAssetMenu(menuName = "Reflectis/SDK-CreatorsKit/MediaTypesAddressablesDictionary", fileName = "MediaTypesAddressablesDictionary")]
 public class MediaTypesAddressablesDictionary : SerializedScriptableObject
 {
     // This Dictionary will be serialized by Odin.

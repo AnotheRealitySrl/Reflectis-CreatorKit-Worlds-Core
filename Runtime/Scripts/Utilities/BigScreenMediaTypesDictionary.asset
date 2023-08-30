@@ -23,11 +23,11 @@ MonoBehaviour:
     SerializationNodes:
     - Name: mediaTypesDictionary
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[Virtuademy.Placeholders.MediaPlayerControllerPlaceholder+MediaType,
+      Data: 0|System.Collections.Generic.Dictionary`2[[Reflectis.SDK.CreatorKit.MediaPlayerControllerPlaceholder+MediaType,
         Assembly-CSharp],[System.String, mscorlib]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Virtuademy.Placeholders.MediaPlayerControllerPlaceholder+MediaType,
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Reflectis.SDK.CreatorKit.MediaPlayerControllerPlaceholder+MediaType,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12

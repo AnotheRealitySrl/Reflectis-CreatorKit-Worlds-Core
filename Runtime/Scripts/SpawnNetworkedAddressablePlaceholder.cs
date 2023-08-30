@@ -2,7 +2,7 @@ using Sirenix.OdinInspector;
 
 using UnityEngine;
 
-using Virtuademy.Placeholders;
+using Reflectis.SDK.CreatorKit;
 
 namespace Virtuademy.DTO
 {

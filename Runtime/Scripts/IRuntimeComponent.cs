@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-using Virtuademy.Placeholders;
+using Reflectis.SDK.CreatorKit;
 
 public interface IRuntimeComponent
 {

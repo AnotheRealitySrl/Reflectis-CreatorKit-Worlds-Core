@@ -8,7 +8,7 @@ using System.Linq;
 
 using UnityEngine;
 
-namespace Virtuademy.Placeholders
+namespace Reflectis.SDK.CreatorKit
 {
     [CreateAssetMenu(menuName = "AnotheReality/Virtuademy/SceneComponentsMapper", fileName = "SceneComponentsMapper")]
     public class SceneComponentsMapper : SerializedScriptableObject
@@ -24,7 +24,7 @@ namespace Virtuademy.Placeholders
                 return componentsMap[componentsMap.Keys.FirstOrDefault(x => x.name == id)].Select(x => GetType(x.name)).ToList();
             }
             else
-            { 
+            {
                 Debug.LogWarning("Mapping for component \"" + id + "\": Not mapped");
                 return new List<Type>() { };
             }

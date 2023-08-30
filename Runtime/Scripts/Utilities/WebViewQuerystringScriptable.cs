@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using Virtuademy.Placeholders;
+using Reflectis.SDK.CreatorKit;
 
 [CreateAssetMenu(menuName = "AnotheReality/Utils/WebViewQuerystringScriptable", fileName = "WebViewQuerystringScriptable")]
 public class WebViewQuerystringScriptable : SerializedScriptableObject
