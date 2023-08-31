@@ -1,4 +1,6 @@
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 
 using System;
 
@@ -32,12 +34,24 @@ namespace Reflectis.SDK.CreatorKit
 
         [Header("Header settings")]
         [SerializeField] private bool headerVisibility = true;
-        [SerializeField, ShowIf("headerVisibility")] private GameObject headerContainer;
+
+#if ODIN_INSPECTOR
+        [ShowIf("headerVisibility")]
+#endif
+        [SerializeField] private GameObject headerContainer;
 
         [Header("Controller settings")]
         [SerializeField] private bool buttonsVisibility = true;
-        [SerializeField, ShowIf("buttonsVisibility")] private GameObject buttonsContainer;
-        [SerializeField, ShowIf("buttonsVisibility")] private string buttonsAddressable;
+
+#if ODIN_INSPECTOR
+        [ShowIf("buttonsVisibility")]
+#endif
+        [SerializeField] private GameObject buttonsContainer;
+
+#if ODIN_INSPECTOR
+        [ShowIf("buttonsVisibility")]
+#endif
+        [SerializeField] private string buttonsAddressable;
 
         [Header("Preloaded media")]
         [SerializeField] private bool defaultMedia;
