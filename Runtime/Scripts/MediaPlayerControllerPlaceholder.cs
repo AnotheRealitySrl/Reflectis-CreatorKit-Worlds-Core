@@ -55,8 +55,16 @@ namespace Reflectis.SDK.CreatorKit
 
         [Header("Preloaded media")]
         [SerializeField] private bool defaultMedia;
-        [SerializeField, ShowIf("defaultMedia")] private string mediaUrl;
-        [SerializeField, ShowIf("defaultMedia")] private MediaType type;
+
+#if ODIN_INSPECTOR
+        [ShowIf("defaultMedia")]
+#endif
+        [SerializeField] private string mediaUrl;
+
+#if ODIN_INSPECTOR
+        [ShowIf("defaultMedia")]
+#endif
+        [SerializeField] private MediaType type;
 
         public bool IsBigScreen => isBigScreen;
         public Transform ScreenContainer => screenContainer;

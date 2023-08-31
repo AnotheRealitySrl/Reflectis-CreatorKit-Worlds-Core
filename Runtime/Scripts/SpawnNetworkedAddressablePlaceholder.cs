@@ -1,4 +1,6 @@
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 
 using UnityEngine;
 
@@ -9,8 +11,16 @@ namespace Virtuademy.DTO
     public class SpawnNetworkedAddressablePlaceholder : SpawnAddressablePlaceholder
     {
         [SerializeField] private bool isNetworked;
-        [SerializeField, ShowIf("IsNetworked")] private string addressableKeyNetwork;
-        [SerializeField, ShowIf("IsNetworked")] private int initializationId;
+
+#if ODIN_INSPECTOR
+        [ShowIf("IsNetworked")]
+#endif
+        [SerializeField] private string addressableKeyNetwork;
+
+#if ODIN_INSPECTOR
+        [ShowIf("IsNetworked")]
+#endif
+        [SerializeField] private int initializationId;
 
         public bool IsNetworked => isNetworked;
         public string AddressableKeyNetwork => addressableKeyNetwork;

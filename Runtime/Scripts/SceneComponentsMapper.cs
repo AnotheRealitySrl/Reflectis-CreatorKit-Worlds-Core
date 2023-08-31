@@ -1,6 +1,8 @@
 using Reflectis.SDK.Utilities.Extensions;
 
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +13,10 @@ using UnityEngine;
 namespace Reflectis.SDK.CreatorKit
 {
     [CreateAssetMenu(menuName = "AnotheReality/Virtuademy/SceneComponentsMapper", fileName = "SceneComponentsMapper")]
-    public class SceneComponentsMapper : SerializedScriptableObject
+    public class SceneComponentsMapper
+#if ODIN_INSPECTOR
+        : SerializedScriptableObject
+#endif
     {
         // This Dictionary will be serialized by Odin.
         [SerializeField] private Dictionary<TextAsset, List<TextAsset>> componentsMap = new();
