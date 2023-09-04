@@ -10,13 +10,12 @@ namespace Reflectis.SDK.CreatorKit
         public enum AnimationStates
         {
             Playing = 1,
-            Paused = 2,
-            Stopped = 3
+            Stopped = 2
         }
 
         [Header("Animation references")]
         [SerializeField] private bool isLooping;
-        [SerializeField] private AnimationStates animationState;
+        [SerializeField] private AnimationStates animationState = AnimationStates.Stopped;
         [SerializeField] private Animator animator;
         [SerializeField] private string animationToTrigger;
         [SerializeField] private string animationToResetTrigger;
