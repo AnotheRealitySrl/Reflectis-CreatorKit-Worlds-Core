@@ -14,7 +14,6 @@ namespace Reflectis.SDK.CreatorKit
 
         [Header("Show Hide references")]
         [SerializeField] private bool haveToToggle;
-        [SerializeField] private List<GameObject> connectables;
         [SerializeField] private bool canBeInteractable;
         [SerializeField] private bool haveToWait;
         [SerializeField] private float timeToTriggerAction;
@@ -24,7 +23,6 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private Collider colliderArea;
 
         public bool HaveToToggle => haveToToggle;
-        public List<GameObject> Connectables => connectables;
         public bool CanBeInteractable => canBeInteractable;
         public HideShowState State => state;
         public float TimeToTriggerAction => timeToTriggerAction;

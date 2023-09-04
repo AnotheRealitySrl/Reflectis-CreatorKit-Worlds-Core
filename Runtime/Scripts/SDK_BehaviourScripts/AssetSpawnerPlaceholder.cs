@@ -21,7 +21,6 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private float timerToSpawn;
         [SerializeField] private bool canMultipleSpawn = false;
         [SerializeField] private ESpawnerState spawnerState = ESpawnerState.NotSpawned;
-        [SerializeField] private List<GameObject> connectables;
         [SerializeField] private UseType usableType;
         [SerializeField] private bool isInteractable = true;
 
@@ -32,7 +31,6 @@ namespace Reflectis.SDK.CreatorKit
         public bool HaveToWait => haveToWait;
         public bool CanMultipleSpawn => canMultipleSpawn;
         public float TimerToSpawn => timerToSpawn;
-        public List<GameObject> Connectables => connectables;
         public ESpawnerState SpawnerState => spawnerState;
         public UseType UsableType => usableType;
         public bool IsInteractable => isInteractable;

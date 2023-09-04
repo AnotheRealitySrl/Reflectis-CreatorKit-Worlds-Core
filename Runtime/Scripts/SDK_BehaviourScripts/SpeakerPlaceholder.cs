@@ -19,7 +19,6 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private bool isSpatialized;
         [SerializeField] private bool isLooping;
         [SerializeField] private SpeakerState state = SpeakerState.Stopped;
-        [SerializeField] private List<GameObject> connectables;
         [SerializeField] private bool isInteractable = true;
 
         public AudioClip AudioToInstantiate => audioToInstantiate;
@@ -27,7 +26,6 @@ namespace Reflectis.SDK.CreatorKit
         public bool IsSpatialized => isSpatialized;
         public bool IsLooping => isLooping;
         public SpeakerState State => state;
-        public List<GameObject> Connectables => connectables;
         public bool IsInteractable => isInteractable;
     }
 }
