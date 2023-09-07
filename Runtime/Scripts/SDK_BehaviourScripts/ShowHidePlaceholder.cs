@@ -20,6 +20,8 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private HideShowState state = HideShowState.Showing;
         [SerializeField] private MeshRenderer mesh;
         [SerializeField] private Collider colliderArea;
+        [SerializeField] private Light lightReference;
+        [SerializeField] private ParticleSystem particleEffect;
 
         public bool HaveToSwitchOnlyOnce => haveToSwitchOnlyOnce;
         public bool CanBeInteractable => canBeInteractable;
@@ -28,5 +30,7 @@ namespace Reflectis.SDK.CreatorKit
         public bool HaveToWait => haveToWait;
         public MeshRenderer Mesh => mesh;
         public Collider ColliderArea => colliderArea;
+        public Light LightReference => lightReference;
+        public ParticleSystem ParticleEffect => particleEffect;
     }
 }

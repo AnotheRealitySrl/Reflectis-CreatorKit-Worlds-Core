@@ -5,7 +5,7 @@ using Virtuademy.DTO;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    public class UsablePlaceholder : SceneComponentPlaceholderBase
+    public class UsablePlaceholder : SceneComponentPlaceholderNetwork
     {
         public enum UseInteractionState
         {
