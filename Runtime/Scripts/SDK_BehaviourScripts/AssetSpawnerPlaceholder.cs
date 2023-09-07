@@ -16,7 +16,7 @@ namespace Reflectis.SDK.CreatorKit
         [Header("Asset Spawner references")]
         [SerializeField] private List<GameObject> prefabsToInstantiate;
         [SerializeField] private List<Transform> posToSpawn;
-        [SerializeField] private float spawnChance;
+        [SerializeField] private float spawnChance = 100;
         [SerializeField] private bool haveToWait = false;
         [SerializeField] private float timerToSpawn;
         [SerializeField] private bool canMultipleSpawn = false;

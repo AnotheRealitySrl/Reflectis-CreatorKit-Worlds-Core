@@ -9,21 +9,18 @@ namespace Reflectis.SDK.CreatorKit
         public enum SpeakerState
         {
             Playing = 1,
-            Paused = 2,
-            Stopped = 3
+            Stopped = 2
         }
 
         [Header("Speaker audio references")]
         [SerializeField] private AudioClip audioToInstantiate;
         [SerializeField] private float audioListenRange;
-        [SerializeField] private bool isSpatialized;
         [SerializeField] private bool isLooping;
         [SerializeField] private SpeakerState state = SpeakerState.Stopped;
         [SerializeField] private bool isInteractable = true;
 
         public AudioClip AudioToInstantiate => audioToInstantiate;
         public float AudioListenRange => audioListenRange;
-        public bool IsSpatialized => isSpatialized;
         public bool IsLooping => isLooping;
         public SpeakerState State => state;
         public bool IsInteractable => isInteractable;
