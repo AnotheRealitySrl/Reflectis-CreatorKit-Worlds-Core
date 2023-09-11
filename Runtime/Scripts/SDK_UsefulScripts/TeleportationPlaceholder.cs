@@ -8,13 +8,13 @@ namespace Reflectis.SDK.CreatorKit
     {
         [Header("Common references")]
         [SerializeField] private Collider teleportCollider;
-        [SerializeField] private Transform teleportDestination;
+        [SerializeField] private TeleportationDestinationPlaceholder teleportDestination;
 
         [Header("VR references")]
         [SerializeField] private GameObject customReticleVR;
 
         public Collider TeleportCollider => teleportCollider;
-        public Transform TeleportDestination => teleportDestination;
+        public TeleportationDestinationPlaceholder TeleportDestination => teleportDestination;
         public GameObject CustomReticleVR => customReticleVR;
     }
 }
