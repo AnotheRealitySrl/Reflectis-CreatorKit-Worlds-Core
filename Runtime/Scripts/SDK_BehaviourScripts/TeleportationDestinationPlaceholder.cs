@@ -6,6 +6,8 @@ namespace Reflectis.SDK.CreatorKit
 {
     public class TeleportationDestinationPlaceholder : SceneComponentPlaceholderBase
     {
+        [SerializeField] private string teleportAreaName;
 
+        public string TeleportAreaName => teleportAreaName;
     }
 }
