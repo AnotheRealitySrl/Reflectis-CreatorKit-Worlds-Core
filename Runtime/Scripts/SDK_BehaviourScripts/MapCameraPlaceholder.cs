@@ -7,6 +7,9 @@ namespace Reflectis.SDK.CreatorKit
     [RequireComponent(typeof(Camera))]
     public class MapCameraPlaceholder : SceneComponentPlaceholderNetwork
     {
-        //[Header("MapValues")]
+        [Header("MapValues")]
+        [SerializeField] private Camera cam;
+
+        public Camera Cam  => cam;
     }
 }
