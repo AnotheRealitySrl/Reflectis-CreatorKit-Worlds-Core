@@ -2,8 +2,6 @@
 using Sirenix.OdinInspector;
 #endif
 
-using System;
-
 using UnityEngine;
 
 using Virtuademy.DTO;
@@ -17,11 +15,11 @@ namespace Reflectis.SDK.CreatorKit
         /// <summary>
         /// Available media types managed by the <see cref="MediaPlayerController"/>.
         /// </summary>
-        [Flags]
         public enum MediaType
         {
             Video = 1,
             Presentation = 2,
+            Image = 3,
         }
 
         #endregion
