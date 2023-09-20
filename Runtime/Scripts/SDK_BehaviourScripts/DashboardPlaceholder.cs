@@ -9,6 +9,7 @@ namespace Reflectis.SDK.CreatorKit
         public enum DashboardFilter
         {
             Environment,
+            Category,
             Tag,
             None
         }
