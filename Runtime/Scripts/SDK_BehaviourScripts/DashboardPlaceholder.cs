@@ -31,7 +31,7 @@ namespace Reflectis.SDK.CreatorKit
             
             Gizmos.matrix = transform.localToWorldMatrix;
 
-            Gizmos.DrawCube(Vector3.zero, transform.localScale);
+            Gizmos.DrawCube(Vector3.zero, new Vector3(transform.localScale.x / transform.localScale.x, transform.localScale.y / transform.localScale.y, transform.localScale.z / transform.localScale.z));
 
         }
     }
