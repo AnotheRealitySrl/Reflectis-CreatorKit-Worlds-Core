@@ -67,19 +67,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90fa3efd17834c428741d88d3a16995, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  componentId: 17
   isNetworked: 1
   initializationId: 31
-  ownershipMask: 31
   isLooping: 1
-  animationState: 3
+  animationState: 2
   animator: {fileID: 824438193690911023}
-  connectables: []
   animationToTrigger: TriggerEvent
   animationToResetTrigger: ResetTriggerEvent
   changeAnimStateToPlay: AnimationEvent
   changeAnimStateToIdle: IdleState
-  fatherConnecter: {fileID: 0}
+  isInteractable: 1
   onEndAnim:
     m_PersistentCalls:
       m_Calls: []
