@@ -67,17 +67,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b87fde2727a37c49a0a7925c6f2812f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  componentId: 16
   isNetworked: 1
   initializationId: 20
-  ownershipMask: -1
-  audioToInstantiate: {fileID: 8300000, guid: 5b67bf63352fdd34691898074cb57154, type: 3}
-  audioListenRange: 15
-  isSpatialized: 0
-  isLooping: 1
-  state: 3
-  connectables: []
-  fatherConnecter: {fileID: 0}
+  isInteractable: 1
 --- !u!82 &3041803271800419884
 AudioSource:
   m_ObjectHideFlags: 0
@@ -87,7 +79,8 @@ AudioSource:
   m_GameObject: {fileID: 7334315647885500038}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -7367543796072260584, guid: ba33c87bbccd4db4ab40718ff7ec5099,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1

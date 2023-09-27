@@ -4,7 +4,6 @@ using UnityEngine;
 using Reflectis.SDK.CreatorKit;
 
 public class PickableContainerInitializationPlaceholder : SceneComponentPlaceholderBase
-
 {
     public List<PickableInitializationEnv> EnvList { get; private set; }
     public List<PickablePlaceholder> DownloadedList { get; private set; }
