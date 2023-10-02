@@ -6,12 +6,6 @@ namespace Reflectis.SDK.CreatorKit
 {
     public class VisualScripitingNetworkEventPlaceholder : SceneComponentPlaceholderNetwork
     {
-        [HideInInspector]
-        public UnityEvent<string> action;
 
-        public void ActionInvoke(string eventName)
-        {
-            action?.Invoke(eventName);
-        }
     }
 }
