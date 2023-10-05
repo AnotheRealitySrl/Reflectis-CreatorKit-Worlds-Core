@@ -48,7 +48,7 @@ MonoBehaviour:
   isNetworked: 0
   initializationId: 0
   dashboardID: 0
-  filter: 0
+  filter: 3
 --- !u!65 &9046122113525964171
 BoxCollider:
   m_ObjectHideFlags: 0
