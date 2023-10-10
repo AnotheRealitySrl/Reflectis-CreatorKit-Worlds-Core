@@ -8,8 +8,8 @@ namespace Reflectis.SDK.CreatorKit
     {
         public enum HideShowState
         {
-            Hiding,
-            Showing
+            Showing,
+            Hiding
         }
 
         [Header("Show Hide references")]
