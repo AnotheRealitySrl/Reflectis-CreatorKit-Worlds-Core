@@ -17,10 +17,10 @@ namespace Reflectis.SDK.CreatorKit
         }
 
         [Header("DashboardData")]
-        [SerializeField] private int dashboardID;
+        [SerializeField] private string dashboardNameFilter;
         [SerializeField] private DashboardFilter filter;
 
-        public int DashboardID => dashboardID;
+        public string DashboardNameFilter => dashboardNameFilter;
 
         public DashboardFilter Filter => filter;
 
