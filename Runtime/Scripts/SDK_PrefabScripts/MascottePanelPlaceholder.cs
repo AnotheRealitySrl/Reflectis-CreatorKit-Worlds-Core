@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
+    [RequireComponent(typeof(MascottePlaceholder))]
     public class MascottePanelPlaceholder : PanelPlaceholder
     {
         [SerializeField]

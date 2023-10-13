@@ -9,6 +9,8 @@ namespace Reflectis.SDK.CreatorKit
     public class MascottePlaceholder : SceneComponentPlaceholderBase
     {
         [SerializeField]
+        private string mascotteName;
+        [SerializeField]
         private Animator animator;
         [SerializeField] 
         private bool panOnInit;
@@ -21,5 +23,6 @@ namespace Reflectis.SDK.CreatorKit
         public BaseInteractableGO Pan { get => pan; }
         public string[] FaqCategory { get => faqCategory;  }
         public bool PanOnInit { get => panOnInit; }
+        public string MascotteName { get => mascotteName; set => mascotteName = value; }
     }
 }
