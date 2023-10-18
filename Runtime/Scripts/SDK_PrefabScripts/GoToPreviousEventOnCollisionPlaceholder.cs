@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    public class GoToPreviousEventOnCollisionPlaceholder : MonoBehaviour
+    public class GoToPreviousEventOnCollisionPlaceholder : SceneComponentPlaceholderBase
     {
         
     }
