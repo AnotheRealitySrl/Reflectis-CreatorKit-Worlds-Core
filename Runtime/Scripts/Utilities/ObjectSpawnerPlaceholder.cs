@@ -5,11 +5,17 @@ using UnityEngine.InputSystem;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    public class SpawnableObjPlaceholder : SceneComponentPlaceholderBase
+    public class ObjectSpawnerPlaceholder : SceneComponentPlaceholderBase
     {
         [SerializeField]
         private SpawnableData spawnableData;
+        [SerializeField]
+        private InputActionReference vrInput;
+        [SerializeField]
+        private InputActionReference desktopInput;
 
+        public InputActionReference VrInput { get => vrInput; }
+        public InputActionReference DesktopInput { get => desktopInput; }
         public SpawnableData Data { get => spawnableData; }
     }
 
@@ -30,12 +36,6 @@ namespace Reflectis.SDK.CreatorKit
         private Vector3 originOffset = Vector3.zero;
         [SerializeField]
         private LayerMask layerMask;
-        [SerializeField]
-        private bool onlyOneNpc = false;
-        [SerializeField]
-        private InputActionReference vrInput;
-        [SerializeField]
-        private InputActionReference desktopInput;
 
 
         public GameObject ObjPrefab { get => objPrefab; }
@@ -45,8 +45,5 @@ namespace Reflectis.SDK.CreatorKit
         public float StartingAngle { get => startingAngle; }
         public Vector3 OriginOffset { get => originOffset; }
         public LayerMask LayerMask { get => layerMask; }
-        public bool OnlyOneNpc { get => onlyOneNpc; }
-        public InputActionReference VrInput { get => vrInput; }
-        public InputActionReference DesktopInput { get => desktopInput; }
     }
 }
