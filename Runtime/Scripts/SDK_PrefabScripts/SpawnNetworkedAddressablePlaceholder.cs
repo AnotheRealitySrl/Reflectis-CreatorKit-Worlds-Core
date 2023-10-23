@@ -24,7 +24,7 @@ namespace Virtuademy.DTO
 
         public bool IsNetworked => isNetworked;
         public string AddressableKeyNetwork => addressableKeyNetwork;
-        public int InitializationId => initializationId;
+        public int InitializationId { get => initializationId; set => initializationId = value; }
     }
 
 }
