@@ -14,12 +14,8 @@ namespace Reflectis.SDK.CreatorKit
             Used = 3
         }
 
-        //[Header("Network settings")]
-        //[SerializeField] private Role ownershipMask;
-
         private PickState state = PickState.Dropped;
 
-        //public Role OwnershipMask { get => ownershipMask; set => ownershipMask = value; }
         public PickState State { get => state; set => state = value; }
     }
 }

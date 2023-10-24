@@ -13,11 +13,17 @@ public class CharacterActivationScriptableAction : ActionScriptable
 
     public override void Action(Action completedCallback)
     {
-        if(SM.GetSystem<AvatarSystem>().ManageCounterAvatarMeshEnable(activate))
+        var count = SM.GetSystem<AvatarSystem>().ManageCounterAvatarMeshEnable(activate);
+
+        if (count == 0 && activate)
         {
             SM.GetSystem<AvatarSystem>().EnableAvatarInstanceMeshes(activate);
-
-            completedCallback?.Invoke();
         }
+        else if(count == 1 && !activate)
+        {
+            SM.GetSystem<AvatarSystem>().EnableAvatarInstanceMeshes(activate);
+        }
+
+        completedCallback?.Invoke();
     }
 }
