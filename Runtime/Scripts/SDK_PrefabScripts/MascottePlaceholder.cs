@@ -18,11 +18,14 @@ namespace Reflectis.SDK.CreatorKit
         private bool panOnInit;
         [SerializeField]
         private BaseInteractableGO pan;
+        [SerializeField]
+        private BaseInteractableGO characterDeactivation;
 
 
         public Animator Animator { get => animator; }
         public BaseInteractableGO Pan { get => pan; }
         public bool PanOnInit { get => panOnInit; }
         public string MascotteName { get => mascotteName; set => mascotteName = value; }
+        public BaseInteractableGO CharacterDeactivation { get => characterDeactivation; }
     }
 }
