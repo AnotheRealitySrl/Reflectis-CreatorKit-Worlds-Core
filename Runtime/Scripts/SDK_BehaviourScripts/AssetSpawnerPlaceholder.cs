@@ -16,7 +16,7 @@ namespace Reflectis.SDK.CreatorKit
         [Header("Asset Spawner references")]
         [SerializeField] private List<AssetReferences> assetReferences;
         [SerializeField] private bool haveToWait = false;
-        [SerializeField] private float timerToSpawn;
+        [SerializeField] private float timerToSpawn = 0;
         [SerializeField] private bool canMultipleSpawn = false;
         [SerializeField] private ESpawnerState spawnerState = ESpawnerState.NotSpawned;
         [SerializeField] private bool isInteractable = true;
