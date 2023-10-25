@@ -9,11 +9,9 @@ namespace Reflectis.SDK.CreatorKit
     public class ButtonVideoPlaceholder : SceneComponentPlaceholderBase
     {
         [SerializeField] VideoClip clip;
-        [SerializeField] Button buttonRef;
         [SerializeField] MediaContainerPlaceholder videoPlayerRef;
 
         public VideoClip Clip => clip;
-        public Button ButtonRef => buttonRef;
         public MediaContainerPlaceholder VideoPlayerRef => videoPlayerRef;
     }
 }
