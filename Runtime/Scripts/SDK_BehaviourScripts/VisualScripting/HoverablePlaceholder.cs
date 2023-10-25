@@ -5,23 +5,13 @@ using UnityEngine.Events;
 
 namespace Reflectis.SDK.CreatorKit
 {
+    [RequireComponent(typeof(Collider))]
     public class HoverablePlaceholder : SceneComponentPlaceholderBase
     {
-
-        [SerializeField] private string hoverActionName;
-        [SerializeField] private string unhoverActionName;
-        [SerializeField] private Renderer rend;
-        [SerializeField] private Animator animator;
-
-        [HideInInspector]
-        public UnityEvent HoverAction = new UnityEvent();    
-        
-        [HideInInspector]
-        public UnityEvent UnhoverAction = new UnityEvent();
+        private string hoverActionName = "TriggerHoverEvent";
+        private string unhoverActionName = "TriggerUnhoverEvent";
 
         public string HoverActionName => hoverActionName;
         public string UnhoverActionName => unhoverActionName;
-        public Renderer Rend => rend;
-        public Animator Animator => animator;
     }
 }
