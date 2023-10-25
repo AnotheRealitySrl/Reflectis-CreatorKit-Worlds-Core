@@ -10,6 +10,7 @@ namespace Reflectis.SDK.CreatorKit
 
         [SerializeField] private string hoverActionName;
         [SerializeField] private string unhoverActionName;
+        [SerializeField] private Renderer rend;
 
         [HideInInspector]
         public UnityEvent HoverAction = new UnityEvent();    
@@ -19,5 +20,6 @@ namespace Reflectis.SDK.CreatorKit
 
         public string HoverActionName => hoverActionName;
         public string UnhoverActionName => unhoverActionName;
+        public Renderer Rend => rend;
     }
 }
