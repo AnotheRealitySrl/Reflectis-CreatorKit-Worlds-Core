@@ -12,6 +12,7 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private GameObject externalController;
         [SerializeField] private GameObject buttonTemplate;
         [SerializeField] private GameObject separatorTemplate;
+        [SerializeField] private GameObject selectionVideoImage;
 
         public string MediaUrl => mediaUrl;
         public bool IsActive => isActive;
@@ -19,5 +20,6 @@ namespace Reflectis.SDK.CreatorKit
         public GameObject ButtonTemplate => buttonTemplate;
         public GameObject SeparatorTemplate => separatorTemplate;
         public VideoClip Clip => clip;
+        public GameObject SelectionVideoImage => selectionVideoImage;
     }
 }
