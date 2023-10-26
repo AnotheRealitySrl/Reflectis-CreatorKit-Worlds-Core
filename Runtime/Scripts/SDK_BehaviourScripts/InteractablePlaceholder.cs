@@ -14,7 +14,7 @@ using static Reflectis.SDK.InteractionNew.Manipulable;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    public class InteractablePlaceholder : SceneComponentPlaceholderBase
+    public class InteractablePlaceholder : SceneComponentPlaceholderNetwork
     {
         [Flags]
         public enum EInteractableType
