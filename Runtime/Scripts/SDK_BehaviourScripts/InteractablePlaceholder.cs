@@ -116,11 +116,7 @@ namespace Reflectis.SDK.CreatorKit
 #endif
         [SerializeField] private List<AwaitableScriptableAction> onInteractFinishActions = new();
 
-#if ODIN_INSPECTOR
-        [BoxGroup("showGenericInteractionSettings/Generic interaction settings")]
-#endif
         [Header("Allowed states")]
-        [SerializeField] private bool skipSelectedState;
 #if ODIN_INSPECTOR
         [BoxGroup("showGenericInteractionSettings/Generic interaction settings")]
 #endif
