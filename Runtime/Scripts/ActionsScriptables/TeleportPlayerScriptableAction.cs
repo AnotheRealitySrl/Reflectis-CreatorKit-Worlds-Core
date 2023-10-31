@@ -23,11 +23,16 @@ namespace Reflectis.SDK.CreatorKit
                 Debug.LogError("No interaction target");
                 return;
             }
-            Transform target = InteractableObjectReference.InteractionTarget.GetComponentsInChildren<GenericHookComponent>(true).FirstOrDefault((x) => x.Id == hookID).transform;
-            if(target == null)
+
+            Transform target = InteractableObjectReference.InteractionTarget.transform;
+
+            var hook = InteractableObjectReference.InteractionTarget.GetComponentsInChildren<GenericHookComponent>(true).FirstOrDefault((x) => x.Id == hookID);
+            
+            if(hook != null)
             {
-                target = InteractableObjectReference.InteractionTarget.transform;
+                target = hook.transform;
             }
+
             SM.GetSystem<IFadeSystem>().FadeToBlack(() =>
             {
                 SM.GetSystem<ICharacterControllerSystem>().MoveCharacter(new Pose(target.position, target.rotation));
