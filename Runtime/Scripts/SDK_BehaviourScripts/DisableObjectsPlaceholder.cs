@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    public class EnableObjectsPlaceholder : SceneComponentPlaceholderBase
+    public class DisableObjectsPlaceholder : SceneComponentPlaceholderBase
     {
         [SerializeField]
         private List<GameObject> disableInVR = new List<GameObject>();
