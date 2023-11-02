@@ -25,12 +25,12 @@ namespace Reflectis.SDK.CreatorKit
         }
 
         [Header("Interaction settings")]
-        [SerializeField] private Collider interactionCollider;
+        [SerializeField] private List<Collider> interactionColliders = new();
 
         [SerializeField, Tooltip("Which kind of interaction should this object have?")]
         private EInteractableType interactionModes;
 
-        public Collider InteractionCollider => interactionCollider;
+        public List<Collider> InteractionColliders => interactionColliders;
         public EInteractableType InteractionModes => interactionModes;
 
         #region Manipulation
