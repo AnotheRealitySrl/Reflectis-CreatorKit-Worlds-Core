@@ -51,14 +51,43 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private bool nonProportionalScale;
 
         [Header("VR manipulation settings")]
+
 #if ODIN_INSPECTOR
         [BoxGroup("showManipulationSettings/Manipulation settings")]
 #endif
         [SerializeField] private EVRInteraction vrInteraction = (EVRInteraction)~0;
+
 #if ODIN_INSPECTOR
         [BoxGroup("showManipulationSettings/Manipulation settings")]
 #endif
         [SerializeField] private bool dynamicAttach;
+
+#if ODIN_INSPECTOR
+        [BoxGroup("showManipulationSettings/Manipulation settings")]
+#endif
+        [SerializeField] private bool adjustRotationOnRelease;
+
+
+#if ODIN_INSPECTOR
+        [BoxGroup("showManipulationSettings/Manipulation settings/Adjust rotation on release"), ShowIf(nameof(adjustRotationOnRelease))]
+#endif
+        [SerializeField] private bool realignAxisX = true;
+
+#if ODIN_INSPECTOR
+        [BoxGroup("showManipulationSettings/Manipulation settings/Adjust rotation on release"), ShowIf(nameof(adjustRotationOnRelease))]
+#endif
+        [SerializeField] private bool realignAxisY = false;
+
+#if ODIN_INSPECTOR
+        [BoxGroup("showManipulationSettings/Manipulation settings/Adjust rotation on release"), ShowIf(nameof(adjustRotationOnRelease))]
+#endif
+        [SerializeField] private bool realignAxisZ = true;
+
+#if ODIN_INSPECTOR
+        [BoxGroup("showManipulationSettings/Manipulation settings/Adjust rotation on release"), ShowIf(nameof(adjustRotationOnRelease))]
+#endif
+        [SerializeField] private float realignDurationTimeInSeconds = 1f;
+
 
         private bool hasTranslationSelected => manipulationMode.HasFlag(EManipulationMode.Translate);
         [Header("WebGL manipulation settings")]
@@ -72,6 +101,11 @@ namespace Reflectis.SDK.CreatorKit
         public bool DynamicAttach => dynamicAttach;
         public bool MouseLookAtCamera => mouseLookAtCamera;
         public bool NonProportionalScale => nonProportionalScale;
+        public bool AdjustRotationOnRelease => adjustRotationOnRelease;
+        public bool RealignAxisX => realignAxisX;
+        public bool RealignAxisY => realignAxisY;
+        public bool RealignAxisZ => realignAxisZ;
+        public float RealignDurationTimeInSeconds => realignDurationTimeInSeconds;
 
         #endregion
 
