@@ -13,11 +13,14 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField]
         private GameObject loader;
         [SerializeField]
+        private GameObject buttonObj;
+        [SerializeField]
         private TextMeshPro goToWebsiteText;
 
         private UnityEvent onClickEvent = new UnityEvent();
 
         public GameObject Loader { get => loader; set => loader = value; }
+        public GameObject ButtonObj  => buttonObj;
         public TextMeshPro GoToWebsiteText { get => goToWebsiteText; set => goToWebsiteText = value; }
         public UnityEvent OnClickEvent => onClickEvent;
 
