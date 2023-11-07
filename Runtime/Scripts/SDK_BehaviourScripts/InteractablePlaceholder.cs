@@ -9,6 +9,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using static Reflectis.SDK.InteractionNew.ContextualMenuManageable;
 using static Reflectis.SDK.InteractionNew.GenericInteractable;
 using static Reflectis.SDK.InteractionNew.Manipulable;
 
@@ -184,34 +185,14 @@ namespace Reflectis.SDK.CreatorKit
 #if ODIN_INSPECTOR
         [BoxGroup("showContextualMenuSettings/Contextual menu settings")]
 #endif
-        [SerializeField] private bool lockTransform;
-#if ODIN_INSPECTOR
-        [BoxGroup("showContextualMenuSettings/Contextual menu settings")]
-#endif
-        [SerializeField] private bool resetTransform;
-#if ODIN_INSPECTOR
-        [BoxGroup("showContextualMenuSettings/Contextual menu settings")]
-#endif
-        [SerializeField] private bool duplicate;
-#if ODIN_INSPECTOR
-        [BoxGroup("showContextualMenuSettings/Contextual menu settings")]
-#endif
-        [SerializeField] private bool delete;
-#if ODIN_INSPECTOR
-        [BoxGroup("showContextualMenuSettings/Contextual menu settings")]
-#endif
-        [SerializeField] private bool colorPicker;
-#if ODIN_INSPECTOR
-        [BoxGroup("showContextualMenuSettings/Contextual menu settings")]
-#endif
-        [SerializeField] private bool explodable;
+        [SerializeField]
+        private EContextualMenuOption contextualMenuOptions =
+            EContextualMenuOption.LockTransform |
+            EContextualMenuOption.ResetTransform |
+            EContextualMenuOption.Duplicate |
+            EContextualMenuOption.Delete;
 
-        public bool LockTransform => lockTransform;
-        public bool ResetTransform => resetTransform;
-        public bool Duplicate => duplicate;
-        public bool Delete => delete;
-        public bool ColorPicker => colorPicker;
-        public bool Explodable => explodable;
+        public EContextualMenuOption ContextualMenuOptions { get => contextualMenuOptions; set => contextualMenuOptions = value; }
 
         #endregion
     }
