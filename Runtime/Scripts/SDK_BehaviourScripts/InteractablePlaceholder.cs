@@ -96,8 +96,6 @@ namespace Reflectis.SDK.CreatorKit
         [BoxGroup("showManipulationSettings/Manipulation settings"), ShowIf(nameof(hasTranslationSelected))]
 #endif
         [SerializeField] private bool mouseLookAtCamera;
-        [SerializeField] private GameObject scalablePointCornerPrefab;
-        [SerializeField] private GameObject scalablePointFacePrefab;
 
         public EManipulationMode ManipulationMode => manipulationMode;
         public EVRInteraction VRInteraction => vrInteraction;
@@ -108,9 +106,7 @@ namespace Reflectis.SDK.CreatorKit
         public bool RealignAxisX => realignAxisX;
         public bool RealignAxisY => realignAxisY;
         public bool RealignAxisZ => realignAxisZ;
-        public float RealignDurationTimeInSeconds => realignDurationTimeInSeconds; 
-        public GameObject ScalablePointCornerPrefab  => scalablePointCornerPrefab;
-        public GameObject ScalablePointFacePrefab => scalablePointFacePrefab;
+        public float RealignDurationTimeInSeconds => realignDurationTimeInSeconds;
 
         #endregion
 
