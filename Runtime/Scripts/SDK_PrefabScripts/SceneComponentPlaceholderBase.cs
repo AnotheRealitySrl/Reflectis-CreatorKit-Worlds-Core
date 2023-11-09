@@ -2,12 +2,17 @@ using System;
 using System.Threading.Tasks;
 
 using UnityEngine;
+
 using Virtuademy.DTO;
 
 namespace Reflectis.SDK.CreatorKit
 {
     public abstract class SceneComponentPlaceholderBase : MonoBehaviour
     {
+        [SerializeField] private bool automaticSetup = true;
+
+        public bool AutomaticSetup => automaticSetup;
+
         public virtual async Task Init(SceneComponentsMapper mapper)
         {
             foreach (Type type in mapper.GetComponentsTypes(GetType().ToString().Split('.')[^1]))
@@ -31,7 +36,7 @@ namespace Reflectis.SDK.CreatorKit
                 }
 
 
-                if (i  == placeholders.Length - 1)
+                if (i == placeholders.Length - 1)
                 {
                     for (var j = 0; j < addressablePlaceholders.Length; j++)
                     {

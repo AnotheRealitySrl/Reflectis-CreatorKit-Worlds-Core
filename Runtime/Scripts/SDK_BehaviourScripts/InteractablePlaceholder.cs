@@ -103,13 +103,13 @@ namespace Reflectis.SDK.CreatorKit
         public EVRInteraction VRInteraction => vrInteraction;
         public bool DynamicAttach => dynamicAttach;
         public bool MouseLookAtCamera => mouseLookAtCamera;
-        public bool NonProportionalScale => nonProportionalScale;
+        public bool NonProportionalScale { get => nonProportionalScale; set => nonProportionalScale = value; }
         public bool AdjustRotationOnRelease => adjustRotationOnRelease;
         public bool RealignAxisX => realignAxisX;
         public bool RealignAxisY => realignAxisY;
         public bool RealignAxisZ => realignAxisZ;
-        public float RealignDurationTimeInSeconds => realignDurationTimeInSeconds; 
-        public GameObject ScalablePointCornerPrefab  => scalablePointCornerPrefab;
+        public float RealignDurationTimeInSeconds => realignDurationTimeInSeconds;
+        public GameObject ScalablePointCornerPrefab => scalablePointCornerPrefab;
         public GameObject ScalablePointFacePrefab => scalablePointFacePrefab;
 
         #endregion
