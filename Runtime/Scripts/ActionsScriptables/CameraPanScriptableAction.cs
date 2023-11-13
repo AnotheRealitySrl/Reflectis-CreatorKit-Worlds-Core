@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Reflectis.SDK.InteractionNew
 {
-    [CreateAssetMenu(menuName = "Reflectis/ScriptableActions/CameraPanScriptableAction", fileName = "CameraPanScriptableAction")]
+    [CreateAssetMenu(menuName = "Reflectis/Scriptable Actions/CameraPanScriptableAction", fileName = "CameraPanScriptableAction")]
     public class CameraPanScriptableAction : AwaitableScriptableAction
     {
         [SerializeField] private string panTransformId;
