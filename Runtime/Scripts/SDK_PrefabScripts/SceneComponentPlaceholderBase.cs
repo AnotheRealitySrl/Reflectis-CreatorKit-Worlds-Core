@@ -27,27 +27,38 @@ namespace Reflectis.SDK.CreatorKit
             var placeholders = FindObjectsOfType<SceneComponentPlaceholderNetwork>();
             var addressablePlaceholders = FindObjectsOfType<SpawnNetworkedAddressablePlaceholder>();
 
-
-            for (var i = 0; i < placeholders.Length; i++)
+            if(placeholders.Length != 0)
             {
-                if (placeholders[i].IsNetworked)
+                for (var i = 0; i < placeholders.Length; i++)
                 {
-                    placeholders[i].InitializationId = i + 1;
-                }
-
-
-                if (i == placeholders.Length - 1)
-                {
-                    for (var j = 0; j < addressablePlaceholders.Length; j++)
+                    if (placeholders[i].IsNetworked)
                     {
-                        if (addressablePlaceholders[j].IsNetworked)
+                        placeholders[i].InitializationId = i + 1;
+                    }
+
+
+                    if (i == placeholders.Length - 1)
+                    {
+                        for (var j = 0; j < addressablePlaceholders.Length; j++)
                         {
-                            addressablePlaceholders[j].InitializationId = j + i + 1;
+                            if (addressablePlaceholders[j].IsNetworked)
+                            {
+                                addressablePlaceholders[j].InitializationId = j + i + 1;
+                            }
                         }
                     }
                 }
             }
+            else
+            {
+                for (var j = 0; j < addressablePlaceholders.Length; j++)
+                {
+                    if (addressablePlaceholders[j].IsNetworked)
+                    {
+                        addressablePlaceholders[j].InitializationId = j + 1;
+                    }
+                }
+            }
         }
-
     }
 }
