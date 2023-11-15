@@ -1,0 +1,79 @@
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+
+namespace Reflectis.SDK.CreatorKit
+{
+    public class SyncedObject : MonoBehaviour
+    {
+
+        [HideInInspector] public bool syncTransform = true;
+        [HideInInspector] public bool saveWithSpace = false;
+
+        [HideInInspector] public string assetID; // unity prefab asset ID
+        [HideInInspector] public string instanceID;
+
+#if UNITY_EDITOR
+        [ContextMenu("Remove Synced Variables")]
+        private void RemoveSyncedVariables()
+        {
+            if (TryGetComponent(out SyncedVariables variables))
+            {
+                DestroyImmediate(variables);
+            }
+        }
+
+        protected void OnValidate()
+        {
+            if (Application.isPlaying)
+                return;
+
+            PrefabInstanceStatus prefabInstanceStatus = PrefabUtility.GetPrefabInstanceStatus(this);
+            PrefabAssetType prefabAssetType = PrefabUtility.GetPrefabAssetType(this);
+
+            bool isPrefab = prefabAssetType != PrefabAssetType.NotAPrefab;
+            bool isPrefabInstance = isPrefab && prefabInstanceStatus == PrefabInstanceStatus.Connected;
+            bool isPrefabAsset = isPrefab && prefabInstanceStatus == PrefabInstanceStatus.NotAPrefab;
+
+            // set assetID if it's a prefab or instance of prefab
+            if (isPrefabAsset || isPrefabInstance)
+            {
+                string assetPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(gameObject);
+                string assetGUID = AssetDatabase.AssetPathToGUID(assetPath);
+                if (assetID != assetGUID)
+                {
+                    assetID = assetGUID;
+                }
+            }
+            else
+            {
+                assetID = null;
+            }
+
+            // set instance ID if it's an instance in the scene
+            // or embedded within a prefab object
+            if (isPrefabAsset)
+            {
+                instanceID = null;
+            }
+            else
+            {
+                HashSet<string> allInstanceIDs = new HashSet<string>();
+                SyncedObject[] allInstanceSyncedObjects = GameObject.FindObjectsOfType<SyncedObject>();
+                foreach (SyncedObject syncedObject in allInstanceSyncedObjects)
+                {
+                    if (syncedObject == this)
+                        continue;
+
+                    allInstanceIDs.Add(syncedObject.instanceID);
+                }
+
+                while (string.IsNullOrEmpty(instanceID) || allInstanceIDs.Contains(instanceID))
+                {
+                    instanceID = System.Guid.NewGuid().ToString();
+                }
+            }
+        }
+#endif
+    }
+}
