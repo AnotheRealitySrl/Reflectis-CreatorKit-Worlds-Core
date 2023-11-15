@@ -41,7 +41,11 @@ namespace Reflectis.SDK.CreatorKit
             syncedVariablesRef = ValueInput<SyncedVariables>(nameof(syncedVariablesRef), null).NullMeansSelf();
             variableName = ValueInput<string>(nameof(variableName), null);
             value = ValueOutput<object>(nameof(value));
-            instances.Add(this);
+
+            if (!instances.Contains(this))
+            {
+                instances.Add(this);
+            }
         }
 
         protected override bool ShouldTrigger(Flow flow, (SyncedVariables, string) args)
