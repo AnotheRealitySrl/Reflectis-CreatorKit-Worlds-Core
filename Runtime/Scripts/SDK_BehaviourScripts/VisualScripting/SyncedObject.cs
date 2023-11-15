@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    public class SyncedObject : MonoBehaviour
+    public class SyncedObject : SceneComponentPlaceholderNetwork
     {
 
         [HideInInspector] public bool syncTransform = true;
