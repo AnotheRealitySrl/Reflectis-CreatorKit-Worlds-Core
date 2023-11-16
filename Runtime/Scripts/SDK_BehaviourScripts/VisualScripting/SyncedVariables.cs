@@ -17,6 +17,9 @@ namespace Reflectis.SDK.CreatorKit
             public string name;
             public bool saveThroughSessions;
 
+            [HideInInspector]
+            public bool isSynced;
+
             public VariableDeclaration declaration { get; set; }
 
             public object Value

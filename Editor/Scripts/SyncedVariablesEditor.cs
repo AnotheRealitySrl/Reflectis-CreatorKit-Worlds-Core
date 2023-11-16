@@ -169,6 +169,8 @@ namespace Reflectis.SDK.CreatorKit
 
                         if (isSynced)
                         {
+                            syncedVariableData.isSynced = isSynced;
+
                             if (newSaveWithScene != syncedVariableData.saveThroughSessions)
                             {
                                 Undo.RecordObject(syncedVariables, $"Save {variable.name} With Space");
@@ -178,8 +180,11 @@ namespace Reflectis.SDK.CreatorKit
                         }
                         else
                         {
+                            syncedVariableData.isSynced = isSynced;
+
                             EditorGUI.EndDisabledGroup();
                         }
+
 
                         EditorGUILayout.EndHorizontal();
 
