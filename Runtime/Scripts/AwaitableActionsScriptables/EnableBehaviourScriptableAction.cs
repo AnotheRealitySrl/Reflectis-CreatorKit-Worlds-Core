@@ -21,7 +21,15 @@ namespace Reflectis.SDK.CreatorKit
             {
                 foreach (Reference reference in referenceContainer.CustomReferences)
                 {
-                    reference.behaviour.enabled = enable;
+                    if (reference.component is Behaviour)
+                    {
+                        (reference.component as Behaviour).enabled = enable;
+                    }
+
+                    if (reference.component is Collider)
+                    {
+                        (reference.component as Collider).enabled = enable;
+                    }
                 }
             }
             else
