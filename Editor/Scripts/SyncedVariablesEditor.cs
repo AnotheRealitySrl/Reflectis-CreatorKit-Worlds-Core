@@ -169,7 +169,10 @@ namespace Reflectis.SDK.CreatorKit
 
                         if (isSynced)
                         {
-                            syncedVariableData.isSynced = isSynced;
+                            if (syncedVariableData != null)
+                            {
+                                syncedVariableData.isSynced = isSynced;
+                            }
 
                             if (newSaveWithScene != syncedVariableData.saveThroughSessions)
                             {
@@ -180,7 +183,10 @@ namespace Reflectis.SDK.CreatorKit
                         }
                         else
                         {
-                            syncedVariableData.isSynced = isSynced;
+                            if (syncedVariableData != null)
+                            {
+                                syncedVariableData.isSynced = isSynced;
+                            }
 
                             EditorGUI.EndDisabledGroup();
                         }
