@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    public enum TasksToPing { MacroTasksOnly, FirstSubtasksLine, AllTasks }
+    public enum TasksToPing { MacroTasksOnly, AllTasks }
 
     public class TaskCompletedPingPlaceholder : SceneComponentPlaceholderBase
     {
