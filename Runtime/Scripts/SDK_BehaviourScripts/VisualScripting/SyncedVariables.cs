@@ -34,7 +34,7 @@ namespace Reflectis.SDK.CreatorKit
         public List<Data> variableSettings = new List<Data>();
         public Dictionary<string, object> variableDictBackup = new Dictionary<string, object>();
 
-        private void Start()
+        private void Awake()
         {
             VariableSet();
         }
