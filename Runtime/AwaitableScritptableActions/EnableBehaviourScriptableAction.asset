@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13d100674ba5e6b45922328adb858a38, type: 3}
   m_Name: EnableBehaviourScriptableAction
   m_EditorClassIdentifier: 
-  enable: 0
+  enable: 1
   referenceContainerId: EnableBehaviours
