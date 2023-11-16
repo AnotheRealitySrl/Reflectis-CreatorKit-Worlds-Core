@@ -1,11 +1,9 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    public class DisableObjectsPlaceholder : SceneComponentPlaceholderBase
+    public class DeactivateObjectsPlaceholder : SceneComponentPlaceholderBase
     {
         [SerializeField]
         private List<GameObject> disableInVR = new List<GameObject>();
