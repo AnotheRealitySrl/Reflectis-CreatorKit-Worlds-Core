@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -13,6 +14,12 @@ namespace Reflectis.SDK.CreatorKit
         [HideInInspector] public string assetID; // unity prefab asset ID
         [HideInInspector] public string instanceID;
 
+        public Action onRequestOwnershipAction;
+        public Action onReleaseOwnershipAction;
+
+        public delegate bool OnCheckOwnershipObject();
+        public event OnCheckOwnershipObject onCheckOwnershipObject;
+
 #if UNITY_EDITOR
         [ContextMenu("Remove Synced Variables")]
         private void RemoveSyncedVariables()
@@ -21,6 +28,11 @@ namespace Reflectis.SDK.CreatorKit
             {
                 DestroyImmediate(variables);
             }
+        }
+
+        public bool OnCheckOwnershipFunction()
+        {
+            return onCheckOwnershipObject.Invoke();
         }
 
         protected void OnValidate()
