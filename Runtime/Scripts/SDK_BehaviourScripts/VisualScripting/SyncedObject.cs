@@ -20,6 +20,12 @@ namespace Reflectis.SDK.CreatorKit
         public delegate bool OnCheckOwnershipObject();
         public event OnCheckOwnershipObject onCheckOwnershipObject;
 
+
+        public bool OnCheckOwnershipFunction()
+        {
+            return onCheckOwnershipObject.Invoke();
+        }
+
 #if UNITY_EDITOR
         [ContextMenu("Remove Synced Variables")]
         private void RemoveSyncedVariables()
@@ -28,11 +34,6 @@ namespace Reflectis.SDK.CreatorKit
             {
                 DestroyImmediate(variables);
             }
-        }
-
-        public bool OnCheckOwnershipFunction()
-        {
-            return onCheckOwnershipObject.Invoke();
         }
 
         protected void OnValidate()
