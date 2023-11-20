@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &188676603989775875
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3158443655680960365}
+  - component: {fileID: 2177952155905155794}
+  m_Layer: 0
+  m_Name: PanTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3158443655680960365
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188676603989775875}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -1133}
+  m_LocalScale: {x: 200, y: 200, z: 200}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5655622178665856787}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2177952155905155794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188676603989775875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ac8c34edcf51e141a65eee59c6ead0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: PanTransform
+  transformRef: {fileID: 3158443655680960365}
 --- !u!1001 &4670717158744499109
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -144,8 +190,71 @@ PrefabInstance:
       propertyPath: isNetworked
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6260427859833912064, guid: 08ba8e4c209df40408f22cf113b491ea, type: 3}
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1057632236951264438, guid: 08ba8e4c209df40408f22cf113b491ea,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3158443655680960365}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7260596705339213385, guid: 08ba8e4c209df40408f22cf113b491ea,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4766455837719721099}
   m_SourcePrefab: {fileID: 100100000, guid: 08ba8e4c209df40408f22cf113b491ea, type: 3}
+--- !u!1 &2599538775580485100 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7260596705339213385, guid: 08ba8e4c209df40408f22cf113b491ea,
+    type: 3}
+  m_PrefabInstance: {fileID: 4670717158744499109}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4766455837719721099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2599538775580485100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 309c16a3ce05273478099b7fe6faab66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  automaticSetup: 1
+  isNetworked: 0
+  initializationId: 0
+  interactionColliders: []
+  interactionModes: 1
+  manipulationMode: -1
+  nonProportionalScale: 0
+  vrInteraction: -1
+  dynamicAttach: 0
+  adjustRotationOnRelease: 0
+  realignAxisX: 1
+  realignAxisY: 0
+  realignAxisZ: 1
+  realignDurationTimeInSeconds: 1
+  mouseLookAtCamera: 0
+  onHoverEnterActions: []
+  onHoverExitActions: []
+  onSelectingActions:
+  - {fileID: 11400000, guid: 54dd7a72f36cacd499c87411d2a1506d, type: 2}
+  - {fileID: 11400000, guid: a08b3556da4bedb4fbf09eb48a457d1c, type: 2}
+  onSelectedActions: []
+  onDeselectingActions: []
+  onDeselectedActions:
+  - {fileID: 11400000, guid: 0b598b029cdf26148895a9590bd7f7ce, type: 2}
+  - {fileID: 11400000, guid: f0294d4a5d2d14f4a92331a289487483, type: 2}
+  onInteractActions: []
+  onInteractFinishActions: []
+  desktopAllowedStates: -1
+  vrAllowedStates: 0
+  contextualMenuOptions: 15
+--- !u!224 &5655622178665856787 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1057632236951264438, guid: 08ba8e4c209df40408f22cf113b491ea,
+    type: 3}
+  m_PrefabInstance: {fileID: 4670717158744499109}
+  m_PrefabAsset: {fileID: 0}
