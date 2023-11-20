@@ -29,9 +29,6 @@ namespace Reflectis.SDK.CreatorKit
 
         private UnityEditor.Editor _variablesEditor;
         private SerializedProperty _syncTransformProp;
-        private SerializedProperty _syncRigidbodyProp;
-        private SerializedProperty _saveWithSpaceProp;
-        private SerializedProperty _destroyOnDisconnectProp;
         private GameObject _targetGameObject;
 
         private void InitializePropertiesIfNecessary()
@@ -43,7 +40,6 @@ namespace Reflectis.SDK.CreatorKit
 
             _syncTransformProp = serializedObject.FindProperty(nameof(SyncedObject.syncTransform));
             //_syncRigidbodyProp = serializedObject.FindProperty(nameof(SyncedObject.syncRigidbody));
-            _saveWithSpaceProp = serializedObject.FindProperty(nameof(SyncedObject.saveWithSpace));
             //_destroyOnDisconnectProp = serializedObject.FindProperty(nameof(SyncedObject.destroyOnCreatorDisconnect));
         }
 
@@ -316,8 +312,6 @@ namespace Reflectis.SDK.CreatorKit
             {
                 //EditorGUILayout.PropertyField(_syncRigidbodyProp);
             }
-
-            EditorGUILayout.PropertyField(_saveWithSpaceProp);
 
             //bool enableDestroyOnDisconnect = (syncedObject.gameObject.scene.name == null || !syncedObject.gameObject.scene.name.Equals(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name));
             // if we enabled save with space, then don't also allow destroy on disconnect

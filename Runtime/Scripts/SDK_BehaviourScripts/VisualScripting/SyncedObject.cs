@@ -9,7 +9,6 @@ namespace Reflectis.SDK.CreatorKit
     {
 
         [HideInInspector] public bool syncTransform = true;
-        [HideInInspector] public bool saveWithSpace = false;
 
         [HideInInspector] public string assetID; // unity prefab asset ID
         [HideInInspector] public string instanceID;

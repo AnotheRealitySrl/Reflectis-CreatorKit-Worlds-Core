@@ -160,25 +160,11 @@ namespace Reflectis.SDK.CreatorKit
                             EditorGUI.BeginDisabledGroup(true);
                         }
 
-                        bool newSaveWithScene = EditorGUILayout.ToggleLeft
-                        (
-                            new GUIContent("Save with Space", "When checked the value will remain consistant across sessions even when nobody is present in a space. If unchecked the value will reset once the space is empty."),
-                            isSynced ? syncedVariableData.saveThroughSessions : false,
-                            new GUILayoutOption[] { GUILayout.Width(115) }
-                        );
-
                         if (isSynced)
                         {
                             if (syncedVariableData != null)
                             {
                                 syncedVariableData.isSynced = isSynced;
-                            }
-
-                            if (newSaveWithScene != syncedVariableData.saveThroughSessions)
-                            {
-                                Undo.RecordObject(syncedVariables, $"Save {variable.name} With Space");
-                                syncedVariableData.saveThroughSessions = newSaveWithScene;
-                                UnityEditor.EditorUtility.SetDirty(syncedVariables);
                             }
                         }
                         else
