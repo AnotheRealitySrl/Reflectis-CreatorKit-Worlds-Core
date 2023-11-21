@@ -13,7 +13,7 @@ namespace Reflectis.SDK.CreatorKit
     {
         public static string eventName = "SyncedVariablesOnVariableChanged";
 
-        public static List<SyncedVariablesEventNodes> instances = new List<SyncedVariablesEventNodes>();
+        public static Dictionary<GraphReference, List<SyncedVariablesEventNodes>> instances = new Dictionary<GraphReference, List<SyncedVariablesEventNodes>>();
 
         [NullMeansSelf]
         [PortLabelHidden]
@@ -27,11 +27,45 @@ namespace Reflectis.SDK.CreatorKit
         [PortLabelHidden]
         public ValueOutput value { get; private set; }
 
-        public static GraphReference graphReference;
+        public static Dictionary<GameObject, List<GraphReference>> graphReferences = new Dictionary<GameObject, List<GraphReference>>();
         protected override bool register => true;
+
         public override EventHook GetHook(GraphReference reference)
         {
-            graphReference = reference;
+            if (graphReferences.TryGetValue(reference.gameObject, out List<GraphReference> graphRef))
+            {
+                if (!graphRef.Contains(reference))
+                {
+                    graphRef.Add(reference);
+                }
+            }
+            else
+            {
+                List<GraphReference> graphReferencesList = new List<GraphReference>
+                {
+                    reference
+                };
+
+                graphReferences.Add(reference.gameObject, graphReferencesList);
+            }
+
+            if (instances.TryGetValue(reference, out var value))
+            {
+                if (!value.Contains(this))
+                {
+                    value.Add(this);
+                }
+            }
+            else
+            {
+                List<SyncedVariablesEventNodes> variableList = new List<SyncedVariablesEventNodes>
+                {
+                    this
+                };
+
+                instances.Add(reference, variableList);
+            }
+
             return new EventHook(eventName);
         }
 
@@ -41,11 +75,6 @@ namespace Reflectis.SDK.CreatorKit
             syncedVariablesRef = ValueInput<SyncedVariables>(nameof(syncedVariablesRef), null).NullMeansSelf();
             variableName = ValueInput<string>(nameof(variableName), null);
             value = ValueOutput<object>(nameof(value));
-
-            if (!instances.Contains(this))
-            {
-                instances.Add(this);
-            }
         }
 
         protected override bool ShouldTrigger(Flow flow, (SyncedVariables, string) args)
