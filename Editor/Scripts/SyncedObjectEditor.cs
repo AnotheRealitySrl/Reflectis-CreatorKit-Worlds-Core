@@ -73,6 +73,7 @@ namespace Reflectis.SDK.CreatorKit
             InitializePropertiesIfNecessary();
             SyncedObject syncedObject = target as SyncedObject;
 
+            GUILayout.Space(8);
             EditorGUILayout.PropertyField(_syncTransformProp);
 
             GUI.enabled = true;

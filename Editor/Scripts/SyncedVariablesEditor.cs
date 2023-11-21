@@ -106,7 +106,7 @@ namespace Reflectis.SDK.CreatorKit
                 if (!hasSomeVariables)
                 {
                     GUILayout.Space(5);
-                    EditorGUILayout.LabelField("(No valid variables defined.)", syncedVariables.variableSettings.Count.ToString());
+                    GUILayout.Label("(No valid variables defined.)");
                 }
 
                 // search through VariableSettings for any that are no longer valid
