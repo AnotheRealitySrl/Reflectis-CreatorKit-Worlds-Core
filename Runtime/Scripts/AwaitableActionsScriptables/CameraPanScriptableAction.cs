@@ -14,12 +14,11 @@ namespace Reflectis.SDK.InteractionNew
         [SerializeField] private string panTransformId;
         [SerializeField] private bool interact;
 
-        public override async Task Action(IInteractable interactable)
+        public override async Task Action(IInteractable interactable = null)
         {
-            Transform panTransform = interactable.GameObjectRef.GetComponentsInChildren<GenericHookComponent>().FirstOrDefault(x => x.Id == panTransformId).transform;
-
             if (interact)
             {
+                Transform panTransform = interactable.GameObjectRef.GetComponentsInChildren<GenericHookComponent>().FirstOrDefault(x => x.Id == panTransformId).transform;
                 await SM.GetSystem<ICharacterControllerSystem>().GoToInteractState(panTransform);
             }
             else
