@@ -67,7 +67,7 @@ PrefabInstance:
     - target: {fileID: 1057632236951264438, guid: 08ba8e4c209df40408f22cf113b491ea,
         type: 3}
       propertyPath: m_RootOrder
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1057632236951264438, guid: 08ba8e4c209df40408f22cf113b491ea,
         type: 3}
@@ -198,60 +198,8 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3158443655680960365}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7260596705339213385, guid: 08ba8e4c209df40408f22cf113b491ea,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4766455837719721099}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 08ba8e4c209df40408f22cf113b491ea, type: 3}
---- !u!1 &2599538775580485100 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7260596705339213385, guid: 08ba8e4c209df40408f22cf113b491ea,
-    type: 3}
-  m_PrefabInstance: {fileID: 4670717158744499109}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4766455837719721099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2599538775580485100}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 309c16a3ce05273478099b7fe6faab66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  automaticSetup: 1
-  isNetworked: 0
-  initializationId: 0
-  interactionColliders: []
-  interactionModes: 1
-  manipulationMode: -1
-  nonProportionalScale: 0
-  vrInteraction: -1
-  dynamicAttach: 0
-  adjustRotationOnRelease: 0
-  realignAxisX: 1
-  realignAxisY: 0
-  realignAxisZ: 1
-  realignDurationTimeInSeconds: 1
-  mouseLookAtCamera: 0
-  onHoverEnterActions: []
-  onHoverExitActions: []
-  onSelectingActions:
-  - {fileID: 11400000, guid: 54dd7a72f36cacd499c87411d2a1506d, type: 2}
-  - {fileID: 11400000, guid: a08b3556da4bedb4fbf09eb48a457d1c, type: 2}
-  onSelectedActions: []
-  onDeselectingActions: []
-  onDeselectedActions:
-  - {fileID: 11400000, guid: 0b598b029cdf26148895a9590bd7f7ce, type: 2}
-  - {fileID: 11400000, guid: f0294d4a5d2d14f4a92331a289487483, type: 2}
-  onInteractActions: []
-  onInteractFinishActions: []
-  desktopAllowedStates: -1
-  vrAllowedStates: 0
-  contextualMenuOptions: 15
 --- !u!224 &5655622178665856787 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1057632236951264438, guid: 08ba8e4c209df40408f22cf113b491ea,

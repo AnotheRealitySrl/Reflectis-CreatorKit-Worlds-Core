@@ -51,6 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0616e242945d7d2419fc5e11166d0297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  automaticSetup: 1
   addressableKey: VideoPlayer
   parent: {fileID: 0}
   objsToDeactivate: []
@@ -59,10 +60,13 @@ MonoBehaviour:
   addressableKeyNetwork: VideoPlayerNetwork
   initializationId: 0
   mediaUrl: 
+  clip: {fileID: 0}
   isActive: 0
+  disableAtStart: 0
   externalController: {fileID: 0}
   buttonTemplate: {fileID: 0}
   separatorTemplate: {fileID: 0}
+  selectionVideoImage: {fileID: 0}
 --- !u!114 &3206746378823476226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,6 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0616e242945d7d2419fc5e11166d0297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  automaticSetup: 1
   addressableKey: PresentationPlayer
   parent: {fileID: 0}
   objsToDeactivate: []
@@ -83,10 +88,13 @@ MonoBehaviour:
   addressableKeyNetwork: PresentationPlayerNetwork
   initializationId: 0
   mediaUrl: 
+  clip: {fileID: 0}
   isActive: 0
+  disableAtStart: 0
   externalController: {fileID: 0}
   buttonTemplate: {fileID: 0}
   separatorTemplate: {fileID: 0}
+  selectionVideoImage: {fileID: 0}
 --- !u!114 &6696874633146533954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,6 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0616e242945d7d2419fc5e11166d0297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  automaticSetup: 1
   addressableKey: ImagePlayer
   parent: {fileID: 0}
   objsToDeactivate: []
@@ -107,10 +116,13 @@ MonoBehaviour:
   addressableKeyNetwork: 
   initializationId: 0
   mediaUrl: 
+  clip: {fileID: 0}
   isActive: 0
+  disableAtStart: 0
   externalController: {fileID: 0}
   buttonTemplate: {fileID: 0}
   separatorTemplate: {fileID: 0}
+  selectionVideoImage: {fileID: 0}
 --- !u!1 &4376516327760610965
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,7 +212,7 @@ GameObject:
   - component: {fileID: 4174191176252260024}
   - component: {fileID: 8687752186879981114}
   - component: {fileID: 2197893277382530783}
-  - component: {fileID: 6260427859833912064}
+  - component: {fileID: 212903756903700270}
   m_Layer: 0
   m_Name: BigScreenPlaceholder
   m_TagString: Untagged
@@ -223,7 +235,7 @@ RectTransform:
   - {fileID: 6475871612027156816}
   - {fileID: 5844161760988343759}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -282,6 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ea0492fa9bed7d4abeb5b2ed4d323f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  automaticSetup: 1
   addressableKey: BigScreen
   parent: {fileID: 0}
   objsToDeactivate:
@@ -300,7 +313,7 @@ MonoBehaviour:
   defaultMedia: 0
   mediaUrl: 
   type: 0
---- !u!114 &6260427859833912064
+--- !u!114 &212903756903700270
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -309,16 +322,39 @@ MonoBehaviour:
   m_GameObject: {fileID: 7260596705339213385}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84e161334e891d64db7372a277bcac2a, type: 3}
+  m_Script: {fileID: 11500000, guid: 309c16a3ce05273478099b7fe6faab66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addressableKey: ToastActivator
-  parent: {fileID: 1057632236951264438}
-  objsToDeactivate: []
-  isUI: 0
-  panTargetTransform: {fileID: 0}
-  proximityActivatorCollider: {fileID: 0}
-  mouseActivatorCollider: {fileID: 0}
+  automaticSetup: 1
+  isNetworked: 0
+  initializationId: 0
+  interactionColliders: []
+  interactionModes: 1
+  manipulationMode: -1
+  nonProportionalScale: 0
+  vrInteraction: -1
+  dynamicAttach: 0
+  adjustRotationOnRelease: 0
+  realignAxisX: 1
+  realignAxisY: 0
+  realignAxisZ: 1
+  realignDurationTimeInSeconds: 1
+  mouseLookAtCamera: 0
+  onHoverEnterActions: []
+  onHoverExitActions: []
+  onSelectingActions:
+  - {fileID: 11400000, guid: 54dd7a72f36cacd499c87411d2a1506d, type: 2}
+  - {fileID: 11400000, guid: a08b3556da4bedb4fbf09eb48a457d1c, type: 2}
+  onSelectedActions: []
+  onDeselectingActions: []
+  onDeselectedActions:
+  - {fileID: 11400000, guid: 0b598b029cdf26148895a9590bd7f7ce, type: 2}
+  - {fileID: 11400000, guid: f0294d4a5d2d14f4a92331a289487483, type: 2}
+  onInteractActions: []
+  onInteractFinishActions: []
+  desktopAllowedStates: -1
+  vrAllowedStates: 0
+  contextualMenuOptions: 15
 --- !u!1 &7915416680680222965
 GameObject:
   m_ObjectHideFlags: 0
