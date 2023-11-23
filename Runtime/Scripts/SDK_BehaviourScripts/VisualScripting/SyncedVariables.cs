@@ -33,6 +33,8 @@ namespace Reflectis.SDK.CreatorKit
 
         public List<Data> variableSettings = new List<Data>();
         public Dictionary<string, object> variableDictBackup = new Dictionary<string, object>();
+        public Dictionary<string, object> variableDictBackupJson = new Dictionary<string, object>();
+        public Dictionary<string, int> variableDictLock = new Dictionary<string, int>();
 
         private void Awake()
         {
@@ -52,6 +54,7 @@ namespace Reflectis.SDK.CreatorKit
                     }
                     object value = data.Value;
                     variableDictBackup.Add(data.name, value);
+                    variableDictLock.Add(data.name, -1);
                 }
             }
         }

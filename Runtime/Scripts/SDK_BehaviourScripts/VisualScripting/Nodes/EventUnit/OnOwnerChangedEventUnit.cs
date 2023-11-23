@@ -12,7 +12,8 @@ namespace Reflectis.SDK.CreatorKit
     public class OnOwnerChangedEventUnit : EventUnit<SyncedObject>
     {
         public static string eventName = "SyncedObjectOnOwnerChanged";
-        public static List<OnOwnerChangedEventUnit> instances = new List<OnOwnerChangedEventUnit>();
+
+        public static Dictionary<GraphReference, List<OnOwnerChangedEventUnit>> instances = new Dictionary<GraphReference, List<OnOwnerChangedEventUnit>>();
 
         [NullMeansSelf]
         [PortLabelHidden]
@@ -20,11 +21,43 @@ namespace Reflectis.SDK.CreatorKit
         public ValueInput syncedObjectRef { get; private set; }
         protected override bool register => true;
 
-        public static GraphReference graphReference;
+        public static Dictionary<GameObject, List<GraphReference>> graphReferences = new Dictionary<GameObject, List<GraphReference>>();
 
         public override EventHook GetHook(GraphReference reference)
         {
-            graphReference = reference;
+            if (graphReferences.TryGetValue(reference.gameObject, out List<GraphReference> graphRef))
+            {
+                if (!graphRef.Contains(reference))
+                {
+                    graphRef.Add(reference);
+                }
+            }
+            else
+            {
+                List<GraphReference> graphReferencesList = new List<GraphReference>
+                {
+                    reference
+                };
+
+                graphReferences.Add(reference.gameObject, graphReferencesList);
+            }
+
+            if (instances.TryGetValue(reference, out var value))
+            {
+                if (!value.Contains(this))
+                {
+                    value.Add(this);
+                }
+            }
+            else
+            {
+                List<OnOwnerChangedEventUnit> variableList = new List<OnOwnerChangedEventUnit>
+                {
+                    this
+                };
+
+                instances.Add(reference, variableList);
+            }
             return new EventHook(eventName);
         }
 
@@ -32,11 +65,6 @@ namespace Reflectis.SDK.CreatorKit
         {
             base.Definition();
             syncedObjectRef = ValueInput<SyncedObject>(nameof(syncedObjectRef), null).NullMeansSelf();
-
-            if (!instances.Contains(this))
-            {
-                instances.Add(this);
-            }
         }
 
         protected override bool ShouldTrigger(Flow flow, SyncedObject args)
