@@ -8,6 +8,15 @@ namespace Reflectis.SDK.CreatorKit
     public class SyncedObject : SceneComponentPlaceholderNetwork
     {
 
+        public enum OwnershipRequestEnum
+        {
+            Request,
+            Takeover,
+            Fixed
+        }
+
+        [SerializeField] private OwnershipRequestEnum ownershipRequestType;
+
         [HideInInspector] public bool syncTransform = true;
 
         [HideInInspector] public string assetID; // unity prefab asset ID
@@ -19,6 +28,7 @@ namespace Reflectis.SDK.CreatorKit
         public delegate bool OnCheckOwnershipObject();
         public event OnCheckOwnershipObject onCheckOwnershipObject;
 
+        public OwnershipRequestEnum OwnershipRequestType { get => ownershipRequestType; }
 
         public bool OnCheckOwnershipFunction()
         {
