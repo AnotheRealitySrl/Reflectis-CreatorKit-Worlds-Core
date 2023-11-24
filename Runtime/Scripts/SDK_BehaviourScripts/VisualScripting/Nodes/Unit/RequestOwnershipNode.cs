@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Synced Object: Request Ownership")]
+    [UnitTitle("Synced Object: Try Get Ownership")]
     [UnitSurtitle("Synced Object")]
-    [UnitShortTitle("Request Ownership")]
+    [UnitShortTitle("Try Get Ownership")]
     [UnitCategory("Events\\Reflectis\\Ownership")]
     [TypeIcon(typeof(Material))]
     public class RequestOwnershipNode : Unit
