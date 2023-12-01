@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 using Virtuademy.DTO;
@@ -21,19 +23,22 @@ namespace Reflectis.SDK.CreatorKit
             }
         }
 
+#if UNITY_EDITOR
         [ContextMenu("Set All Placeholder New ID")]
         private void SetAllPlaceholderNewID()
         {
             var placeholders = FindObjectsOfType<SceneComponentPlaceholderNetwork>();
             var addressablePlaceholders = FindObjectsOfType<SpawnNetworkedAddressablePlaceholder>();
 
-            if(placeholders.Length != 0)
+            if (placeholders.Length != 0)
             {
                 for (var i = 0; i < placeholders.Length; i++)
                 {
                     if (placeholders[i].IsNetworked)
                     {
                         placeholders[i].InitializationId = i + 1;
+
+                        EditorUtility.SetDirty(placeholders[i]);
                     }
 
 
@@ -44,6 +49,7 @@ namespace Reflectis.SDK.CreatorKit
                             if (addressablePlaceholders[j].IsNetworked)
                             {
                                 addressablePlaceholders[j].InitializationId = j + i + 1;
+                                EditorUtility.SetDirty(addressablePlaceholders[j]);
                             }
                         }
                     }
@@ -56,9 +62,12 @@ namespace Reflectis.SDK.CreatorKit
                     if (addressablePlaceholders[j].IsNetworked)
                     {
                         addressablePlaceholders[j].InitializationId = j + 1;
+                        EditorUtility.SetDirty(addressablePlaceholders[j]);
                     }
                 }
             }
         }
+
+#endif
     }
 }
