@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [CreateAssetMenu(menuName = "AnotheReality/Utilities/ParametricScriptableAction", fileName = "ParametricScriptableAction")]
+    [CreateAssetMenu(menuName = "Reflectis/SDK-CreatorKit/ParametricScriptableAction", fileName = "ParametricScriptableAction")]
     public class ParametricScriptableAction : AwaitableScriptableAction
     {
         [SerializeField] private bool isChildObject;
