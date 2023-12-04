@@ -1,27 +1,33 @@
-using System;
+using Reflectis.SDK.InteractionNew;
+
 using System.Linq;
+using System.Threading.Tasks;
 
 using UnityEngine;
 
-using Reflectis.SDK.Interaction;
-
-[CreateAssetMenu(menuName = "AnotheReality/Utilities/ParametricScriptableAction", fileName = "ParametricScriptableAction")]
-public class ParametricScriptableAction : ActionScriptable
+namespace Reflectis.SDK.CreatorKit
 {
-    [SerializeField] private bool isChildObject;
-    [SerializeField] private string goName;
-    [SerializeField] private string methodName;
-
-    public override void Action(Action completedCallback)
+    [CreateAssetMenu(menuName = "AnotheReality/Utilities/ParametricScriptableAction", fileName = "ParametricScriptableAction")]
+    public class ParametricScriptableAction : AwaitableScriptableAction
     {
-        if (isChildObject)
+        [SerializeField] private bool isChildObject;
+        [SerializeField] private string goName;
+        [SerializeField] private string methodName;
+
+        public override Task Action(IInteractable interactable = null)
         {
-            Transform[] allChildren = InteractableObjectReference.GetComponentsInChildren<Transform>(true);
-            allChildren.FirstOrDefault(x => x.name == goName)?.gameObject.SendMessage(methodName);
-        }
-        else
-        {
-            GameObject.Find(goName).SendMessage(methodName);
+            if (isChildObject)
+            {
+                Transform[] allChildren = interactable.GameObjectRef.GetComponentsInChildren<Transform>(true);
+                allChildren.FirstOrDefault(x => x.name == goName)?.gameObject.SendMessage(methodName);
+            }
+            else
+            {
+                GameObject.Find(goName).SendMessage(methodName);
+            }
+
+            return Task.CompletedTask;
         }
     }
 }
+

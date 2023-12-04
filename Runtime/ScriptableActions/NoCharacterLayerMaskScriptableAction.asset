@@ -15,4 +15,4 @@ MonoBehaviour:
   InteractableObjectReference: {fileID: 0}
   layerMask:
     serializedVersion: 2
-    m_Bits: 4244637047
+    m_Bits: 4026531959

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 897da5c3e00226049b083e48d7f13ba2, type: 3}
-  m_Name: EnableUIInteraction
+  m_Name: UIInteractionDisable
   m_EditorClassIdentifier: 
   InteractableObjectReference: {fileID: 0}
   isChildObject: 0
   goName: MainMenuDesktop(Clone)
-  methodName: EnableUIInteraction
+  methodName: DisableUIInteraction
