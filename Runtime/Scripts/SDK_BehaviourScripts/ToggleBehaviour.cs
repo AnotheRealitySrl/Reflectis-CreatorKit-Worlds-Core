@@ -1,6 +1,5 @@
 using Reflectis.SDK.Interaction;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class ToggleBehaviour : MonoBehaviour
@@ -56,7 +55,8 @@ public class ToggleBehaviour : MonoBehaviour
             }
             catch (ArgumentOutOfRangeException e)
             {
-                behaviourComponents[behaviourComponents.Count].GetComponent<IInteractable>().Interact();
+                behaviourComponents[0].GetComponent<IInteractable>().Interact();
+                currentBehaviourCycle = 0;
             }
         }
     }
