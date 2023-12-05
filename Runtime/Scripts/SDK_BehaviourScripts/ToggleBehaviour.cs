@@ -1,5 +1,6 @@
 using Reflectis.SDK.Interaction;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class ToggleBehaviour : MonoBehaviour
@@ -11,6 +12,7 @@ public class ToggleBehaviour : MonoBehaviour
 
     int currentBehaviourCycle;
     bool isNotInteracted = false;
+    private bool isInteractable = true;
 
     public List<GameObject> BehaviourComponents => behaviourComponents;
     public GameObject InteractionTarget => throw new NotImplementedException();
@@ -35,6 +37,13 @@ public class ToggleBehaviour : MonoBehaviour
 
     public void Interact(Action completedCallback = null)
     {
+        if (!isInteractable) return;
+
+        if (isInteractable)
+        {
+            StartCoroutine(CheckSpawnTime());
+        }
+
         try
         {
             behaviourComponents[CurrentBehaviourCycle].GetComponent<IInteractable>().Interact();
@@ -59,5 +68,14 @@ public class ToggleBehaviour : MonoBehaviour
                 currentBehaviourCycle = 0;
             }
         }
+    }
+
+    private IEnumerator CheckSpawnTime()
+    {
+        isInteractable = false;
+
+        yield return new WaitForSeconds(.5f);
+
+        isInteractable = true;
     }
 }

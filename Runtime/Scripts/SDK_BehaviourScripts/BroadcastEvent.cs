@@ -8,7 +8,8 @@ namespace Reflectis.SDK.CreatorKit
     {
         [SerializeField] List<GameObject> connectables;
 
-        public List<GameObject> Connectables  => connectables;
+        private bool isInteractable = true;
+        public List<GameObject> Connectables => connectables;
 
         private void Start()
         {
@@ -22,7 +23,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             List<GameObject> referenceList = new List<GameObject>();
 
-            if(Connectables != null && Connectables.Count != 0)
+            if (Connectables != null && Connectables.Count != 0)
             {
                 foreach (var connectable in Connectables)
                 {
@@ -36,7 +37,7 @@ namespace Reflectis.SDK.CreatorKit
                     }
                 }
             }
-            
+
             for (var i = 0; i < referenceList.Count; i++)
             {
                 Connectables.Remove(referenceList[i]);
@@ -45,6 +46,13 @@ namespace Reflectis.SDK.CreatorKit
 
         public void TriggerConnectables()
         {
+            if (!isInteractable) return;
+
+            if (isInteractable)
+            {
+                StartCoroutine(CheckSpawnTime());
+            }
+
             if (Connectables.Count != 0)
             {
                 foreach (var connectable in Connectables)
@@ -55,6 +63,15 @@ namespace Reflectis.SDK.CreatorKit
                     }
                 }
             }
+        }
+
+        private IEnumerator CheckSpawnTime()
+        {
+            isInteractable = false;
+
+            yield return new WaitForSeconds(.5f);
+
+            isInteractable = true;
         }
     }
 }
