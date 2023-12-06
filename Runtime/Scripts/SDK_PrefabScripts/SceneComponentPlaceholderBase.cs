@@ -27,8 +27,8 @@ namespace Reflectis.SDK.CreatorKit
         [ContextMenu("Set All Placeholder New ID")]
         private void SetAllPlaceholderNewID()
         {
-            var placeholders = FindObjectsOfType<SceneComponentPlaceholderNetwork>();
-            var addressablePlaceholders = FindObjectsOfType<SpawnNetworkedAddressablePlaceholder>();
+            var placeholders = FindObjectsOfType<SceneComponentPlaceholderNetwork>(true);
+            var addressablePlaceholders = FindObjectsOfType<SpawnNetworkedAddressablePlaceholder>(true);
 
             if (placeholders.Length != 0)
             {
