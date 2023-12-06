@@ -48,7 +48,7 @@ namespace Reflectis.SDK.CreatorKit
                         {
                             if (addressablePlaceholders[j].IsNetworked)
                             {
-                                addressablePlaceholders[j].InitializationId = j + i + 1;
+                                addressablePlaceholders[j].InitializationId = j + i + 2;
                                 EditorUtility.SetDirty(addressablePlaceholders[j]);
                             }
                         }
