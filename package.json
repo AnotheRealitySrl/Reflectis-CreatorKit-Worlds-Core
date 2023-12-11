@@ -11,5 +11,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/AnotheRealitySrl/Reflectis-SDK-CreatorKit"
-  }
+  },
+  "samples": [
+    {
+      "displayName": "Multiplayer Visual Scripting Sample",
+      "description": "Template scene with visual scripting network sample use",
+      "path": "Samples~/MultiplayerSceneSample"
+    }
+  ]
 }
