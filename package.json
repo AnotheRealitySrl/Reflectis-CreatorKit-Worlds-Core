@@ -14,7 +14,7 @@
   },
   "samples": [
     {
-      "displayName": "Basic visual scripting flow scene sample",
+      "displayName": "Multiplayer Visual Scripting Sample",
       "description": "Template scene with visual scripting network sample use",
       "path": "Samples~/MultiplayerSceneSample"
     }
