@@ -13,16 +13,7 @@ public class EnableCharacterMeshScriptableAction : AwaitableScriptableAction
 
     public override Task Action(IInteractable interactable = null)
     {
-        var count = SM.GetSystem<AvatarSystem>().ManageCounterAvatarMeshEnable(enable);
-
-        if (count == 0 && enable)
-        {
-            SM.GetSystem<AvatarSystem>().EnableAvatarInstanceMeshes(enable);
-        }
-        else if (count == 1 && !enable)
-        {
-            SM.GetSystem<AvatarSystem>().EnableAvatarInstanceMeshes(enable);
-        }
+        SM.GetSystem<AvatarSystem>().EnableAvatarInstanceMeshes(enable);
 
         return Task.CompletedTask;
     }
