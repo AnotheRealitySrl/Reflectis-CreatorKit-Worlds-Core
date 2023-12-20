@@ -6,25 +6,20 @@ using UnityEngine;
 
 using Reflectis.SDK.CreatorKit;
 
+using UnityEngine.Serialization;
+
 namespace Virtuademy.DTO
 {
-    public class SpawnNetworkedAddressablePlaceholder : SpawnAddressablePlaceholder
+    public class SpawnNetworkedAddressablePlaceholder : SpawnAddressablePlaceholder, INetworkPlaceholder
     {
-        [SerializeField] private bool isNetworked;
-
 #if ODIN_INSPECTOR
         [ShowIf("IsNetworked")]
 #endif
         [SerializeField] private string addressableKeyNetwork;
+        [SerializeField, HideInInspector] private int initializationId;
 
-#if ODIN_INSPECTOR
-        [ShowIf("IsNetworked")]
-#endif
-        [SerializeField] private int initializationId;
-
-        public bool IsNetworked => isNetworked;
-        public string AddressableKeyNetwork => addressableKeyNetwork;
+        [field: SerializeField, FormerlySerializedAs("isNetworked")] public bool IsNetworked { get; set; }
         public int InitializationId { get => initializationId; set => initializationId = value; }
+        public string AddressableKeyNetwork => addressableKeyNetwork;
     }
-
 }
