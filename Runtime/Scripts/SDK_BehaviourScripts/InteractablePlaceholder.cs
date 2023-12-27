@@ -32,7 +32,7 @@ namespace Reflectis.SDK.CreatorKit
         private EInteractableType interactionModes;
 
         public List<Collider> InteractionColliders => interactionColliders;
-        public EInteractableType InteractionModes => interactionModes;
+        public EInteractableType InteractionModes { get => interactionModes; set => interactionModes = value; }
 
         #region Manipulation
 
@@ -97,8 +97,8 @@ namespace Reflectis.SDK.CreatorKit
 #endif
         [SerializeField] private bool mouseLookAtCamera;
 
-        public EManipulationMode ManipulationMode => manipulationMode;
-        public EVRInteraction VRInteraction => vrInteraction;
+        public EManipulationMode ManipulationMode { get => manipulationMode; set => manipulationMode = value; }
+        public EVRInteraction VRInteraction { get => vrInteraction; set => vrInteraction = value; }
         public bool DynamicAttach => dynamicAttach;
         public bool MouseLookAtCamera => mouseLookAtCamera;
         public bool NonProportionalScale { get => nonProportionalScale; set => nonProportionalScale = value; }

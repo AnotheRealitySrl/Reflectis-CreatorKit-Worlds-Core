@@ -108,9 +108,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a08b3556da4bedb4fbf09eb48a457d1c, type: 2}
   onSelectedActions: []
   onDeselectingActions:
-  - {fileID: 11400000, guid: 49fb4a21e23fbc14d8a21d0afa8c802e, type: 2}
   - {fileID: 11400000, guid: f0294d4a5d2d14f4a92331a289487483, type: 2}
   - {fileID: 11400000, guid: 0b598b029cdf26148895a9590bd7f7ce, type: 2}
+  - {fileID: 11400000, guid: 49fb4a21e23fbc14d8a21d0afa8c802e, type: 2}
   onDeselectedActions: []
   onInteractActions: []
   onInteractFinishActions: []
