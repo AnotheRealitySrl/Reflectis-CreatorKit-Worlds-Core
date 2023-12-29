@@ -1,7 +1,6 @@
 using Reflectis.SDK.Core;
 using Reflectis.SDK.Help;
 using Reflectis.SDK.InteractionNew;
-
 using System.Threading.Tasks;
 
 using UnityEngine;
@@ -11,17 +10,17 @@ public class OpenCloseTutorialScriptableAction : AwaitableScriptableAction
 {
     [SerializeField] private bool open;
 
-    public override Task Action(IInteractable interactable = null)
+    public override async Task Action(IInteractable interactable = null)
     {
+        var helpSystem = SM.GetSystem<IHelpSystem>();
         if (open)
         {
-            SM.GetSystem<IHelpSystem>().CallGetHelp();
+            await helpSystem.CallGetHelp();
         }
         else
         {
-            SM.GetSystem<IHelpSystem>().CallCloseGetHelp();
+            await helpSystem.CallCloseGetHelp();
         }
 
-        return Task.CompletedTask;
     }
 }
