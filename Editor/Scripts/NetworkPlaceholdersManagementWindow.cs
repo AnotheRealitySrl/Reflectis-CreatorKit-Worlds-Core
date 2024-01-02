@@ -15,7 +15,6 @@ namespace Reflectis.SDK.CreatorKitEditor
     public class NetworkPlaceholdersManagementWindow : EditorWindow
     {
         private List<SceneComponentPlaceholderBase> networkPlaceholders = new();
-        private string networkPlaceholdersStringified;
 
         [MenuItem("Reflectis/Network placeholders management")]
         public static void ShowWindow()
@@ -29,17 +28,10 @@ namespace Reflectis.SDK.CreatorKitEditor
             FindNetworkPlaceholders();
             DisplayPlaceholders();
 
-
             if (GUILayout.Button("Initialize network placeholders IDs"))
             {
-                FindNetworkPlaceholders();
                 SetPlaceholdersNewIDs();
-                DisplayPlaceholders();
             }
-
-            GUILayoutOption[] options = new GUILayoutOption[] {
-                GUILayout.ExpandHeight(true)};
-            EditorGUILayout.LabelField(new GUIContent(networkPlaceholdersStringified), options);
         }
 
         private void FindNetworkPlaceholders()
@@ -64,11 +56,21 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         private void DisplayPlaceholders()
         {
-            networkPlaceholdersStringified = string.Empty;
+            GUIStyle style = new(EditorStyles.label)
+            {
+                richText = true
+            };
+
+            EditorGUILayout.BeginScrollView(Vector2.zero);
+            EditorGUILayout.BeginVertical();
+
             foreach (var placeholder in networkPlaceholders)
             {
-                networkPlaceholdersStringified += $"{placeholder.gameObject.name}: {((INetworkPlaceholder)placeholder).InitializationId} \n";
+                EditorGUILayout.LabelField($"<b>{placeholder.gameObject.name}</b>: {((INetworkPlaceholder)placeholder).InitializationId}", style);
             }
+
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.EndScrollView();
         }
     }
 }
