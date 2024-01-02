@@ -1,7 +1,5 @@
 using Reflectis.SDK.CreatorKit;
 
-using Sirenix.Utilities;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -40,8 +38,12 @@ namespace Reflectis.SDK.CreatorKitEditor
             GameObject[] gameObjects = s.GetRootGameObjects();
 
             networkPlaceholders.Clear();
-            gameObjects.ForEach(x => networkPlaceholders.AddRange(x.GetComponentsInChildren<SceneComponentPlaceholderBase>(true)
-                    .Where(p => p is INetworkPlaceholder np && np.IsNetworked)));
+
+            foreach (GameObject obj in gameObjects)
+            {
+                networkPlaceholders.AddRange(obj.GetComponentsInChildren<SceneComponentPlaceholderBase>(true)
+                        .Where(p => p is INetworkPlaceholder np && np.IsNetworked));
+            }
         }
 
         private void SetPlaceholdersNewIDs()
