@@ -54,9 +54,10 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         private void SetPlaceholdersNewIDs()
         {
+            System.Random rnd = new();
             networkPlaceholders.ForEach(p =>
             {
-                ((INetworkPlaceholder)p).InitializationId = networkPlaceholders.IndexOf(p) + 1;
+                ((INetworkPlaceholder)p).InitializationId = rnd.Next(1, 99999);
                 EditorUtility.SetDirty(p);
             });
         }

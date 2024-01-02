@@ -14,7 +14,7 @@ namespace Reflectis.SDK.CreatorKitEditor
             DrawDefaultInspector();
 
             SceneComponentPlaceholderBase placeholder = (SceneComponentPlaceholderBase)target;
-            if (placeholder is INetworkPlaceholder networkPlaceholder)
+            if (placeholder is INetworkPlaceholder networkPlaceholder && networkPlaceholder.IsNetworked)
             {
                 GUIStyle style = new(EditorStyles.label)
                 {
