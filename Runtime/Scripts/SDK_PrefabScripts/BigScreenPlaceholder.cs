@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class BigScreenPlaceholder : SceneComponentPlaceholderBase
 {
-    [SerializeField] private Transform headerTransform;
-    [SerializeField] private Transform controllerTransform;
+    [SerializeField] private Transform contentTransform;
 
-    public Transform HeaderTransform => headerTransform;
-    public Transform ControllerTransform => controllerTransform;
+    public Transform ContentTransform => contentTransform;
 }
