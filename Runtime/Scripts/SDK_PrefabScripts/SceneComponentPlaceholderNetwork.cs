@@ -2,16 +2,15 @@ using System;
 using System.Threading.Tasks;
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    public class SceneComponentPlaceholderNetwork : SceneComponentPlaceholderBase
+    public class SceneComponentPlaceholderNetwork : SceneComponentPlaceholderBase, INetworkPlaceholder
     {
-        [Header("Network settings")]
-        [SerializeField] private bool isNetworked;
-        [SerializeField] private int initializationId;
+        [SerializeField, HideInInspector] private int initializationId;
 
-        public bool IsNetworked { get => isNetworked; set => isNetworked = value; }
+        [field: SerializeField, FormerlySerializedAs("isNetworked")] public bool IsNetworked { get; set; }
         public int InitializationId { get => initializationId; set => initializationId = value; }
 
         public override async Task Init(SceneComponentsMapper mapper)
