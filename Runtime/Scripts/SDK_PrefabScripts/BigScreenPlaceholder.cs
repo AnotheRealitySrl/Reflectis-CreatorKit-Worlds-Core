@@ -2,7 +2,7 @@ using Reflectis.SDK.CreatorKit;
 
 using UnityEngine;
 
-public class BigScreenPlaceholder : SceneComponentPlaceholderBase
+public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
 {
     [SerializeField] private Transform contentTransform;
 
