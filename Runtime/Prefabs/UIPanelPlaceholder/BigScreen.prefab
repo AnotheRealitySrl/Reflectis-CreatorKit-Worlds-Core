@@ -81,7 +81,8 @@ MonoBehaviour:
   automaticSetup: 1
   initializationId: 0
   <IsNetworked>k__BackingField: 0
-  contentTransform: {fileID: 2934402864329866326}
+  contentTransform: {fileID: 9002948500902079657}
+  screenTransform: {fileID: 2934402864329866326}
 --- !u!1 &2898105385615111704
 GameObject:
   m_ObjectHideFlags: 0
