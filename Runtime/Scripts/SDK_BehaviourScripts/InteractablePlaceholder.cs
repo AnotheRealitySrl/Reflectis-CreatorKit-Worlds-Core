@@ -194,6 +194,13 @@ namespace Reflectis.SDK.CreatorKit
 
         public EContextualMenuOption ContextualMenuOptions { get => contextualMenuOptions; set => contextualMenuOptions = value; }
 
+#if ODIN_INSPECTOR
+        [BoxGroup("showContextualMenuSettings/Contextual menu settings")]
+#endif
+        [SerializeField] private EContextualMenuType contextualMenuType;
+
+        public EContextualMenuType ContextualMenuType { get => contextualMenuType; set => contextualMenuType = value; }
+
         #endregion
     }
 }
