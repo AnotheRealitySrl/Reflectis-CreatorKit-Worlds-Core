@@ -13,6 +13,10 @@ namespace Reflectis.SDK.InteractionNew
 
         public override Task Action(IInteractable interactable)
         {
+            if (interactable == null || interactable.GameObjectRef == null)
+            {
+                return Task.CompletedTask;
+            }
             foreach (GenericHookComponent component in interactable.GameObjectRef.GetComponentsInChildren<GenericHookComponent>(true))
             {
                 if (enableObjectsId == component.Id)
