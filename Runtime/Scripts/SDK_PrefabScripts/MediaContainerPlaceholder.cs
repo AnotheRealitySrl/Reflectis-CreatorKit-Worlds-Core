@@ -24,7 +24,6 @@ namespace Reflectis.SDK.CreatorKit
         public GameObject SeparatorTemplate => separatorTemplate;
         public VideoClip Clip => clip;
         public GameObject SelectionVideoImage => selectionVideoImage;
-
-        public bool PlayInLoop { get => playInLoop; set => playInLoop = value; }
+        public bool PlayInLoop => playInLoop;
     }
 }
