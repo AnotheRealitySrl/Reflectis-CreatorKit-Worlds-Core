@@ -14,6 +14,7 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private GameObject buttonTemplate;
         [SerializeField] private GameObject separatorTemplate;
         [SerializeField] private GameObject selectionVideoImage;
+        [SerializeField] private bool playInLoop = true;
 
         public string MediaUrl => mediaUrl;
         public bool IsActive => isActive;
@@ -23,5 +24,7 @@ namespace Reflectis.SDK.CreatorKit
         public GameObject SeparatorTemplate => separatorTemplate;
         public VideoClip Clip => clip;
         public GameObject SelectionVideoImage => selectionVideoImage;
+
+        public bool PlayInLoop { get => playInLoop; set => playInLoop = value; }
     }
 }
