@@ -108,6 +108,8 @@ namespace Reflectis.SDK.CreatorKit
         public bool RealignAxisZ => realignAxisZ;
         public float RealignDurationTimeInSeconds => realignDurationTimeInSeconds;
 
+        public Transform attachTransform;
+
         #endregion
 
         #region Generic interaction
