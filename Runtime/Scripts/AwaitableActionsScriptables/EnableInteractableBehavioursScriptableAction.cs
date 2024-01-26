@@ -1,6 +1,5 @@
 using Reflectis.SDK.InteractionNew;
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using UnityEngine;
@@ -17,9 +16,7 @@ namespace Reflectis.SDK.CreatorKit
 
         public override Task Action(IInteractable interactable = null)
         {
-            List<IInteractableBehaviour> behaviours = new(interactable.InteractableBehaviours);
-
-            behaviours.ForEach(beh =>
+            foreach (var beh in interactable.InteractableBehaviours)
             {
                 if (beh is Manipulable manipulable && interactionsToEnable.HasFlag(EInteractableType.Manipulable))
                     manipulable.CanInteract = activate;
@@ -29,7 +26,7 @@ namespace Reflectis.SDK.CreatorKit
 
                 if (beh is ContextualMenuManageable manageable && interactionsToEnable.HasFlag(EInteractableType.ContextualMenuInteractable))
                     manageable.CanInteract = activate;
-            });
+            };
 
             return Task.CompletedTask;
         }

@@ -18,7 +18,7 @@ namespace Reflectis.SDK.InteractionNew
             GenericHookComponent hook = interactable.GameObjectRef.GetComponentsInChildren<GenericHookComponent>().FirstOrDefault(x => x.Id == boundingBoxHookId);
             if (hook)
             {
-                hook.GetComponent<MeshRenderer>().enabled = activate;
+                hook.GetComponentInChildren<MeshRenderer>(true).enabled = activate;
             }
 
             return Task.CompletedTask;
