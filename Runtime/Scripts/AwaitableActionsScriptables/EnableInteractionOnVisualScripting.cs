@@ -29,9 +29,9 @@ namespace Reflectis.SDK.CreatorKit
                 {
                     foreach (var graphReference2 in graphReference.Value)
                     {
-                        var syncedObject = graphReference2.gameObject.GetComponent<SyncedObject>();
+                        var interactablePlaceholder = graphReference2.gameObject.GetComponent<InteractablePlaceholder>();
 
-                        foreach (var instance in OnOwnerChangedEventUnit.instances)
+                        foreach (var instance in OnInteractionEvent.instances)
                         {
                             if (instance.Key != graphReference2)
                             {
@@ -40,8 +40,8 @@ namespace Reflectis.SDK.CreatorKit
 
                             foreach (var instance2 in instance.Value)
                             {
-                                EventUnit<SyncedObject> eventUnit = instance2;
-                                eventUnit.Trigger(graphReference2, syncedObject);
+                                EventUnit<InteractablePlaceholder> eventUnit = instance2;
+                                eventUnit.Trigger(graphReference2, interactablePlaceholder);
                             }
                             break;
                         }
