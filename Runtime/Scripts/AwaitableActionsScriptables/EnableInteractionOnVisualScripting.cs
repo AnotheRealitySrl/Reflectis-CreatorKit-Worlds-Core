@@ -1,5 +1,4 @@
 using Reflectis.SDK.InteractionNew;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,6 +8,8 @@ namespace Reflectis.SDK.CreatorKit
     [CreateAssetMenu(menuName = "Reflectis/Scriptable Actions/TriggerEventOnVisualScripting", fileName = "TriggerEventOnVisualScripting")]
     public class EnableInteractionOnVisualScripting : AwaitableScriptableAction
     {
+        [SerializeField] string eventName;
+
         public override Task Action(IInteractable interactable)
         {
             if (interactable == null || interactable.GameObjectRef == null)
@@ -16,38 +17,9 @@ namespace Reflectis.SDK.CreatorKit
                 return Task.CompletedTask;
             }
 
-            TriggerOnOwnerChanged(OnInteractionEvent.graphReferences, interactable.GameObjectRef);
+            CustomEvent.Trigger(interactable.GameObjectRef, eventName, eventName);
 
             return Task.CompletedTask;
-        }
-
-        private void TriggerOnOwnerChanged(Dictionary<GameObject, List<GraphReference>> graphReferences, GameObject interactableObj)
-        {
-            foreach (var graphReference in graphReferences)
-            {
-                if (graphReference.Key == interactableObj)
-                {
-                    foreach (var graphReference2 in graphReference.Value)
-                    {
-                        var interactablePlaceholder = graphReference2.gameObject.GetComponent<InteractablePlaceholder>();
-
-                        foreach (var instance in OnInteractionEvent.instances)
-                        {
-                            if (instance.Key != graphReference2)
-                            {
-                                continue;
-                            }
-
-                            foreach (var instance2 in instance.Value)
-                            {
-                                EventUnit<InteractablePlaceholder> eventUnit = instance2;
-                                eventUnit.Trigger(graphReference2, interactablePlaceholder);
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
         }
     }
 }
