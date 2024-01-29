@@ -4,27 +4,19 @@ using Reflectis.SDK.InteractionNew;
 using Sirenix.OdinInspector;
 #endif
 
-using System;
 using System.Collections.Generic;
 
 using UnityEngine;
 
 using static Reflectis.SDK.InteractionNew.ContextualMenuManageable;
 using static Reflectis.SDK.InteractionNew.GenericInteractable;
+using static Reflectis.SDK.InteractionNew.IInteractable;
 using static Reflectis.SDK.InteractionNew.Manipulable;
 
 namespace Reflectis.SDK.CreatorKit
 {
     public class InteractablePlaceholder : SceneComponentPlaceholderNetwork
     {
-        [Flags]
-        public enum EInteractableType
-        {
-            GenericInteractable = 1,
-            Manipulable = 2,
-            ContextualMenuInteractable = 4
-        }
-
         [Header("Interaction settings")]
         [SerializeField] private List<Collider> interactionColliders = new();
 
@@ -107,6 +99,8 @@ namespace Reflectis.SDK.CreatorKit
         public bool RealignAxisY => realignAxisY;
         public bool RealignAxisZ => realignAxisZ;
         public float RealignDurationTimeInSeconds => realignDurationTimeInSeconds;
+
+        public Transform attachTransform;
 
         #endregion
 

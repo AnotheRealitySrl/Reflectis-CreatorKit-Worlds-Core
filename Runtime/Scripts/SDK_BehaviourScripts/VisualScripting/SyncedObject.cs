@@ -32,7 +32,12 @@ namespace Reflectis.SDK.CreatorKit
 
         public bool OnCheckOwnershipFunction()
         {
-            return onCheckOwnershipObject.Invoke();
+            if (onCheckOwnershipObject == null)
+            {
+                Debug.LogError("Null ownership");
+            }
+
+            return (bool)onCheckOwnershipObject?.Invoke();
         }
 
 #if UNITY_EDITOR

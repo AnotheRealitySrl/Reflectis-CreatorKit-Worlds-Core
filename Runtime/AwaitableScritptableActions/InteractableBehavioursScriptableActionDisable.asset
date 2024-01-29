@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9ae6217e50df8040a28ea054d76af59, type: 3}
-  m_Name: ActivateAllCharactersScriptableAction
+  m_Script: {fileID: 11500000, guid: 5f519eeb9fbdc12458de2c0c450488d9, type: 3}
+  m_Name: InteractableBehavioursScriptableActionDisable
   m_EditorClassIdentifier: 
-  InteractableObjectReference: {fileID: 0}
-  activate: 1
+  activate: 0
+  interactionsToEnable: 6

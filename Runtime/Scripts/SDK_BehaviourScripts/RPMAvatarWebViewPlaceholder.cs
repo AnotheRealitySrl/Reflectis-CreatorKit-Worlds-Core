@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 namespace Reflectis.SDK.CreatorKit
 {
@@ -15,13 +12,13 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField]
         private GameObject buttonObj;
         [SerializeField]
-        private TextMeshPro goToWebsiteText;
+        private TextMeshProUGUI goToWebsiteText;
 
         private UnityEvent onClickEvent = new UnityEvent();
 
         public GameObject Loader { get => loader; set => loader = value; }
-        public GameObject ButtonObj  => buttonObj;
-        public TextMeshPro GoToWebsiteText { get => goToWebsiteText; set => goToWebsiteText = value; }
+        public GameObject ButtonObj => buttonObj;
+        public TextMeshProUGUI GoToWebsiteText { get => goToWebsiteText; set => goToWebsiteText = value; }
         public UnityEvent OnClickEvent => onClickEvent;
 
         public void OnClickCustomizeInvoke()

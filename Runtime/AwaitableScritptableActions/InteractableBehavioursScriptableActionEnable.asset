@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eae1940484438944ea1c995824e2169a, type: 3}
-  m_Name: TeleportPlayerScriptableAction
+  m_Script: {fileID: 11500000, guid: 5f519eeb9fbdc12458de2c0c450488d9, type: 3}
+  m_Name: InteractableBehavioursScriptableActionEnable
   m_EditorClassIdentifier: 
-  InteractableObjectReference: {fileID: 0}
-  hookID: teleportTarget
+  activate: 1
+  interactionsToEnable: 6
