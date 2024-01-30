@@ -17,8 +17,6 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
     private string defaultUrl;
     [SerializeField, Tooltip("If set to true, it won't be possible to change the media on this screen")]
     private bool isLocked;
-    [SerializeField, Tooltip("If set to false, the UI on the big screen is hidden")]
-    private bool isUIVisible = true;
 
     public Transform ScreenTransform => screenTransform;
     public Transform ContentTransform => contentTransform;
@@ -26,5 +24,4 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
     public FileTypeExt MediaType => mediaType;
     public string DefaultUrl => defaultUrl;
     public bool IsLocked => isLocked;
-    public bool IsUIVisible => isUIVisible;
 }
