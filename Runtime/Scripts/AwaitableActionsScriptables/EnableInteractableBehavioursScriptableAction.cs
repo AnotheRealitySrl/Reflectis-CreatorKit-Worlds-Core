@@ -16,17 +16,20 @@ namespace Reflectis.SDK.CreatorKit
 
         public override Task Action(IInteractable interactable = null)
         {
-            foreach (var beh in interactable.InteractableBehaviours)
+            if (interactable != null)
             {
-                if (beh is Manipulable manipulable && interactionsToEnable.HasFlag(EInteractableType.Manipulable))
-                    manipulable.CanInteract = activate;
+                foreach (var beh in interactable.InteractableBehaviours)
+                {
+                    if (beh is Manipulable manipulable && interactionsToEnable.HasFlag(EInteractableType.Manipulable))
+                        manipulable.CanInteract = activate;
 
-                if (beh is GenericInteractable genericInteractable && interactionsToEnable.HasFlag(EInteractableType.GenericInteractable))
-                    genericInteractable.CanInteract = activate;
+                    if (beh is GenericInteractable genericInteractable && interactionsToEnable.HasFlag(EInteractableType.GenericInteractable))
+                        genericInteractable.CanInteract = activate;
 
-                if (beh is ContextualMenuManageable manageable && interactionsToEnable.HasFlag(EInteractableType.ContextualMenuInteractable))
-                    manageable.CanInteract = activate;
-            };
+                    if (beh is ContextualMenuManageable manageable && interactionsToEnable.HasFlag(EInteractableType.ContextualMenuInteractable))
+                        manageable.CanInteract = activate;
+                };
+            }
 
             return Task.CompletedTask;
         }
