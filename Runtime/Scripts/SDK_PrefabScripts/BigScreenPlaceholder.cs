@@ -1,5 +1,6 @@
 using Reflectis.SDK.ClientModels;
 using Reflectis.SDK.CreatorKit;
+using Reflectis.SDK.Utilities;
 
 using UnityEngine;
 
@@ -12,10 +13,13 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
     [SerializeField, Tooltip("If this flag is set, a default media is loaded in the big screen.")]
     private bool defaultMedia;
     [SerializeField, Tooltip("The type of media being loaded by default. Valid only if defaultMedia is set to true")]
+    [DrawIf(nameof(defaultMedia), true)]
     private FileTypeExt mediaType;
     [SerializeField, Tooltip("The url of the media being loaded by default. Valid only if defaultMedia is set to true")]
+    [DrawIf(nameof(defaultMedia), true)]
     private string defaultUrl;
     [SerializeField, Tooltip("If set to true, it won't be possible to change the media on this screen")]
+    [DrawIf(nameof(defaultMedia), true)]
     private bool isLocked;
 
     public Transform ScreenTransform => screenTransform;
