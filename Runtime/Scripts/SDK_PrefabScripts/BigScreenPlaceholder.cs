@@ -47,13 +47,11 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
 
     public void OnWidthChanged()
     {
-        Debug.Log(screenWidth);
         screenTransform.localScale = new Vector3(screenWidth, screenTransform.localScale.y, screenTransform.localScale.z);
     }
 
     public void OnHeightChanged()
     {
-        Debug.Log(screenWidth);
         screenTransform.localScale = new Vector3(screenTransform.localScale.x, screenHeight, screenTransform.localScale.z);
     }
 }
