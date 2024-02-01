@@ -63,6 +63,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9002948500902079657}
+  - {fileID: 6909687537252600302}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -83,12 +84,14 @@ MonoBehaviour:
   <IsNetworked>k__BackingField: 0
   contentTransform: {fileID: 9002948500902079657}
   screenTransform: {fileID: 2934402864329866326}
+  cameraPanTransform: {fileID: 6909687537252600302}
   screenWidth: 1.5
   screenHeight: 1
-  defaultMedia: 0
-  mediaType: 0
-  defaultUrl: 
-  isLocked: 0
+  cameraPanDistance: 1
+  defaultMedia: 1
+  mediaType: 1
+  defaultUrl: www.google.com
+  isLocked: 1
 --- !u!1 &2898105385615111704
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,6 +198,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &3238881716627783108
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6909687537252600302}
+  m_Layer: 0
+  m_Name: PanTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6909687537252600302
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3238881716627783108}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1323849392332981646}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4808178059432317513
 GameObject:
   m_ObjectHideFlags: 0
