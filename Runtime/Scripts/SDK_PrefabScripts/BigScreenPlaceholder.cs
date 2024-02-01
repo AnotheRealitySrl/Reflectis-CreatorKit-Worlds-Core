@@ -40,6 +40,7 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
 
     public Transform ScreenTransform => screenTransform;
     public Transform ContentTransform => contentTransform;
+    public Transform CameraPanTransform => cameraPanTransform;
     public bool DefaultMedia => defaultMedia;
     public FileTypeExt MediaType => mediaType;
     public string DefaultUrl => defaultUrl;
