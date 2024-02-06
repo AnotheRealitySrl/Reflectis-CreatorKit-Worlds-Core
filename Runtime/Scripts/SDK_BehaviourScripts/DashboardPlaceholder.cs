@@ -16,9 +16,9 @@ namespace Reflectis.SDK.CreatorKit
             None
         }
 
-        [Header("DashboardData")]
-        [SerializeField] private string dashboardNameFilter;
-        [SerializeField] private DashboardFilter filter;
+        [Header("DashboardData")] 
+        [SerializeField, Tooltip("Choose the type on information you want to show on the dashboard")] private DashboardFilter filter;
+        [SerializeField, Tooltip("Write the name of the category,environment or tag present in the backoffice that you want to show on the dashboard ")] private string dashboardNameFilter;
 
         public string DashboardNameFilter => dashboardNameFilter;
 

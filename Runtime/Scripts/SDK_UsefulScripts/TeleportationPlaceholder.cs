@@ -7,8 +7,8 @@ namespace Reflectis.SDK.CreatorKit
     public class TeleportationPlaceholder : SceneComponentPlaceholderBase
     {
         [Header("Common references")]
-        [SerializeField] private Collider teleportCollider;
-        [SerializeField] private TeleportationDestinationPlaceholder teleportDestination;
+        [SerializeField, Tooltip("If this object is the teleporter, drag its own collider here")] private Collider teleportCollider;
+        [SerializeField, Tooltip("Drag the destination point that has the TeleportDestinationPlaceholder script attached to it")] private TeleportationDestinationPlaceholder teleportDestination;
 
         [Header("VR references")]
         [SerializeField] private GameObject customReticleVR;
