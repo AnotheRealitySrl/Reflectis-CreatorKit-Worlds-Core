@@ -21,13 +21,22 @@ namespace Reflectis.SDK.CreatorKit
                 foreach (var beh in interactable.InteractableBehaviours)
                 {
                     if (beh is Manipulable manipulable && interactionsToEnable.HasFlag(EInteractableType.Manipulable))
+                    {
+                        manipulable.enabled = activate;
                         manipulable.CanInteract = activate;
+                    }
 
                     if (beh is GenericInteractable genericInteractable && interactionsToEnable.HasFlag(EInteractableType.GenericInteractable))
+                    {
+                        genericInteractable.enabled = activate;
                         genericInteractable.CanInteract = activate;
+                    }
 
                     if (beh is ContextualMenuManageable manageable && interactionsToEnable.HasFlag(EInteractableType.ContextualMenuInteractable))
+                    {
+                        manageable.enabled = activate;
                         manageable.CanInteract = activate;
+                    }
                 };
             }
 
