@@ -1,8 +1,5 @@
 using Reflectis.SDK.InteractionNew;
-
-#if ODIN_INSPECTOR
-using Sirenix.OdinInspector;
-#endif
+using Reflectis.SDK.Utilities;
 
 using System.Collections.Generic;
 
@@ -17,8 +14,12 @@ namespace Reflectis.SDK.CreatorKit
 {
     public class InteractablePlaceholder : SceneComponentPlaceholderNetwork
     {
+        #region Shared settings
+
         [Header("Interaction settings")]
-        [SerializeField] private List<Collider> interactionColliders = new();
+
+        [SerializeField, Tooltip("The colliders that will be recognized by the interactable behaviours")]
+        private List<Collider> interactionColliders = new();
 
         [SerializeField, Tooltip("Which kind of interaction should this object have?")]
         private EInteractableType interactionModes;
@@ -26,73 +27,64 @@ namespace Reflectis.SDK.CreatorKit
         public List<Collider> InteractionColliders => interactionColliders;
         public EInteractableType InteractionModes { get => interactionModes; set => interactionModes = value; }
 
+        #endregion
+
         #region Manipulation
 
-        private bool showManipulationSettings => interactionModes.HasFlag(EInteractableType.Manipulable);
-#if ODIN_INSPECTOR
-        [ShowIfGroup(nameof(showManipulationSettings))]
-#endif
-#if ODIN_INSPECTOR
-        [BoxGroup("showManipulationSettings/Manipulation settings")]
-#endif
-        [SerializeField] private EManipulationMode manipulationMode = (EManipulationMode)~0;
+        [SerializeField, Tooltip("Translate, rotate and scale.")]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable)]
+        private EManipulationMode manipulationMode = (EManipulationMode)~0;
 
-        private bool hasScaleSelected => manipulationMode.HasFlag(EManipulationMode.Scale);
-#if ODIN_INSPECTOR
-        [BoxGroup("showManipulationSettings/Manipulation settings"), ShowIf(nameof(hasScaleSelected))]
-#endif
-        [SerializeField] private bool nonProportionalScale;
+        [SerializeField, Tooltip("Enables non-proportional scale on this object.")]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(manipulationMode), EManipulationMode.Scale)]
+        private bool nonProportionalScale;
+
 
         [Header("VR manipulation settings")]
+        [SerializeField, Tooltip("Enables hand and ray interaction on this object")]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable)]
+        private EVRInteraction vrInteraction = (EVRInteraction)~0;
 
-#if ODIN_INSPECTOR
-        [BoxGroup("showManipulationSettings/Manipulation settings")]
-#endif
-        [SerializeField] private EVRInteraction vrInteraction = (EVRInteraction)~0;
+        [SerializeField, Tooltip("A dynamic attach means that the object won't snap to the center of gravity")]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable)]
+        private bool dynamicAttach;
 
-#if ODIN_INSPECTOR
-        [BoxGroup("showManipulationSettings/Manipulation settings")]
-#endif
-        [SerializeField] private bool dynamicAttach;
+        [SerializeField, Tooltip("Resets the rotation on one or more axes when the interaction ends (VR-only)")]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable)]
+        private bool adjustRotationOnRelease;
 
-#if ODIN_INSPECTOR
-        [BoxGroup("showManipulationSettings/Manipulation settings")]
-#endif
-        [SerializeField] private bool adjustRotationOnRelease;
+        [SerializeField, Tooltip("Resets the rotation on the X axis")]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(adjustRotationOnRelease), true)]
+        private bool realignAxisX = true;
 
+        [SerializeField, Tooltip("Resets the rotation on the Y axis")]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(adjustRotationOnRelease), true)]
+        private bool realignAxisY = false;
 
-#if ODIN_INSPECTOR
-        [BoxGroup("showManipulationSettings/Manipulation settings/Adjust rotation on release"), ShowIf(nameof(adjustRotationOnRelease))]
-#endif
-        [SerializeField] private bool realignAxisX = true;
+        [SerializeField, Tooltip("Resets the rotation on the Z axis")]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(adjustRotationOnRelease), true)]
+        private bool realignAxisZ = true;
 
-#if ODIN_INSPECTOR
-        [BoxGroup("showManipulationSettings/Manipulation settings/Adjust rotation on release"), ShowIf(nameof(adjustRotationOnRelease))]
-#endif
-        [SerializeField] private bool realignAxisY = false;
-
-#if ODIN_INSPECTOR
-        [BoxGroup("showManipulationSettings/Manipulation settings/Adjust rotation on release"), ShowIf(nameof(adjustRotationOnRelease))]
-#endif
-        [SerializeField] private bool realignAxisZ = true;
-
-#if ODIN_INSPECTOR
-        [BoxGroup("showManipulationSettings/Manipulation settings/Adjust rotation on release"), ShowIf(nameof(adjustRotationOnRelease))]
-#endif
-        [SerializeField] private float realignDurationTimeInSeconds = 1f;
+        [SerializeField, Tooltip("How much time is needed to reset the rotation")]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(adjustRotationOnRelease), true)]
+        private float realignDurationTimeInSeconds = 1f;
 
 
-        private bool hasTranslationSelected => manipulationMode.HasFlag(EManipulationMode.Translate);
         [Header("WebGL manipulation settings")]
-#if ODIN_INSPECTOR
-        [BoxGroup("showManipulationSettings/Manipulation settings"), ShowIf(nameof(hasTranslationSelected))]
-#endif
-        [SerializeField] private bool mouseLookAtCamera;
+
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(manipulationMode), EManipulationMode.Translate)]
+        private bool mouseLookAtCamera;
+
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(manipulationMode), EManipulationMode.Translate)]
+        private Transform attachTransform;
 
         public EManipulationMode ManipulationMode { get => manipulationMode; set => manipulationMode = value; }
         public EVRInteraction VRInteraction { get => vrInteraction; set => vrInteraction = value; }
         public bool DynamicAttach => dynamicAttach;
         public bool MouseLookAtCamera => mouseLookAtCamera;
+        public Transform AttachTransform => attachTransform;
         public bool NonProportionalScale { get => nonProportionalScale; set => nonProportionalScale = value; }
         public bool AdjustRotationOnRelease => adjustRotationOnRelease;
         public bool RealignAxisX => realignAxisX;
@@ -100,60 +92,54 @@ namespace Reflectis.SDK.CreatorKit
         public bool RealignAxisZ => realignAxisZ;
         public float RealignDurationTimeInSeconds => realignDurationTimeInSeconds;
 
-        public Transform attachTransform;
 
         #endregion
 
         #region Generic interaction
 
-        private bool showGenericInteractionSettings => interactionModes.HasFlag(EInteractableType.GenericInteractable);
-#if ODIN_INSPECTOR
-        [ShowIfGroup(nameof(showGenericInteractionSettings))]
-#endif
-
         [Header("Generic interaction scriptable actions")]
-#if ODIN_INSPECTOR
-        [BoxGroup("showGenericInteractionSettings/Generic interaction settings")]
-#endif
-        [SerializeField] private List<AwaitableScriptableAction> onHoverEnterActions = new();
-#if ODIN_INSPECTOR
-        [BoxGroup("showGenericInteractionSettings/Generic interaction settings")]
-#endif
-        [SerializeField] private List<AwaitableScriptableAction> onHoverExitActions = new();
-#if ODIN_INSPECTOR
-        [BoxGroup("showGenericInteractionSettings/Generic interaction settings")]
-#endif
-        [SerializeField] private List<AwaitableScriptableAction> onSelectingActions = new();
-#if ODIN_INSPECTOR
-        [BoxGroup("showGenericInteractionSettings/Generic interaction settings")]
-#endif
-        [SerializeField] private List<AwaitableScriptableAction> onSelectedActions = new();
-#if ODIN_INSPECTOR
-        [BoxGroup("showGenericInteractionSettings/Generic interaction settings")]
-#endif
-        [SerializeField] private List<AwaitableScriptableAction> onDeselectingActions = new();
-#if ODIN_INSPECTOR
-        [BoxGroup("showGenericInteractionSettings/Generic interaction settings")]
-#endif
-        [SerializeField] private List<AwaitableScriptableAction> onDeselectedActions = new();
-#if ODIN_INSPECTOR
-        [BoxGroup("showGenericInteractionSettings/Generic interaction settings")]
-#endif
-        [SerializeField] private List<AwaitableScriptableAction> onInteractActions = new();
-#if ODIN_INSPECTOR
-        [BoxGroup("showGenericInteractionSettings/Generic interaction settings")]
-#endif
-        [SerializeField] private List<AwaitableScriptableAction> onInteractFinishActions = new();
+
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private List<AwaitableScriptableAction> onHoverEnterActions = new();
+
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private List<AwaitableScriptableAction> onHoverExitActions = new();
+
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private List<AwaitableScriptableAction> onSelectingActions = new();
+
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private List<AwaitableScriptableAction> onSelectedActions = new();
+
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private List<AwaitableScriptableAction> onDeselectingActions = new();
+
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private List<AwaitableScriptableAction> onDeselectedActions = new();
+
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private List<AwaitableScriptableAction> onInteractActions = new();
+
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private List<AwaitableScriptableAction> onInteractFinishActions = new();
 
         [Header("Allowed states")]
-#if ODIN_INSPECTOR
-        [BoxGroup("showGenericInteractionSettings/Generic interaction settings")]
-#endif
-        [SerializeField] private EAllowedGenericInteractableState desktopAllowedStates = (EAllowedGenericInteractableState)~0;
-#if ODIN_INSPECTOR
-        [BoxGroup("showGenericInteractionSettings/Generic interaction settings")]
-#endif
-        [SerializeField] private EAllowedGenericInteractableState vrAllowedStates = (EAllowedGenericInteractableState)~0;
+
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private EAllowedGenericInteractableState desktopAllowedStates = (EAllowedGenericInteractableState)~0;
+
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private EAllowedGenericInteractableState vrAllowedStates = (EAllowedGenericInteractableState)~0;
 
 
         public List<AwaitableScriptableAction> OnHoverEnterActions => onHoverEnterActions;
@@ -172,27 +158,20 @@ namespace Reflectis.SDK.CreatorKit
 
         #region Contextual menu
 
-        private bool showContextualMenuSettings => interactionModes.HasFlag(EInteractableType.ContextualMenuInteractable);
-#if ODIN_INSPECTOR
-        [ShowIfGroup(nameof(showContextualMenuSettings))]
-#endif
-#if ODIN_INSPECTOR
-        [BoxGroup("showContextualMenuSettings/Contextual menu settings")]
-#endif
         [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.ContextualMenuInteractable)]
         private EContextualMenuOption contextualMenuOptions =
             EContextualMenuOption.LockTransform |
             EContextualMenuOption.ResetTransform |
             EContextualMenuOption.Duplicate |
             EContextualMenuOption.Delete;
 
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.ContextualMenuInteractable)]
+        private EContextualMenuType contextualMenuType = EContextualMenuType.Default;
+
+
         public EContextualMenuOption ContextualMenuOptions { get => contextualMenuOptions; set => contextualMenuOptions = value; }
-
-#if ODIN_INSPECTOR
-        [BoxGroup("showContextualMenuSettings/Contextual menu settings")]
-#endif
-        [SerializeField] private EContextualMenuType contextualMenuType;
-
         public EContextualMenuType ContextualMenuType { get => contextualMenuType; set => contextualMenuType = value; }
 
         #endregion
