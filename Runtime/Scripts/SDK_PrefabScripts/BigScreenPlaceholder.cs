@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
 {
-    [HelpBox("To resize the screen, use the parameters \"Screen Width\" and \"Screen Height\" " +
-        "and they will adjust automatically the dimensions. Same applies to the distance of the camera pan transform", HelpBoxMessageType.Info)]
+    [HelpBox("To resize the screen, don't modify the scale of the transforms, but use the parameters \"Screen Width\" and \"Screen Height\" " +
+        "and they will adjust automatically its dimensions. The same applies to the distance of the camera pan transform.", HelpBoxMessageType.Info)]
 
     [Header("Screen references. \nDo not change unless making a custom prefab.")]
 
@@ -45,12 +45,13 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
     [SerializeField, Tooltip("If this flag is set, a default media is loaded in the big screen.")]
     private bool defaultMedia;
 
-    [SerializeField, Tooltip("The type of media being loaded by default. Valid only if defaultMedia is set to true.")]
+    [SerializeField, Tooltip("The type of media being loaded by default. Valid only if defaultMedia is set to true. " +
+        "WARNING: do not use the \"Asset3D\" value!")]
     [DrawIf(nameof(defaultMedia), true)]
     private FileTypeExt mediaType;
 
     [SerializeField, Tooltip("The url of the media being loaded by default. Valid only if defaultMedia is set to true. " +
-        "WARNING: do not use the \"Asset3D\" value!")]
+        "WARNING: the url must be an absolute url, with the extension of the file included!")]
     [DrawIf(nameof(defaultMedia), true)]
     private string defaultUrl;
 
