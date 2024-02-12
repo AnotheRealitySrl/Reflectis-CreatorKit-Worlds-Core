@@ -27,11 +27,11 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
 
     [Header("Screen settings")]
 
-    [SerializeField/*, Range(0.5f, 10)*/, Tooltip("The width of the screen.")]
+    [SerializeField, /*Range(0.5f, 10),*/ Tooltip("The width of the screen.")]
     [OnChangedCall(nameof(OnWidthChanged))]
     private float screenWidth = 1.5f;
 
-    [SerializeField/*, Range(0.5f, 10)*/, Tooltip("The height of the screen.")]
+    [SerializeField, /*Range(0.5f, 10),*/ Tooltip("The height of the screen.")]
     [OnChangedCall(nameof(OnHeightChanged))]
     private float screenHeight = 1f;
 
