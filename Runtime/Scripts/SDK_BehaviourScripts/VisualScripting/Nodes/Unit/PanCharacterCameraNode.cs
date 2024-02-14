@@ -47,6 +47,8 @@ namespace Reflectis.SDK.CreatorKit
 
         private IEnumerator PanCoroutine(Flow flow)
         {
+            awaitableMethodRuning = false;
+
             CallAwaitableMethod(flow);
 
             while (!awaitableMethodRuning)
@@ -54,15 +56,20 @@ namespace Reflectis.SDK.CreatorKit
                 yield return null;
             }
         }
+
         private async void CallAwaitableMethod(Flow flow)
         {
             if (flow.GetValue<bool>(boolVal))
             {
                 await SM.GetSystem<ICharacterControllerSystem>().GoToInteractState(flow.GetValue<Transform>(transformVal));
+
+                awaitableMethodRuning = true;
             }
             else
             {
                 await SM.GetSystem<ICharacterControllerSystem>().GoToSetMovementState();
+
+                awaitableMethodRuning = true;
             }
         }
     }
