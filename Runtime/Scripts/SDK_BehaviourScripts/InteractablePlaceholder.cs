@@ -142,8 +142,17 @@ namespace Reflectis.SDK.CreatorKit
 
         [HideInInspector]
         public Action<GameObject> OnSelectedActionVisualScripting;
-        [HideInInspector]
-        public bool VisualScriptingFinished;
+
+        public bool VisualScriptingFinished
+        {
+            set
+            {
+                if (GetComponent<GenericInteractable>())
+                {
+                    GetComponent<GenericInteractable>().VisualScriptingInteractionFinished = value;
+                }
+            }
+        }
 
         public List<AwaitableScriptableAction> OnHoverEnterActions => onHoverEnterActions;
         public List<AwaitableScriptableAction> OnHoverExitActions => onHoverExitActions;

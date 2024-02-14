@@ -90,12 +90,15 @@ namespace Reflectis.SDK.CreatorKit
 
         private IEnumerator TriggerState(Flow flow, InteractablePlaceholder interactable)
         {
+            Debug.Log("Visual SCripting Started");
+
             while (flow.stack != null)
             {
                 yield return null;
             }
 
             Debug.Log("visual scripting finished event");
+
             interactable.VisualScriptingFinished = true;
         }
 
