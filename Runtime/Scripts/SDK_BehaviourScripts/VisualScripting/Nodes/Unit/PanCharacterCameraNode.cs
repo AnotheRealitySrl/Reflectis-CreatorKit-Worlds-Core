@@ -55,6 +55,8 @@ namespace Reflectis.SDK.CreatorKit
             {
                 yield return null;
             }
+
+            yield return outputTrigger;
         }
 
         private async void CallAwaitableMethod(Flow flow)
@@ -64,6 +66,7 @@ namespace Reflectis.SDK.CreatorKit
                 await SM.GetSystem<ICharacterControllerSystem>().GoToInteractState(flow.GetValue<Transform>(transformVal));
 
                 awaitableMethodRuning = true;
+
             }
             else
             {
