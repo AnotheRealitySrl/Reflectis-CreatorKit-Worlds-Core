@@ -31,6 +31,8 @@ namespace Reflectis.SDK.CreatorKit
 
         #region Manipulation
 
+        [Header("Manipulation section")]
+
         [SerializeField, Tooltip("Translate, rotate and scale.")]
         [DrawIf(nameof(interactionModes), EInteractableType.Manipulable)]
         private EManipulationMode manipulationMode = (EManipulationMode)~0;
@@ -41,42 +43,43 @@ namespace Reflectis.SDK.CreatorKit
 
 
         [Header("VR manipulation settings")]
+
         [SerializeField, Tooltip("Enables hand and ray interaction on this object")]
         [DrawIf(nameof(interactionModes), EInteractableType.Manipulable)]
         private EVRInteraction vrInteraction = (EVRInteraction)~0;
 
         [SerializeField, Tooltip("A dynamic attach means that the object won't snap to the center of gravity")]
-        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable)]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(vrInteraction), EVRInteraction.Hands | EVRInteraction.RayInteraction)]
         private bool dynamicAttach;
 
         [SerializeField, Tooltip("Resets the rotation on one or more axes when the interaction ends (VR-only)")]
-        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable)]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(vrInteraction), EVRInteraction.Hands | EVRInteraction.RayInteraction)]
         private bool adjustRotationOnRelease;
 
         [SerializeField, Tooltip("Resets the rotation on the X axis")]
-        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(adjustRotationOnRelease), true)]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(vrInteraction), EVRInteraction.Hands | EVRInteraction.RayInteraction), DrawIf(nameof(adjustRotationOnRelease), true)]
         private bool realignAxisX = true;
 
         [SerializeField, Tooltip("Resets the rotation on the Y axis")]
-        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(adjustRotationOnRelease), true)]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(vrInteraction), EVRInteraction.Hands | EVRInteraction.RayInteraction), DrawIf(nameof(adjustRotationOnRelease), true)]
         private bool realignAxisY = false;
 
         [SerializeField, Tooltip("Resets the rotation on the Z axis")]
-        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(adjustRotationOnRelease), true)]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(vrInteraction), EVRInteraction.Hands | EVRInteraction.RayInteraction), DrawIf(nameof(adjustRotationOnRelease), true)]
         private bool realignAxisZ = true;
 
         [SerializeField, Tooltip("How much time is needed to reset the rotation")]
-        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(adjustRotationOnRelease), true)]
+        [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(vrInteraction), EVRInteraction.Hands | EVRInteraction.RayInteraction), DrawIf(nameof(adjustRotationOnRelease), true)]
         private float realignDurationTimeInSeconds = 1f;
 
 
         [Header("WebGL manipulation settings")]
 
-        [SerializeField]
+        [SerializeField, Tooltip("If selected, the object will face the camera on mouse interaction")]
         [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(manipulationMode), EManipulationMode.Translate)]
         private bool mouseLookAtCamera;
 
-        [SerializeField]
+        [SerializeField, Tooltip("If specified, a dynamic attach will be generated on interaction")]
         [DrawIf(nameof(interactionModes), EInteractableType.Manipulable), DrawIf(nameof(manipulationMode), EManipulationMode.Translate)]
         private Transform attachTransform;
 
@@ -92,52 +95,56 @@ namespace Reflectis.SDK.CreatorKit
         public bool RealignAxisZ => realignAxisZ;
         public float RealignDurationTimeInSeconds => realignDurationTimeInSeconds;
 
-
         #endregion
 
         #region Generic interaction
 
         [Header("Generic interaction scriptable actions")]
 
-        [SerializeField]
+        [SerializeField, Tooltip("Actions that are triggered when hovering the object.")]
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private List<AwaitableScriptableAction> onHoverEnterActions = new();
 
-        [SerializeField]
+        [SerializeField, Tooltip("Actions that are triggered when finishing the hover on the object.")]
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private List<AwaitableScriptableAction> onHoverExitActions = new();
 
-        [SerializeField]
+        [SerializeField, Tooltip("Actions that are triggered when selecting the object. " +
+            "During this state the interaction with the object is disabled.")]
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private List<AwaitableScriptableAction> onSelectingActions = new();
 
-        [SerializeField]
+        [SerializeField, Tooltip("Actions that are triggered automatically when the \"Selecting\" states terminates. " +
+            "In this state it's possible to interact with the object")]
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private List<AwaitableScriptableAction> onSelectedActions = new();
 
-        [SerializeField]
+        [SerializeField, Tooltip("Actions that are triggered when deselecting the object. " +
+            "During this state the interaction with the object is disabled.")]
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private List<AwaitableScriptableAction> onDeselectingActions = new();
 
-        [SerializeField]
+        [SerializeField, Tooltip("Actions that are triggered automatically when the \"Deselecting\" states terminates. " +
+            "In this state it's possible to interact with the object")]
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private List<AwaitableScriptableAction> onDeselectedActions = new();
 
-        [SerializeField]
+        [SerializeField, Tooltip("Actions that are triggered automatically when entering the \"Interact\" state.")]
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private List<AwaitableScriptableAction> onInteractActions = new();
 
-        [SerializeField]
+        [SerializeField, Tooltip("Actions that are triggered automatically when exiting the \"Interact\" state.")]
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private List<AwaitableScriptableAction> onInteractFinishActions = new();
 
+
         [Header("Allowed states")]
 
-        [SerializeField]
+        [SerializeField, Tooltip("Choose which state are enabled on this object in desktop platforms.")]
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private EAllowedGenericInteractableState desktopAllowedStates = (EAllowedGenericInteractableState)~0;
 
-        [SerializeField]
+        [SerializeField, Tooltip("Choose which state are enabled on this object in VR platforms.")]
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private EAllowedGenericInteractableState vrAllowedStates = (EAllowedGenericInteractableState)~0;
 
@@ -158,7 +165,9 @@ namespace Reflectis.SDK.CreatorKit
 
         #region Contextual menu
 
-        [SerializeField]
+        [Header("Contextual menu")]
+
+        [SerializeField, Tooltip("Select how many options will be available in this menu")]
         [DrawIf(nameof(interactionModes), EInteractableType.ContextualMenuInteractable)]
         private EContextualMenuOption contextualMenuOptions =
             EContextualMenuOption.LockTransform |
@@ -166,7 +175,7 @@ namespace Reflectis.SDK.CreatorKit
             EContextualMenuOption.Duplicate |
             EContextualMenuOption.Delete;
 
-        [SerializeField]
+        [SerializeField, Tooltip("Select the type of contextual menu. Use \"Default\" one unless you are working with a media player")]
         [DrawIf(nameof(interactionModes), EInteractableType.ContextualMenuInteractable)]
         private EContextualMenuType contextualMenuType = EContextualMenuType.Default;
 
