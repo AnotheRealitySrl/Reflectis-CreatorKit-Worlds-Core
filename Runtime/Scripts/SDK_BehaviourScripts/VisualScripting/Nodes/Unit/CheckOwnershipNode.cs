@@ -28,7 +28,6 @@ namespace Reflectis.SDK.CreatorKit
         protected override void Definition()
         {
             syncedObject = ValueInput<SyncedObject>(nameof(syncedObject), null).NullMeansSelf();
-
             inputTrigger = ControlInput(nameof(inputTrigger), (f) =>
             {
                 if (f.GetValue<SyncedObject>(syncedObject).OnCheckOwnershipFunction())
@@ -47,7 +46,6 @@ namespace Reflectis.SDK.CreatorKit
             Succession(inputTrigger, outputTriggerTrue);
             Succession(inputTrigger, outputTriggerFalse);
         }
-
         private bool CheckOwnershipNode_onCheckOwnershipObject()
         {
             throw new System.NotImplementedException();

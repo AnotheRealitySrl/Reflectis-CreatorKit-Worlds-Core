@@ -1,10 +1,9 @@
 using Reflectis.SDK.InteractionNew;
 using Reflectis.SDK.Utilities;
-
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
-
 using static Reflectis.SDK.InteractionNew.ContextualMenuManageable;
 using static Reflectis.SDK.InteractionNew.GenericInteractable;
 using static Reflectis.SDK.InteractionNew.IInteractable;
@@ -141,6 +140,10 @@ namespace Reflectis.SDK.CreatorKit
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private EAllowedGenericInteractableState vrAllowedStates = (EAllowedGenericInteractableState)~0;
 
+        [HideInInspector]
+        public Action<GameObject> OnSelectedActionVisualScripting;
+        [HideInInspector]
+        public bool VisualScriptingFinished;
 
         public List<AwaitableScriptableAction> OnHoverEnterActions => onHoverEnterActions;
         public List<AwaitableScriptableAction> OnHoverExitActions => onHoverExitActions;
@@ -175,5 +178,11 @@ namespace Reflectis.SDK.CreatorKit
         public EContextualMenuType ContextualMenuType { get => contextualMenuType; set => contextualMenuType = value; }
 
         #endregion
+
+        private void Start()
+        {
+            OnSelectedActionVisualScripting += OnSelectedEnterEventUnit.TriggerEventCallback;
+        }
+
     }
 }
