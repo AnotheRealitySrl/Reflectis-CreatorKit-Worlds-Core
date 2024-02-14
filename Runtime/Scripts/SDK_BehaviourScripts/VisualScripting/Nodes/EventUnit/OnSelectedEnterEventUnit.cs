@@ -80,6 +80,7 @@ namespace Reflectis.SDK.CreatorKit
             {
                 if (flow.stack != null)
                 {
+                    args.CurrentEventCount++;
                     args.VisualScriptingFinished = false;
                     flow.stack.component.StartCoroutine(TriggerState(flow, args));
                 }
@@ -98,6 +99,8 @@ namespace Reflectis.SDK.CreatorKit
             }
 
             Debug.Log("visual scripting finished event");
+
+            interactable.CurrentEventCount--;
 
             interactable.VisualScriptingFinished = true;
         }

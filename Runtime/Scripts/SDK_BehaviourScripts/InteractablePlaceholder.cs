@@ -143,6 +143,18 @@ namespace Reflectis.SDK.CreatorKit
         [HideInInspector]
         public Action<GameObject> OnSelectedActionVisualScripting;
 
+        public int CurrentEventCount
+        {
+            get { return CurrentEventCount; }
+            set
+            {
+                if (GetComponent<GenericInteractable>())
+                {
+                    GetComponent<GenericInteractable>().VisualScriptingInteractionCount = value;
+                }
+            }
+        }
+
         public bool VisualScriptingFinished
         {
             set
