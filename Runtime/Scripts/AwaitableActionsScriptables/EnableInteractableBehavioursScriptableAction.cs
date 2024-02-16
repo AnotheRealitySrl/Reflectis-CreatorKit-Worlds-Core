@@ -22,8 +22,12 @@ namespace Reflectis.SDK.CreatorKit
                 {
                     if (beh is Manipulable manipulable && interactionsToEnable.HasFlag(EInteractableType.Manipulable))
                     {
-                        manipulable.enabled = activate;
-                        manipulable.CanInteract = activate;
+                        //TODO Refactor of CanInteract/Ownership/CanManipulate
+                        if (manipulable.canManipulate)
+                        {
+                            manipulable.enabled = activate;
+                            manipulable.CanInteract = activate;
+                        }
                     }
 
                     if (beh is GenericInteractable genericInteractable && interactionsToEnable.HasFlag(EInteractableType.GenericInteractable))
