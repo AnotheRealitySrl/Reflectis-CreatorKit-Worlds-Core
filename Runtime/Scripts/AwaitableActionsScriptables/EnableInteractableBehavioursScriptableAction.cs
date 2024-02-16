@@ -22,10 +22,7 @@ namespace Reflectis.SDK.CreatorKit
                 {
                     if (beh is Manipulable manipulable && interactionsToEnable.HasFlag(EInteractableType.Manipulable))
                     {
-                        if(manipulable.isBigScreen == false)
-                        {
-                            manipulable.enabled = activate;
-                        }
+                        manipulable.enabled = activate;
                         manipulable.CanInteract = activate;
                     }
 
