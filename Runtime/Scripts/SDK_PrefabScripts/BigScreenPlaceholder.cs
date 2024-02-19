@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
 {
-    [HelpBox("To resize the screen, don't modify the scale of the transforms, but use the parameters \"Screen Width\" and \"Screen Height\" " +
-        "and they will adjust automatically its dimensions. The same applies to the distance of the camera pan transform.", HelpBoxMessageType.Info)]
+
+    [HelpBox("Do not change the value of \"IsNetworked\" field", HelpBoxMessageType.Warning)]
 
     [Header("Screen references. \nDo not change unless making a custom prefab.")]
 
@@ -24,6 +24,9 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
         "Do not change its local position, it will be automatically updated by using the screen settings.")]
     private Transform cameraPanTransform;
 
+
+    [HelpBox("To resize the screen, don't modify the scale of the transforms, but use the parameters \"Screen Width\" and \"Screen Height\" " +
+        "and they will adjust automatically its dimensions. The same applies to the distance of the camera pan transform.", HelpBoxMessageType.Info)]
 
     [Header("Screen settings")]
 
