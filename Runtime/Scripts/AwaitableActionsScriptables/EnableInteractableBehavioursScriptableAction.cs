@@ -23,30 +23,48 @@ namespace Reflectis.SDK.CreatorKit
                     if (beh is Manipulable manipulable && interactionsToEnable.HasFlag(EInteractableType.Manipulable))
                     {
                         //TODO Refactor of CanInteract/Ownership/CanManipulate
-                        if (manipulable.CurrentInteractionBehaviourState != InteractableBehaviourBase.EInteractionState.Blocked)
+                        if (!activate)
                         {
-                            if (activate)
-                            {
-                                manipulable.CurrentInteractionBehaviourState = InteractableBehaviourBase.EInteractionState.Selected;
-                            }
-                            else
-                            {
-                                manipulable.CurrentInteractionBehaviourState = InteractableBehaviourBase.EInteractionState.Idle;
-                            }
-                            manipulable.enabled = activate;
+                            manipulable.CurrentBlockedState |= InteractableBehaviourBase.EBlockedState.BlockedBySelection;
                         }
+                        else
+                        {
+                            manipulable.CurrentBlockedState = manipulable.CurrentBlockedState & ~InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                            //manipulable.CurrentBlockedState = InteractableBehaviourBase.EBlockedState.Idle;
+                            //remove blockedBySelection
+                        }
+                        manipulable.enabled = activate;
                     }
 
                     if (beh is GenericInteractable genericInteractable && interactionsToEnable.HasFlag(EInteractableType.GenericInteractable))
                     {
+                        if (!activate)
+                        {
+                            genericInteractable.CurrentBlockedState |= InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                        }
+                        else
+                        {
+                            //remove blockedBySelection
+                            genericInteractable.CurrentBlockedState = genericInteractable.CurrentBlockedState &~InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                            //genericInteractable.CurrentBlockedState = InteractableBehaviourBase.EBlockedState.Idle;
+                        }
                         genericInteractable.enabled = activate;
-                        genericInteractable.CanInteract = activate;
+                        //genericInteractable.CanInteract = activate;
                     }
 
                     if (beh is ContextualMenuManageable manageable && interactionsToEnable.HasFlag(EInteractableType.ContextualMenuInteractable))
                     {
+                        if (!activate)
+                        {
+                            manageable.CurrentBlockedState |=  InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                        }
+                        else
+                        {
+                            //remove blockedBySelection
+                            manageable.CurrentBlockedState = manageable.CurrentBlockedState & ~InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                        }
                         manageable.enabled = activate;
-                        manageable.CanInteract = activate;
+                        //manageable.CanInteract = activate;
                     }
                 };
             }
