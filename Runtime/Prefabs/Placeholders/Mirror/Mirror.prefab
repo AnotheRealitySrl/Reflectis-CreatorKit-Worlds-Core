@@ -202,7 +202,7 @@ Transform:
   m_GameObject: {fileID: 3396935892489593298}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalScale: {x: -1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9167023236696829475}
@@ -371,7 +371,7 @@ Transform:
   - {fileID: 4330334731125782779}
   - {fileID: 8714169347406590598}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9147093764125674488
 MonoBehaviour:
@@ -401,6 +401,7 @@ MonoBehaviour:
   realignAxisZ: 1
   realignDurationTimeInSeconds: 1
   mouseLookAtCamera: 0
+  attachTransform: {fileID: 0}
   onHoverEnterActions: []
   onHoverExitActions: []
   onSelectingActions:
@@ -419,6 +420,7 @@ MonoBehaviour:
   desktopAllowedStates: -1
   vrAllowedStates: 0
   contextualMenuOptions: 15
+  contextualMenuType: 0
 --- !u!65 &334317772072228971
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1109,7 +1111,7 @@ MonoBehaviour:
   m_StopNaN: 0
   m_Dithering: 0
   m_ClearDepth: 1
-  m_AllowXRRendering: 1
+  m_AllowXRRendering: 0
   m_AllowHDROutput: 1
   m_UseScreenCoordOverride: 0
   m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
