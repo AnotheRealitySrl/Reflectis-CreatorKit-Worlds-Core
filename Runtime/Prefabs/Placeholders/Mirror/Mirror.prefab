@@ -347,6 +347,8 @@ GameObject:
   - component: {fileID: 9147093764125674488}
   - component: {fileID: 334317772072228971}
   - component: {fileID: 8167290085301973599}
+  - component: {fileID: 3189011076758610273}
+  - component: {fileID: 5373263422417737578}
   m_Layer: 0
   m_Name: Mirror
   m_TagString: Untagged
@@ -371,7 +373,7 @@ Transform:
   - {fileID: 4330334731125782779}
   - {fileID: 8714169347406590598}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9147093764125674488
 MonoBehaviour:
@@ -409,8 +411,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 36aaac1aedcbc4b4f96e4f48d2bb8e25, type: 2}
   - {fileID: 11400000, guid: a08b3556da4bedb4fbf09eb48a457d1c, type: 2}
   - {fileID: 11400000, guid: a175a52e3424bbd4eb2ef27377ee74b8, type: 2}
+  - {fileID: 11400000, guid: 5f3cca8e4997bb545bca39e3c4809893, type: 2}
   onSelectedActions: []
   onDeselectingActions:
+  - {fileID: 11400000, guid: 0dbf0707249097c439538765e28b7b3e, type: 2}
   - {fileID: 11400000, guid: 49fb4a21e23fbc14d8a21d0afa8c802e, type: 2}
   - {fileID: 11400000, guid: 0c00ded6f49ac5046862da78239741bd, type: 2}
   - {fileID: 11400000, guid: 0b598b029cdf26148895a9590bd7f7ce, type: 2}
@@ -458,6 +462,38 @@ MonoBehaviour:
   disableInVR:
   - {fileID: 334317772072228971}
   disableInWebGL: []
+--- !u!114 &3189011076758610273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3602442629590522712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3de3b8981d2a947acef79622e6c780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: EnableBehaviours
+  customReferences:
+  - name: 
+    component: {fileID: 1007369905696330684}
+--- !u!114 &5373263422417737578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3602442629590522712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3de3b8981d2a947acef79622e6c780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: DisableBehaviours
+  customReferences:
+  - name: 
+    component: {fileID: 1007369905696330684}
 --- !u!1 &3992436055641907915
 GameObject:
   m_ObjectHideFlags: 0
@@ -589,7 +625,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4373825439435451471}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
