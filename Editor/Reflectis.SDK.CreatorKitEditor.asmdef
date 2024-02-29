@@ -1,0 +1,21 @@
+{
+    "name": "Reflectis.SDK.CreatorKitEditor",
+    "rootNamespace": "Reflectis.SDK.CreatorKitEditor",
+    "references": [
+        "GUID:69448af7b92c7f342b298e06a37122aa",
+        "GUID:e1e4f83f6c2796445b9ea45a4dca9090",
+        "GUID:21b0c8d1703a94250bfac916590cea4f",
+        "GUID:54cb1906aeb4e4264bc1d2aa3818a43f"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

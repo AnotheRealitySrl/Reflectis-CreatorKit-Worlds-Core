@@ -1,0 +1,22 @@
+{
+  "name": "com.anotherealitysrl.reflectis-sdk-creatorkit",
+  "displayName": "Reflectis-SDK-CreatorKit",
+  "version": "2.0.0",
+  "unity": "2020.1",
+  "description": "Reflectis Creator Kit module",
+  "keywords": [
+    "unity"
+  ],
+  "category": "Unity",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AnotheRealitySrl/Reflectis-SDK-CreatorKit"
+  },
+  "samples": [
+    {
+      "displayName": "Multiplayer Visual Scripting Sample",
+      "description": "Template scene with visual scripting network sample use",
+      "path": "Samples~/MultiplayerSceneSample"
+    }
+  ]
+}
