@@ -17,7 +17,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             foreach (Type type in mapper.GetComponentsTypes(GetType().ToString().Split('.')[^1]))
             {
-                if (!typeof(INetworkRuntimeComponent).IsAssignableFrom(type) || (typeof(INetworkRuntimeComponent).IsAssignableFrom(type) && IsNetworked))
+                if (!typeof(INetworkRuntimeComponent).IsAssignableFrom(type) || (typeof(INetworkRuntimeComponent).IsAssignableFrom(type) && IsNetworked && InitializationId != 0))
                 {
                     await ((IRuntimeComponent)gameObject.AddComponent(type)).Init(this);
                 }
