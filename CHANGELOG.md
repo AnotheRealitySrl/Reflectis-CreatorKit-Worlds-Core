@@ -20,11 +20,11 @@
 - Added window for configure network placeholder IDs
 - `SpawnAddressable` placeholder for spawning addressable assets
 - `InteractableOwnershipPlaceholder` for ownership management
-- `HelpSpawnObjectPlaceholder`
-- `GoToPreviousEventButtonAdder`
-- `GoToPreviousEventOnCollisionPlaceholder`
-- `MascotteNameSetCheckPlaceholder`
-- `RPMAvatarWebViewButtonPlaceholder`
+- `HelpSpawnObjectPlaceholder` which allows for spawning object on help system calls
+- `GoToPreviousEventButtonAdder` which allows to add a button to the menu that teleports the player to the previous event
+- `GoToPreviousEventOnCollisionPlaceholder`which allow to create a teleport point to the previous event
+- `MascotteNameSetCheckPlaceholder` which allow to check if the mascotte name has been set at scene start. If it is not set calls the help at start
+- `RPMAvatarWebViewButtonPlaceholder` which allow to open the ReadyPlayerMeWebView
 
 ### Deprecated
 
