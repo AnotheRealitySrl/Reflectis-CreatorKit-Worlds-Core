@@ -6,14 +6,13 @@ using UnityEngine;
 
 public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
 {
-
     [HelpBox("Do not change the value of \"IsNetworked\" field", HelpBoxMessageType.Warning)]
 
     [Header("Screen references. \nDo not change unless making a custom prefab.")]
 
     [SerializeField, Tooltip("The transform that contains the body of the media player (the screen, optional graphics, and so on). " +
-        "When a media is sent to this screen, the GameObject associated with this transform will be deactivated. " +
-        "This is the place in which it's possible to put custom graphics, like a background, a logo, etc.")]
+        "It's recommended to put custom graphics, like a background, a logo, etc. as children of this transform, " +
+        "but keep in mind that, when a media is sent to this screen, the GameObject associated with this transform will be deactivated.")]
     private Transform contentTransform;
 
     [SerializeField, Tooltip("The transform that represents the screen where the media is being reproduced. " +
@@ -29,6 +28,10 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
         "and they will adjust automatically its dimensions. The same applies to the distance of the camera pan transform.", HelpBoxMessageType.Info)]
 
     [Header("Screen settings")]
+
+    [SerializeField, Tooltip("Select a user-friendly name for this screen that will be displayed to the users in the list of the available screens. " +
+        "If not specified, the name of the GameObject will be used.")]
+    private string screenName;
 
     [SerializeField, /*Range(0.5f, 10),*/ Tooltip("The width of the screen.")]
     [OnChangedCall(nameof(OnWidthChanged))]
@@ -66,6 +69,7 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
     public Transform ScreenTransform => screenTransform;
     public Transform ContentTransform => contentTransform;
     public Transform CameraPanTransform => cameraPanTransform;
+    public string ScreenName => !string.IsNullOrEmpty(screenName) ? screenName : gameObject.name;
     public bool DefaultMedia => defaultMedia;
     public FileTypeExt MediaType => mediaType;
     public string DefaultUrl => defaultUrl;
