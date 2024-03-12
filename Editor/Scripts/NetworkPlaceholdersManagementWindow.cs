@@ -14,6 +14,8 @@ namespace Reflectis.SDK.CreatorKitEditor
     {
         private List<SceneComponentPlaceholderBase> networkPlaceholders = new();
 
+        private Vector2 scrollPosition = Vector2.zero;
+
         [MenuItem("Reflectis/Network placeholders management")]
         public static void ShowWindow()
         {
@@ -63,16 +65,14 @@ namespace Reflectis.SDK.CreatorKitEditor
                 richText = true
             };
 
-            EditorGUILayout.BeginScrollView(Vector2.zero);
-            EditorGUILayout.BeginVertical();
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, false);
 
             foreach (var placeholder in networkPlaceholders)
             {
                 EditorGUILayout.LabelField($"<b>{placeholder.gameObject.name}</b>: {((INetworkPlaceholder)placeholder).InitializationId}", style);
             }
 
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.EndScrollView();
+            GUILayout.EndScrollView();
         }
     }
 }
