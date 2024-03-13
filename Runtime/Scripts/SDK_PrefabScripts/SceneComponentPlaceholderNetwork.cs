@@ -17,9 +17,11 @@ namespace Reflectis.SDK.CreatorKit
         {
             foreach (Type type in mapper.GetComponentsTypes(GetType().ToString().Split('.')[^1]))
             {
-                if (!typeof(INetworkRuntimeComponent).IsAssignableFrom(type) || (typeof(INetworkRuntimeComponent).IsAssignableFrom(type) && IsNetworked))
+                if (!typeof(INetworkRuntimeComponent).IsAssignableFrom(type) || (typeof(INetworkRuntimeComponent).IsAssignableFrom(type) && IsNetworked && InitializationId != 0))
                 {
+                    Debug.Log($"Initializing network controller \"{type}\" from placeholder \"{this}\" on gameobject {gameObject}", gameObject);
                     await ((IRuntimeComponent)gameObject.AddComponent(type)).Init(this);
+                    Debug.Log($"Network controller \"{type}\" correctly initialized on gameobject {gameObject}", gameObject);
                 }
             }
         }

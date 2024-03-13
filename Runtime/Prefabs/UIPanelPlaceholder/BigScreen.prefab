@@ -81,7 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   automaticSetup: 1
   initializationId: 0
-  <IsNetworked>k__BackingField: 0
+  <IsNetworked>k__BackingField: 1
   contentTransform: {fileID: 9002948500902079657}
   screenTransform: {fileID: 2934402864329866326}
   cameraPanTransform: {fileID: 6909687537252600302}
