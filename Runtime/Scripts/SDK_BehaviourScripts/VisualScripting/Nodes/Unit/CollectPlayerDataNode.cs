@@ -11,8 +11,10 @@ namespace Reflectis.SDK.CreatorKit
     [UnitCategory("ReflectisUnit")]
     public class CollectPlayerDataNode : Unit
     {
+        [PortLabelHidden]
         [DoNotSerialize]
         public ControlInput InputTrigger { get; private set; }
+        [PortLabelHidden]
         [DoNotSerialize]
         public ControlOutput OutputTrigger { get; private set; }
 
