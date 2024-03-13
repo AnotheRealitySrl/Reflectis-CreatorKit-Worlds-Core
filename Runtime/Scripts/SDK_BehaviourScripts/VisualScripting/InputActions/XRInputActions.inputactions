@@ -6,7 +6,7 @@
             "id": "8a58ea6b-f391-407e-9667-1628a7ad37a0",
             "actions": [
                 {
-                    "name": "TriggerButtonPressed",
+                    "name": "RightController_TriggerButton",
                     "type": "Button",
                     "id": "63b85131-6ed7-4667-81bc-b048730395a6",
                     "expectedControlType": "Button",
@@ -15,7 +15,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "GripButtonPressed",
+                    "name": "RightController_GripButton",
                     "type": "Button",
                     "id": "a8a68608-be1b-41c6-9343-bce2f92b0a59",
                     "expectedControlType": "Button",
@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SecondaryButtonPressed",
+                    "name": "RightController_SecondaryButton",
                     "type": "Button",
                     "id": "e20284a1-4b05-434e-8a91-37e97a6a7335",
                     "expectedControlType": "Button",
@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "PrimaryButtonPressed",
+                    "name": "RightController_PrimaryButton",
                     "type": "Button",
                     "id": "b48eb8ed-f149-4d4d-ae0a-3b367b48eefe",
                     "expectedControlType": "Button",
@@ -47,10 +47,10 @@
                     "name": "",
                     "id": "137ee8b4-4092-4964-9056-df1d57e65e5d",
                     "path": "<XRController>{RightHand}/{TriggerButton}",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "TriggerButtonPressed",
+                    "groups": "XRControlScheme",
+                    "action": "RightController_TriggerButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -58,10 +58,10 @@
                     "name": "",
                     "id": "8bae2868-bc1b-470b-93bd-b6b9ac64e277",
                     "path": "<XRController>{RightHand}/{GripButton}",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
                     "groups": "XRControlScheme",
-                    "action": "GripButtonPressed",
+                    "action": "RightController_GripButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -69,10 +69,10 @@
                     "name": "",
                     "id": "5c188f72-5ae9-4614-9016-074cc737b8ad",
                     "path": "<XRController>{RightHand}/secondaryButton",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "SecondaryButtonPressed",
+                    "groups": "XRControlScheme",
+                    "action": "RightController_SecondaryButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -80,10 +80,10 @@
                     "name": "",
                     "id": "86b84ed1-d6db-468a-93c7-195034fced3c",
                     "path": "<XRController>{RightHand}/primaryButton",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "PrimaryButtonPressed",
+                    "groups": "XRControlScheme",
+                    "action": "RightController_PrimaryButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
