@@ -80,8 +80,8 @@ namespace Reflectis.SDK.CreatorKit
             {
                 if (flow.stack != null)
                 {
-                    args.CurrentEventCount++;
-                    args.VisualScriptingFinished = false;
+                    //args.CurrentEventCount++;
+                    //args.VisualScriptingFinished = false;
                     flow.stack.component.StartCoroutine(TriggerState(flow, args));
                 }
                 return true;
@@ -100,9 +100,9 @@ namespace Reflectis.SDK.CreatorKit
 
             Debug.Log("visual scripting finished event");
 
-            interactable.CurrentEventCount--;
+            //interactable.CurrentEventCount--;
 
-            interactable.VisualScriptingFinished = true;
+            //interactable.VisualScriptingFinished = true;
         }
 
         public static void TriggerEventCallback(GameObject gameObject)

@@ -2,7 +2,7 @@ using Reflectis.SDK.InteractionNew;
 using Reflectis.SDK.Utilities;
 using System;
 using System.Collections.Generic;
-
+using Unity.VisualScripting;
 using UnityEngine;
 using static Reflectis.SDK.InteractionNew.ContextualMenuManageable;
 using static Reflectis.SDK.InteractionNew.GenericInteractable;
@@ -130,6 +130,10 @@ namespace Reflectis.SDK.CreatorKit
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private List<AwaitableScriptableAction> onInteractFinishActions = new();
 
+        [SerializeField]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private ScriptMachine interactionsScriptMachine;
+
         [Header("Allowed states")]
 
         [SerializeField]
@@ -143,33 +147,6 @@ namespace Reflectis.SDK.CreatorKit
         [HideInInspector]
         public Action<GameObject> OnSelectedActionVisualScripting;
 
-        private int currentEventCount = 0;
-
-        public int CurrentEventCount
-        {
-            get => currentEventCount;
-            set
-            {
-                currentEventCount = value;
-
-                if (GetComponent<GenericInteractable>())
-                {
-                    GetComponent<GenericInteractable>().VisualScriptingInteractionCount = currentEventCount;
-                }
-            }
-        }
-
-        public bool VisualScriptingFinished
-        {
-            set
-            {
-                if (GetComponent<GenericInteractable>())
-                {
-                    GetComponent<GenericInteractable>().VisualScriptingInteractionFinished = value;
-                }
-            }
-        }
-
         public List<AwaitableScriptableAction> OnHoverEnterActions => onHoverEnterActions;
         public List<AwaitableScriptableAction> OnHoverExitActions => onHoverExitActions;
         public List<AwaitableScriptableAction> OnSelectingActions => onSelectingActions;
@@ -178,6 +155,7 @@ namespace Reflectis.SDK.CreatorKit
         public List<AwaitableScriptableAction> OnDeselectedActions => onDeselectedActions;
         public List<AwaitableScriptableAction> OnInteractActions => onInteractActions;
         public List<AwaitableScriptableAction> OnInteractFinishActions => onInteractFinishActions;
+        public ScriptMachine InteractionsScriptMachine => interactionsScriptMachine;
 
         public EAllowedGenericInteractableState DesktopAllowedStates => desktopAllowedStates;
         public EAllowedGenericInteractableState VRAllowedStates => vrAllowedStates;

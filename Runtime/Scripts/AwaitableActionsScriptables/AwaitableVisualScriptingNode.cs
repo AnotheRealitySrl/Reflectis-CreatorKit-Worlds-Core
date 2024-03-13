@@ -38,13 +38,13 @@ namespace Reflectis.SDK.CreatorKit
                                 break;
                             }
 
-                            if (interactablePlaceholder.CurrentEventCount > 0)
-                            {
-                                while (interactablePlaceholder.CurrentEventCount > 0)
-                                {
-                                    await Task.Yield();
-                                }
-                            }
+                            //if (interactablePlaceholder.CurrentEventCount > 0)
+                            //{
+                            //    while (interactablePlaceholder.CurrentEventCount > 0)
+                            //    {
+                            //        await Task.Yield();
+                            //    }
+                            //}
                             break;
                         }
                         else
