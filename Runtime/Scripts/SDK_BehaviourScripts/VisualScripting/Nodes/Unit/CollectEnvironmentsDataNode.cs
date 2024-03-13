@@ -1,70 +1,68 @@
 using Reflectis.SDK.ClientModels;
 using Reflectis.SDK.Core;
 using Unity.VisualScripting;
-using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Collect environments data")]
-    [UnitSurtitle("Environments data")]
-    [UnitShortTitle("Data")]
-    [UnitCategory("Events\\Reflectis\\Data")]
-    [TypeIcon(typeof(Material))]
+    [UnitTitle("Reflectis Environments: Get Current Environment")]
+    [UnitSurtitle("Environment")]
+    [UnitShortTitle("Get Current Environment")]
+    [UnitCategory("ReflectisUnit")]
     public class CollectEnvironmentsDataNode : Unit
     {
         [PortLabelHidden]
         [DoNotSerialize]
-        public ControlInput inputTrigger { get; private set; }
+        public ControlInput InputTrigger { get; private set; }
         [PortLabelHidden]
         [DoNotSerialize]
-        public ControlOutput outputTrigger { get; private set; }
+        public ControlOutput OutputTrigger { get; private set; }
 
         [DoNotSerialize]
-        public ValueOutput envID { get; private set; }
+        public ValueOutput ID { get; private set; }
         [DoNotSerialize]
-        public ValueOutput envName { get; private set; }
+        public ValueOutput Name { get; private set; }
         [DoNotSerialize]
-        public ValueOutput envDescription { get; private set; }
+        public ValueOutput Description { get; private set; }
         [DoNotSerialize]
-        public ValueOutput envAddressableKey { get; private set; }
+        public ValueOutput AddressableKey { get; private set; }
         [DoNotSerialize]
-        public ValueOutput envCatalog { get; private set; }
+        public ValueOutput Catalog { get; private set; }
 
         protected override void Definition()
         {
             IClientModelSystem system = null;
 
             //Making the ControlInput port visible, setting its key and running the anonymous action method to pass the flow to the outputTrigger port.
-            inputTrigger = ControlInput(nameof(inputTrigger), (flow) =>
+            InputTrigger = ControlInput(nameof(InputTrigger), (flow) =>
             {
                 system = SM.GetSystem<IClientModelSystem>();
-                return outputTrigger;
+                return OutputTrigger;
             });
             //Making the ControlOutput port visible and setting its key.
-            outputTrigger = ControlOutput(nameof(outputTrigger));
+            OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
 
-            envID = ValueOutput(nameof(envID), (flow) =>
+            ID = ValueOutput(nameof(ID), (flow) =>
             {
                 return system.CurrentEvent.Environment.ID;
             });
 
-            envName = ValueOutput(nameof(envName), (flow) =>
+            Name = ValueOutput(nameof(Name), (flow) =>
             {
                 return system.CurrentEvent.Environment.Name;
             });
 
-            envDescription = ValueOutput(nameof(envDescription), (flow) =>
+            Description = ValueOutput(nameof(Description), (flow) =>
             {
                 return system.CurrentEvent.Environment.Description;
             });
 
-            envAddressableKey = ValueOutput(nameof(envAddressableKey), (flow) =>
+            AddressableKey = ValueOutput(nameof(AddressableKey), (flow) =>
             {
                 return system.CurrentEvent.Environment.AddressableKey;
             });
 
-            envCatalog = ValueOutput(nameof(envCatalog), (flow) =>
+            Catalog = ValueOutput(nameof(Catalog), (flow) =>
             {
                 return system.CurrentEvent.Environment.Catalog;
             });

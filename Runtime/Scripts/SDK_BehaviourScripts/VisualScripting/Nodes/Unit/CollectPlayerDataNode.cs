@@ -2,61 +2,59 @@ using Reflectis.SDK.ClientModels;
 using Reflectis.SDK.Core;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Collect player data")]
-    [UnitSurtitle("Player data")]
-    [UnitShortTitle("Data")]
-    [UnitCategory("Events\\Reflectis\\Data")]
-    [TypeIcon(typeof(Material))]
+    [UnitTitle("Reflectis Player: Get Player")]
+    [UnitSurtitle("Player")]
+    [UnitShortTitle("Get Player")]
+    [UnitCategory("ReflectisUnit")]
     public class CollectPlayerDataNode : Unit
     {
         [DoNotSerialize]
-        public ControlInput inputTrigger { get; private set; }
+        public ControlInput InputTrigger { get; private set; }
         [DoNotSerialize]
-        public ControlOutput outputTrigger { get; private set; }
+        public ControlOutput OutputTrigger { get; private set; }
 
         [DoNotSerialize]
-        public ValueOutput playerID { get; private set; }
+        public ValueOutput ID { get; private set; }
         [DoNotSerialize]
-        public ValueOutput playerName { get; private set; }
+        public ValueOutput Name { get; private set; }
         [DoNotSerialize]
-        public ValueOutput playerMail { get; private set; }
+        public ValueOutput EMail { get; private set; }
         [DoNotSerialize]
-        public ValueOutput playerRoles { get; private set; }
+        public ValueOutput Roles { get; private set; }
 
         protected override void Definition()
         {
             IClientModelSystem system = null;
 
             //Making the ControlInput port visible, setting its key and running the anonymous action method to pass the flow to the outputTrigger port.
-            inputTrigger = ControlInput(nameof(inputTrigger), (flow) => 
+            InputTrigger = ControlInput(nameof(InputTrigger), (flow) => 
             {
                 system = SM.GetSystem<IClientModelSystem>();
-                return outputTrigger;
+                return OutputTrigger;
             });
             //Making the ControlOutput port visible and setting its key.
-            outputTrigger = ControlOutput(nameof(outputTrigger));
+            OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
 
-            playerID = ValueOutput(nameof(playerID), (flow) =>
+            ID = ValueOutput(nameof(ID), (flow) =>
             {
                 return system.UserData.ID;
             });
 
-            playerName = ValueOutput(nameof(playerName), (flow) =>
+            Name = ValueOutput(nameof(Name), (flow) =>
             {
                 return system.UserData.DisplayName;
             });
 
-            playerMail = ValueOutput(nameof(playerMail), (flow) =>
+            EMail = ValueOutput(nameof(EMail), (flow) =>
             {
                 return system.UserData.Email;
             });
 
-            playerRoles = ValueOutput(nameof(playerRoles), (flow) =>
+            Roles = ValueOutput(nameof(Roles), (flow) =>
             {
                 List<string> roles = new List<string>();
                 foreach (var role in system.UserData.Tags)

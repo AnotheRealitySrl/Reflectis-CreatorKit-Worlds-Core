@@ -1,110 +1,108 @@
 using Reflectis.SDK.ClientModels;
 using Reflectis.SDK.Core;
 using Unity.VisualScripting;
-using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Collect event data")]
-    [UnitSurtitle("Event data")]
-    [UnitShortTitle("Data")]
-    [UnitCategory("Events\\Reflectis\\Data")]
-    [TypeIcon(typeof(Material))]
+    [UnitTitle("Reflectis Event: Get Current Event")]
+    [UnitSurtitle("Event")]
+    [UnitShortTitle("Get Current Event")]
+    [UnitCategory("ReflectisUnit")]
     public class CollectEventDataNode : Unit
     {
         [DoNotSerialize]
-        public ControlInput inputTrigger { get; private set; }
+        public ControlInput InputTrigger { get; private set; }
         [DoNotSerialize]
-        public ControlOutput outputTrigger { get; private set; }
+        public ControlOutput OutputTrigger { get; private set; }
 
         [DoNotSerialize]
-        public ValueOutput eventID { get; private set; }
+        public ValueOutput ID { get; private set; }
         [DoNotSerialize]
-        public ValueOutput eventTitle { get; private set; }
+        public ValueOutput Title { get; private set; }
         [DoNotSerialize]
-        public ValueOutput eventDescription { get; private set; }
+        public ValueOutput Description { get; private set; }
         [DoNotSerialize]
-        public ValueOutput eventStartDateTime { get; private set; }
+        public ValueOutput StartDateTime { get; private set; }
         [DoNotSerialize]
-        public ValueOutput eventEndDateTime { get; private set; }
+        public ValueOutput EndDateTime { get; private set; }
         [DoNotSerialize]
-        public ValueOutput eventCategoryID { get; private set; }
+        public ValueOutput CategoryID { get; private set; }
         [DoNotSerialize]
-        public ValueOutput eventCategoryName { get; private set; }
+        public ValueOutput CategoryName { get; private set; }
         [DoNotSerialize]
-        public ValueOutput eventSubcategoryID { get; private set; }
+        public ValueOutput SubcategoryID { get; private set; }
         [DoNotSerialize]
-        public ValueOutput eventSubcategoryName { get; private set; }
+        public ValueOutput SubcategoryName { get; private set; }
         [DoNotSerialize]
-        public ValueOutput isEventPublic { get; private set; }
+        public ValueOutput IsEventPublic { get; private set; }
         [DoNotSerialize]
-        public ValueOutput isEventStatic { get; private set; }
+        public ValueOutput IsEventStatic { get; private set; }
 
         protected override void Definition()
         {
             IClientModelSystem system = null;
 
             //Making the ControlInput port visible, setting its key and running the anonymous action method to pass the flow to the outputTrigger port.
-            inputTrigger = ControlInput(nameof(inputTrigger), (flow) =>
+            InputTrigger = ControlInput(nameof(InputTrigger), (flow) =>
             {
                 system = SM.GetSystem<IClientModelSystem>();
-                return outputTrigger;
+                return OutputTrigger;
             });
             //Making the ControlOutput port visible and setting its key.
-            outputTrigger = ControlOutput(nameof(outputTrigger));
+            OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
 
-            eventID = ValueOutput(nameof(eventID), (flow) =>
+            ID = ValueOutput(nameof(ID), (flow) =>
             {
                 return system.CurrentEvent.Id;
             });
 
-            eventTitle = ValueOutput(nameof(eventTitle), (flow) =>
+            Title = ValueOutput(nameof(Title), (flow) =>
             {
                 return system.CurrentEvent.Title;
             });
 
-            eventDescription = ValueOutput(nameof(eventDescription), (flow) =>
+            Description = ValueOutput(nameof(Description), (flow) =>
             {
                 return system.CurrentEvent.Description;
             });
 
-            eventStartDateTime = ValueOutput(nameof(eventStartDateTime), (flow) =>
+            StartDateTime = ValueOutput(nameof(StartDateTime), (flow) =>
             {
                 return system.CurrentEvent.StartDateTime;
             });
 
-            eventEndDateTime = ValueOutput(nameof(eventEndDateTime), (flow) =>
+            EndDateTime = ValueOutput(nameof(EndDateTime), (flow) =>
             {
                 return system.CurrentEvent.EndDateTime;
             });
 
-            eventCategoryID = ValueOutput(nameof(eventCategoryID), (flow) =>
+            CategoryID = ValueOutput(nameof(CategoryID), (flow) =>
             {
                 return system.CurrentEvent.Category.ID;
             });
 
-            eventCategoryName = ValueOutput(nameof(eventCategoryName), (flow) =>
+            CategoryName = ValueOutput(nameof(CategoryName), (flow) =>
             {
                 return system.CurrentEvent.Category.Name;
             });
 
-            eventSubcategoryID = ValueOutput(nameof(eventSubcategoryID), (flow) =>
+            SubcategoryID = ValueOutput(nameof(SubcategoryID), (flow) =>
             {
                 return system.CurrentEvent.SubCategory.ID;
             });
 
-            eventSubcategoryID = ValueOutput(nameof(eventSubcategoryName), (flow) =>
+            SubcategoryID = ValueOutput(nameof(SubcategoryName), (flow) =>
             {
                 return system.CurrentEvent.SubCategory.Name;
             });
 
-            isEventPublic = ValueOutput(nameof(isEventPublic), (flow) =>
+            IsEventPublic = ValueOutput(nameof(IsEventPublic), (flow) =>
             {
                 return system.CurrentEvent.IsPublic;
             });
 
-            isEventStatic = ValueOutput(nameof(isEventStatic), (flow) =>
+            IsEventStatic = ValueOutput(nameof(IsEventStatic), (flow) =>
             {
                 return system.CurrentEvent.StaticEvent;
             });

@@ -1,24 +1,22 @@
 using Unity.VisualScripting;
-using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Synced Object: If Owned Locally")]
+    [UnitTitle("Reflectis Synced Object: If Owned Locally")]
     [UnitSurtitle("Synced Object")]
     [UnitShortTitle("Check if Owned Locally")]
-    [UnitCategory("Events\\Reflectis\\Ownership")]
-    [TypeIcon(typeof(Material))]
+    [UnitCategory("ReflectisUnit\\Ownership")]
     public class CheckOwnershipNode : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlInput inputTrigger { get; private set; }
+        public ControlInput InputTrigger { get; private set; }
         [DoNotSerialize]
         [PortLabel("True")]
-        public ControlOutput outputTriggerTrue { get; private set; }
+        public ControlOutput OutputTriggerTrue { get; private set; }
         [DoNotSerialize]
         [PortLabel("False")]
-        public ControlOutput outputTriggerFalse { get; private set; }
+        public ControlOutput OutputTriggerFalse { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
@@ -29,23 +27,23 @@ namespace Reflectis.SDK.CreatorKit
         {
             syncedObject = ValueInput<SyncedObject>(nameof(syncedObject), null).NullMeansSelf();
 
-            inputTrigger = ControlInput(nameof(inputTrigger), (f) =>
+            InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
                 if (f.GetValue<SyncedObject>(syncedObject).OnCheckOwnershipFunction())
                 {
-                    return outputTriggerTrue;
+                    return OutputTriggerTrue;
                 }
                 else
                 {
-                    return outputTriggerFalse;
+                    return OutputTriggerFalse;
                 }
             });
 
-            outputTriggerTrue = ControlOutput(nameof(outputTriggerTrue));
-            outputTriggerFalse = ControlOutput(nameof(outputTriggerFalse));
+            OutputTriggerTrue = ControlOutput(nameof(OutputTriggerTrue));
+            OutputTriggerFalse = ControlOutput(nameof(OutputTriggerFalse));
 
-            Succession(inputTrigger, outputTriggerTrue);
-            Succession(inputTrigger, outputTriggerFalse);
+            Succession(InputTrigger, OutputTriggerTrue);
+            Succession(InputTrigger, OutputTriggerFalse);
         }
 
         private bool CheckOwnershipNode_onCheckOwnershipObject()

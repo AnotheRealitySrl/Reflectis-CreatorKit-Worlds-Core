@@ -4,11 +4,10 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Synced Object: On Owner Lost")]
+    [UnitTitle("Reflectis Synced Object: On Owner Lost")]
     [UnitSurtitle("Synced Object")]
     [UnitShortTitle("On Owner Lost")]
     [UnitCategory("Events\\Reflectis\\Ownership")]
-    [TypeIcon(typeof(Material))]
     public class OnOwnershipLostEventUnit : EventUnit<SyncedObject>
     {
         public static string eventName = "SyncedObjectOnOwnerLost";
@@ -18,7 +17,7 @@ namespace Reflectis.SDK.CreatorKit
         [NullMeansSelf]
         [PortLabelHidden]
         [DoNotSerialize]
-        public ValueInput syncedObjectRef { get; private set; }
+        public ValueInput SyncedObjectRef { get; private set; }
         protected override bool register => true;
 
         public static Dictionary<GameObject, List<GraphReference>> graphReferences = new Dictionary<GameObject, List<GraphReference>>();
@@ -65,7 +64,7 @@ namespace Reflectis.SDK.CreatorKit
         protected override void Definition()
         {
             base.Definition();
-            syncedObjectRef = ValueInput<SyncedObject>(nameof(syncedObjectRef), null).NullMeansSelf();
+            SyncedObjectRef = ValueInput<SyncedObject>(nameof(SyncedObjectRef), null).NullMeansSelf();
         }
 
         protected override bool ShouldTrigger(Flow flow, SyncedObject args)
@@ -74,7 +73,7 @@ namespace Reflectis.SDK.CreatorKit
             {
                 return false;
             }
-            if (flow.GetValue<SyncedObject>(syncedObjectRef) == args)
+            if (flow.GetValue<SyncedObject>(SyncedObjectRef) == args)
             {
                 return true;
             }
