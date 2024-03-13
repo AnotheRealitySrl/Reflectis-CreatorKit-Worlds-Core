@@ -12,8 +12,10 @@ namespace Reflectis.SDK.CreatorKit
     [TypeIcon(typeof(Material))]
     public class CollectEnvironmentsDataNode : Unit
     {
+        [PortLabelHidden]
         [DoNotSerialize]
         public ControlInput inputTrigger { get; private set; }
+        [PortLabelHidden]
         [DoNotSerialize]
         public ControlOutput outputTrigger { get; private set; }
 
