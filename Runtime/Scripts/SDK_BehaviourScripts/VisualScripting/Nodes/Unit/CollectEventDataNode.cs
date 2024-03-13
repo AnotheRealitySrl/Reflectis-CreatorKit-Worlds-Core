@@ -1,21 +1,16 @@
 using Reflectis.SDK.ClientModels;
-using Reflectis.SDK.Core;
 using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Event: Get Current Event")]
-    [UnitSurtitle("Event")]
-    [UnitShortTitle("Get Current Event")]
-    [UnitCategory("ReflectisUnit")]
+    [UnitTitle("Expose: CMEvent")]
+    [UnitSurtitle("Expose")]
+    [UnitShortTitle("CMEvent")]
+    [UnitCategory("Expose\\Reflectis\\Event")]
     public class CollectEventDataNode : Unit
     {
-        [PortLabelHidden]
         [DoNotSerialize]
-        public ControlInput InputTrigger { get; private set; }
-        [PortLabelHidden]
-        [DoNotSerialize]
-        public ControlOutput OutputTrigger { get; private set; }
+        public ValueInput CMEvent { get; private set; }
 
         [DoNotSerialize]
         public ValueOutput ID { get; private set; }
@@ -42,72 +37,29 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void Definition()
         {
-            IClientModelSystem system = null;
+            CMEvent = ValueInput<CMEvent>(nameof(CMEvent), null).NullMeansSelf();
 
-            //Making the ControlInput port visible, setting its key and running the anonymous action method to pass the flow to the outputTrigger port.
-            InputTrigger = ControlInput(nameof(InputTrigger), (flow) =>
-            {
-                system = SM.GetSystem<IClientModelSystem>();
-                return OutputTrigger;
-            });
-            //Making the ControlOutput port visible and setting its key.
-            OutputTrigger = ControlOutput(nameof(OutputTrigger));
+            ID = ValueOutput(nameof(ID), (flow) => flow.GetValue<CMEvent>(CMEvent).Id);
 
+            Title = ValueOutput(nameof(Title), (flow) => flow.GetValue<CMEvent>(CMEvent).Title);
 
-            ID = ValueOutput(nameof(ID), (flow) =>
-            {
-                return system.CurrentEvent.Id;
-            });
+            Description = ValueOutput(nameof(Description), (flow) => flow.GetValue<CMEvent>(CMEvent).Description);
 
-            Title = ValueOutput(nameof(Title), (flow) =>
-            {
-                return system.CurrentEvent.Title;
-            });
+            StartDateTime = ValueOutput(nameof(StartDateTime), (flow) => flow.GetValue<CMEvent>(CMEvent).StartDateTime);
 
-            Description = ValueOutput(nameof(Description), (flow) =>
-            {
-                return system.CurrentEvent.Description;
-            });
+            EndDateTime = ValueOutput(nameof(EndDateTime), (flow) => flow.GetValue<CMEvent>(CMEvent).EndDateTime);
 
-            StartDateTime = ValueOutput(nameof(StartDateTime), (flow) =>
-            {
-                return system.CurrentEvent.StartDateTime;
-            });
+            CategoryID = ValueOutput(nameof(CategoryID), (flow) => flow.GetValue<CMEvent>(CMEvent).Category.ID);
 
-            EndDateTime = ValueOutput(nameof(EndDateTime), (flow) =>
-            {
-                return system.CurrentEvent.EndDateTime;
-            });
+            CategoryName = ValueOutput(nameof(CategoryName), (flow) => flow.GetValue<CMEvent>(CMEvent).Category.Name);
 
-            CategoryID = ValueOutput(nameof(CategoryID), (flow) =>
-            {
-                return system.CurrentEvent.Category.ID;
-            });
+            SubcategoryID = ValueOutput(nameof(SubcategoryID), (flow) => flow.GetValue<CMEvent>(CMEvent).SubCategory.ID);
 
-            CategoryName = ValueOutput(nameof(CategoryName), (flow) =>
-            {
-                return system.CurrentEvent.Category.Name;
-            });
+            SubcategoryName = ValueOutput(nameof(SubcategoryName), (flow) => flow.GetValue<CMEvent>(CMEvent).SubCategory.Name);
 
-            SubcategoryID = ValueOutput(nameof(SubcategoryID), (flow) =>
-            {
-                return system.CurrentEvent.SubCategory.ID;
-            });
+            IsEventPublic = ValueOutput(nameof(IsEventPublic), (flow) => flow.GetValue<CMEvent>(CMEvent).IsPublic);
 
-            SubcategoryID = ValueOutput(nameof(SubcategoryName), (flow) =>
-            {
-                return system.CurrentEvent.SubCategory.Name;
-            });
-
-            IsEventPublic = ValueOutput(nameof(IsEventPublic), (flow) =>
-            {
-                return system.CurrentEvent.IsPublic;
-            });
-
-            IsEventStatic = ValueOutput(nameof(IsEventStatic), (flow) =>
-            {
-                return system.CurrentEvent.StaticEvent;
-            });
+            IsEventStatic = ValueOutput(nameof(IsEventStatic), (flow) => flow.GetValue<CMEvent>(CMEvent).StaticEvent);
         }
     }
 }

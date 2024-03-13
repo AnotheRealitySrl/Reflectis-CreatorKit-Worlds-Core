@@ -1,23 +1,17 @@
 using Reflectis.SDK.ClientModels;
-using Reflectis.SDK.Core;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Player: Get Player")]
-    [UnitSurtitle("Player")]
-    [UnitShortTitle("Get Player")]
-    [UnitCategory("ReflectisUnit")]
+    [UnitTitle("Expose: CMUser")]
+    [UnitSurtitle("Expose")]
+    [UnitShortTitle("CMUser")]
+    [UnitCategory("Expose\\Reflectis\\User")]
     public class CollectPlayerDataNode : Unit
     {
-        [PortLabelHidden]
         [DoNotSerialize]
-        public ControlInput InputTrigger { get; private set; }
-        [PortLabelHidden]
-        [DoNotSerialize]
-        public ControlOutput OutputTrigger { get; private set; }
-
+        public ValueInput CMUser { get; private set; }
         [DoNotSerialize]
         public ValueOutput ID { get; private set; }
         [DoNotSerialize]
@@ -29,37 +23,18 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void Definition()
         {
-            IClientModelSystem system = null;
+            CMUser = ValueInput<CMUser>(nameof(CMUser), null).NullMeansSelf();
 
-            //Making the ControlInput port visible, setting its key and running the anonymous action method to pass the flow to the outputTrigger port.
-            InputTrigger = ControlInput(nameof(InputTrigger), (flow) => 
-            {
-                system = SM.GetSystem<IClientModelSystem>();
-                return OutputTrigger;
-            });
-            //Making the ControlOutput port visible and setting its key.
-            OutputTrigger = ControlOutput(nameof(OutputTrigger));
+            ID = ValueOutput(nameof(ID), (flow) => flow.GetValue<CMUser>(CMUser).ID);
 
+            Name = ValueOutput(nameof(Name), (flow) => flow.GetValue<CMUser>(CMUser).DisplayName);
 
-            ID = ValueOutput(nameof(ID), (flow) =>
-            {
-                return system.UserData.ID;
-            });
-
-            Name = ValueOutput(nameof(Name), (flow) =>
-            {
-                return system.UserData.DisplayName;
-            });
-
-            EMail = ValueOutput(nameof(EMail), (flow) =>
-            {
-                return system.UserData.Email;
-            });
+            EMail = ValueOutput(nameof(EMail), (flow) => flow.GetValue<CMUser>(CMUser).Email);
 
             Roles = ValueOutput(nameof(Roles), (flow) =>
             {
                 List<string> roles = new List<string>();
-                foreach (var role in system.UserData.Tags)
+                foreach (var role in flow.GetValue<CMUser>(CMUser).Tags)
                     roles.Add(role.Label);
 
                 return roles;

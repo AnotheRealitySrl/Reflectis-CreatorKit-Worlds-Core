@@ -1,22 +1,16 @@
 using Reflectis.SDK.ClientModels;
-using Reflectis.SDK.Core;
 using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Environments: Get Current Environment")]
-    [UnitSurtitle("Environment")]
-    [UnitShortTitle("Get Current Environment")]
-    [UnitCategory("ReflectisUnit")]
+    [UnitTitle("Expose: CMEnvironment")]
+    [UnitSurtitle("Expose")]
+    [UnitShortTitle("CMEnvironment")]
+    [UnitCategory("Expose\\Reflectis\\Environment")]
     public class CollectEnvironmentsDataNode : Unit
     {
-        [PortLabelHidden]
         [DoNotSerialize]
-        public ControlInput InputTrigger { get; private set; }
-        [PortLabelHidden]
-        [DoNotSerialize]
-        public ControlOutput OutputTrigger { get; private set; }
-
+        public ValueInput CMEnvironment{ get; private set; }
         [DoNotSerialize]
         public ValueOutput ID { get; private set; }
         [DoNotSerialize]
@@ -30,42 +24,17 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void Definition()
         {
-            IClientModelSystem system = null;
+            CMEnvironment = ValueInput<CMEnvironment>(nameof(CMEnvironment), null).NullMeansSelf();
 
-            //Making the ControlInput port visible, setting its key and running the anonymous action method to pass the flow to the outputTrigger port.
-            InputTrigger = ControlInput(nameof(InputTrigger), (flow) =>
-            {
-                system = SM.GetSystem<IClientModelSystem>();
-                return OutputTrigger;
-            });
-            //Making the ControlOutput port visible and setting its key.
-            OutputTrigger = ControlOutput(nameof(OutputTrigger));
+            ID = ValueOutput(nameof(ID), (flow) => flow.GetValue<CMEnvironment>(CMEnvironment).ID);
 
+            Name = ValueOutput(nameof(Name), (flow) => flow.GetValue<CMEnvironment>(CMEnvironment).Name);
 
-            ID = ValueOutput(nameof(ID), (flow) =>
-            {
-                return system.CurrentEvent.Environment.ID;
-            });
+            Description = ValueOutput(nameof(Description), (flow) => flow.GetValue<CMEnvironment>(CMEnvironment).Description);
 
-            Name = ValueOutput(nameof(Name), (flow) =>
-            {
-                return system.CurrentEvent.Environment.Name;
-            });
+            AddressableKey = ValueOutput(nameof(AddressableKey), (flow) => flow.GetValue<CMEnvironment>(CMEnvironment).AddressableKey);
 
-            Description = ValueOutput(nameof(Description), (flow) =>
-            {
-                return system.CurrentEvent.Environment.Description;
-            });
-
-            AddressableKey = ValueOutput(nameof(AddressableKey), (flow) =>
-            {
-                return system.CurrentEvent.Environment.AddressableKey;
-            });
-
-            Catalog = ValueOutput(nameof(Catalog), (flow) =>
-            {
-                return system.CurrentEvent.Environment.Catalog;
-            });
+            Catalog = ValueOutput(nameof(Catalog), (flow) => flow.GetValue<CMEnvironment>(CMEnvironment).Catalog);
         }
     }
 }
