@@ -23,9 +23,6 @@ namespace Reflectis.SDK.CreatorKit
         [DoNotSerialize]
         public ValueOutput interactionColliders { get; private set; }
 
-        [DoNotSerialize]
-        public ValueOutput canInteract { get; private set; }
-
         protected override void Definition()
         {
             interactable = ValueInput<GenericInteractable>(nameof(interactable), null).NullMeansSelf();
@@ -34,9 +31,7 @@ namespace Reflectis.SDK.CreatorKit
 
             interactionState = ValueOutput(nameof(interactionState), (flow) => flow.GetValue<GenericInteractable>(interactable).InteractableRef.InteractionState);
 
-            canInteract = ValueOutput(nameof(canInteract), (flow) => flow.GetValue<GenericInteractable>(interactable).InteractableRef.InteractionColliders);
-
-            interactionColliders = ValueOutput(nameof(interactionColliders), (flow) => flow.GetValue<GenericInteractable>(interactable).CanInteract);
+            interactionColliders = ValueOutput(nameof(interactionColliders), (flow) => flow.GetValue<GenericInteractable>(interactable).InteractableRef.InteractionColliders);
         }
 
 
