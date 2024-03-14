@@ -189,11 +189,5 @@ namespace Reflectis.SDK.CreatorKit
         public EContextualMenuType ContextualMenuType { get => contextualMenuType; set => contextualMenuType = value; }
 
         #endregion
-
-        private void Start()
-        {
-            OnSelectedActionVisualScripting += OnSelectedEnterEventUnit.TriggerEventCallback;
-        }
-
     }
 }
