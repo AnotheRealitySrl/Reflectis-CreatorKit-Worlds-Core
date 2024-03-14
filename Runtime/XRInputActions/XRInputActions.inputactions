@@ -42,6 +42,33 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "RightController_AnalogicMove",
+                    "type": "Value",
+                    "id": "932b0af3-9ee9-4e53-8d9f-feb821679fff",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RightController_AnalogicTouch",
+                    "type": "Button",
+                    "id": "bc9c0cc2-8885-403f-b3da-e26ffba568a3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightController_AnalogicClick",
+                    "type": "Button",
+                    "id": "c5faa488-32fc-40e5-a0b4-73465426134d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "LeftController_PrimaryButton",
                     "type": "Button",
                     "id": "8f4f4c4c-ca51-48de-860b-b95e1d3461e6",
@@ -72,6 +99,42 @@
                     "name": "LeftController_TriggerButton",
                     "type": "Button",
                     "id": "f9577abc-1d31-47a8-9ba7-f7464c193c67",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftController_AnalogicMove",
+                    "type": "Value",
+                    "id": "7b12a5ed-37a0-4187-b0ed-67b55c4e8202",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "LeftController_AnalogicTouch",
+                    "type": "Button",
+                    "id": "5fc45628-707c-4277-9701-f4f2a32fc6bc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftController_AnalogicClick",
+                    "type": "Button",
+                    "id": "db84ad4d-c5af-4e01-a270-a19a22c171e2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftController_MenuButton",
+                    "type": "Button",
+                    "id": "1380e057-09c6-42b6-8c78-59f752de80d7",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -164,6 +227,83 @@
                     "processors": "",
                     "groups": "XRControlScheme",
                     "action": "LeftController_TriggerButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cbad6739-0fa6-4bad-9fc0-f06ad5e54c87",
+                    "path": "<XRController>{LeftHand}/primary2DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XRControlScheme",
+                    "action": "LeftController_AnalogicMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b007c109-66b8-4af5-91f5-5d5742fbd008",
+                    "path": "<XRController>{RightHand}/primary2DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XRControlScheme",
+                    "action": "RightController_AnalogicMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ef5196e1-dc4e-49e0-acda-ece5cdb7afb6",
+                    "path": "<XRController>{RightHand}/primary2DAxisTouch",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XRControlScheme",
+                    "action": "RightController_AnalogicTouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "853dd5f5-34bf-4c12-9211-a5a36222b1d0",
+                    "path": "<XRController>{RightHand}/primary2DAxisClick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XRControlScheme",
+                    "action": "RightController_AnalogicClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "11913603-c61d-4ca7-8140-4785b9158b6e",
+                    "path": "<XRController>{LeftHand}/primary2DAxisClick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XRControlScheme",
+                    "action": "LeftController_AnalogicClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7fcb0120-e6fa-412b-8b01-ba30f504397e",
+                    "path": "<XRController>{LeftHand}/primary2DAxisTouch",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XRControlScheme",
+                    "action": "LeftController_AnalogicTouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8411b9cd-0646-42f4-b4b4-7d664b59f11b",
+                    "path": "<XRController>/{MenuButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XRControlScheme",
+                    "action": "LeftController_MenuButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
