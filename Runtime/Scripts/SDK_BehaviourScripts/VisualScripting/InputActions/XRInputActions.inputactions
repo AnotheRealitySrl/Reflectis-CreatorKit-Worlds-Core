@@ -40,6 +40,42 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LeftController_PrimaryButton",
+                    "type": "Button",
+                    "id": "8f4f4c4c-ca51-48de-860b-b95e1d3461e6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftController_SecondaryButton",
+                    "type": "Button",
+                    "id": "b6e84742-3762-422d-a003-ae1d68513aac",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftController_GripButton",
+                    "type": "Button",
+                    "id": "228298c9-ae96-4e93-9b8c-203665f3d505",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftController_TriggerButton",
+                    "type": "Button",
+                    "id": "f9577abc-1d31-47a8-9ba7-f7464c193c67",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -84,6 +120,50 @@
                     "processors": "",
                     "groups": "XRControlScheme",
                     "action": "RightController_PrimaryButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ddfa360a-5594-40e1-95eb-e074d9bac9a8",
+                    "path": "<XRController>{LeftHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XRControlScheme",
+                    "action": "LeftController_PrimaryButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "39dc1c97-bffd-42e8-8605-724fd6e21b45",
+                    "path": "<XRController>{LeftHand}/secondaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XRControlScheme",
+                    "action": "LeftController_SecondaryButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "786e808f-6a67-44ec-b6d7-ecb838b1b9a6",
+                    "path": "<XRController>{LeftHand}/gripButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XRControlScheme",
+                    "action": "LeftController_GripButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2f38e5cd-aa79-4218-b066-19ee2fe13184",
+                    "path": "<XRController>{LeftHand}/{TriggerButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XRControlScheme",
+                    "action": "LeftController_TriggerButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
