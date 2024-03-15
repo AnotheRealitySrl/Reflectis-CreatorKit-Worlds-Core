@@ -28,7 +28,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             manipulable = ValueInput<Manipulable>(nameof(manipulable));
 
-            blockValue = ValueInput<bool>(nameof(blockValue));
+            blockValue = ValueInput<bool>(nameof(blockValue), false);
 
             inputTrigger = ControlInput(nameof(inputTrigger), (f) =>
             {

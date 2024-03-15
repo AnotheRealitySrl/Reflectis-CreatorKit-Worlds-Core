@@ -3,11 +3,11 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("ContextualMenuManageable: BlockInteraction")]
-    [UnitSurtitle("ContextualMenuManageable")]
+    [UnitTitle("GenericInteractable: BlockInteraction")]
+    [UnitSurtitle("GenericInteractable")]
     [UnitShortTitle("BlockBySelection")]
-    [UnitCategory("Reflectis\\ContextualMenuManageable")]
-    public class BlockBySelectionContextualMenuManageableUnit : Unit
+    [UnitCategory("Reflectis\\GenericInteractable")]
+    public class BlockBySelectionGenericInteractableUnit : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
@@ -18,7 +18,7 @@ namespace Reflectis.SDK.CreatorKit
 
         [NullMeansSelf]
         [DoNotSerialize]
-        public ValueInput contextualMenuManageable { get; private set; }
+        public ValueInput genericInteractable { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
@@ -26,7 +26,7 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void Definition()
         {
-            contextualMenuManageable = ValueInput<ContextualMenuManageable>(nameof(contextualMenuManageable));
+            genericInteractable = ValueInput<GenericInteractable>(nameof(genericInteractable));
 
             blockValue = ValueInput<bool>(nameof(blockValue), false);
 
@@ -35,11 +35,11 @@ namespace Reflectis.SDK.CreatorKit
 
                 if (f.GetValue<bool>(blockValue))
                 {
-                    f.GetValue<ContextualMenuManageable>(contextualMenuManageable).CurrentBlockedState |= InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                    f.GetValue<GenericInteractable>(genericInteractable).CurrentBlockedState |= InteractableBehaviourBase.EBlockedState.BlockedBySelection;
                 }
                 else
                 {
-                    f.GetValue<ContextualMenuManageable>(contextualMenuManageable).CurrentBlockedState = f.GetValue<ContextualMenuManageable>(contextualMenuManageable).CurrentBlockedState & ~InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                    f.GetValue<GenericInteractable>(genericInteractable).CurrentBlockedState = f.GetValue<GenericInteractable>(genericInteractable).CurrentBlockedState & ~InteractableBehaviourBase.EBlockedState.BlockedBySelection;
                 }
                 return outputTrigger;
             });
