@@ -30,7 +30,7 @@ namespace Reflectis.SDK.CreatorKit
         [PortLabelHidden]
         public ValueInput transformVal { get; private set; }
 
-        bool awaitableMethodRuning = false;
+        bool awaitableMethodRunning = false;
 
         protected override void Definition()
         {
@@ -47,33 +47,26 @@ namespace Reflectis.SDK.CreatorKit
 
         private IEnumerator PanCoroutine(Flow flow)
         {
-            awaitableMethodRuning = false;
+            awaitableMethodRunning = true;
 
             CallAwaitableMethod(flow);
 
-            while (!awaitableMethodRuning)
-            {
-                yield return null;
-            }
+            yield return new WaitUntil(() => !awaitableMethodRunning);
 
             yield return outputTrigger;
         }
-
         private async void CallAwaitableMethod(Flow flow)
         {
             if (flow.GetValue<bool>(boolVal))
             {
                 await SM.GetSystem<ICharacterControllerSystem>().GoToInteractState(flow.GetValue<Transform>(transformVal));
-
-                awaitableMethodRuning = true;
-
             }
             else
             {
                 await SM.GetSystem<ICharacterControllerSystem>().GoToSetMovementState();
-
-                awaitableMethodRuning = true;
             }
+
+            awaitableMethodRunning = false;
         }
     }
 }
