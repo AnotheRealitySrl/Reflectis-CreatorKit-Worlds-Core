@@ -31,7 +31,7 @@ public static class VisualScriptingSetupEditor
                 }
                 if (!BoltCore.Configuration.typeOptions.Contains(type))
                 {
-                    if (!BoltCore.Configuration.assemblyOptions.Exists(x => x.name == type.Namespace))
+                    if (type.Namespace != null && !BoltCore.Configuration.assemblyOptions.Exists(x => x.name == type.Namespace))
                     {
                         LooseAssemblyName looseAssemblyName = new LooseAssemblyName(type.Namespace);
                         BoltCore.Configuration.assemblyOptions.Add(looseAssemblyName);
