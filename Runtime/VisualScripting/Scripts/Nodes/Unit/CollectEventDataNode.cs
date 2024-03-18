@@ -6,7 +6,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitTitle("Expose: CMEvent")]
     [UnitSurtitle("Expose")]
     [UnitShortTitle("CMEvent")]
-    [UnitCategory("Expose\\Reflectis\\Event")]
+    [UnitCategory("Reflectis\\Expose")]
     public class CollectEventDataNode : Unit
     {
         [DoNotSerialize]

@@ -7,7 +7,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitTitle("Reflectis CMUser: Get CMUser")]
     [UnitSurtitle("CMUser")]
     [UnitShortTitle("Get CMUser")]
-    [UnitCategory("ReflectisUnit")]
+    [UnitCategory("Reflectis\\Get")]
     public class GetCMUserNode : Unit
     {
         [NullMeansSelf]

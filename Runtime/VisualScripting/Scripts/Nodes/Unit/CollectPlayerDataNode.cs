@@ -7,7 +7,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitTitle("Expose: CMUser")]
     [UnitSurtitle("Expose")]
     [UnitShortTitle("CMUser")]
-    [UnitCategory("Expose\\Reflectis\\User")]
+    [UnitCategory("Reflectis\\Expose")]
     public class CollectPlayerDataNode : Unit
     {
         [DoNotSerialize]

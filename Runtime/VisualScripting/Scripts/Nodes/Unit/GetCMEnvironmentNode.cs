@@ -7,7 +7,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitTitle("Reflectis CMEnvironment: Get CMEnvironment")]
     [UnitSurtitle("CMEnvironment")]
     [UnitShortTitle("Get CMEnvironment")]
-    [UnitCategory("ReflectisUnit")]
+    [UnitCategory("Reflectis\\Get")]
     public class GetCMEnvironmentNode : Unit
     {
         [NullMeansSelf]

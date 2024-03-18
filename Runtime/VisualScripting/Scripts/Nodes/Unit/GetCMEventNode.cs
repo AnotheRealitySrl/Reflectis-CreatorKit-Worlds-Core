@@ -7,7 +7,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitTitle("Reflectis CMEvent: Get CMEvent")]
     [UnitSurtitle("CMEvent")]
     [UnitShortTitle("Get CMEvent")]
-    [UnitCategory("ReflectisUnit")]
+    [UnitCategory("Reflectis\\Get")]
     public class GetCMEventNode : Unit
     {
         [NullMeansSelf]

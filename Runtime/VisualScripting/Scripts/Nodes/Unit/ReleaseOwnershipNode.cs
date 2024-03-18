@@ -5,7 +5,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitTitle("Reflectis Synced Object: Release Ownership")]
     [UnitSurtitle("Synced Object")]
     [UnitShortTitle("Release Ownership")]
-    [UnitCategory("ReflectisUnit\\Ownership")]
+    [UnitCategory("Reflectis\\Ownership")]
     public class ReleaseOwnershipNode : Unit
     {
         [DoNotSerialize]

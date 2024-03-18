@@ -5,7 +5,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitTitle("Reflectis Synced Object: Try Get Ownership")]
     [UnitSurtitle("Synced Object")]
     [UnitShortTitle("Try Get Ownership")]
-    [UnitCategory("ReflectisUnit\\Ownership")]
+    [UnitCategory("Reflectis\\Ownership")]
     public class RequestOwnershipNode : Unit
     {
         [DoNotSerialize]

@@ -6,7 +6,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitTitle("Expose: CMEnvironment")]
     [UnitSurtitle("Expose")]
     [UnitShortTitle("CMEnvironment")]
-    [UnitCategory("Expose\\Reflectis\\Environment")]
+    [UnitCategory("Reflectis\\Expose")]
     public class CollectEnvironmentsDataNode : Unit
     {
         [DoNotSerialize]
