@@ -1,5 +1,24 @@
 # Release notes
 
+## Unreleased
+
+### Changed
+
+- InteractablePlaceholder: Now accepts script machines instead of scriptable actions to define custom logic
+
+### Added
+
+- new VisualScriptingNodes: Added Block interactable behaviours block by selection, pan character camera, disable character mesh, teleport player, open close tutorial
+
+### Deprecated
+
+### Removed
+
+- Removed awaitable scriptable actions
+
+### Fixed
+
+
 ## v2.0.0
 
 ### Changed

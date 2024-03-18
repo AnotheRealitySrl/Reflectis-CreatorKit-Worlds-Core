@@ -8,7 +8,7 @@ using Reflectis.SDK.CreatorKit;
 
 using UnityEngine.Serialization;
 
-namespace Virtuademy.DTO
+namespace Reflectis.DTO
 {
     public class SpawnNetworkedAddressablePlaceholder : SpawnAddressablePlaceholder, INetworkPlaceholder
     {
