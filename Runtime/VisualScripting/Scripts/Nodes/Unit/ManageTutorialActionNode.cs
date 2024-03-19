@@ -2,40 +2,38 @@ using Reflectis.SDK.Core;
 using Reflectis.SDK.Help;
 using System.Collections;
 using Unity.VisualScripting;
-using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Manage Tutorial Action")]
+    [UnitTitle("Reflectis Tutorial: Enable")]
     [UnitSurtitle("Tutorial")]
-    [UnitShortTitle("Open or Close Tutorial")]
-    [UnitCategory("Events\\Reflectis\\Tutorial")]
-    [TypeIcon(typeof(Material))]
+    [UnitShortTitle("Enable")]
+    [UnitCategory("Reflectis\\Flow")]
     public class ManageTutorialActionNode : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlInput inputTrigger { get; private set; }
+        public ControlInput InputTrigger { get; private set; }
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlOutput outputTrigger { get; private set; }
+        public ControlOutput OutputTrigger { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
         [PortLabelHidden]
-        public ValueInput boolVal { get; private set; }
+        public ValueInput Enable { get; private set; }
 
         bool awaitableMethodRuning = false;
 
         protected override void Definition()
         {
-            boolVal = ValueInput<bool>(nameof(boolVal));
+            Enable = ValueInput<bool>(nameof(Enable));
 
-            inputTrigger = ControlInputCoroutine(nameof(inputTrigger), ManageTutorialCoroutine);
+            InputTrigger = ControlInputCoroutine(nameof(InputTrigger), ManageTutorialCoroutine);
 
-            outputTrigger = ControlOutput(nameof(outputTrigger));
+            OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
-            Succession(inputTrigger, outputTrigger);
+            Succession(InputTrigger, OutputTrigger);
         }
 
         private IEnumerator ManageTutorialCoroutine(Flow flow)
@@ -49,14 +47,14 @@ namespace Reflectis.SDK.CreatorKit
                 yield return null;
             }
 
-            yield return outputTrigger;
+            yield return OutputTrigger;
         }
 
         private async void CallAwaitableMethod(Flow flow)
         {
             var helpSystem = SM.GetSystem<IHelpSystem>();
 
-            if (flow.GetValue<bool>(boolVal))
+            if (flow.GetValue<bool>(Enable))
             {
                 await helpSystem.CallGetHelp();
 

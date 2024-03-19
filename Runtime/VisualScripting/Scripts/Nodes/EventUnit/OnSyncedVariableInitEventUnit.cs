@@ -4,11 +4,10 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Synced Variables: On Synced Variable Changed Init")]
+    [UnitTitle("Reflectis Synced Variables: On Synced Variable Changed Init")]
     [UnitSurtitle("Synced Variables Init")]
     [UnitShortTitle("On Synced Variable Changed Init")]
-    [UnitCategory("Events\\Reflectis\\Synced Object")]
-    [TypeIcon(typeof(Material))]
+    [UnitCategory("Events\\Reflectis")]
     public class OnSyncedVariableInitEventUnit : EventUnit<(SyncedVariables, string)>
     {
         public static string eventName = "SyncedVariablesOnVariableChangedInit";
@@ -17,14 +16,14 @@ namespace Reflectis.SDK.CreatorKit
         [NullMeansSelf]
         [PortLabelHidden]
         [DoNotSerialize]
-        public ValueInput syncedVariablesRef { get; private set; }
+        public ValueInput SyncedVariablesRef { get; private set; }
 
         [DoNotSerialize]
-        public ValueInput variableName { get; private set; }
+        public ValueInput VariableName { get; private set; }
 
         [DoNotSerialize]
         [PortLabelHidden]
-        public ValueOutput value { get; private set; }
+        public ValueOutput Value { get; private set; }
 
         public static Dictionary<GameObject, List<GraphReference>> graphReferences = new Dictionary<GameObject, List<GraphReference>>();
 
@@ -71,18 +70,18 @@ namespace Reflectis.SDK.CreatorKit
         protected override void Definition()
         {
             base.Definition();
-            syncedVariablesRef = ValueInput<SyncedVariables>(nameof(syncedVariablesRef), null).NullMeansSelf();
-            variableName = ValueInput<string>(nameof(variableName), null);
-            value = ValueOutput<object>(nameof(value));
+            SyncedVariablesRef = ValueInput<SyncedVariables>(nameof(SyncedVariablesRef), null).NullMeansSelf();
+            VariableName = ValueInput<string>(nameof(VariableName), null);
+            Value = ValueOutput<object>(nameof(Value));
         }
 
         protected override bool ShouldTrigger(Flow flow, (SyncedVariables, string) args)
         {
-            if (flow.GetValue<string>(variableName) != args.Item2) { return false; }
-            if (flow.GetValue<SyncedVariables>(syncedVariablesRef) == args.Item1) { }
+            if (flow.GetValue<string>(VariableName) != args.Item2) { return false; }
+            if (flow.GetValue<SyncedVariables>(SyncedVariablesRef) == args.Item1) { }
             else if (args.Item1.variableSettings.Count != 0) { }
 
-            if (flow.GetValue<SyncedVariables>(syncedVariablesRef) == args.Item1 && flow.GetValue<string>(variableName) == args.Item2 && args.Item1.variableSettings.Count != 0)
+            if (flow.GetValue<SyncedVariables>(SyncedVariablesRef) == args.Item1 && flow.GetValue<string>(VariableName) == args.Item2 && args.Item1.variableSettings.Count != 0)
             {
                 foreach (SyncedVariables.Data data in args.Item1.variableSettings)
                 {
@@ -101,7 +100,7 @@ namespace Reflectis.SDK.CreatorKit
             {
                 if (data.name == args.Item2)
                 {
-                    flow.SetValue(value, data.Value);
+                    flow.SetValue(Value, data.Value);
                     break;
                 }
             }

@@ -4,38 +4,37 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Enable Character Movement")]
+    [UnitTitle("Reflectis Character: Enable Movement")]
     [UnitSurtitle("Character")]
-    [UnitShortTitle("Enable Character Movement")]
-    [UnitCategory("Events\\Reflectis\\Character")]
-    [TypeIcon(typeof(UnityEngine.CharacterController))]
+    [UnitShortTitle("Enable Movement")]
+    [UnitCategory("Reflectis\\Flow")]
     public class EnableCharacterMovementNode : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlInput inputTrigger { get; private set; }
+        public ControlInput InputTrigger { get; private set; }
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlOutput outputTrigger { get; private set; }
+        public ControlOutput OutputTrigger { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
         [PortLabelHidden]
-        public ValueInput boolVal { get; private set; }
+        public ValueInput Enable { get; private set; }
 
         protected override void Definition()
         {
-            boolVal = ValueInput<bool>(nameof(boolVal));
+            Enable = ValueInput<bool>(nameof(Enable));
 
-            inputTrigger = ControlInput(nameof(inputTrigger), (f) =>
+            InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                SM.GetSystem<ICharacterControllerSystem>().EnableCharacterMovement(f.GetValue<bool>(boolVal));
-                return outputTrigger;
+                SM.GetSystem<ICharacterControllerSystem>().EnableCharacterMovement(f.GetValue<bool>(Enable));
+                return OutputTrigger;
             });
 
-            outputTrigger = ControlOutput(nameof(outputTrigger));
+            OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
-            Succession(inputTrigger, outputTrigger);
+            Succession(InputTrigger, OutputTrigger);
         }
     }
 }

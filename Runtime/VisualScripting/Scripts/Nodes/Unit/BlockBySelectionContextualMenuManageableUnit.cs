@@ -3,50 +3,50 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("ContextualMenuManageable: BlockInteraction")]
+    [UnitTitle("Reflectis ContextualMenuManageable: BlockInteractionBySelection")]
     [UnitSurtitle("ContextualMenuManageable")]
-    [UnitShortTitle("BlockBySelection")]
-    [UnitCategory("Reflectis\\ContextualMenuManageable")]
+    [UnitShortTitle("BlockInteractionBySelection")]
+    [UnitCategory("Reflectis\\Flow")]
     public class BlockBySelectionContextualMenuManageableUnit : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlInput inputTrigger { get; private set; }
+        public ControlInput InputTrigger { get; private set; }
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlOutput outputTrigger { get; private set; }
+        public ControlOutput OutputTrigger { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
-        public ValueInput contextualMenuManageable { get; private set; }
+        public ValueInput ContextualMenuManageable { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
-        public ValueInput blockValue { get; private set; }
+        public ValueInput BlockValue { get; private set; }
 
         protected override void Definition()
         {
-            contextualMenuManageable = ValueInput<ContextualMenuManageable>(nameof(contextualMenuManageable));
+            ContextualMenuManageable = ValueInput<ContextualMenuManageable>(nameof(ContextualMenuManageable));
 
-            blockValue = ValueInput<bool>(nameof(blockValue), false);
+            BlockValue = ValueInput<bool>(nameof(BlockValue), false);
 
-            inputTrigger = ControlInput(nameof(inputTrigger), (f) =>
+            InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
 
-                if (f.GetValue<bool>(blockValue))
+                if (f.GetValue<bool>(BlockValue))
                 {
-                    f.GetValue<ContextualMenuManageable>(contextualMenuManageable).CurrentBlockedState |= InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                    f.GetValue<ContextualMenuManageable>(ContextualMenuManageable).CurrentBlockedState |= InteractableBehaviourBase.EBlockedState.BlockedBySelection;
                 }
                 else
                 {
-                    f.GetValue<ContextualMenuManageable>(contextualMenuManageable).CurrentBlockedState = f.GetValue<ContextualMenuManageable>(contextualMenuManageable).CurrentBlockedState & ~InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                    f.GetValue<ContextualMenuManageable>(ContextualMenuManageable).CurrentBlockedState = f.GetValue<ContextualMenuManageable>(ContextualMenuManageable).CurrentBlockedState & ~InteractableBehaviourBase.EBlockedState.BlockedBySelection;
                 }
-                return outputTrigger;
+                return OutputTrigger;
             });
 
-            outputTrigger = ControlOutput(nameof(outputTrigger));
+            OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
-            Succession(inputTrigger, outputTrigger);
+            Succession(InputTrigger, OutputTrigger);
 
         }
     }
