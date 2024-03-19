@@ -4,24 +4,23 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Transition Provider Activator")]
+    [UnitTitle("Reflectis Transition Provider: Do Transition")]
     [UnitSurtitle("Transition Provider")]
-    [UnitShortTitle("Transition Provider Activator")]
-    [UnitCategory("Events\\Reflectis\\Utils")]
-    [TypeIcon(typeof(Component))]
+    [UnitShortTitle("Do Transition")]
+    [UnitCategory("Reflectis\\Flow")]
     public class TransitionProviderActivatorNode : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlInput inputTrigger { get; private set; }
+        public ControlInput InputTrigger { get; private set; }
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlOutput outputTrigger { get; private set; }
+        public ControlOutput OutputTrigger { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
         [PortLabelHidden]
-        public ValueInput boolVal { get; private set; }
+        public ValueInput Enter { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
@@ -30,20 +29,20 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void Definition()
         {
-            boolVal = ValueInput<bool>(nameof(boolVal));
+            Enter = ValueInput<bool>(nameof(Enter));
 
             GameobjectVal = ValueInput<GameObject>(nameof(GameobjectVal), null).NullMeansSelf();
 
-            inputTrigger = ControlInput(nameof(inputTrigger), (f) =>
+            InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                f.GetValue<GameObject>(GameobjectVal).GetComponent<AbstractTransitionProvider>().DoTransition(f.GetValue<bool>(boolVal));
+                f.GetValue<GameObject>(GameobjectVal).GetComponent<AbstractTransitionProvider>().DoTransition(f.GetValue<bool>(Enter));
 
-                return outputTrigger;
+                return OutputTrigger;
             });
 
-            outputTrigger = ControlOutput(nameof(outputTrigger));
+            OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
-            Succession(inputTrigger, outputTrigger);
+            Succession(InputTrigger, OutputTrigger);
         }
     }
 }

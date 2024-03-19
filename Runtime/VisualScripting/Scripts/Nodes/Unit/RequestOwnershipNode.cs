@@ -1,40 +1,38 @@
 using Unity.VisualScripting;
-using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Synced Object: Try Get Ownership")]
+    [UnitTitle("Reflectis Synced Object: Try Get Ownership")]
     [UnitSurtitle("Synced Object")]
     [UnitShortTitle("Try Get Ownership")]
-    [UnitCategory("Events\\Reflectis\\Ownership")]
-    [TypeIcon(typeof(Material))]
+    [UnitCategory("Reflectis\\Flow")]
     public class RequestOwnershipNode : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlInput inputTrigger { get; private set; }
+        public ControlInput InputTrigger { get; private set; }
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlOutput outputTrigger { get; private set; }
+        public ControlOutput OutputTrigger { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
         [PortLabelHidden]
-        public ValueInput syncedObject { get; private set; }
+        public ValueInput SyncedObject { get; private set; }
 
         protected override void Definition()
         {
-            syncedObject = ValueInput<SyncedObject>(nameof(syncedObject), null).NullMeansSelf();
+            SyncedObject = ValueInput<SyncedObject>(nameof(SyncedObject), null).NullMeansSelf();
 
-            inputTrigger = ControlInput(nameof(inputTrigger), (f) =>
+            InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                f.GetValue<SyncedObject>(syncedObject).onRequestOwnershipAction?.Invoke();
-                return outputTrigger;
+                f.GetValue<SyncedObject>(SyncedObject).onRequestOwnershipAction?.Invoke();
+                return OutputTrigger;
             });
 
-            outputTrigger = ControlOutput(nameof(outputTrigger));
+            OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
-            Succession(inputTrigger, outputTrigger);
+            Succession(InputTrigger, OutputTrigger);
         }
     }
 }

@@ -4,39 +4,38 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Enable Character Mesh")]
+    [UnitTitle("Reflectis Character: Enable Mesh")]
     [UnitSurtitle("Character")]
-    [UnitShortTitle("Enable Character Mesh")]
-    [UnitCategory("Events\\Reflectis\\Character")]
-    [TypeIcon(typeof(UnityEngine.CharacterController))]
+    [UnitShortTitle("Enable Mesh")]
+    [UnitCategory("Reflectis\\Flow")]
     public class EnableCharacterMeshNode : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlInput inputTrigger { get; private set; }
+        public ControlInput InputTrigger { get; private set; }
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlOutput outputTrigger { get; private set; }
+        public ControlOutput OutputTrigger { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
         [PortLabelHidden]
-        public ValueInput boolVal { get; private set; }
+        public ValueInput Enable { get; private set; }
 
         protected override void Definition()
         {
-            boolVal = ValueInput<bool>(nameof(boolVal));
+            Enable = ValueInput<bool>(nameof(Enable));
 
-            inputTrigger = ControlInput(nameof(inputTrigger), (f) =>
+            InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                SM.GetSystem<AvatarSystem>().EnableAvatarInstanceMeshes(f.GetValue<bool>(boolVal));
+                SM.GetSystem<AvatarSystem>().EnableAvatarInstanceMeshes(f.GetValue<bool>(Enable));
 
-                return outputTrigger;
+                return OutputTrigger;
             });
 
-            outputTrigger = ControlOutput(nameof(outputTrigger));
+            OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
-            Succession(inputTrigger, outputTrigger);
+            Succession(InputTrigger, OutputTrigger);
         }
     }
 }

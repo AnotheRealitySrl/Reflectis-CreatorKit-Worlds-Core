@@ -4,16 +4,26 @@ using Reflectis.SDK.Utilities;
 using Reflectis.SDK.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
 public static class VisualScriptingSetupEditor
 {
+    //[MenuItem("Reflectis/Reset Visual Scripting Nodes")]
+    //public static void ResetNodes()
+    //{
+    //    var _typeOptionsMetadata = BoltCore.Configuration.GetMetadata(nameof(BoltCore.Configuration.typeOptions));
+    //    _typeOptionsMetadata.Reset(true);
+    //}
+
     [MenuItem("Reflectis/Setup Visual Scripting Nodes")]
     public static void Setup()
     {
         var boltTypeOptionsChanged = false;
+        //var _typeOptionsMetadata = BoltCore.Configuration.GetMetadata(nameof(BoltCore.Configuration.typeOptions));
+        //_typeOptionsMetadata.Reset(true);
 
         foreach (var typeTexts in GetCustomTypeTexts())
         {
@@ -46,6 +56,8 @@ public static class VisualScriptingSetupEditor
 
         if (boltTypeOptionsChanged)
         {
+            var typeOptionsMetadata = BoltCore.Configuration.GetMetadata(nameof(BoltCore.Configuration.typeOptions));
+            typeOptionsMetadata.Save();
             BoltCore.Configuration.Save();
             Codebase.UpdateSettings();
             UnitBase.Rebuild();
@@ -60,6 +72,11 @@ public static class VisualScriptingSetupEditor
     private static IEnumerable<TextAsset> GetCustomTypeTexts()
     {
         var customTypeCollector = Resources.Load<VisualScriptingCustomTypeCollector>("VisualScriptingCustomTypeCollector");
+        var reflectisCustomTypeCollector = Resources.Load<VisualScriptingCustomTypeCollector>("ReflectisVisualScriptingCustomTypeCollector");
+        if (reflectisCustomTypeCollector != null)
+        {
+            return customTypeCollector.CustomTypeTexts.Union(reflectisCustomTypeCollector.CustomTypeTexts);
+        }
         return customTypeCollector.CustomTypeTexts;
     }
 }

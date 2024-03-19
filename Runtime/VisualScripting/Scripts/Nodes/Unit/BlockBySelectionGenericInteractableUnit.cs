@@ -3,50 +3,50 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("GenericInteractable: BlockInteraction")]
+    [UnitTitle("Reflectis GenericInteractable: BlockInteractionBySelection")]
     [UnitSurtitle("GenericInteractable")]
-    [UnitShortTitle("BlockBySelection")]
-    [UnitCategory("Reflectis\\GenericInteractable")]
+    [UnitShortTitle("BlockInteractionBySelection")]
+    [UnitCategory("Reflectis\\Flow")]
     public class BlockBySelectionGenericInteractableUnit : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlInput inputTrigger { get; private set; }
+        public ControlInput InputTrigger { get; private set; }
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlOutput outputTrigger { get; private set; }
+        public ControlOutput OutputTrigger { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
-        public ValueInput genericInteractable { get; private set; }
+        public ValueInput GenericInteractable { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
-        public ValueInput blockValue { get; private set; }
+        public ValueInput BlockValue { get; private set; }
 
         protected override void Definition()
         {
-            genericInteractable = ValueInput<GenericInteractable>(nameof(genericInteractable));
+            GenericInteractable = ValueInput<GenericInteractable>(nameof(GenericInteractable));
 
-            blockValue = ValueInput<bool>(nameof(blockValue), false);
+            BlockValue = ValueInput<bool>(nameof(BlockValue), false);
 
-            inputTrigger = ControlInput(nameof(inputTrigger), (f) =>
+            InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
 
-                if (f.GetValue<bool>(blockValue))
+                if (f.GetValue<bool>(BlockValue))
                 {
-                    f.GetValue<GenericInteractable>(genericInteractable).CurrentBlockedState |= InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                    f.GetValue<GenericInteractable>(GenericInteractable).CurrentBlockedState |= InteractableBehaviourBase.EBlockedState.BlockedBySelection;
                 }
                 else
                 {
-                    f.GetValue<GenericInteractable>(genericInteractable).CurrentBlockedState = f.GetValue<GenericInteractable>(genericInteractable).CurrentBlockedState & ~InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                    f.GetValue<GenericInteractable>(GenericInteractable).CurrentBlockedState = f.GetValue<GenericInteractable>(GenericInteractable).CurrentBlockedState & ~InteractableBehaviourBase.EBlockedState.BlockedBySelection;
                 }
-                return outputTrigger;
+                return OutputTrigger;
             });
 
-            outputTrigger = ControlOutput(nameof(outputTrigger));
+            OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
-            Succession(inputTrigger, outputTrigger);
+            Succession(InputTrigger, OutputTrigger);
 
         }
     }

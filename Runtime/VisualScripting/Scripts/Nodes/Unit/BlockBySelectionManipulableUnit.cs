@@ -3,50 +3,50 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Manipulable: BlockInteraction")]
+    [UnitTitle("Reflectis Manipulable: BlockInteractionBySelection")]
     [UnitSurtitle("Manipulable")]
-    [UnitShortTitle("BlockBySelection")]
-    [UnitCategory("Reflectis\\Manipulable")]
+    [UnitShortTitle("BlockInteractionBySelection")]
+    [UnitCategory("Reflectis\\Flow")]
     public class BlockBySelectionManipulableUnit : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlInput inputTrigger { get; private set; }
+        public ControlInput InputTrigger { get; private set; }
         [DoNotSerialize]
         [PortLabelHidden]
-        public ControlOutput outputTrigger { get; private set; }
+        public ControlOutput OutputTrigger { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
-        public ValueInput manipulable { get; private set; }
+        public ValueInput Manipulable { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
-        public ValueInput blockValue { get; private set; }
+        public ValueInput BlockValue { get; private set; }
 
         protected override void Definition()
         {
-            manipulable = ValueInput<Manipulable>(nameof(manipulable));
+            Manipulable = ValueInput<Manipulable>(nameof(Manipulable));
 
-            blockValue = ValueInput<bool>(nameof(blockValue), false);
+            BlockValue = ValueInput<bool>(nameof(BlockValue), false);
 
-            inputTrigger = ControlInput(nameof(inputTrigger), (f) =>
+            InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
 
-                if (f.GetValue<bool>(blockValue))
+                if (f.GetValue<bool>(BlockValue))
                 {
-                    f.GetValue<Manipulable>(manipulable).CurrentBlockedState |= InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                    f.GetValue<Manipulable>(Manipulable).CurrentBlockedState |= InteractableBehaviourBase.EBlockedState.BlockedBySelection;
                 }
                 else
                 {
-                    f.GetValue<Manipulable>(manipulable).CurrentBlockedState = f.GetValue<Manipulable>(manipulable).CurrentBlockedState & ~InteractableBehaviourBase.EBlockedState.BlockedBySelection;
+                    f.GetValue<Manipulable>(Manipulable).CurrentBlockedState = f.GetValue<Manipulable>(Manipulable).CurrentBlockedState & ~InteractableBehaviourBase.EBlockedState.BlockedBySelection;
                 }
-                return outputTrigger;
+                return OutputTrigger;
             });
 
-            outputTrigger = ControlOutput(nameof(outputTrigger));
+            OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
-            Succession(inputTrigger, outputTrigger);
+            Succession(InputTrigger, OutputTrigger);
 
         }
     }

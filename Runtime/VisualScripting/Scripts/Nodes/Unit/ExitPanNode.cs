@@ -1,6 +1,5 @@
 using Reflectis.SDK.CharacterController;
 using Reflectis.SDK.Core;
-using Reflectis.SDK.Fade;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -8,11 +7,11 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Character: Teleport")]
+    [UnitTitle("Reflectis Character: Exit Pan")]
     [UnitSurtitle("Character")]
-    [UnitShortTitle("Teleport")]
+    [UnitShortTitle("Exit Pan")]
     [UnitCategory("Reflectis\\Flow")]
-    public class TeleportPlayerActionNode : Unit
+    public class ExitPanNode : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
@@ -21,37 +20,33 @@ namespace Reflectis.SDK.CreatorKit
         [PortLabelHidden]
         public ControlOutput OutputTrigger { get; private set; }
 
-        [NullMeansSelf]
-        [DoNotSerialize]
-        [PortLabelHidden]
-        public ValueInput TransformVal { get; private set; }
-
         private List<Flow> runningFlows = new List<Flow>();
 
         protected override void Definition()
         {
-            TransformVal = ValueInput<Transform>(nameof(TransformVal));
 
-            InputTrigger = ControlInputCoroutine(nameof(InputTrigger), TeleportPlayerCoroutine);
+            InputTrigger = ControlInputCoroutine(nameof(InputTrigger), PanCoroutine);
 
             OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
             Succession(InputTrigger, OutputTrigger);
         }
 
-        private IEnumerator TeleportPlayerCoroutine(Flow flow)
+        private IEnumerator PanCoroutine(Flow flow)
         {
             runningFlows.Add(flow);
 
-            SM.GetSystem<IFadeSystem>().FadeToBlack(() =>
-            {
-                SM.GetSystem<ICharacterControllerSystem>().MoveCharacter(new Pose(flow.GetValue<Transform>(TransformVal).position, flow.GetValue<Transform>(TransformVal).rotation));
-                SM.GetSystem<IFadeSystem>().FadeFromBlack(() => runningFlows.Remove(flow));
-            });
+            CallAwaitableMethod(flow);
 
             yield return new WaitUntil(() => runningFlows.Contains(flow));
 
             yield return OutputTrigger;
+        }
+        private async void CallAwaitableMethod(Flow flow)
+        {
+            await SM.GetSystem<ICharacterControllerSystem>().GoToSetMovementState();
+
+            runningFlows.Remove(flow);
         }
     }
 }
