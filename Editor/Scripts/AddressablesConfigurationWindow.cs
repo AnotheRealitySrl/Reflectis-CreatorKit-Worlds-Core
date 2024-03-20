@@ -13,6 +13,8 @@ namespace Reflectis.SDK.CreatorKitEditor
 {
     public class AddressablesConfigurationWindow : EditorWindow
     {
+        #region Private variables
+
         private AddressableAssetSettings settings;
 
         private const string addressables_output_folder = "ServerData";
@@ -22,6 +24,10 @@ namespace Reflectis.SDK.CreatorKitEditor
         private string remoteLoadPath;
 
         private string playerVersionOverride;
+
+        #endregion
+
+        #region Unity callbacks
 
         [MenuItem("Reflectis/Addressables settings window")]
         public static void ShowWindow()
@@ -42,6 +48,10 @@ namespace Reflectis.SDK.CreatorKitEditor
             }
         }
 
+        #endregion
+
+        #region Private methods
+
         private void LoadProfileSettings()
         {
             settings = AddressablesBuildScript.GetSettingsObject(AddressablesBuildScript.settings_asset);
@@ -49,9 +59,11 @@ namespace Reflectis.SDK.CreatorKitEditor
             remoteBuildPath = string.Join('/', addressables_output_folder, build_target);
 
             var addressablesVariables = typeof(AddressablesVariables).GetProperties();
+            string baseUrl = addressablesVariables.First(x => x.PropertyType == typeof(string)).Name;
+            string worldId = addressablesVariables.First(x => x.PropertyType == typeof(int)).Name;
             remoteLoadPath = string.Join('/',
-                RuntimeVariable($"{typeof(AddressablesVariables)}.{addressablesVariables[1].Name}"),
-                RuntimeVariable($"{typeof(AddressablesVariables)}.{addressablesVariables[0].Name}"),
+                RuntimeVariable($"{typeof(AddressablesVariables)}.{baseUrl}"),
+                RuntimeVariable($"{typeof(AddressablesVariables)}.{worldId}"),
                 build_target);
 
             playerVersionOverride = settings.OverridePlayerVersion;
@@ -64,6 +76,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                 richText = true
             };
 
+            #region Top-level settings
             // General settings
             EditorGUILayout.LabelField($"<b>Addressables general settings</b>", style);
 
@@ -113,6 +126,10 @@ namespace Reflectis.SDK.CreatorKitEditor
             rect1.height = 1;
             EditorGUI.DrawRect(rect1, new Color(0.5f, 0.5f, 0.5f, 1));
 
+            #endregion
+
+            #region Profiles settings
+
             // Profile settings
             EditorGUILayout.BeginVertical();
 
@@ -154,6 +171,9 @@ namespace Reflectis.SDK.CreatorKitEditor
             rect2.height = 1;
             EditorGUI.DrawRect(rect2, new Color(0.5f, 0.5f, 0.5f, 1));
 
+            #endregion
+
+            #region Groups settings
 
             // Groups settings
 
@@ -191,6 +211,8 @@ namespace Reflectis.SDK.CreatorKitEditor
                         });
                 });
             }
+
+            #endregion
         }
 
         private bool IsDefaultProfileConfigured()
@@ -215,5 +237,7 @@ namespace Reflectis.SDK.CreatorKitEditor
         }
 
         private string RuntimeVariable(string variable) => "{" + variable + "}";
+
+        #endregion
     }
 }
