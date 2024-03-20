@@ -14,7 +14,8 @@ namespace Reflectis.SDK.CreatorKitEditor
             = "Assets/AddressableAssetsData/AddressableAssetSettings.asset";
 
         private static AddressableAssetSettings settings;
-        private static readonly string default_profile = "Default";
+
+        public static string PlayerVersionOverride { get; private set; }
 
         public static AddressableAssetSettings GetSettingsObject(string settingsAsset)
         {
@@ -66,10 +67,9 @@ namespace Reflectis.SDK.CreatorKitEditor
             return success;
         }
 
-        public static bool BuildAddressables(string profile)
+        public static bool BuildAddressables()
         {
             GetSettingsObject(settings_asset);
-            SetProfile(profile);
 
             if (AssetDatabase.LoadAssetAtPath<ScriptableObject>(build_script) is not IDataBuilder builderScript)
             {
@@ -79,23 +79,23 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             SetBuilder(builderScript);
 
+            PlayerVersionOverride = settings.OverridePlayerVersion;
+
             return BuildAddressableContent();
         }
 
-        public static void RemoteBuildAddressablesProduction() => BuildAddressables(default_profile);
-
 
         [MenuItem("Reflectis/Build Addressables")]
-        public static void BuildAddressablesProduction()
+        public static void BuildAddressablesForAllPlatforms()
         {
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
-            BuildAddressables(default_profile);
+            BuildAddressables();
 
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.WebGL, BuildTarget.WebGL);
-            BuildAddressables(default_profile);
+            BuildAddressables();
 
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
-            BuildAddressables(default_profile);
+            BuildAddressables();
         }
     }
 }
