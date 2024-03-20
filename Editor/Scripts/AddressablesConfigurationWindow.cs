@@ -50,8 +50,8 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             var addressablesVariables = typeof(AddressablesVariables).GetProperties();
             remoteLoadPath = string.Join('/',
-                RuntimeVariable($"{typeof(AddressablesVariables)}.{addressablesVariables[0].Name}"),
                 RuntimeVariable($"{typeof(AddressablesVariables)}.{addressablesVariables[1].Name}"),
+                RuntimeVariable($"{typeof(AddressablesVariables)}.{addressablesVariables[0].Name}"),
                 build_target);
 
             playerVersionOverride = settings.OverridePlayerVersion;
