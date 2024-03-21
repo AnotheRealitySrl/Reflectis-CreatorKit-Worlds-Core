@@ -1,11 +1,12 @@
 #if UNITY_EDITOR
+using Reflectis.SDK.CreatorKitEditor;
 using UnityEditor;
 using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
     [CustomEditor(typeof(SyncedObject))]
-    public class SyncedObjectEditor : UnityEditor.Editor
+    public class SyncedObjectEditor : NetworkPlaceholderEditor
     {
         //used to hide the script field
         private static readonly string[] _excludedProperties = new string[] { "m_Script" };
@@ -31,6 +32,8 @@ namespace Reflectis.SDK.CreatorKit
             DrawFields();
 
             serializedObject.ApplyModifiedProperties();
+
+            base.OnInspectorGUI();
         }
 
         private void OnEnable()
