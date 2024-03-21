@@ -84,8 +84,6 @@ namespace Reflectis.SDK.CreatorKitEditor
             return BuildAddressableContent();
         }
 
-
-        [MenuItem("Reflectis/Build Addressables")]
         public static void BuildAddressablesForAllPlatforms()
         {
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
