@@ -37,6 +37,8 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         private string playerVersionOverride;
 
+        private Vector2 scrollPosition = Vector2.zero;
+
         #endregion
 
         #region Unity callbacks
@@ -90,6 +92,8 @@ namespace Reflectis.SDK.CreatorKitEditor
             {
                 richText = true,
             };
+
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, false);
 
             #region Top-level settings
 
@@ -290,6 +294,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                 EditorGUILayout.LabelField("<color=red>There are some configuration issue in the addressables. Please fix them before building.</color>", style);
             }
 
+            GUILayout.EndScrollView();
         }
 
         private void CreateSeparator()
