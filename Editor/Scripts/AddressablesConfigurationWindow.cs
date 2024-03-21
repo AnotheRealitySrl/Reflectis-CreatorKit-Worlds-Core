@@ -1,5 +1,6 @@
 ﻿using Sirenix.Utilities;
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -27,6 +28,9 @@ namespace Reflectis.SDK.CreatorKitEditor
         private const string build_target_variable_value = "[UnityEditor.EditorUserBuildSettings.activeBuildTarget]";
         private const string player_version_override_variable_name = "PlayerVersionOverride";
         private const string player_version_override_variable_value = "[Reflectis.SDK.CreatorKitEditor.AddressablesBuildScript.PlayerVersionOverride]";
+
+        private const string environments_group_name = "Environments";
+        private const string thumbnails_group_name = "Thumbnails";
 
         private string remoteBuildPath;
         private string remoteLoadPath;
@@ -104,13 +108,14 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             if (string.IsNullOrEmpty(playerVersionOverride))
             {
-                EditorGUILayout.LabelField($"<color=red>Catalog name cannot be null!</color>", style);
+                EditorGUILayout.LabelField($"<color=red>The catalog name can not be null!</color>", style);
             }
             else if (!Regex.IsMatch(playerVersionOverride, @"[a-zA-Z][a-zA-Z0-9]*$"))
             {
-                EditorGUILayout.LabelField($"<color=red>Catalog name can contain only alphanumeric values!</color>", style);
+                EditorGUILayout.LabelField($"<color=red>Only alphanumeric values are allowed!</color>", style);
             }
-            else if (settings.OverridePlayerVersion != playerVersionOverride)
+
+            if (settings.OverridePlayerVersion != playerVersionOverride)
             {
                 settings.OverridePlayerVersion = playerVersionOverride;
             }
@@ -124,20 +129,7 @@ namespace Reflectis.SDK.CreatorKitEditor
             {
                 if (GUILayout.Button("Configure addressables settings", GUILayout.Width(250)))
                 {
-                    settings.BundleLocalCatalog = false;
-                    settings.BuildRemoteCatalog = true;
-                    settings.CheckForContentUpdateRestrictionsOption = CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions;
-                    settings.ContentStateBuildPath = string.Empty;
-                    settings.MaxConcurrentWebRequests = 3;
-                    settings.CatalogRequestsTimeout = 0;
-                    settings.IgnoreUnsupportedFilesInBuild = false;
-                    settings.UniqueBundleIds = false;
-                    settings.ContiguousBundles = true;
-                    settings.NonRecursiveBuilding = true;
-                    settings.ShaderBundleNaming = ShaderBundleNaming.ProjectName;
-                    settings.MonoScriptBundleNaming = MonoScriptBundleNaming.Disabled;
-                    settings.DisableVisibleSubAssetRepresentations = false;
-                    settings.BuildRemoteCatalog = true;
+                    ConfigureAddressablesSettings();
                 }
             }
             else
@@ -146,9 +138,7 @@ namespace Reflectis.SDK.CreatorKitEditor
             }
 
             EditorGUILayout.Space();
-            Rect rect1 = EditorGUILayout.GetControlRect(false, 1);
-            rect1.height = 1;
-            EditorGUI.DrawRect(rect1, new Color(0.5f, 0.5f, 0.5f, 1));
+            CreateSeparator();
 
             #endregion
 
@@ -156,7 +146,7 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             EditorGUILayout.BeginVertical();
 
-            EditorGUILayout.LabelField($"<b>Profiles settings</b>", style);
+            EditorGUILayout.LabelField($"<b>Profile settings</b>", style);
 
             string remoteBuildPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name);
             bool isRemoteBuildPathConfigured = remoteBuildPath == this.remoteBuildPath;
@@ -186,16 +176,15 @@ namespace Reflectis.SDK.CreatorKitEditor
             EditorGUILayout.LabelField($"<b>{player_version_override_variable_name}: </b>{playerVersionOverrideVariable}", style);
             EditorGUILayout.EndHorizontal();
 
-
             EditorGUILayout.EndVertical();
 
             EditorGUILayout.Space();
 
-            if (!IsDefaultProfileConfigured())
+            if (!IsProfileConfigured())
             {
                 if (GUILayout.Button("Configure remote build and load paths", GUILayout.Width(250)))
                 {
-                    ConfigureDefaultProfile();
+                    ConfigureProfile();
                 }
             }
             else
@@ -204,9 +193,7 @@ namespace Reflectis.SDK.CreatorKitEditor
             }
 
             EditorGUILayout.Space();
-            Rect rect2 = EditorGUILayout.GetControlRect(false, 1);
-            rect2.height = 1;
-            EditorGUI.DrawRect(rect2, new Color(0.5f, 0.5f, 0.5f, 1));
+            CreateSeparator();
 
             #endregion
 
@@ -214,54 +201,84 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             EditorGUILayout.LabelField("<b>Groups settings</b>", style);
 
-            if (!IsAddressablesGroupsConfigured())
-            {
-                if (GUILayout.Button("Configure addressables groups", GUILayout.Width(250)))
-                {
-                    settings.groups.ForEach(group =>
-                    {
-                        group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ForEach(schema =>
-                        {
-                            BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
+            EditorGUILayout.HelpBox($"Every addressable scene must be put inside the {environments_group_name} group, " +
+                    $"and the associated thumbnail inside the {thumbnails_group_name} group. " +
+                    $"Note that each addressable asset must have a lower-case, alphanumeric name.",
+                    MessageType.Info);
 
-                            bundledAssetGroupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
-                            bundledAssetGroupSchema.IncludeInBuild = true;
-                            bundledAssetGroupSchema.ForceUniqueProvider = false;
-                            bundledAssetGroupSchema.UseAssetBundleCache = true;
-                            bundledAssetGroupSchema.UseAssetBundleCrc = true;
-                            bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles = true;
-                            bundledAssetGroupSchema.UseUnityWebRequestForLocalBundles = false;
-                            bundledAssetGroupSchema.Timeout = 0;
-                            bundledAssetGroupSchema.ChunkedTransfer = false;
-                            bundledAssetGroupSchema.RedirectLimit = -1;
-                            bundledAssetGroupSchema.RetryCount = 0;
-                            bundledAssetGroupSchema.IncludeAddressInCatalog = true;
-                            bundledAssetGroupSchema.IncludeGUIDInCatalog = true;
-                            bundledAssetGroupSchema.IncludeLabelsInCatalog = true;
-                            bundledAssetGroupSchema.InternalIdNamingMode = BundledAssetGroupSchema.AssetNamingMode.FullPath;
-                            bundledAssetGroupSchema.InternalBundleIdMode = BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash;
-                            bundledAssetGroupSchema.AssetBundledCacheClearBehavior = BundledAssetGroupSchema.CacheClearBehavior.ClearWhenSpaceIsNeededInCache;
-                            bundledAssetGroupSchema.BundleMode = group.IsDefaultGroup()
-                                    ? BundledAssetGroupSchema.BundlePackingMode.PackTogether
-                                    : BundledAssetGroupSchema.BundlePackingMode.PackSeparately;
-                            bundledAssetGroupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash;
-                        });
-                    });
+            if (!IsGroupValid(environments_group_name) || !IsGroupValid(thumbnails_group_name))
+            {
+                EditorGUILayout.HelpBox($"Could not find one or more required addressables groups. Ckick on the button to fix the issue.",
+                    MessageType.Error);
+
+                if (GUILayout.Button("Create missing groups", GUILayout.ExpandWidth(false)))
+                {
+                    if (!IsGroupValid(environments_group_name))
+                    {
+                        CreateGroup(environments_group_name);
+                    }
+                    if (!IsGroupValid(thumbnails_group_name))
+                    {
+                        CreateGroup(thumbnails_group_name);
+                    }
+                    ConfigureAddressablesGroups();
                 }
             }
             else
             {
-                EditorGUILayout.LabelField("<color=lime>The groups are properly configured!</color>", style);
+                EditorGUILayout.BeginHorizontal();
+                foreach (var group in settings.groups.Where(x => !x.SchemaTypes.Contains(typeof(PlayerDataGroupSchema)) && x != settings.DefaultGroup))
+                {
+                    EditorGUILayout.BeginVertical();
+                    EditorGUILayout.LabelField($"<b>{group.name}</b>", style);
+                    foreach (var entry in group.entries.OrderBy(x => x.address))
+                    {
+                        EditorGUILayout.BeginHorizontal();
+                        bool isEntryNameValid = new Regex(@"^[a-z0-9\s,]*$").IsMatch(entry.address);
+                        if (!isEntryNameValid)
+                        {
+                            if (GUILayout.Button("Fix", GUILayout.ExpandWidth(false)))
+                            {
+                                entry.address = Regex.Replace(entry.address.ToLower(), "[^a-z0-9 -]", string.Empty);
+                            }
+                        }
+                        EditorGUILayout.LabelField($"{(isEntryNameValid ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} {entry}", style);
+                        EditorGUILayout.EndHorizontal();
+                    }
+                    EditorGUILayout.EndVertical();
+                }
+                EditorGUILayout.EndHorizontal();
             }
+
+            if (!IsAddressablesEntriesValid())
+            {
+                EditorGUILayout.HelpBox($"There are inconsistencies between the {environments_group_name} and the {thumbnails_group_name} asset groups. " +
+                    $"Check if each environment has a corresponding thumbnail and viceversa, and there are not duplicate names within each group",
+                    MessageType.Error);
+            }
+
+            EditorGUILayout.Space();
+
+            if (!IsAddressablesGroupsConfigured())
+            {
+                if (GUILayout.Button("Configure addressables groups", GUILayout.Width(250)))
+                {
+                    ConfigureAddressablesGroups();
+                }
+            }
+            else if (IsAddressablesEntriesValid())
+            {
+                EditorGUILayout.LabelField("<color=lime>The groups settings are properly configured!</color>", style);
+            }
+
+            EditorGUILayout.Space();
 
             #endregion
 
+            CreateSeparator();
             EditorGUILayout.Space();
-            Rect rect3 = EditorGUILayout.GetControlRect(false, 1);
-            rect3.height = 1;
-            EditorGUI.DrawRect(rect3, new Color(0.5f, 0.5f, 0.5f, 1));
 
-            if (IsDefaultProfileConfigured() && IsAddressablesSettingsConfigured() && IsAddressablesGroupsConfigured())
+            if (IsProfileConfigured() && IsAddressablesSettingsConfigured() && IsAddressablesGroupsConfigured() && IsAddressablesEntriesValid())
             {
                 if (GUILayout.Button("Build Addressables", EditorStyles.miniButtonMid))
                 {
@@ -275,12 +292,18 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         }
 
-        private bool IsDefaultProfileConfigured()
+        private void CreateSeparator()
         {
-            return settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name) == remoteBuildPath
-                && settings.profileSettings.GetValueByName(settings.activeProfileId, remote_load_path_variable_name) == remoteLoadPath
-                && settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name) == build_target_variable_value
-                && settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name) == player_version_override_variable_value;
+            Rect rect = EditorGUILayout.GetControlRect(false, 1);
+            rect.height = 1;
+            EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
+        }
+
+        #region Top-Level settings configuration
+
+        private bool IsPlayerVersionOverrideValid()
+        {
+            return !string.IsNullOrEmpty(playerVersionOverride) && Regex.IsMatch(playerVersionOverride, @"[a-zA-Z][a-zA-Z0-9]*$");
         }
 
         private bool IsAddressablesSettingsConfigured()
@@ -302,14 +325,86 @@ namespace Reflectis.SDK.CreatorKitEditor
                 !settings.DisableVisibleSubAssetRepresentations;
         }
 
-        private bool IsPlayerVersionOverrideValid()
+        private void ConfigureAddressablesSettings()
         {
-            return !string.IsNullOrEmpty(playerVersionOverride) && Regex.IsMatch(playerVersionOverride, @"[a-zA-Z][a-zA-Z0-9]*$");
+            settings.BundleLocalCatalog = false;
+            settings.BuildRemoteCatalog = true;
+            settings.CheckForContentUpdateRestrictionsOption = CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions;
+            settings.ContentStateBuildPath = string.Empty;
+            settings.MaxConcurrentWebRequests = 3;
+            settings.CatalogRequestsTimeout = 0;
+            settings.IgnoreUnsupportedFilesInBuild = false;
+            settings.UniqueBundleIds = false;
+            settings.ContiguousBundles = true;
+            settings.NonRecursiveBuilding = true;
+            settings.ShaderBundleNaming = ShaderBundleNaming.ProjectName;
+            settings.MonoScriptBundleNaming = MonoScriptBundleNaming.Disabled;
+            settings.DisableVisibleSubAssetRepresentations = false;
+            settings.BuildRemoteCatalog = true;
+
+            SaveSettings();
+        }
+
+        #endregion
+
+        #region Profiles configuration
+
+        private bool IsProfileConfigured()
+        {
+            return settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name) == remoteBuildPath
+                && settings.profileSettings.GetValueByName(settings.activeProfileId, remote_load_path_variable_name) == remoteLoadPath
+                && settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name) == build_target_variable_value
+                && settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name) == player_version_override_variable_value;
+        }
+
+        private void ConfigureProfile()
+        {
+            settings.profileSettings.SetValue(settings.activeProfileId, remote_build_path_variable_name, remoteBuildPath);
+            settings.profileSettings.SetValue(settings.activeProfileId, remote_load_path_variable_name, remoteLoadPath);
+
+            if (string.IsNullOrEmpty(settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name)))
+            {
+                settings.profileSettings.CreateValue(build_target_variable_name, build_target_variable_value);
+            }
+            else
+            {
+                settings.profileSettings.SetValue(settings.activeProfileId, build_target_variable_name, build_target_variable_value);
+            }
+
+            if (string.IsNullOrEmpty(settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name)))
+            {
+                settings.profileSettings.CreateValue(player_version_override_variable_name, player_version_override_variable_value);
+            }
+            else
+            {
+                settings.profileSettings.SetValue(settings.activeProfileId, player_version_override_variable_name, player_version_override_variable_value);
+            }
+
+            SaveSettings();
+        }
+
+        #endregion
+
+        #region Groups configuration
+
+        private bool IsGroupValid(string groupName)
+        {
+            return settings.groups.Find(x => x.Name == groupName);
+        }
+
+        private void CreateGroup(string groupName)
+        {
+            settings.CreateGroup(groupName, false, false, true, settings.DefaultGroup.Schemas);
         }
 
         private bool IsAddressablesGroupsConfigured()
         {
-            bool configured = false;
+            bool configured = true;
+
+            if (!IsGroupValid(environments_group_name) || !IsGroupValid(thumbnails_group_name))
+            {
+                return false;
+            }
 
             settings.groups.ForEach(group =>
             {
@@ -317,7 +412,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                 {
                     BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
 
-                    configured =
+                    configured &=
                         bundledAssetGroupSchema.Compression == BundledAssetGroupSchema.BundleCompressionMode.LZ4 &&
                         bundledAssetGroupSchema.IncludeInBuild == true &&
                         bundledAssetGroupSchema.ForceUniqueProvider == false &&
@@ -345,37 +440,64 @@ namespace Reflectis.SDK.CreatorKitEditor
             return configured;
         }
 
-        private void ConfigureDefaultProfile()
+        private void ConfigureAddressablesGroups()
         {
-            settings.profileSettings.SetValue(settings.activeProfileId, remote_build_path_variable_name, remoteBuildPath);
-            settings.profileSettings.SetValue(settings.activeProfileId, remote_load_path_variable_name, remoteLoadPath);
-
-            if (string.IsNullOrEmpty(settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name)))
+            settings.groups.ForEach(group =>
             {
-                settings.profileSettings.CreateValue(build_target_variable_name, build_target_variable_value);
-            }
-            else
-            {
-                settings.profileSettings.SetValue(settings.activeProfileId, build_target_variable_name, build_target_variable_value);
-            }
+                group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ForEach(schema =>
+                {
+                    BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
 
-            if (string.IsNullOrEmpty(settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name)))
-            {
-                settings.profileSettings.CreateValue(player_version_override_variable_name, player_version_override_variable_value);
-            }
-            else
-            {
-                settings.profileSettings.SetValue(settings.activeProfileId, player_version_override_variable_name, player_version_override_variable_value);
-            }
+                    bundledAssetGroupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
+                    bundledAssetGroupSchema.IncludeInBuild = true;
+                    bundledAssetGroupSchema.ForceUniqueProvider = false;
+                    bundledAssetGroupSchema.UseAssetBundleCache = true;
+                    bundledAssetGroupSchema.UseAssetBundleCrc = true;
+                    bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles = true;
+                    bundledAssetGroupSchema.UseUnityWebRequestForLocalBundles = false;
+                    bundledAssetGroupSchema.Timeout = 0;
+                    bundledAssetGroupSchema.ChunkedTransfer = false;
+                    bundledAssetGroupSchema.RedirectLimit = -1;
+                    bundledAssetGroupSchema.RetryCount = 0;
+                    bundledAssetGroupSchema.IncludeAddressInCatalog = true;
+                    bundledAssetGroupSchema.IncludeGUIDInCatalog = true;
+                    bundledAssetGroupSchema.IncludeLabelsInCatalog = true;
+                    bundledAssetGroupSchema.InternalIdNamingMode = BundledAssetGroupSchema.AssetNamingMode.FullPath;
+                    bundledAssetGroupSchema.InternalBundleIdMode = BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash;
+                    bundledAssetGroupSchema.AssetBundledCacheClearBehavior = BundledAssetGroupSchema.CacheClearBehavior.ClearWhenSpaceIsNeededInCache;
+                    bundledAssetGroupSchema.BundleMode = group.IsDefaultGroup()
+                            ? BundledAssetGroupSchema.BundlePackingMode.PackTogether
+                            : BundledAssetGroupSchema.BundlePackingMode.PackSeparately;
+                    bundledAssetGroupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash;
+                });
+            });
 
+            SaveSettings();
+        }
 
+        private bool IsAddressablesEntriesValid()
+        {
+            IEnumerable<string> environmentEntries = settings.groups.Find(x => x.Name == environments_group_name).entries.Select(x => x.address);
+            IEnumerable<string> thumbnailEntries = settings.groups.Find(x => x.Name == thumbnails_group_name).entries.Select(x => x.address);
+
+            return
+                environmentEntries.All(new HashSet<string>().Add) &&
+                thumbnailEntries.All(new HashSet<string>().Add) &&
+                !environmentEntries.Except(thumbnailEntries).Any() &&
+                !thumbnailEntries.Except(environmentEntries).Any();
+        }
+
+        #endregion
+
+        private string BuildtimeVariable(string variable) => "[" + variable + "]";
+        private string RuntimeVariable(string variable) => "{" + variable + "}";
+
+        private void SaveSettings()
+        {
             EditorApplication.ExecuteMenuItem("File/Save Project");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
-
-        private string BuildtimeVariable(string variable) => "[" + variable + "]";
-        private string RuntimeVariable(string variable) => "{" + variable + "}";
 
         #endregion
     }
