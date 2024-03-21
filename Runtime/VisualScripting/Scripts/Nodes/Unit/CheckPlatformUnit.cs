@@ -8,7 +8,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitSurtitle("Platform")]
     [UnitShortTitle("Switch")]
     [UnitCategory("Reflectis\\Flow")]
-    public class CheckPlatformNode : Unit
+    public class CheckPlatformUnit : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
@@ -38,6 +38,7 @@ namespace Reflectis.SDK.CreatorKit
 #if UNITY_ANDROID
                 return OutputTriggerVR;
 #endif
+                return OutputTriggerWebGL;
             });
 
             OutputTriggerVR = ControlOutput(nameof(OutputTriggerVR));
