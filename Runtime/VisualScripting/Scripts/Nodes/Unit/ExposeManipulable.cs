@@ -24,7 +24,10 @@ namespace Reflectis.SDK.CreatorKit
         public ValueOutput InteractionColliders { get; private set; }
 
         [DoNotSerialize]
-        public ValueOutput VRInteraction { get; private set; }
+        public ValueOutput IsManipulated { get; private set; }
+
+        [DoNotSerialize]
+        public ValueOutput ManipulationInput { get; private set; }
 
         protected override void Definition()
         {
@@ -34,7 +37,9 @@ namespace Reflectis.SDK.CreatorKit
 
             InteractionColliders = ValueOutput(nameof(InteractionColliders), (flow) => flow.GetValue<Manipulable>(Manipulable).InteractableRef.InteractionColliders);
 
-            VRInteraction = ValueOutput(nameof(VRInteraction), (flow) => flow.GetValue<Manipulable>(Manipulable).VRInteraction);
+            IsManipulated = ValueOutput(nameof(IsManipulated), (flow) => flow.GetValue<Manipulable>(Manipulable).CurrentInteractionState == InteractionNew.Manipulable.EManipulableState.Manipulating);
+
+            ManipulationInput = ValueOutput(nameof(ManipulationInput), (flow) => flow.GetValue<Manipulable>(Manipulable).CurrentManipulationInput);
         }
     }
 }
