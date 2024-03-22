@@ -25,12 +25,11 @@ namespace Reflectis.SDK.CreatorKit
         {
             if (componentsMap.Keys.Count(x => x.name == id) > 0)
             {
-                Debug.Log("Mapping for component \"" + id + "\": Mapped");
                 return componentsMap[componentsMap.Keys.FirstOrDefault(x => x.name == id)].Select(x => GetType(x.name)).ToList();
             }
             else
             {
-                Debug.LogWarning("Mapping for component \"" + id + "\": Not mapped");
+                Debug.LogWarning("Mapping for component \"" + id + "\": Cannot find type list");
                 return new List<Type>() { };
             }
         }

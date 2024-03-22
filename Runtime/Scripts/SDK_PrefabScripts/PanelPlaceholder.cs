@@ -1,7 +1,5 @@
-using Reflectis.SDK.Interaction;
 using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
@@ -33,7 +31,7 @@ namespace Reflectis.SDK.CreatorKit
                 Quaternion originalRotation = uiParent.rotation;
 
                 // Impostiamo la matrice di trasformazione in modo che il cubo sia disegnato relativo a questo oggetto
-                Gizmos.matrix = Matrix4x4.TRS(originalPosition,originalRotation, Vector3.one);
+                Gizmos.matrix = Matrix4x4.TRS(originalPosition, originalRotation, Vector3.one);
 
                 // Disegniamo il cubo
                 Gizmos.color = Color.cyan;

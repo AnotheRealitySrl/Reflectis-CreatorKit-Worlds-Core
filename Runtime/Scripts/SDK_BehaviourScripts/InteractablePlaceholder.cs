@@ -1,10 +1,8 @@
-using Reflectis.SDK.InteractionNew;
 using Reflectis.SDK.Utilities;
-
+using System;
 using System.Collections.Generic;
-
+using Unity.VisualScripting;
 using UnityEngine;
-
 using static Reflectis.SDK.InteractionNew.ContextualMenuManageable;
 using static Reflectis.SDK.InteractionNew.GenericInteractable;
 using static Reflectis.SDK.InteractionNew.IInteractable;
@@ -101,42 +99,11 @@ namespace Reflectis.SDK.CreatorKit
 
         [Header("Generic interaction scriptable actions")]
 
-        [SerializeField, Tooltip("Actions that are triggered when hovering the object.")]
+        [SerializeField, Tooltip("Reference to the script machine that describes what happens during interaction events." +
+            "Utilize \"GenericInteractableHoverEnter\",\"GenericInteractableHoverExit\",\"GenericInteractableSelectEnter\",\"GenericInteractableSelectExit\"" +
+            " and \"GenericInteractableInteract\" nodes to custumize your interactions")]
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
-        private List<AwaitableScriptableAction> onHoverEnterActions = new();
-
-        [SerializeField, Tooltip("Actions that are triggered when finishing the hover on the object.")]
-        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
-        private List<AwaitableScriptableAction> onHoverExitActions = new();
-
-        [SerializeField, Tooltip("Actions that are triggered when selecting the object. " +
-            "During this state the interaction with the object is disabled.")]
-        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
-        private List<AwaitableScriptableAction> onSelectingActions = new();
-
-        [SerializeField, Tooltip("Actions that are triggered automatically when the \"Selecting\" states terminates. " +
-            "In this state it's possible to interact with the object")]
-        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
-        private List<AwaitableScriptableAction> onSelectedActions = new();
-
-        [SerializeField, Tooltip("Actions that are triggered when deselecting the object. " +
-            "During this state the interaction with the object is disabled.")]
-        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
-        private List<AwaitableScriptableAction> onDeselectingActions = new();
-
-        [SerializeField, Tooltip("Actions that are triggered automatically when the \"Deselecting\" states terminates. " +
-            "In this state it's possible to interact with the object")]
-        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
-        private List<AwaitableScriptableAction> onDeselectedActions = new();
-
-        [SerializeField, Tooltip("Actions that are triggered automatically when entering the \"Interact\" state.")]
-        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
-        private List<AwaitableScriptableAction> onInteractActions = new();
-
-        [SerializeField, Tooltip("Actions that are triggered automatically when exiting the \"Interact\" state.")]
-        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
-        private List<AwaitableScriptableAction> onInteractFinishActions = new();
-
+        private ScriptMachine interactionsScriptMachine;
 
         [Header("Allowed states")]
 
@@ -148,15 +115,10 @@ namespace Reflectis.SDK.CreatorKit
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private EAllowedGenericInteractableState vrAllowedStates = (EAllowedGenericInteractableState)~0;
 
+        [HideInInspector]
+        public Action<GameObject> OnSelectedActionVisualScripting;
 
-        public List<AwaitableScriptableAction> OnHoverEnterActions => onHoverEnterActions;
-        public List<AwaitableScriptableAction> OnHoverExitActions => onHoverExitActions;
-        public List<AwaitableScriptableAction> OnSelectingActions => onSelectingActions;
-        public List<AwaitableScriptableAction> OnSelectedActions => onSelectedActions;
-        public List<AwaitableScriptableAction> OnDeselectingActions => onDeselectingActions;
-        public List<AwaitableScriptableAction> OnDeselectedActions => onDeselectedActions;
-        public List<AwaitableScriptableAction> OnInteractActions => onInteractActions;
-        public List<AwaitableScriptableAction> OnInteractFinishActions => onInteractFinishActions;
+        public ScriptMachine InteractionsScriptMachine => interactionsScriptMachine;
 
         public EAllowedGenericInteractableState DesktopAllowedStates => desktopAllowedStates;
         public EAllowedGenericInteractableState VRAllowedStates => vrAllowedStates;
