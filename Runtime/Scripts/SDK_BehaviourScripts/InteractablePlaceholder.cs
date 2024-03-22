@@ -105,6 +105,17 @@ namespace Reflectis.SDK.CreatorKit
         [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
         private ScriptMachine interactionsScriptMachine;
 
+        [SerializeField, Tooltip("Check if you need special operations to do after the object is destroyed while selected.")]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private bool needUnselectOnDestroyScriptMachine;
+
+        [SerializeField, Tooltip("Reference to the script machine that describes what happens if the object is destroyed while selected." +
+            "The script machine has to be assigned to a different empty gameobject! " +
+            "Utilize \"GenericInteractableUnselectOnDestroy\" node to custumize the interaction")]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        [DrawIf(nameof(needUnselectOnDestroyScriptMachine), true)]
+        private ScriptMachine unselectOnDestroyScriptMachine;
+
         [Header("Allowed states")]
 
         [SerializeField, Tooltip("Choose which state are enabled on this object in desktop platforms.")]
@@ -119,6 +130,8 @@ namespace Reflectis.SDK.CreatorKit
         public Action<GameObject> OnSelectedActionVisualScripting;
 
         public ScriptMachine InteractionsScriptMachine => interactionsScriptMachine;
+        public bool NeedUnselectOnDestroyScriptMachine => needUnselectOnDestroyScriptMachine;
+        public ScriptMachine UnselectOnDestroyScriptMachine => unselectOnDestroyScriptMachine;
 
         public EAllowedGenericInteractableState DesktopAllowedStates => desktopAllowedStates;
         public EAllowedGenericInteractableState VRAllowedStates => vrAllowedStates;
