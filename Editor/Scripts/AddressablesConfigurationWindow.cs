@@ -1,10 +1,9 @@
-﻿using Sirenix.Utilities;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 using UnityEditor;
+using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
@@ -37,6 +36,7 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         private string playerVersionOverride;
 
+        private GUIStyle _toolbarButtonStyle;
         private Vector2 scrollPosition = Vector2.zero;
 
         #endregion
@@ -69,21 +69,56 @@ namespace Reflectis.SDK.CreatorKitEditor
         private void LoadProfileSettings()
         {
             settings = AddressablesBuildScript.GetSettingsObject(AddressablesBuildScript.settings_asset);
-            playerVersionOverride = settings.OverridePlayerVersion;
 
-            remoteBuildPath = string.Join('/',
-                addressables_output_folder,
-                BuildtimeVariable(player_version_override_variable_name),
-                BuildtimeVariable(build_target_variable_name));
+            if (settings)
+            {
+                playerVersionOverride = settings.OverridePlayerVersion;
 
-            var addressablesVariables = typeof(AddressablesVariables).GetProperties();
-            string baseUrl = addressablesVariables.First(x => x.PropertyType == typeof(string)).Name;
-            string worldId = addressablesVariables.First(x => x.PropertyType == typeof(int)).Name;
-            remoteLoadPath = string.Join('/',
-                RuntimeVariable($"{typeof(AddressablesVariables)}.{baseUrl}"),
-                RuntimeVariable($"{typeof(AddressablesVariables)}.{worldId}"),
-                BuildtimeVariable(player_version_override_variable_name),
-                BuildtimeVariable(build_target_variable_name));
+                remoteBuildPath = string.Join('/',
+                    addressables_output_folder,
+                    BuildtimeVariable(player_version_override_variable_name),
+                    BuildtimeVariable(build_target_variable_name));
+
+                var addressablesVariables = typeof(AddressablesVariables).GetProperties();
+                string baseUrl = addressablesVariables.First(x => x.PropertyType == typeof(string)).Name;
+                string worldId = addressablesVariables.First(x => x.PropertyType == typeof(int)).Name;
+                remoteLoadPath = string.Join('/',
+                    RuntimeVariable($"{typeof(AddressablesVariables)}.{baseUrl}"),
+                    RuntimeVariable($"{typeof(AddressablesVariables)}.{worldId}"),
+                    BuildtimeVariable(player_version_override_variable_name),
+                    BuildtimeVariable(build_target_variable_name));
+            }
+            else
+            {
+
+
+                EditorGUILayout.HelpBox("No Addressables settings found! Click on \"Create Addressable settings\" to create them",
+                    MessageType.Warning);
+
+                if (GUILayout.Button("Create Addressables settings"))
+                {
+                    AddressableAssetSettingsDefaultObject.Settings = AddressableAssetSettings.Create(AddressableAssetSettingsDefaultObject.kDefaultConfigFolder,
+                        AddressableAssetSettingsDefaultObject.kDefaultConfigAssetName, true, true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draw buttons on toolbar.
+        /// Automatically called by unity.
+        /// </summary>
+        /// <param name="position"></param>
+        private void ShowButton(Rect position)
+        {
+            _toolbarButtonStyle ??= new GUIStyle(GUI.skin.button)
+            {
+                padding = new RectOffset()
+            };
+
+            if (GUI.Button(position, EditorGUIUtility.IconContent("_Help", "Doc|Open documentation"), _toolbarButtonStyle))
+            {
+                Application.OpenURL("https://reflectis.io/docs/CK/gettingstarted/startanewproject/Addressable-setup/");
+            }
         }
 
         private void DisplayAddressablesSettings()
@@ -97,7 +132,13 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             #region Top-level settings
 
-            EditorGUILayout.LabelField($"<b>General settings</b>", style);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField($"<b>General settings</b>", style, GUILayout.Width(100));
+            if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
+            {
+                EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Settings");
+            }
+            EditorGUILayout.EndHorizontal();
 
             string activeProfileName = settings.profileSettings.GetProfileName(settings.activeProfileId);
             EditorGUILayout.LabelField($"Active addressables profile: <b>{activeProfileName}</b>", style);
@@ -150,7 +191,13 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             EditorGUILayout.BeginVertical();
 
-            EditorGUILayout.LabelField($"<b>Profile settings</b>", style);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField($"<b>Profile settings</b>", style, GUILayout.Width(100));
+            if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
+            {
+                EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Profiles");
+            }
+            EditorGUILayout.EndHorizontal();
 
             string remoteBuildPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name);
             bool isRemoteBuildPathConfigured = remoteBuildPath == this.remoteBuildPath;
@@ -203,7 +250,13 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             #region Groups settings
 
-            EditorGUILayout.LabelField("<b>Groups settings</b>", style);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("<b>Groups settings</b>", style, GUILayout.Width(100));
+            if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
+            {
+                EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Groups");
+            }
+            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.HelpBox($"Every addressable scene must be put inside the {environments_group_name} group, " +
                     $"and the associated thumbnail inside the {thumbnails_group_name} group. " +
@@ -282,7 +335,7 @@ namespace Reflectis.SDK.CreatorKitEditor
             CreateSeparator();
             EditorGUILayout.Space();
 
-            if (IsProfileConfigured() && IsAddressablesSettingsConfigured() && IsAddressablesGroupsConfigured() && IsAddressablesEntriesValid())
+            if (IsAddressablesSettingsConfigured() && IsPlayerVersionOverrideValid() && IsProfileConfigured() && IsAddressablesGroupsConfigured() && IsAddressablesEntriesValid())
             {
                 if (GUILayout.Button("Build Addressables", EditorStyles.miniButtonMid))
                 {
@@ -315,7 +368,6 @@ namespace Reflectis.SDK.CreatorKitEditor
         {
             return
                 !settings.BundleLocalCatalog &&
-                IsPlayerVersionOverrideValid() &&
                 settings.BuildRemoteCatalog &&
                 settings.CheckForContentUpdateRestrictionsOption
                         == CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions &&
@@ -413,7 +465,7 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             settings.groups.ForEach(group =>
             {
-                group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ForEach(schema =>
+                group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ToList().ForEach(schema =>
                 {
                     BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
 
@@ -449,7 +501,7 @@ namespace Reflectis.SDK.CreatorKitEditor
         {
             settings.groups.ForEach(group =>
             {
-                group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ForEach(schema =>
+                group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ToList().ForEach(schema =>
                 {
                     BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
 
