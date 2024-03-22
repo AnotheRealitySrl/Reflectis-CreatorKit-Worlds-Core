@@ -36,6 +36,7 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         private string playerVersionOverride;
 
+        private GUIStyle _toolbarButtonStyle;
         private Vector2 scrollPosition = Vector2.zero;
 
         #endregion
@@ -89,6 +90,8 @@ namespace Reflectis.SDK.CreatorKitEditor
             }
             else
             {
+
+
                 EditorGUILayout.HelpBox("No Addressables settings found! Click on \"Create Addressable settings\" to create them",
                     MessageType.Warning);
 
@@ -97,6 +100,24 @@ namespace Reflectis.SDK.CreatorKitEditor
                     AddressableAssetSettingsDefaultObject.Settings = AddressableAssetSettings.Create(AddressableAssetSettingsDefaultObject.kDefaultConfigFolder,
                         AddressableAssetSettingsDefaultObject.kDefaultConfigAssetName, true, true);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Draw buttons on toolbar.
+        /// Automatically called by unity.
+        /// </summary>
+        /// <param name="position"></param>
+        private void ShowButton(Rect position)
+        {
+            _toolbarButtonStyle ??= new GUIStyle(GUI.skin.button)
+            {
+                padding = new RectOffset()
+            };
+
+            if (GUI.Button(position, EditorGUIUtility.IconContent("_Help", "Doc|Open documentation"), _toolbarButtonStyle))
+            {
+                Application.OpenURL("https://reflectis.io/docs/CK/gettingstarted/startanewproject/Addressable-setup/");
             }
         }
 
@@ -111,7 +132,13 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             #region Top-level settings
 
-            EditorGUILayout.LabelField($"<b>General settings</b>", style);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField($"<b>General settings</b>", style, GUILayout.Width(100));
+            if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
+            {
+                EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Settings");
+            }
+            EditorGUILayout.EndHorizontal();
 
             string activeProfileName = settings.profileSettings.GetProfileName(settings.activeProfileId);
             EditorGUILayout.LabelField($"Active addressables profile: <b>{activeProfileName}</b>", style);
@@ -164,7 +191,13 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             EditorGUILayout.BeginVertical();
 
-            EditorGUILayout.LabelField($"<b>Profile settings</b>", style);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField($"<b>Profile settings</b>", style, GUILayout.Width(100));
+            if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
+            {
+                EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Profiles");
+            }
+            EditorGUILayout.EndHorizontal();
 
             string remoteBuildPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name);
             bool isRemoteBuildPathConfigured = remoteBuildPath == this.remoteBuildPath;
@@ -217,7 +250,13 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             #region Groups settings
 
-            EditorGUILayout.LabelField("<b>Groups settings</b>", style);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("<b>Groups settings</b>", style, GUILayout.Width(100));
+            if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
+            {
+                EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Groups");
+            }
+            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.HelpBox($"Every addressable scene must be put inside the {environments_group_name} group, " +
                     $"and the associated thumbnail inside the {thumbnails_group_name} group. " +
