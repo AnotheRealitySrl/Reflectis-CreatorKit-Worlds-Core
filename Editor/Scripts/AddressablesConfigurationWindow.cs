@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 using UnityEditor;
+using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
@@ -67,21 +68,36 @@ namespace Reflectis.SDK.CreatorKitEditor
         private void LoadProfileSettings()
         {
             settings = AddressablesBuildScript.GetSettingsObject(AddressablesBuildScript.settings_asset);
-            playerVersionOverride = settings.OverridePlayerVersion;
 
-            remoteBuildPath = string.Join('/',
-                addressables_output_folder,
-                BuildtimeVariable(player_version_override_variable_name),
-                BuildtimeVariable(build_target_variable_name));
+            if (settings)
+            {
+                playerVersionOverride = settings.OverridePlayerVersion;
 
-            var addressablesVariables = typeof(AddressablesVariables).GetProperties();
-            string baseUrl = addressablesVariables.First(x => x.PropertyType == typeof(string)).Name;
-            string worldId = addressablesVariables.First(x => x.PropertyType == typeof(int)).Name;
-            remoteLoadPath = string.Join('/',
-                RuntimeVariable($"{typeof(AddressablesVariables)}.{baseUrl}"),
-                RuntimeVariable($"{typeof(AddressablesVariables)}.{worldId}"),
-                BuildtimeVariable(player_version_override_variable_name),
-                BuildtimeVariable(build_target_variable_name));
+                remoteBuildPath = string.Join('/',
+                    addressables_output_folder,
+                    BuildtimeVariable(player_version_override_variable_name),
+                    BuildtimeVariable(build_target_variable_name));
+
+                var addressablesVariables = typeof(AddressablesVariables).GetProperties();
+                string baseUrl = addressablesVariables.First(x => x.PropertyType == typeof(string)).Name;
+                string worldId = addressablesVariables.First(x => x.PropertyType == typeof(int)).Name;
+                remoteLoadPath = string.Join('/',
+                    RuntimeVariable($"{typeof(AddressablesVariables)}.{baseUrl}"),
+                    RuntimeVariable($"{typeof(AddressablesVariables)}.{worldId}"),
+                    BuildtimeVariable(player_version_override_variable_name),
+                    BuildtimeVariable(build_target_variable_name));
+            }
+            else
+            {
+                EditorGUILayout.HelpBox("No Addressables settings found! Click on \"Create Addressable settings\" to create them",
+                    MessageType.Warning);
+
+                if (GUILayout.Button("Create Addressables settings"))
+                {
+                    AddressableAssetSettingsDefaultObject.Settings = AddressableAssetSettings.Create(AddressableAssetSettingsDefaultObject.kDefaultConfigFolder,
+                        AddressableAssetSettingsDefaultObject.kDefaultConfigAssetName, true, true);
+                }
+            }
         }
 
         private void DisplayAddressablesSettings()
@@ -280,7 +296,7 @@ namespace Reflectis.SDK.CreatorKitEditor
             CreateSeparator();
             EditorGUILayout.Space();
 
-            if (IsProfileConfigured() && IsAddressablesSettingsConfigured() && IsAddressablesGroupsConfigured() && IsAddressablesEntriesValid())
+            if (IsAddressablesSettingsConfigured() && IsPlayerVersionOverrideValid() && IsProfileConfigured() && IsAddressablesGroupsConfigured() && IsAddressablesEntriesValid())
             {
                 if (GUILayout.Button("Build Addressables", EditorStyles.miniButtonMid))
                 {
@@ -313,7 +329,6 @@ namespace Reflectis.SDK.CreatorKitEditor
         {
             return
                 !settings.BundleLocalCatalog &&
-                IsPlayerVersionOverrideValid() &&
                 settings.BuildRemoteCatalog &&
                 settings.CheckForContentUpdateRestrictionsOption
                         == CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions &&
