@@ -1,6 +1,4 @@
-﻿using Sirenix.Utilities;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -413,7 +411,7 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             settings.groups.ForEach(group =>
             {
-                group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ForEach(schema =>
+                group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ToList().ForEach(schema =>
                 {
                     BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
 
@@ -449,7 +447,7 @@ namespace Reflectis.SDK.CreatorKitEditor
         {
             settings.groups.ForEach(group =>
             {
-                group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ForEach(schema =>
+                group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ToList().ForEach(schema =>
                 {
                     BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
 
