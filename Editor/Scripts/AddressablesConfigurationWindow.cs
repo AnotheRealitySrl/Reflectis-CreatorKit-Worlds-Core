@@ -165,8 +165,7 @@ namespace Reflectis.SDK.CreatorKitEditor
 
                 if (settings.OverridePlayerVersion != playerVersionOverride)
                 {
-                    settings.OverridePlayerVersion = playerVersionOverride;
-                    settings.ShaderBundleCustomNaming = playerVersionOverride;
+                    UpdatePlayerVersion();
                 }
 
                 EditorGUILayout.HelpBox("Catalog names should be univoque within the same world. If a new catalog is loaded through the Back office " +
@@ -367,6 +366,14 @@ namespace Reflectis.SDK.CreatorKitEditor
         private bool IsPlayerVersionOverrideValid()
         {
             return !string.IsNullOrEmpty(playerVersionOverride) && Regex.IsMatch(playerVersionOverride, @"[a-zA-Z][a-zA-Z0-9]*$");
+        }
+
+        private void UpdatePlayerVersion()
+        {
+            settings.OverridePlayerVersion = playerVersionOverride;
+            settings.ShaderBundleCustomNaming = playerVersionOverride;
+
+            SaveChanges();
         }
 
         private bool IsAddressablesSettingsConfigured()
