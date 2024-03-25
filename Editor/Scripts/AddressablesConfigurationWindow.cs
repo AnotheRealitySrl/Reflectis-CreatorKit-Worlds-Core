@@ -166,6 +166,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                 if (settings.OverridePlayerVersion != playerVersionOverride)
                 {
                     settings.OverridePlayerVersion = playerVersionOverride;
+                    settings.ShaderBundleCustomNaming = playerVersionOverride;
                 }
 
                 EditorGUILayout.HelpBox("Catalog names should be univoque within the same world. If a new catalog is loaded through the Back office " +
@@ -381,7 +382,8 @@ namespace Reflectis.SDK.CreatorKitEditor
                 !settings.UniqueBundleIds &&
                 settings.ContiguousBundles &&
                 settings.NonRecursiveBuilding &&
-                settings.ShaderBundleNaming == ShaderBundleNaming.ProjectName &&
+                settings.ShaderBundleNaming == ShaderBundleNaming.Custom &&
+                settings.ShaderBundleCustomNaming == playerVersionOverride &&
                 settings.MonoScriptBundleNaming == MonoScriptBundleNaming.Disabled &&
                 !settings.DisableVisibleSubAssetRepresentations;
         }
@@ -398,7 +400,8 @@ namespace Reflectis.SDK.CreatorKitEditor
             settings.UniqueBundleIds = false;
             settings.ContiguousBundles = true;
             settings.NonRecursiveBuilding = true;
-            settings.ShaderBundleNaming = ShaderBundleNaming.ProjectName;
+            settings.ShaderBundleNaming = ShaderBundleNaming.Custom;
+            settings.ShaderBundleCustomNaming = playerVersionOverride;
             settings.MonoScriptBundleNaming = MonoScriptBundleNaming.Disabled;
             settings.DisableVisibleSubAssetRepresentations = false;
             settings.BuildRemoteCatalog = true;
