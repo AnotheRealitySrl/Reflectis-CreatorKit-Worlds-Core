@@ -24,7 +24,6 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void Definition()
         {
-
             InputTrigger = ControlInputCoroutine(nameof(InputTrigger), PanCoroutine);
 
             OutputTrigger = ControlOutput(nameof(OutputTrigger));
@@ -38,7 +37,7 @@ namespace Reflectis.SDK.CreatorKit
 
             CallAwaitableMethod(flow);
 
-            yield return new WaitUntil(() => runningFlows.Contains(flow));
+            yield return new WaitUntil(() => !runningFlows.Contains(flow));
 
             yield return OutputTrigger;
         }

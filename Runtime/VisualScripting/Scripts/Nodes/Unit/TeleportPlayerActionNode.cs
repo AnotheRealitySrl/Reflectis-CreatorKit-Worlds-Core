@@ -49,7 +49,7 @@ namespace Reflectis.SDK.CreatorKit
                 SM.GetSystem<IFadeSystem>().FadeFromBlack(() => runningFlows.Remove(flow));
             });
 
-            yield return new WaitUntil(() => runningFlows.Contains(flow));
+            yield return new WaitUntil(() => !runningFlows.Contains(flow));
 
             yield return OutputTrigger;
         }
