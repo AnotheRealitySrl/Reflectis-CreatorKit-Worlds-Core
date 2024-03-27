@@ -1,6 +1,8 @@
 #if UNITY_EDITOR
 using Reflectis.SDK.CreatorKitEditor;
+
 using UnityEditor;
+
 using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
@@ -8,10 +10,7 @@ namespace Reflectis.SDK.CreatorKit
     [CustomEditor(typeof(SyncedObject))]
     public class SyncedObjectEditor : NetworkPlaceholderEditor
     {
-        //used to hide the script field
-        private static readonly string[] _excludedProperties = new string[] { "m_Script" };
-
-        private UnityEditor.Editor _variablesEditor;
+        private Editor _variablesEditor;
         private SerializedProperty _syncTransformProp;
         private GameObject _targetGameObject;
 
@@ -27,13 +26,14 @@ namespace Reflectis.SDK.CreatorKit
 
         public override void OnInspectorGUI()
         {
+            base.OnInspectorGUI();
+
             serializedObject.Update();
 
             DrawFields();
 
             serializedObject.ApplyModifiedProperties();
 
-            base.OnInspectorGUI();
         }
 
         private void OnEnable()
@@ -71,8 +71,6 @@ namespace Reflectis.SDK.CreatorKit
 
         public virtual void DrawFields()
         {
-            DrawPropertiesExcluding(serializedObject, _excludedProperties);
-
             InitializePropertiesIfNecessary();
             SyncedObject syncedObject = target as SyncedObject;
 
@@ -86,14 +84,16 @@ namespace Reflectis.SDK.CreatorKit
             //Embed the synced variables inspector
             if (syncedObject.TryGetComponent(out SyncedVariables syncedVariables))
             {
-                GUIStyle boldStyle = new GUIStyle(GUI.skin.label);
-                boldStyle.fontStyle = FontStyle.Bold;
+                GUIStyle boldStyle = new(GUI.skin.label)
+                {
+                    fontStyle = FontStyle.Bold
+                };
 
                 GUILayout.Label("List of Variables", boldStyle);
 
                 if (_variablesEditor == null || _variablesEditor.target != syncedVariables)
                 {
-                    _variablesEditor = UnityEditor.Editor.CreateEditor(syncedVariables);
+                    _variablesEditor = CreateEditor(syncedVariables);
                 }
 
                 _variablesEditor.OnInspectorGUI();
