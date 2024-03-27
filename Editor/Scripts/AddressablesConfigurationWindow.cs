@@ -16,6 +16,10 @@ namespace Reflectis.SDK.CreatorKitEditor
     {
         #region Private variables
 
+        private const string alphanumeric_string_pattern = @"^[a-zA-Z0-9]*$";
+        private const string alphanumeric_lowercase_string_pattern = @"^[a-z0-9]*$";
+        private const string alphanumeric_lowercase_string_pattern_negated = @"[^a-z0-9]";
+
         private AddressableAssetSettings settings;
 
         private const string addressables_output_folder = "ServerData";
@@ -151,14 +155,14 @@ namespace Reflectis.SDK.CreatorKitEditor
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField($"{(IsPlayerVersionOverrideValid() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
                 EditorGUILayout.LabelField($"Catalog name: ", style, GUILayout.Width(100));
-                playerVersionOverride = EditorGUILayout.TextArea(playerVersionOverride);
+                playerVersionOverride = EditorGUILayout.TextField(playerVersionOverride);
                 EditorGUILayout.EndHorizontal();
 
                 if (string.IsNullOrEmpty(playerVersionOverride))
                 {
                     EditorGUILayout.LabelField($"<color=red>The catalog name can not be null!</color>", style);
                 }
-                else if (!Regex.IsMatch(playerVersionOverride, @"[a-zA-Z][a-zA-Z0-9]*$"))
+                else if (!Regex.IsMatch(playerVersionOverride, alphanumeric_string_pattern))
                 {
                     EditorGUILayout.LabelField($"<color=red>Only alphanumeric values are allowed!</color>", style);
                 }
@@ -294,12 +298,12 @@ namespace Reflectis.SDK.CreatorKitEditor
                         foreach (var entry in group.entries.OrderBy(x => x.address))
                         {
                             EditorGUILayout.BeginHorizontal();
-                            bool isEntryNameValid = new Regex(@"^[a-z0-9\s,]*$").IsMatch(entry.address);
+                            bool isEntryNameValid = Regex.IsMatch(entry.address, alphanumeric_lowercase_string_pattern);
                             if (!isEntryNameValid)
                             {
                                 if (GUILayout.Button("Fix", GUILayout.ExpandWidth(false)))
                                 {
-                                    entry.address = Regex.Replace(entry.address.ToLower(), "[^a-z0-9 -]", string.Empty);
+                                    UpdateAddressableEntry(entry);
                                 }
                             }
                             EditorGUILayout.LabelField($"{(isEntryNameValid ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} {entry}", style);
@@ -365,7 +369,7 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         private bool IsPlayerVersionOverrideValid()
         {
-            return !string.IsNullOrEmpty(playerVersionOverride) && Regex.IsMatch(playerVersionOverride, @"[a-zA-Z][a-zA-Z0-9]*$");
+            return !string.IsNullOrEmpty(playerVersionOverride) && Regex.IsMatch(playerVersionOverride, alphanumeric_string_pattern);
         }
 
         private void UpdatePlayerVersion()
@@ -559,6 +563,13 @@ namespace Reflectis.SDK.CreatorKitEditor
                 thumbnailEntries.All(new HashSet<string>().Add) &&
                 !environmentEntries.Except(thumbnailEntries).Any() &&
                 !thumbnailEntries.Except(environmentEntries).Any();
+        }
+
+        private void UpdateAddressableEntry(AddressableAssetEntry entry)
+        {
+            entry.SetAddress(Regex.Replace(entry.address.ToLower(), alphanumeric_lowercase_string_pattern_negated, string.Empty));
+
+            SaveSettings();
         }
 
         #endregion

@@ -1,8 +1,12 @@
 using Reflectis.SDK.Utilities;
+
 using System;
 using System.Collections.Generic;
+
 using Unity.VisualScripting;
+
 using UnityEngine;
+
 using static Reflectis.SDK.InteractionNew.ContextualMenuManageable;
 using static Reflectis.SDK.InteractionNew.GenericInteractable;
 using static Reflectis.SDK.InteractionNew.IInteractable;
@@ -141,13 +145,11 @@ namespace Reflectis.SDK.CreatorKit
         #region Contextual menu
 
         [Header("Contextual menu")]
+        [HelpBox("Please note that only delete option is currently supported. Other options will not be considered", HelpBoxMessageType.Warning)]
 
         [SerializeField, Tooltip("Select how many options will be available in this menu")]
         [DrawIf(nameof(interactionModes), EInteractableType.ContextualMenuInteractable)]
         private EContextualMenuOption contextualMenuOptions =
-            EContextualMenuOption.LockTransform |
-            EContextualMenuOption.ResetTransform |
-            EContextualMenuOption.Duplicate |
             EContextualMenuOption.Delete;
 
         [SerializeField, Tooltip("Select the type of contextual menu. Use \"Default\" one unless you are working with a media player")]
