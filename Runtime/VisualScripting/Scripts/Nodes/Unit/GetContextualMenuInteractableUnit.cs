@@ -16,13 +16,13 @@ namespace Reflectis.SDK.CreatorKit
         public ValueInput GameObject { get; private set; }
 
         [DoNotSerialize]
-        public ValueOutput ContextualMenuManageable { get; private set; }
+        public ValueOutput ContextualMenuInteractable { get; private set; }
 
         protected override void Definition()
         {
             GameObject = ValueInput<GameObject>(nameof(GameObject), null).NullMeansSelf();
 
-            ContextualMenuManageable = ValueOutput(nameof(ContextualMenuManageable), (flow) => flow.GetValue<GameObject>(GameObject).GetComponent<ContextualMenuManageable>());
+            ContextualMenuInteractable = ValueOutput(nameof(ContextualMenuInteractable), (flow) => flow.GetValue<GameObject>(GameObject).GetComponent<ContextualMenuManageable>());
         }
 
 
