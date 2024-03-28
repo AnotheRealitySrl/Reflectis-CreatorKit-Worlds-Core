@@ -16,6 +16,8 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             if (interactablePlaceholder.InteractionModes.HasFlag(InteractionNew.IInteractable.EInteractableType.Manipulable))
             {
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("manipulationMode"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("nonProportionalScale"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("vrInteraction"));
                 if (interactablePlaceholder.VRInteraction != 0)
                 {

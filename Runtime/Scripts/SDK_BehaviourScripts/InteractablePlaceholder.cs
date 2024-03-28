@@ -35,6 +35,8 @@ namespace Reflectis.SDK.CreatorKit
 
         [Header("Manipulation section")]
 
+        [HelpBox("Pleaase note that \"Scale\" option of Manipulation Mode and \"Non Proportional Scale\" are currently not supported.", HelpBoxMessageType.Warning)]
+
         [SerializeField, Tooltip("Translate, rotate and scale.")]
         private EManipulationMode manipulationMode = (EManipulationMode)~0;
 
@@ -128,7 +130,7 @@ namespace Reflectis.SDK.CreatorKit
         #region Contextual menu
 
         [Header("Contextual menu")]
-        [HelpBox("Please note that only delete option is currently supported. Other options will not be considered", HelpBoxMessageType.Warning)]
+        [HelpBox("Please note that only \"Delete\" option is currently supported. Other options will not be considered", HelpBoxMessageType.Warning)]
 
         [SerializeField, Tooltip("Select how many options will be available in this menu")]
         private EContextualMenuOption contextualMenuOptions =
