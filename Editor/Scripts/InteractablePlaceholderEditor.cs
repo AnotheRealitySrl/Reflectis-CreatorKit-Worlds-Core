@@ -36,6 +36,7 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             if (interactablePlaceholder.InteractionModes.HasFlag(InteractionNew.IInteractable.EInteractableType.GenericInteractable))
             {
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("lockHoverDuringInteraction"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("interactionsScriptMachine"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("needUnselectOnDestroyScriptMachine"));
 
