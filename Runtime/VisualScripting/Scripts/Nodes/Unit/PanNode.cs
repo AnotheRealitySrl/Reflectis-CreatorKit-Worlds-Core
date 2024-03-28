@@ -44,7 +44,7 @@ namespace Reflectis.SDK.CreatorKit
 
             CallAwaitableMethod(flow);
 
-            yield return new WaitUntil(() => runningFlows.Contains(flow));
+            yield return new WaitUntil(() => !runningFlows.Contains(flow));
 
             yield return OutputTrigger;
         }

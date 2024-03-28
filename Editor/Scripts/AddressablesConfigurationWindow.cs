@@ -16,6 +16,10 @@ namespace Reflectis.SDK.CreatorKitEditor
     {
         #region Private variables
 
+        private const string alphanumeric_string_pattern = @"^[a-zA-Z0-9]*$";
+        private const string alphanumeric_lowercase_string_pattern = @"^[a-z0-9]*$";
+        private const string alphanumeric_lowercase_string_pattern_negated = @"[^a-z0-9]";
+
         private AddressableAssetSettings settings;
 
         private const string addressables_output_folder = "ServerData";
@@ -50,16 +54,17 @@ namespace Reflectis.SDK.CreatorKitEditor
             GetWindow(typeof(AddressablesConfigurationWindow));
         }
 
-        private void OnGUI()
+        private void Awake()
         {
             if (settings == null)
             {
                 LoadProfileSettings();
             }
-            else
-            {
-                DisplayAddressablesSettings();
-            }
+        }
+
+        private void OnGUI()
+        {
+            DisplayAddressablesSettings();
         }
 
         #endregion
@@ -88,19 +93,6 @@ namespace Reflectis.SDK.CreatorKitEditor
                     BuildtimeVariable(player_version_override_variable_name),
                     BuildtimeVariable(build_target_variable_name));
             }
-            else
-            {
-
-
-                EditorGUILayout.HelpBox("No Addressables settings found! Click on \"Create Addressable settings\" to create them",
-                    MessageType.Warning);
-
-                if (GUILayout.Button("Create Addressables settings"))
-                {
-                    AddressableAssetSettingsDefaultObject.Settings = AddressableAssetSettings.Create(AddressableAssetSettingsDefaultObject.kDefaultConfigFolder,
-                        AddressableAssetSettingsDefaultObject.kDefaultConfigAssetName, true, true);
-                }
-            }
         }
 
         /// <summary>
@@ -128,226 +120,242 @@ namespace Reflectis.SDK.CreatorKitEditor
                 richText = true,
             };
 
-            scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, false);
-
-            #region Top-level settings
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"<b>General settings</b>", style, GUILayout.Width(100));
-            if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
+            if (!settings)
             {
-                EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Settings");
-            }
-            EditorGUILayout.EndHorizontal();
+                EditorGUILayout.HelpBox("No Addressables settings found! Click on \"Create Addressable settings\" to create them",
+                  MessageType.Warning);
 
-            string activeProfileName = settings.profileSettings.GetProfileName(settings.activeProfileId);
-            EditorGUILayout.LabelField($"Active addressables profile: <b>{activeProfileName}</b>", style);
-
-            EditorGUILayout.Space();
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"{(IsPlayerVersionOverrideValid() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-            EditorGUILayout.LabelField($"Catalog name: ", style, GUILayout.Width(100));
-            playerVersionOverride = EditorGUILayout.TextArea(playerVersionOverride);
-            EditorGUILayout.EndHorizontal();
-
-            if (string.IsNullOrEmpty(playerVersionOverride))
-            {
-                EditorGUILayout.LabelField($"<color=red>The catalog name can not be null!</color>", style);
-            }
-            else if (!Regex.IsMatch(playerVersionOverride, @"[a-zA-Z][a-zA-Z0-9]*$"))
-            {
-                EditorGUILayout.LabelField($"<color=red>Only alphanumeric values are allowed!</color>", style);
-            }
-
-            if (settings.OverridePlayerVersion != playerVersionOverride)
-            {
-                settings.OverridePlayerVersion = playerVersionOverride;
-            }
-
-            EditorGUILayout.HelpBox("Catalog names should be univoque within the same world. If a new catalog is loaded through the Back office " +
-                "with the same name of another one, the previous one is overridden.", MessageType.Info);
-
-            EditorGUILayout.Space();
-
-            if (!IsAddressablesSettingsConfigured())
-            {
-                if (GUILayout.Button("Configure addressables settings", GUILayout.Width(250)))
+                if (GUILayout.Button("Create Addressables settings"))
                 {
-                    ConfigureAddressablesSettings();
+                    AddressableAssetSettingsDefaultObject.Settings = AddressableAssetSettings.Create(AddressableAssetSettingsDefaultObject.kDefaultConfigFolder,
+                        AddressableAssetSettingsDefaultObject.kDefaultConfigAssetName, true, true);
+
+                    LoadProfileSettings();
                 }
             }
             else
             {
-                EditorGUILayout.LabelField("<color=lime>General settings are properly configured!</color>", style);
-            }
+                scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, false);
 
-            EditorGUILayout.Space();
-            CreateSeparator();
+                #region Top-level settings
 
-            #endregion
-
-            #region Profiles settings
-
-            EditorGUILayout.BeginVertical();
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"<b>Profile settings</b>", style, GUILayout.Width(100));
-            if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
-            {
-                EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Profiles");
-            }
-            EditorGUILayout.EndHorizontal();
-
-            string remoteBuildPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name);
-            bool isRemoteBuildPathConfigured = remoteBuildPath == this.remoteBuildPath;
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"{(isRemoteBuildPathConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-            EditorGUILayout.LabelField($"<b>{remote_build_path_variable_name}: </b>{remoteBuildPath}", style);
-            EditorGUILayout.EndHorizontal();
-
-            string remoteLoadPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_load_path_variable_name);
-            bool isRemoteLoadPathConfigured = remoteLoadPath == this.remoteLoadPath;
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"{(isRemoteLoadPathConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-            EditorGUILayout.LabelField($"<b>{remote_load_path_variable_name}: </b>{remoteLoadPath}", style);
-            EditorGUILayout.EndHorizontal();
-
-            string buildTarget = settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name);
-            bool isBuildTargetConfigured = buildTarget == build_target_variable_value;
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"{(isBuildTargetConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-            EditorGUILayout.LabelField($"<b>{build_target_variable_name}: </b>{buildTarget}", style);
-            EditorGUILayout.EndHorizontal();
-
-            string playerVersionOverrideVariable = settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name);
-            bool isPlayerVersionOverrideConfiugred = playerVersionOverrideVariable == player_version_override_variable_value;
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"{(isPlayerVersionOverrideConfiugred ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-            EditorGUILayout.LabelField($"<b>{player_version_override_variable_name}: </b>{playerVersionOverrideVariable}", style);
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.EndVertical();
-
-            EditorGUILayout.Space();
-
-            if (!IsProfileConfigured())
-            {
-                if (GUILayout.Button("Configure remote build and load paths", GUILayout.Width(250)))
-                {
-                    ConfigureProfile();
-                }
-            }
-            else
-            {
-                EditorGUILayout.LabelField("<color=lime>The addressables profile is properly configured!</color>", style);
-            }
-
-            EditorGUILayout.Space();
-            CreateSeparator();
-
-            #endregion
-
-            #region Groups settings
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("<b>Groups settings</b>", style, GUILayout.Width(100));
-            if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
-            {
-                EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Groups");
-            }
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.HelpBox($"Every addressable scene must be put inside the {environments_group_name} group, " +
-                    $"and the associated thumbnail inside the {thumbnails_group_name} group. " +
-                    $"Note that each addressable asset must have a lower-case, alphanumeric name.",
-                    MessageType.Info);
-
-            if (!IsGroupValid(environments_group_name) || !IsGroupValid(thumbnails_group_name))
-            {
-                EditorGUILayout.HelpBox($"Could not find one or more required addressables groups. Ckick on the button to fix the issue.",
-                    MessageType.Error);
-
-                if (GUILayout.Button("Create missing groups", GUILayout.ExpandWidth(false)))
-                {
-                    if (!IsGroupValid(environments_group_name))
-                    {
-                        CreateGroup(environments_group_name);
-                    }
-                    if (!IsGroupValid(thumbnails_group_name))
-                    {
-                        CreateGroup(thumbnails_group_name);
-                    }
-                    ConfigureAddressablesGroups();
-                }
-            }
-            else
-            {
                 EditorGUILayout.BeginHorizontal();
-                foreach (var group in settings.groups.Where(x => !x.SchemaTypes.Contains(typeof(PlayerDataGroupSchema)) && x != settings.DefaultGroup))
+                EditorGUILayout.LabelField($"<b>General settings</b>", style, GUILayout.Width(100));
+                if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
                 {
-                    EditorGUILayout.BeginVertical();
-                    EditorGUILayout.LabelField($"<b>{group.name}</b>", style);
-                    foreach (var entry in group.entries.OrderBy(x => x.address))
-                    {
-                        EditorGUILayout.BeginHorizontal();
-                        bool isEntryNameValid = new Regex(@"^[a-z0-9\s,]*$").IsMatch(entry.address);
-                        if (!isEntryNameValid)
-                        {
-                            if (GUILayout.Button("Fix", GUILayout.ExpandWidth(false)))
-                            {
-                                entry.address = Regex.Replace(entry.address.ToLower(), "[^a-z0-9 -]", string.Empty);
-                            }
-                        }
-                        EditorGUILayout.LabelField($"{(isEntryNameValid ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} {entry}", style);
-                        EditorGUILayout.EndHorizontal();
-                    }
-                    EditorGUILayout.EndVertical();
+                    EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Settings");
                 }
                 EditorGUILayout.EndHorizontal();
-            }
 
-            if (!IsAddressablesEntriesValid())
-            {
-                EditorGUILayout.HelpBox($"There are inconsistencies between the {environments_group_name} and the {thumbnails_group_name} asset groups. " +
-                    $"Check if each environment has a corresponding thumbnail and viceversa, and there are not duplicate names within each group",
-                    MessageType.Error);
-            }
+                string activeProfileName = settings.profileSettings.GetProfileName(settings.activeProfileId);
+                EditorGUILayout.LabelField($"Active addressables profile: <b>{activeProfileName}</b>", style);
 
-            EditorGUILayout.Space();
+                EditorGUILayout.Space();
 
-            if (!IsAddressablesGroupsConfigured())
-            {
-                if (GUILayout.Button("Configure addressables groups", GUILayout.Width(250)))
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField($"{(IsPlayerVersionOverrideValid() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
+                EditorGUILayout.LabelField($"Catalog name: ", style, GUILayout.Width(100));
+                playerVersionOverride = EditorGUILayout.TextField(playerVersionOverride);
+                EditorGUILayout.EndHorizontal();
+
+                if (string.IsNullOrEmpty(playerVersionOverride))
                 {
-                    ConfigureAddressablesGroups();
+                    EditorGUILayout.LabelField($"<color=red>The catalog name can not be null!</color>", style);
                 }
-            }
-            else if (IsAddressablesEntriesValid())
-            {
-                EditorGUILayout.LabelField("<color=lime>The groups settings are properly configured!</color>", style);
-            }
-
-            EditorGUILayout.Space();
-
-            #endregion
-
-            CreateSeparator();
-            EditorGUILayout.Space();
-
-            if (IsAddressablesSettingsConfigured() && IsPlayerVersionOverrideValid() && IsProfileConfigured() && IsAddressablesGroupsConfigured() && IsAddressablesEntriesValid())
-            {
-                if (GUILayout.Button("Build Addressables", EditorStyles.miniButtonMid))
+                else if (!Regex.IsMatch(playerVersionOverride, alphanumeric_string_pattern))
                 {
-                    AddressablesBuildScript.BuildAddressablesForAllPlatforms();
+                    EditorGUILayout.LabelField($"<color=red>Only alphanumeric values are allowed!</color>", style);
                 }
-            }
-            else
-            {
-                EditorGUILayout.LabelField("<color=red>There are some configuration issue in the addressables. Please fix them before building.</color>", style);
-            }
 
-            GUILayout.EndScrollView();
+                if (settings.OverridePlayerVersion != playerVersionOverride)
+                {
+                    UpdatePlayerVersion();
+                }
+
+                EditorGUILayout.HelpBox("Catalog names should be univoque within the same world. If a new catalog is loaded through the Back office " +
+                    "with the same name of another one, the previous one is overridden.", MessageType.Info);
+
+                EditorGUILayout.Space();
+
+                if (!IsAddressablesSettingsConfigured())
+                {
+                    if (GUILayout.Button("Configure addressables settings", GUILayout.Width(250)))
+                    {
+                        ConfigureAddressablesSettings();
+                    }
+                }
+                else
+                {
+                    EditorGUILayout.LabelField("<color=lime>General settings are properly configured!</color>", style);
+                }
+
+                EditorGUILayout.Space();
+                CreateSeparator();
+
+                #endregion
+
+                #region Profiles settings
+
+                EditorGUILayout.BeginVertical();
+
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField($"<b>Profile settings</b>", style, GUILayout.Width(100));
+                if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
+                {
+                    EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Profiles");
+                }
+                EditorGUILayout.EndHorizontal();
+
+                string remoteBuildPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name);
+                bool isRemoteBuildPathConfigured = remoteBuildPath == this.remoteBuildPath;
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField($"{(isRemoteBuildPathConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
+                EditorGUILayout.LabelField($"<b>{remote_build_path_variable_name}: </b>{remoteBuildPath}", style);
+                EditorGUILayout.EndHorizontal();
+
+                string remoteLoadPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_load_path_variable_name);
+                bool isRemoteLoadPathConfigured = remoteLoadPath == this.remoteLoadPath;
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField($"{(isRemoteLoadPathConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
+                EditorGUILayout.LabelField($"<b>{remote_load_path_variable_name}: </b>{remoteLoadPath}", style);
+                EditorGUILayout.EndHorizontal();
+
+                string buildTarget = settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name);
+                bool isBuildTargetConfigured = buildTarget == build_target_variable_value;
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField($"{(isBuildTargetConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
+                EditorGUILayout.LabelField($"<b>{build_target_variable_name}: </b>{buildTarget}", style);
+                EditorGUILayout.EndHorizontal();
+
+                string playerVersionOverrideVariable = settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name);
+                bool isPlayerVersionOverrideConfiugred = playerVersionOverrideVariable == player_version_override_variable_value;
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField($"{(isPlayerVersionOverrideConfiugred ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
+                EditorGUILayout.LabelField($"<b>{player_version_override_variable_name}: </b>{playerVersionOverrideVariable}", style);
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.EndVertical();
+
+                EditorGUILayout.Space();
+
+                if (!IsProfileConfigured())
+                {
+                    if (GUILayout.Button("Configure remote build and load paths", GUILayout.Width(250)))
+                    {
+                        ConfigureProfile();
+                    }
+                }
+                else
+                {
+                    EditorGUILayout.LabelField("<color=lime>The addressables profile is properly configured!</color>", style);
+                }
+
+                EditorGUILayout.Space();
+                CreateSeparator();
+
+                #endregion
+
+                #region Groups settings
+
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("<b>Groups settings</b>", style, GUILayout.Width(100));
+                if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
+                {
+                    EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Groups");
+                }
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.HelpBox($"Every addressable scene must be put inside the {environments_group_name} group, " +
+                        $"and the associated thumbnail inside the {thumbnails_group_name} group. " +
+                        $"Note that each addressable asset must have a lower-case, alphanumeric name.",
+                        MessageType.Info);
+
+                if (!IsGroupValid(environments_group_name) || !IsGroupValid(thumbnails_group_name))
+                {
+                    EditorGUILayout.HelpBox($"Could not find one or more required addressables groups. Ckick on the button to fix the issue.",
+                        MessageType.Error);
+
+                    if (GUILayout.Button("Create missing groups", GUILayout.ExpandWidth(false)))
+                    {
+                        if (!IsGroupValid(environments_group_name))
+                        {
+                            CreateGroup(environments_group_name);
+                        }
+                        if (!IsGroupValid(thumbnails_group_name))
+                        {
+                            CreateGroup(thumbnails_group_name);
+                        }
+                        ConfigureAddressablesGroups();
+                    }
+                }
+                else
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    foreach (var group in settings.groups.Where(x => !x.SchemaTypes.Contains(typeof(PlayerDataGroupSchema)) && x != settings.DefaultGroup))
+                    {
+                        EditorGUILayout.BeginVertical();
+                        EditorGUILayout.LabelField($"<b>{group.name}</b>", style);
+                        foreach (var entry in group.entries.OrderBy(x => x.address))
+                        {
+                            EditorGUILayout.BeginHorizontal();
+                            bool isEntryNameValid = Regex.IsMatch(entry.address, alphanumeric_lowercase_string_pattern);
+                            if (!isEntryNameValid)
+                            {
+                                if (GUILayout.Button("Fix", GUILayout.ExpandWidth(false)))
+                                {
+                                    UpdateAddressableEntry(entry);
+                                }
+                            }
+                            EditorGUILayout.LabelField($"{(isEntryNameValid ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} {entry}", style);
+                            EditorGUILayout.EndHorizontal();
+                        }
+                        EditorGUILayout.EndVertical();
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
+
+                if (!IsAddressablesEntriesValid())
+                {
+                    EditorGUILayout.HelpBox($"There are inconsistencies between the {environments_group_name} and the {thumbnails_group_name} asset groups. " +
+                        $"Check if each environment has a corresponding thumbnail and viceversa, and there are not duplicate names within each group",
+                        MessageType.Error);
+                }
+
+                EditorGUILayout.Space();
+
+                if (!IsAddressablesGroupsConfigured())
+                {
+                    if (GUILayout.Button("Configure addressables groups", GUILayout.Width(250)))
+                    {
+                        ConfigureAddressablesGroups();
+                    }
+                }
+                else if (IsAddressablesEntriesValid())
+                {
+                    EditorGUILayout.LabelField("<color=lime>The groups settings are properly configured!</color>", style);
+                }
+
+                EditorGUILayout.Space();
+
+                #endregion
+
+                CreateSeparator();
+                EditorGUILayout.Space();
+
+                if (IsAddressablesSettingsConfigured() && IsPlayerVersionOverrideValid() && IsProfileConfigured() && IsAddressablesGroupsConfigured() && IsAddressablesEntriesValid())
+                {
+                    if (GUILayout.Button("Build Addressables", EditorStyles.miniButtonMid))
+                    {
+                        AddressablesBuildScript.BuildAddressablesForAllPlatforms();
+                    }
+                }
+                else
+                {
+                    EditorGUILayout.LabelField("<color=red>There are some configuration issue in the addressables. Please fix them before building.</color>", style);
+                }
+
+                GUILayout.EndScrollView();
+            }
         }
 
         private void CreateSeparator()
@@ -361,7 +369,15 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         private bool IsPlayerVersionOverrideValid()
         {
-            return !string.IsNullOrEmpty(playerVersionOverride) && Regex.IsMatch(playerVersionOverride, @"[a-zA-Z][a-zA-Z0-9]*$");
+            return !string.IsNullOrEmpty(playerVersionOverride) && Regex.IsMatch(playerVersionOverride, alphanumeric_string_pattern);
+        }
+
+        private void UpdatePlayerVersion()
+        {
+            settings.OverridePlayerVersion = playerVersionOverride;
+            settings.ShaderBundleCustomNaming = playerVersionOverride;
+
+            SaveChanges();
         }
 
         private bool IsAddressablesSettingsConfigured()
@@ -377,7 +393,8 @@ namespace Reflectis.SDK.CreatorKitEditor
                 !settings.UniqueBundleIds &&
                 settings.ContiguousBundles &&
                 settings.NonRecursiveBuilding &&
-                settings.ShaderBundleNaming == ShaderBundleNaming.ProjectName &&
+                settings.ShaderBundleNaming == ShaderBundleNaming.Custom &&
+                settings.ShaderBundleCustomNaming == playerVersionOverride &&
                 settings.MonoScriptBundleNaming == MonoScriptBundleNaming.Disabled &&
                 !settings.DisableVisibleSubAssetRepresentations;
         }
@@ -394,7 +411,8 @@ namespace Reflectis.SDK.CreatorKitEditor
             settings.UniqueBundleIds = false;
             settings.ContiguousBundles = true;
             settings.NonRecursiveBuilding = true;
-            settings.ShaderBundleNaming = ShaderBundleNaming.ProjectName;
+            settings.ShaderBundleNaming = ShaderBundleNaming.Custom;
+            settings.ShaderBundleCustomNaming = playerVersionOverride;
             settings.MonoScriptBundleNaming = MonoScriptBundleNaming.Disabled;
             settings.DisableVisibleSubAssetRepresentations = false;
             settings.BuildRemoteCatalog = true;
@@ -534,6 +552,9 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         private bool IsAddressablesEntriesValid()
         {
+            if (settings.groups.Count == 0)
+                return true;
+
             IEnumerable<string> environmentEntries = settings.groups.Find(x => x.Name == environments_group_name).entries.Select(x => x.address);
             IEnumerable<string> thumbnailEntries = settings.groups.Find(x => x.Name == thumbnails_group_name).entries.Select(x => x.address);
 
@@ -542,6 +563,13 @@ namespace Reflectis.SDK.CreatorKitEditor
                 thumbnailEntries.All(new HashSet<string>().Add) &&
                 !environmentEntries.Except(thumbnailEntries).Any() &&
                 !thumbnailEntries.Except(environmentEntries).Any();
+        }
+
+        private void UpdateAddressableEntry(AddressableAssetEntry entry)
+        {
+            entry.SetAddress(Regex.Replace(entry.address.ToLower(), alphanumeric_lowercase_string_pattern_negated, string.Empty));
+
+            SaveSettings();
         }
 
         #endregion
