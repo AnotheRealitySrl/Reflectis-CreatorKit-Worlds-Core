@@ -296,7 +296,7 @@
                 {
                     "name": "",
                     "id": "77c6f407-3080-4ca8-b767-c33eba0a60be",
-                    "path": "<XRController>{LeftHand}/{Primary2DAxisClick}",
+                    "path": "<XRController>{LeftHand}/{Primary2DAxisTouch}",
                     "interactions": "",
                     "processors": "",
                     "groups": "XRControlScheme",
