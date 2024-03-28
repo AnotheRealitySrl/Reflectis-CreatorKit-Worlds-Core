@@ -90,7 +90,13 @@ namespace Reflectis.SDK.CreatorKit
 
         #region Generic interaction
 
-        [Header("Generic interaction scriptable actions")]
+        [Header("Generic interaction definition")]
+
+        [SerializeField, Tooltip("If set to true the hover callback won't be called if the generic interactable is in a " +
+            "state that is different from idle. As an example if the interactable is selected, it will keep the hover state " +
+            "until the selection is over and the user is not hovering the object.")]
+        [DrawIf(nameof(interactionModes), EInteractableType.GenericInteractable)]
+        private bool lockHoverDuringInteraction;
 
         [SerializeField, Tooltip("Reference to the script machine that describes what happens during interaction events." +
             "Utilize \"GenericInteractableHoverEnter\",\"GenericInteractableHoverExit\",\"GenericInteractableSelectEnter\",\"GenericInteractableSelectExit\"" +
@@ -140,6 +146,7 @@ namespace Reflectis.SDK.CreatorKit
 
         public EContextualMenuOption ContextualMenuOptions { get => contextualMenuOptions; set => contextualMenuOptions = value; }
         public EContextualMenuType ContextualMenuType { get => contextualMenuType; set => contextualMenuType = value; }
+        public bool LockHoverDuringInteraction => lockHoverDuringInteraction;
 
         #endregion
     }
