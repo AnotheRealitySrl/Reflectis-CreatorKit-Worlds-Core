@@ -128,7 +128,7 @@
                 {
                     "name": "",
                     "id": "ef5196e1-dc4e-49e0-acda-ece5cdb7afb6",
-                    "path": "<XRController>{RightHand}/primary2DAxisTouch",
+                    "path": "<XRController>{RightHand}/{Primary2DAxisTouch}",
                     "interactions": "",
                     "processors": "",
                     "groups": "XRControlScheme",
@@ -138,8 +138,8 @@
                 },
                 {
                     "name": "",
-                    "id": "853dd5f5-34bf-4c12-9211-a5a36222b1d0",
-                    "path": "<XRController>{RightHand}/primary2DAxisClick",
+                    "id": "8b3a7377-bf2a-446c-a629-b2d98b7f8af6",
+                    "path": "<XRController>{RightHand}/{Primary2DAxisClick}",
                     "interactions": "",
                     "processors": "",
                     "groups": "XRControlScheme",
@@ -285,7 +285,7 @@
                 {
                     "name": "",
                     "id": "363f9e72-acb5-46e6-ad04-3e7d17eb0153",
-                    "path": "<XRController>{LeftHand}/primary2DAxisClick",
+                    "path": "<XRController>{LeftHand}/{Primary2DAxisClick}",
                     "interactions": "",
                     "processors": "",
                     "groups": "XRControlScheme",
@@ -296,7 +296,7 @@
                 {
                     "name": "",
                     "id": "77c6f407-3080-4ca8-b767-c33eba0a60be",
-                    "path": "<XRController>{LeftHand}/primary2DAxisTouch",
+                    "path": "<XRController>{LeftHand}/{Primary2DAxisClick}",
                     "interactions": "",
                     "processors": "",
                     "groups": "XRControlScheme",
