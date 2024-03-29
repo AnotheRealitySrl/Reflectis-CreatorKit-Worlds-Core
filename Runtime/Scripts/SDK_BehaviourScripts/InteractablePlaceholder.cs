@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 
 using UnityEngine;
-
+using UnityEngine.Events;
 using static Reflectis.SDK.InteractionNew.ContextualMenuManageable;
 using static Reflectis.SDK.InteractionNew.GenericInteractable;
 using static Reflectis.SDK.InteractionNew.IInteractable;
@@ -149,5 +149,14 @@ namespace Reflectis.SDK.CreatorKit
         public bool LockHoverDuringInteraction => lockHoverDuringInteraction;
 
         #endregion
+
+        /*#region Events Callbacks
+
+        [HideInInspector] public UnityEvent OnGrabStart = default; //initialized by the manipulableGrabberDetector
+        [HideInInspector] public UnityEvent OnGrabEnd = default; //initialized by the manipulableGrabberDetector
+
+        #endregion*/
+
+        [HideInInspector] public UnityEvent OnSetupFinished = default;
     }
 }
