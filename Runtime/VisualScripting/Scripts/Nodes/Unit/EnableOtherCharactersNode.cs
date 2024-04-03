@@ -4,9 +4,9 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Scene: Enable Others")]
+    [UnitTitle("Reflectis Scene: Enable Other Players")]
     [UnitSurtitle("Scene")]
-    [UnitShortTitle("Enable Others")]
+    [UnitShortTitle("Enable Other Players")]
     [UnitCategory("Reflectis\\Flow")]
     public class EnableOtherCharactersNode : Unit
     {
