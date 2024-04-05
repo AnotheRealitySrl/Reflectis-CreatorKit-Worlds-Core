@@ -36,7 +36,7 @@ namespace Reflectis.SDK.CreatorKit
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                SM.GetSystem<ISceneHierarchySystem>().EnableSpawnedObjects(f.GetValue<bool>(Enable), new List<GameObject>() { f.stack.AsReference().gameObject });
+                SM.GetSystem<ISceneObjectsSystem>().EnableSpawnedObjects(f.GetValue<bool>(Enable), new List<GameObject>() { f.stack.AsReference().gameObject });
 
                 return OutputTrigger;
             });

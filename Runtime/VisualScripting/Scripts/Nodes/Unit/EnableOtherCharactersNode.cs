@@ -28,7 +28,7 @@ namespace Reflectis.SDK.CreatorKit
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                SM.GetSystem<ISceneHierarchySystem>().EnableOtherAvatars(f.GetValue<bool>(Enable));
+                SM.GetSystem<ISceneObjectsSystem>().EnableOtherAvatars(f.GetValue<bool>(Enable));
 
                 return OutputTrigger;
             });
