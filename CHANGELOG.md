@@ -1,23 +1,31 @@
 # Release notes
 
-## Unreleased
+## v3.0.0
 
 ### Changed
 
-- InteractablePlaceholder: Now accepts script machines instead of scriptable actions to define custom logic
+- An `InteractablePlaceholder` now accepts viual scripting state machines instead of scriptable actions the generic interaction.
+- Improved name conventions of public variables and properties of existing visual scripting nodes.
 
 ### Added
 
-- new VisualScriptingNodes: Added Block interactable behaviours block by selection, pan character camera, disable character mesh, teleport player, open close tutorial
-
-### Deprecated
+- Added `ScreenName` field to `BigScreenPlaceholder` to identify big screens by a custom name instead of its `GameObjsect`'s name.
+- Added new visual scripting nodes: interactable behaviours blocking by selection, pan character camera, disable character mesh, teleport player, open-close tutorial.
+- Added visual scripting nodes which collect data from current event, current environment and current user.
+- Added an `ActionPlayerMap` defining XR inputs (useful for recognizing user input by visual scripting).
+- Added visual scripting nodes which detect manipulation start/end of a `Manipulable` object.
+- Implemented a utility to auto-setup visual scripting nodes.
 
 ### Removed
 
-- Removed awaitable scriptable actions
+- Removed awaitable scriptable actions in favour of visual scripting machines.
+- Removed legacy `ToastInteractablePlaceholder`.
 
 ### Fixed
 
+- Fixed `NetworkPlaceholdersManager` editor window scrolling.
+- Fixed `SyncedObject`'s custom inspector not showing the info of the base class.
+- Improved `InteractablePlaceholder`'s custom inspector.
 
 ## v2.0.0
 
