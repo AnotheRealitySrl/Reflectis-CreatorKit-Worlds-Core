@@ -27,11 +27,11 @@ namespace Reflectis.SDK.CreatorKit
         {
             Interactable = ValueInput<GenericInteractable>(nameof(Interactable), null).NullMeansSelf();
 
-            GameObjectReference = ValueOutput(nameof(GameObjectReference), (flow) => flow.GetValue<GenericInteractable>(Interactable).InteractableRef.GameObjectRef);
+            GameObjectReference = ValueOutput(nameof(GameObjectReference), (flow) => flow.GetValue<GenericInteractable>(Interactable).gameObject);
 
-            InteractionState = ValueOutput(nameof(InteractionState), (flow) => flow.GetValue<GenericInteractable>(Interactable).InteractableRef.InteractionState);
+            InteractionState = ValueOutput(nameof(InteractionState), (flow) => flow.GetValue<GenericInteractable>(Interactable).CurrentInteractionState);
 
-            InteractionColliders = ValueOutput(nameof(InteractionColliders), (flow) => flow.GetValue<GenericInteractable>(Interactable).InteractableRef.InteractionColliders);
+            InteractionColliders = ValueOutput(nameof(InteractionColliders), (flow) => flow.GetValue<GenericInteractable>(Interactable).InteractionColliders);
         }
 
 

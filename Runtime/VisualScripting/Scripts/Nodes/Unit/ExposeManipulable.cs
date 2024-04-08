@@ -33,9 +33,9 @@ namespace Reflectis.SDK.CreatorKit
         {
             Manipulable = ValueInput<Manipulable>(nameof(Manipulable), null).NullMeansSelf();
 
-            GameObjectReference = ValueOutput(nameof(GameObjectReference), (flow) => flow.GetValue<Manipulable>(Manipulable).InteractableRef.GameObjectRef);
+            GameObjectReference = ValueOutput(nameof(GameObjectReference), (flow) => flow.GetValue<Manipulable>(Manipulable).gameObject);
 
-            InteractionColliders = ValueOutput(nameof(InteractionColliders), (flow) => flow.GetValue<Manipulable>(Manipulable).InteractableRef.InteractionColliders);
+            InteractionColliders = ValueOutput(nameof(InteractionColliders), (flow) => flow.GetValue<Manipulable>(Manipulable).BoundingBox);
 
             IsManipulated = ValueOutput(nameof(IsManipulated), (flow) => flow.GetValue<Manipulable>(Manipulable).CurrentInteractionState == InteractionNew.Manipulable.EManipulableState.Manipulating);
 

@@ -35,7 +35,7 @@ namespace Reflectis.SDK.CreatorKit
 
         [Header("Manipulation section")]
 
-        [HelpBox("Pleaase note that \"Scale\" option of Manipulation Mode and \"Non Proportional Scale\" are currently not supported.", HelpBoxMessageType.Warning)]
+        [HelpBox("Please note that \"Scale\" option of Manipulation Mode and \"Non Proportional Scale\" are currently not supported.", HelpBoxMessageType.Warning)]
 
         [SerializeField, Tooltip("Translate, rotate and scale.")]
         private EManipulationMode manipulationMode = (EManipulationMode)~0;
