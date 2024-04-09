@@ -68,6 +68,5 @@ namespace Reflectis.SDK.CreatorKit
         public bool LockHoverDuringInteraction => lockHoverDuringInteraction;
 
         #endregion
-
     }
 }
