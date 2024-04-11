@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Synced Variables: On Synced Variable Changed Init")]
+    [UnitTitle("Reflectis Synced Variables: On Synced Variable  Init")]
     [UnitSurtitle("Synced Variables Init")]
-    [UnitShortTitle("On Synced Variable Changed Init")]
+    [UnitShortTitle("On Synced Variable Init")]
     [UnitCategory("Events\\Reflectis")]
     public class OnSyncedVariableInit : EventUnit<(SyncedVariables, string)>
     {
