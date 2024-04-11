@@ -88,6 +88,15 @@ namespace Reflectis.SDK.CreatorKit
 
             if (args.Item1.variableSettings.Count != 0)
             {
+                if (flow.GetValue<SyncedVariables>(SyncedVariablesRef) == args.Item1 && flow.GetValue<string>(VariableName) == args.Item2 && args.Item1.variableSettings.Count != 0)
+                {
+                    //change boolean to true
+                    BooleanValue = ValueOutput(nameof(BooleanValue), (f) => true);
+                }
+                else
+                {
+                    BooleanValue = ValueOutput(nameof(BooleanValue), (f) => false);
+                }
 
                 foreach (SyncedVariables.Data data in args.Item1.variableSettings)
                 {
