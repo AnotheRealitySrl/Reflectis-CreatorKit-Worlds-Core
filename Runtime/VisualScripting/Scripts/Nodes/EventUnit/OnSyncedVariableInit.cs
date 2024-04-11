@@ -25,6 +25,10 @@ namespace Reflectis.SDK.CreatorKit
         [PortLabelHidden]
         public ValueOutput Value { get; private set; }
 
+        [DoNotSerialize]
+        [PortLabelHidden]
+        public ValueOutput BooleanValue { get; private set; }
+
         public static Dictionary<GameObject, List<GraphReference>> graphReferences = new Dictionary<GameObject, List<GraphReference>>();
 
         protected override bool register => true;
@@ -73,29 +77,26 @@ namespace Reflectis.SDK.CreatorKit
             SyncedVariablesRef = ValueInput<SyncedVariables>(nameof(SyncedVariablesRef), null).NullMeansSelf();
             VariableName = ValueInput<string>(nameof(VariableName), null);
             Value = ValueOutput<object>(nameof(Value));
+            BooleanValue = ValueOutput<bool>(nameof(BooleanValue));
         }
 
         protected override bool ShouldTrigger(Flow flow, (SyncedVariables, string) args)
         {
-            Debug.LogError("Trigger Function");
-            if (flow.GetValue<string>(VariableName) != args.Item2) { Debug.LogError("return false"); return false; }
+            if (flow.GetValue<string>(VariableName) != args.Item2) { return false; }
             if (flow.GetValue<SyncedVariables>(SyncedVariablesRef) == args.Item1) { }
             else if (args.Item1.variableSettings.Count != 0) { }
 
             if (args.Item1.variableSettings.Count != 0)
             {
 
-                Debug.LogError("Entered if of shouldTrigger");
                 foreach (SyncedVariables.Data data in args.Item1.variableSettings)
                 {
                     if (data.declaration == null)
                     {
-                        Debug.LogError("data declaration is null");
                         return false;
                     }
                     else
                     {
-                        Debug.LogError("data declaration is NOT null");
                         return true;
                     }
                 }
@@ -109,7 +110,6 @@ namespace Reflectis.SDK.CreatorKit
             {
                 if (data.name == args.Item2)
                 {
-                    Debug.LogError("Do not assign value in assignArguments");
                     //flow.SetValue(Value, data.Value);
                     break;
                 }
