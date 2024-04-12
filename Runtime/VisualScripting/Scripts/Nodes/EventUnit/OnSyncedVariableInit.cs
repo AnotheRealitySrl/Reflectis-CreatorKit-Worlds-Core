@@ -90,7 +90,7 @@ namespace Reflectis.SDK.CreatorKit
             {
                 if (flow.GetValue<SyncedVariables>(SyncedVariablesRef) == args.Item1 && flow.GetValue<string>(VariableName) == args.Item2 && args.Item1.variableSettings.Count != 0)
                 {
-                    int i = 0;
+                    //int i = 0;
                     foreach (SyncedVariables.Data data in args.Item1.variableSettings)
                     {
                         if (data.declaration == null)
@@ -99,22 +99,10 @@ namespace Reflectis.SDK.CreatorKit
                         }
                         else
                         {
-                            if (args.Item1.variableSettings[i].hasChanged)
-                            {
-                                flow.SetValue(IsChanged, true);
-                                i++;
-                            }
-                            else
-                            {
-                                flow.SetValue(IsChanged, false);
-                            }
                             return true;
                         }
                     }
-                    //change boolean to true
-                    //Debug.LogError("argsItem1: " + args.Item1 + "syncedVariableRef " + flow.GetValue<SyncedVariables>(SyncedVariablesRef) + "args 2" + args.Item2);
-                    //flow.SetValue(IsChanged, true);
-                    //IsChanged = ValueOutput(nameof(IsChanged), (f) => true);
+                    return true;
                 }
 
             }
@@ -123,13 +111,22 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void AssignArguments(Flow flow, (SyncedVariables, string) args)
         {
+            int i = 0;
             foreach (SyncedVariables.Data data in args.Item1.variableSettings)
             {
                 if (data.name == args.Item2)
                 {
-                    //flow.SetValue(Value, data.Value);
+                    if (args.Item1.variableSettings[i].hasChanged)
+                    {
+                        flow.SetValue(IsChanged, true);
+                    }
+                    else
+                    {
+                        flow.SetValue(IsChanged, false);
+                    }
                     break;
                 }
+                i++;
             }
         }
     }
