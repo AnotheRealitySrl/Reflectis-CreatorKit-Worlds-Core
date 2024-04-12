@@ -90,6 +90,7 @@ namespace Reflectis.SDK.CreatorKit
             {
                 if (flow.GetValue<SyncedVariables>(SyncedVariablesRef) == args.Item1 && flow.GetValue<string>(VariableName) == args.Item2 && args.Item1.variableSettings.Count != 0)
                 {
+                    int i = 0;
                     foreach (SyncedVariables.Data data in args.Item1.variableSettings)
                     {
                         if (data.declaration == null)
@@ -98,9 +99,10 @@ namespace Reflectis.SDK.CreatorKit
                         }
                         else
                         {
-                            if (args.Item1.variableSettings[0].hasChanged)
+                            if (args.Item1.variableSettings[i].hasChanged)
                             {
                                 flow.SetValue(IsChanged, true);
+                                i++;
                             }
                             else
                             {
