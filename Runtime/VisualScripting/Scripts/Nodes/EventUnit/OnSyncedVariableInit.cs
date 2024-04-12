@@ -22,7 +22,6 @@ namespace Reflectis.SDK.CreatorKit
         public ValueInput VariableName { get; private set; }
 
         [DoNotSerialize]
-        [PortLabelHidden]
         public ValueOutput Value { get; private set; }
 
         [DoNotSerialize]
