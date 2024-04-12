@@ -1,3 +1,4 @@
+using Reflectis.SDK.InteractionNew;
 using Reflectis.SDK.Utilities;
 
 using UnityEngine;
@@ -5,6 +6,7 @@ using static Reflectis.SDK.InteractionNew.Manipulable;
 
 namespace Reflectis.SDK.CreatorKit
 {
+    [RequireComponent(typeof(InteractableColliderContainer))]
     public class ManipulablePlaceholder : SceneComponentPlaceholderNetwork
     {
         #region Manipulation

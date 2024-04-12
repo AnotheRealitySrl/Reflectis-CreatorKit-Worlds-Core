@@ -1,10 +1,11 @@
+using Reflectis.SDK.InteractionNew;
 using Reflectis.SDK.Utilities;
 using UnityEngine;
-
 using static Reflectis.SDK.InteractionNew.ContextualMenuManageable;
 
 namespace Reflectis.SDK.CreatorKit
 {
+    [RequireComponent(typeof(InteractableColliderContainer))]
     public class ContextualMenuManageablePlaceholder : SceneComponentPlaceholderNetwork
     {
         #region Contextual menu

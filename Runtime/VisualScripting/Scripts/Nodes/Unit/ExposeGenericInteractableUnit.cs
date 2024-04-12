@@ -31,7 +31,7 @@ namespace Reflectis.SDK.CreatorKit
 
             InteractionState = ValueOutput(nameof(InteractionState), (flow) => flow.GetValue<GenericInteractable>(Interactable).CurrentInteractionState);
 
-            InteractionColliders = ValueOutput(nameof(InteractionColliders), (flow) => flow.GetValue<GenericInteractable>(Interactable).InteractionColliders);
+            InteractionColliders = ValueOutput(nameof(InteractionColliders), (flow) => flow.GetValue<GenericInteractable>(Interactable).InteractableCollider.Colliders);
         }
 
 

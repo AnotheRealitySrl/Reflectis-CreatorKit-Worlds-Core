@@ -1,3 +1,4 @@
+using Reflectis.SDK.InteractionNew;
 using Reflectis.SDK.Utilities;
 
 using System;
@@ -11,6 +12,7 @@ using static Reflectis.SDK.InteractionNew.GenericInteractable;
 
 namespace Reflectis.SDK.CreatorKit
 {
+    [RequireComponent(typeof(InteractableColliderContainer))]
     public class GenericInteractablePlaceholder : SceneComponentPlaceholderBase
     {
         #region Shared settings
