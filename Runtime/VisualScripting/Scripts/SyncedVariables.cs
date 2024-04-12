@@ -16,6 +16,7 @@ namespace Reflectis.SDK.CreatorKit
             public byte id;
             public string name;
             public bool saveThroughSessions;
+            public bool hasChanged;
 
             [HideInInspector]
             public bool isSynced;

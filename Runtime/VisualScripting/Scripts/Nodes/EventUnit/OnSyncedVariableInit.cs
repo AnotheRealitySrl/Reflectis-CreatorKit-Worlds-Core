@@ -90,25 +90,31 @@ namespace Reflectis.SDK.CreatorKit
             {
                 if (flow.GetValue<SyncedVariables>(SyncedVariablesRef) == args.Item1 && flow.GetValue<string>(VariableName) == args.Item2 && args.Item1.variableSettings.Count != 0)
                 {
+                    foreach (SyncedVariables.Data data in args.Item1.variableSettings)
+                    {
+                        if (data.declaration == null)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            if (args.Item1.variableSettings[0].hasChanged)
+                            {
+                                flow.SetValue(IsChanged, true);
+                            }
+                            else
+                            {
+                                flow.SetValue(IsChanged, false);
+                            }
+                            return true;
+                        }
+                    }
                     //change boolean to true
-                    IsChanged = ValueOutput(nameof(IsChanged), (f) => true);
-                }
-                else
-                {
-                    IsChanged = ValueOutput(nameof(IsChanged), (f) => false);
+                    //Debug.LogError("argsItem1: " + args.Item1 + "syncedVariableRef " + flow.GetValue<SyncedVariables>(SyncedVariablesRef) + "args 2" + args.Item2);
+                    //flow.SetValue(IsChanged, true);
+                    //IsChanged = ValueOutput(nameof(IsChanged), (f) => true);
                 }
 
-                foreach (SyncedVariables.Data data in args.Item1.variableSettings)
-                {
-                    if (data.declaration == null)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
             }
             return false;
         }
