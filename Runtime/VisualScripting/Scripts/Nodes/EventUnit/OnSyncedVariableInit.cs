@@ -26,8 +26,8 @@ namespace Reflectis.SDK.CreatorKit
         public ValueOutput Value { get; private set; }
 
         [DoNotSerialize]
-        [PortLabelHidden]
-        public ValueOutput BooleanValue { get; private set; }
+        [Tooltip("This variable returns true if the variable in the variable name field has been changed at least once from its default state. Otherwise it returns false")]
+        public ValueOutput IsChanged { get; private set; }
 
         public static Dictionary<GameObject, List<GraphReference>> graphReferences = new Dictionary<GameObject, List<GraphReference>>();
 
@@ -77,7 +77,7 @@ namespace Reflectis.SDK.CreatorKit
             SyncedVariablesRef = ValueInput<SyncedVariables>(nameof(SyncedVariablesRef), null).NullMeansSelf();
             VariableName = ValueInput<string>(nameof(VariableName), null);
             Value = ValueOutput<object>(nameof(Value));
-            BooleanValue = ValueOutput<bool>(nameof(BooleanValue));
+            IsChanged = ValueOutput<bool>(nameof(IsChanged));
         }
 
         protected override bool ShouldTrigger(Flow flow, (SyncedVariables, string) args)
@@ -91,11 +91,11 @@ namespace Reflectis.SDK.CreatorKit
                 if (flow.GetValue<SyncedVariables>(SyncedVariablesRef) == args.Item1 && flow.GetValue<string>(VariableName) == args.Item2 && args.Item1.variableSettings.Count != 0)
                 {
                     //change boolean to true
-                    BooleanValue = ValueOutput(nameof(BooleanValue), (f) => true);
+                    IsChanged = ValueOutput(nameof(IsChanged), (f) => true);
                 }
                 else
                 {
-                    BooleanValue = ValueOutput(nameof(BooleanValue), (f) => false);
+                    IsChanged = ValueOutput(nameof(IsChanged), (f) => false);
                 }
 
                 foreach (SyncedVariables.Data data in args.Item1.variableSettings)
