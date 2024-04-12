@@ -115,6 +115,7 @@ namespace Reflectis.SDK.CreatorKit
             {
                 if (data.name == args.Item2)
                 {
+                    flow.SetValue(Value, data.Value);
                     if (args.Item1.variableSettings[i].hasChanged)
                     {
                         flow.SetValue(IsChanged, true);
