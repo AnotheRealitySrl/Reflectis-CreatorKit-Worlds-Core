@@ -437,7 +437,7 @@ namespace Reflectis.SDK.CreatorKitEditor
             settings.profileSettings.SetValue(settings.activeProfileId, remote_build_path_variable_name, remoteBuildPath);
             settings.profileSettings.SetValue(settings.activeProfileId, remote_load_path_variable_name, remoteLoadPath);
 
-            if (string.IsNullOrEmpty(settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name)))
+            if (settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name) == null)
             {
                 settings.profileSettings.CreateValue(build_target_variable_name, build_target_variable_value);
             }
@@ -446,7 +446,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                 settings.profileSettings.SetValue(settings.activeProfileId, build_target_variable_name, build_target_variable_value);
             }
 
-            if (string.IsNullOrEmpty(settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name)))
+            if (settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name) == null)
             {
                 settings.profileSettings.CreateValue(player_version_override_variable_name, player_version_override_variable_value);
             }
