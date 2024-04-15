@@ -27,6 +27,10 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField, Tooltip("Enables hand and ray interaction on this object")]
         private EVRInteraction vrInteraction = (EVRInteraction)~0;
 
+        [SerializeField, Tooltip("If the \"InteractableColliderContainer\" associated with this gameObject is set to bounding box," +
+            " you can check this box to use the variable vrColliders inside \"InteractableColliderContainer\" for grab interactions.")]
+        private bool useVRHandSpecificColliders = false;
+
         [SerializeField, Tooltip("A dynamic attach means that the object won't snap to the center of gravity")]
         private bool dynamicAttach;
 
@@ -65,6 +69,8 @@ namespace Reflectis.SDK.CreatorKit
         public bool RealignAxisY => realignAxisY;
         public bool RealignAxisZ => realignAxisZ;
         public float RealignDurationTimeInSeconds => realignDurationTimeInSeconds;
+
+        public bool UseVRHandSpecificColliders { get => useVRHandSpecificColliders; set => useVRHandSpecificColliders = value; }
 
         #endregion
     }
