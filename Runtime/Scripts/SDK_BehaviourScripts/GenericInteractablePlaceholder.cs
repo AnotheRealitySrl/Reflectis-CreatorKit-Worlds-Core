@@ -2,7 +2,6 @@ using Reflectis.SDK.InteractionNew;
 using Reflectis.SDK.Utilities;
 
 using System;
-using System.Collections.Generic;
 
 using Unity.VisualScripting;
 
@@ -15,18 +14,9 @@ namespace Reflectis.SDK.CreatorKit
     [RequireComponent(typeof(InteractableColliderContainer))]
     public class GenericInteractablePlaceholder : SceneComponentPlaceholderBase
     {
-        #region Shared settings
-
-        [Header("Interaction settings")]
-
-        [SerializeField, Tooltip("The colliders that will be recognized by the interactable behaviours")]
-        private List<Collider> interactionColliders = new();
-
-        public List<Collider> InteractionColliders => interactionColliders;
-
-        #endregion
 
         #region Generic interaction
+        [Header("Interaction settings")]
 
         [Header("Generic interaction definition")]
 
