@@ -1,10 +1,15 @@
 # Release notes
+## v3.1.0
+
+### Added
+ - Added `OnSceneSetupEventNode` that will be triggered during scene setup. If marked as coroutine will wait the flows to finish while in fade in.
+ - Added `OnSceneSetupCompletedEventNode` that will be triggered after the setup fadeout is completed.
 
 ## v3.0.0
 
 ### Changed
 
-- An `InteractablePlaceholder` now accepts viual scripting state machines instead of scriptable actions the generic interaction.
+- An `InteractablePlaceholder` now accepts viual scripting state machines instead of scriptable actions to handle the generic interaction.
 - Improved name conventions of public variables and properties of existing visual scripting nodes.
 
 ### Added
