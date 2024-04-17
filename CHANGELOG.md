@@ -1,10 +1,17 @@
 # Release notes
+## v3.1.0
+
+### Added
+ - Added `OnSceneSetupEventNode` that will be triggered during scene setup. If marked as coroutine will wait the flows to finish while in fade in.
+ - Added `OnSceneSetupCompletedEventNode` that will be triggered after the setup fadeout is completed.
+ - Added scale on `InteractablePlaceholder` in manipulable mode (UX feelds since there is no bounding box).
+ - Added color picker and non proportional scale to `interactable placeholder` in contextual menu mode (non proportialScale needs manipulation mode to work properly).
 
 ## v3.0.0
 
 ### Changed
 
-- An `InteractablePlaceholder` now accepts viual scripting state machines instead of scriptable actions the generic interaction.
+- An `InteractablePlaceholder` now accepts viual scripting state machines instead of scriptable actions to handle the generic interaction.
 - Improved name conventions of public variables and properties of existing visual scripting nodes.
 
 ### Added

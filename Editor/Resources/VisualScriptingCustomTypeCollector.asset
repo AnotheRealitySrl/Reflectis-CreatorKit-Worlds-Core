@@ -21,4 +21,6 @@ MonoBehaviour:
   - {fileID: 11500000, guid: 57bcc8102620f6c4fa6ca12099cf0c25, type: 3}
   customTypeNames:
   - UnityEngine.WheelCollider
+  - UnityEngine.WWWForm
   - System.DateTime
+  - System.TimeSpan
