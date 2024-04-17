@@ -31,6 +31,10 @@ public static class VisualScriptingSetupEditor
     [MenuItem("Reflectis/Setup Visual Scripting Nodes")]
     public static void Setup()
     {
+        if (!VSUsageUtility.isVisualScriptingUsed)
+        {
+            VSUsageUtility.isVisualScriptingUsed = true;
+        }
 
         ResetNodes();
 
