@@ -2,6 +2,7 @@
 ## v3.1.0
 
 ### Added
+ - Added `OnSceneLoadEventNode` that will be triggered during scene loading before placholders' mapping. If marked as coroutine will wait the flows to finish while in fade in.
  - Added `OnSceneSetupEventNode` that will be triggered during scene setup. If marked as coroutine will wait the flows to finish while in fade in.
  - Added `OnSceneSetupCompletedEventNode` that will be triggered after the setup fadeout is completed.
  - Added scale on `InteractablePlaceholder` in manipulable mode (UX feelds since there is no bounding box).
