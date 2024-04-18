@@ -14,7 +14,7 @@ namespace Reflectis.SDK.CreatorKit
         public Vector3 positionOffset;
 
         [Tooltip("The distance offset of the radialMenu from the camera")]
-        public Vector3 distanceOffset;
+        public float distanceOffset;
 
         [Tooltip("The radius that the items are going to use when opening the radialMenu")]
         public float radius;
