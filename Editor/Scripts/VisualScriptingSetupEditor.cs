@@ -18,7 +18,7 @@ public static class VisualScriptingSetupEditor
         }
 
         var _typeOptionsMetadata = BoltCore.Configuration.GetMetadata(nameof(BoltCore.Configuration.typeOptions));
-        //_typeOptionsMetadata.Reset(true);
+
         if (_typeOptionsMetadata.defaultValue is List<Type> defaultTypes)
         {
             foreach (Type type in defaultTypes)
@@ -42,7 +42,7 @@ public static class VisualScriptingSetupEditor
         {
             if (type == null)
             {
-                Debug.Log("Found Null type!");
+                Debug.LogError("Found Null type!");
                 continue;
             }
             if (type == null)
@@ -58,7 +58,7 @@ public static class VisualScriptingSetupEditor
                 }
 
                 BoltCore.Configuration.typeOptions.Add(type);
-                Debug.Log($"Add {type.FullName} to Visual Scripting type options.");
+                //Debug.Log($"Add {type.FullName} to Visual Scripting type options.");
             }
 
         }
