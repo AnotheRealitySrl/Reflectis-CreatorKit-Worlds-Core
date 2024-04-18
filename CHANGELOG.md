@@ -1,12 +1,19 @@
 # Release notes
+
 ## v3.1.0
 
 ### Added
- - Added `OnSceneLoadEventNode` that will be triggered during scene loading before placholders' mapping. If marked as coroutine will wait the flows to finish while in fade in.
- - Added `OnSceneSetupEventNode` that will be triggered during scene setup. If marked as coroutine will wait the flows to finish while in fade in.
- - Added `OnSceneSetupCompletedEventNode` that will be triggered after the setup fadeout is completed.
- - Added scale on `InteractablePlaceholder` in manipulable mode (UX feelds since there is no bounding box).
- - Added color picker and non proportional scale to `interactable placeholder` in contextual menu mode (non proportialScale needs manipulation mode to work properly).
+
+- Added `OnSceneLoadEventNode` that will be triggered during scene loading before placholders' mapping. If marked as coroutine will wait the flows to finish while in fade in.
+- Added `OnSceneSetupEventNode` that will be triggered during scene setup. If marked as coroutine will wait the flows to finish while in fade in.
+- Added `OnSceneSetupCompletedEventNode` that will be triggered after the setup fadeout is completed.
+- Added scale on `InteractablePlaceholder` in manipulable mode (UX feelds since there is no bounding box).
+- Added color picker and non proportional scale to `InteractablePaceholder` in contextual menu mode (non proportialScale needs manipulation mode to work properly).
+
+## Fixed
+
+- Fixed an issue of the Addressables configuration window not updating properly the load and build paths of the Addressables groups.
+- Fixed an issue of the Addressables configuration window not updating the value of a profile variable if such variable was defined but empty.
 
 ## v3.0.0
 

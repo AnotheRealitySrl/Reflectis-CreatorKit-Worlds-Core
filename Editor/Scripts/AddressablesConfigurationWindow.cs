@@ -527,7 +527,6 @@ namespace Reflectis.SDK.CreatorKitEditor
 
                     bundledAssetGroupSchema.LoadPath.SetVariableByName(settings, remote_load_path_variable_name);
                     bundledAssetGroupSchema.BuildPath.SetVariableByName(settings, remote_build_path_variable_name);
-
                     bundledAssetGroupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
                     bundledAssetGroupSchema.IncludeInBuild = true;
                     bundledAssetGroupSchema.ForceUniqueProvider = false;
