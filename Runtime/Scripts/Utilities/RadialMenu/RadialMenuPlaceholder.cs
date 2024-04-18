@@ -20,7 +20,7 @@ namespace Reflectis.SDK.CreatorKit
         public float radius;
 
         [Tooltip("The speed with which the radialMenu will be opened")]
-        public float OpenSpeed;
+        public float openSpeed = 1f;
 
         [Tooltip("The speed with which the radialMenu will be closed")]
         public float closeSpeed;
@@ -30,6 +30,8 @@ namespace Reflectis.SDK.CreatorKit
 
         [Tooltip("the input pressed in order to open and close the radialMenu")]
         public InputAction action;
+
+        public AudioClip itemClickAudio;
 
         public bool isNetworked; //used to know if we need to add the RadialRPCManager too and also to know if we need to instantiate the RadialMenuNetworked
 
