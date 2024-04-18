@@ -30,7 +30,7 @@ namespace Reflectis.SDK.CreatorKit
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
                 Debug.Log("ENABLE TAG " + f.GetValue<bool>(Enable));
-                SM.GetSystem<AvatarSystem>().EnableAvatarInstanceTag(f.GetValue<bool>(Enable));
+                SM.GetSystem<AvatarSystem>().EnableAvatarInstanceLabel(f.GetValue<bool>(Enable));
 
                 return OutputTrigger;
             });
