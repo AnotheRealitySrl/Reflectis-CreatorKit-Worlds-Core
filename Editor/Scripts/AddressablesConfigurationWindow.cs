@@ -488,6 +488,8 @@ namespace Reflectis.SDK.CreatorKitEditor
                     BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
 
                     configured &=
+                        bundledAssetGroupSchema.LoadPath.GetName(settings) == remote_load_path_variable_name &&
+                        bundledAssetGroupSchema.BuildPath.GetName(settings) == remote_build_path_variable_name &&
                         bundledAssetGroupSchema.Compression == BundledAssetGroupSchema.BundleCompressionMode.LZ4 &&
                         bundledAssetGroupSchema.IncludeInBuild == true &&
                         bundledAssetGroupSchema.ForceUniqueProvider == false &&
@@ -522,6 +524,9 @@ namespace Reflectis.SDK.CreatorKitEditor
                 group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ToList().ForEach(schema =>
                 {
                     BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
+
+                    bundledAssetGroupSchema.LoadPath.SetVariableByName(settings, remote_load_path_variable_name);
+                    bundledAssetGroupSchema.BuildPath.SetVariableByName(settings, remote_build_path_variable_name);
 
                     bundledAssetGroupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
                     bundledAssetGroupSchema.IncludeInBuild = true;
