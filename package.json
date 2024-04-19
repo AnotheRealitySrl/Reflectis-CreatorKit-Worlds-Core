@@ -18,5 +18,8 @@
       "description": "Template scene with visual scripting network sample use",
       "path": "Samples~/MultiplayerSceneSample"
     }
-  ]
+  ],
+  "dependencies": {
+    "com.unity.addressables": "1.21.20"
+  }
 }
