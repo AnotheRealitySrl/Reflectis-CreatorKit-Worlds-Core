@@ -14,6 +14,7 @@
 
 - Fixed an issue of the Addressables configuration window not updating properly the load and build paths of the Addressables groups.
 - Fixed an issue of the Addressables configuration window not updating the value of a profile variable if such variable was defined but empty.
+- Fixed issue of `automaticSetup` and `isNetworking` fields of `InteractablePlaceholder` not being shown in the inspector.
 
 ## v3.0.0
 
