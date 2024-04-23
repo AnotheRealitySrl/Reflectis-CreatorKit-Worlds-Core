@@ -35,14 +35,8 @@ namespace Reflectis.SDK.CreatorKit
 
         [Header("Manipulation section")]
 
-        [HelpBox("Pleaase note that \"Scale\" option of Manipulation Mode and \"Non Proportional Scale\" are currently not supported.", HelpBoxMessageType.Warning)]
-
         [SerializeField, Tooltip("Translate, rotate and scale.")]
         private EManipulationMode manipulationMode = (EManipulationMode)~0;
-
-        [SerializeField, Tooltip("Enables non-proportional scale on this object.")]
-        private bool nonProportionalScale;
-
 
         [Header("VR manipulation settings")]
 
@@ -81,7 +75,6 @@ namespace Reflectis.SDK.CreatorKit
         public bool DynamicAttach => dynamicAttach;
         public bool MouseLookAtCamera => mouseLookAtCamera;
         public Transform AttachTransform => attachTransform;
-        public bool NonProportionalScale { get => nonProportionalScale; set => nonProportionalScale = value; }
         public bool AdjustRotationOnRelease => adjustRotationOnRelease;
         public bool RealignAxisX => realignAxisX;
         public bool RealignAxisY => realignAxisY;
