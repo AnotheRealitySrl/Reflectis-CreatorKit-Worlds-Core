@@ -9,12 +9,14 @@
 - Added `OnSceneSetupCompletedEventNode` that will be triggered after the setup fadeout is completed.
 - Added scale on `InteractablePlaceholder` in manipulable mode (UX feelds since there is no bounding box).
 - Added color picker and non proportional scale to `InteractablePaceholder` in contextual menu mode (non proportialScale needs manipulation mode to work properly).
+- Added `OnSyncedVariableInit` node that will be triggered when entering the scene. It outputs the value of the synced variable, whether or not it has changed and an event.
 
 ## Fixed
 
 - Fixed an issue of the Addressables configuration window not updating properly the load and build paths of the Addressables groups.
 - Fixed an issue of the Addressables configuration window not updating the value of a profile variable if such variable was defined but empty.
 - Fixed issue of `automaticSetup` and `isNetworking` fields of `InteractablePlaceholder` not being shown in the inspector.
+- Fixed the synced position of the synced object when player enter the environment
 
 ## v3.0.0
 
