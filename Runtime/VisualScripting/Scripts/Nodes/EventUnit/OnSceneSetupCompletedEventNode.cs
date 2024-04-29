@@ -2,7 +2,7 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Scene: Setup Completed")]
+    [UnitTitle("Reflectis Scene: On Setup Completed")]
     [UnitSurtitle("Scene")]
     [UnitShortTitle("On Setup Completed")]
     [UnitCategory("Events\\Reflectis")]

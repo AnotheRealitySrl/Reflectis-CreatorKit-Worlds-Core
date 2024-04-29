@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Scene: Load")]
+    [UnitTitle("Reflectis Scene: On Load")]
     [UnitSurtitle("Scene")]
     [UnitShortTitle("On Load")]
     [UnitCategory("Events\\Reflectis")]

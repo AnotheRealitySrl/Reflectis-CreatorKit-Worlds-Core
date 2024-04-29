@@ -494,8 +494,8 @@ namespace Reflectis.SDK.CreatorKitEditor
                         bundledAssetGroupSchema.IncludeInBuild == true &&
                         bundledAssetGroupSchema.ForceUniqueProvider == false &&
                         bundledAssetGroupSchema.UseAssetBundleCache == true &&
-                        bundledAssetGroupSchema.UseAssetBundleCrc == true &&
-                        bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles == true &&
+                        bundledAssetGroupSchema.UseAssetBundleCrc == false &&
+                        bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles == false &&
                         bundledAssetGroupSchema.UseUnityWebRequestForLocalBundles == false &&
                         bundledAssetGroupSchema.Timeout == 0 &&
                         bundledAssetGroupSchema.ChunkedTransfer == false &&
@@ -531,8 +531,8 @@ namespace Reflectis.SDK.CreatorKitEditor
                     bundledAssetGroupSchema.IncludeInBuild = true;
                     bundledAssetGroupSchema.ForceUniqueProvider = false;
                     bundledAssetGroupSchema.UseAssetBundleCache = true;
-                    bundledAssetGroupSchema.UseAssetBundleCrc = true;
-                    bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles = true;
+                    bundledAssetGroupSchema.UseAssetBundleCrc = false;
+                    bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles = false;
                     bundledAssetGroupSchema.UseUnityWebRequestForLocalBundles = false;
                     bundledAssetGroupSchema.Timeout = 0;
                     bundledAssetGroupSchema.ChunkedTransfer = false;
