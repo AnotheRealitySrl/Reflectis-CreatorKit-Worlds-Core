@@ -3,6 +3,7 @@ using Reflectis.SDK.RadialMenuUtils;
 using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.SceneManagement;
 #endif
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -62,6 +63,15 @@ public class RadialMenuPlaceholderEditor : Editor
             script.reflectisRadialItemSpawnerPlaceholder = EditorGUILayout.ObjectField("ReflectisRadialItemSpawnerPlaceholder", script.reflectisRadialItemSpawnerPlaceholder, typeof(ReflectisRadialItemSpawnerPlaceholder), true) as ReflectisRadialItemSpawnerPlaceholder;
 
             EditorGUILayout.EndHorizontal();
+        }
+
+        serializedObject.Update();
+        serializedObject.ApplyModifiedProperties();
+
+        if (GUI.changed)
+        {
+            EditorUtility.SetDirty(script);
+            EditorSceneManager.MarkSceneDirty(script.gameObject.scene);
         }
     }
 
