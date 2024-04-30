@@ -1,5 +1,7 @@
+using Reflectis.SDK.CreatorKit;
 using Reflectis.SDK.RadialMenuUtils;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -35,5 +37,29 @@ namespace Reflectis.SDK.CreatorKit
 
         public bool isNetworked; //used to know if we need to add the RadialRPCManager too and also to know if we need to instantiate the RadialMenuNetworked
 
+
+        [HideInInspector] public ReflectisRadialItemSpawnerPlaceholder reflectisRadialItemSpawnerPlaceholder;
+
     }
+}
+
+[CustomEditor(typeof(RadialMenuPlaceholder))]
+public class RadialMenuPlaceholderEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        RadialMenuPlaceholder script = (RadialMenuPlaceholder)target;
+
+        if (script.isNetworked)
+        {
+            EditorGUILayout.BeginHorizontal();
+
+            script.reflectisRadialItemSpawnerPlaceholder = EditorGUILayout.ObjectField("ReflectisRadialItemSpawnerPlaceholder", script.reflectisRadialItemSpawnerPlaceholder, typeof(ReflectisRadialItemSpawnerPlaceholder), true) as ReflectisRadialItemSpawnerPlaceholder;
+
+            EditorGUILayout.EndHorizontal();
+        }
+    }
+
 }
