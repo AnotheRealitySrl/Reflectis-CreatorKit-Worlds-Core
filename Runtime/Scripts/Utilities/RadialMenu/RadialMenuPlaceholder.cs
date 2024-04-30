@@ -1,7 +1,9 @@
 using Reflectis.SDK.CreatorKit;
 using Reflectis.SDK.RadialMenuUtils;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -43,6 +45,7 @@ namespace Reflectis.SDK.CreatorKit
     }
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(RadialMenuPlaceholder))]
 public class RadialMenuPlaceholderEditor : Editor
 {
@@ -63,3 +66,4 @@ public class RadialMenuPlaceholderEditor : Editor
     }
 
 }
+#endif
