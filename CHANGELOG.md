@@ -17,6 +17,7 @@
 - Fixed an issue of the Addressables configuration window not updating the value of a profile variable if such variable was defined but empty.
 - Fixed issue of `automaticSetup` and `isNetworking` fields of `InteractablePlaceholder` not being shown in the inspector.
 - Fixed the synced position of the synced object when player enter the environment.
+- Improved `InteractablePlaceholder`'s custom inspector.
 - Disabled CRC check option in Addressables groups.
 
 ## v3.0.0
