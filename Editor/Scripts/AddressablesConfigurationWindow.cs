@@ -488,12 +488,14 @@ namespace Reflectis.SDK.CreatorKitEditor
                     BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
 
                     configured &=
+                        bundledAssetGroupSchema.LoadPath.GetName(settings) == remote_load_path_variable_name &&
+                        bundledAssetGroupSchema.BuildPath.GetName(settings) == remote_build_path_variable_name &&
                         bundledAssetGroupSchema.Compression == BundledAssetGroupSchema.BundleCompressionMode.LZ4 &&
                         bundledAssetGroupSchema.IncludeInBuild == true &&
                         bundledAssetGroupSchema.ForceUniqueProvider == false &&
                         bundledAssetGroupSchema.UseAssetBundleCache == true &&
-                        bundledAssetGroupSchema.UseAssetBundleCrc == true &&
-                        bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles == true &&
+                        bundledAssetGroupSchema.UseAssetBundleCrc == false &&
+                        bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles == false &&
                         bundledAssetGroupSchema.UseUnityWebRequestForLocalBundles == false &&
                         bundledAssetGroupSchema.Timeout == 0 &&
                         bundledAssetGroupSchema.ChunkedTransfer == false &&
@@ -523,12 +525,14 @@ namespace Reflectis.SDK.CreatorKitEditor
                 {
                     BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
 
+                    bundledAssetGroupSchema.LoadPath.SetVariableByName(settings, remote_load_path_variable_name);
+                    bundledAssetGroupSchema.BuildPath.SetVariableByName(settings, remote_build_path_variable_name);
                     bundledAssetGroupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
                     bundledAssetGroupSchema.IncludeInBuild = true;
                     bundledAssetGroupSchema.ForceUniqueProvider = false;
                     bundledAssetGroupSchema.UseAssetBundleCache = true;
-                    bundledAssetGroupSchema.UseAssetBundleCrc = true;
-                    bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles = true;
+                    bundledAssetGroupSchema.UseAssetBundleCrc = false;
+                    bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles = false;
                     bundledAssetGroupSchema.UseUnityWebRequestForLocalBundles = false;
                     bundledAssetGroupSchema.Timeout = 0;
                     bundledAssetGroupSchema.ChunkedTransfer = false;

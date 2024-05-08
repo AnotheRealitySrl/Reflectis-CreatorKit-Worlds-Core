@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Synced Variables: On Variable Changed")]
+    [UnitTitle("Reflectis Synced Variables: On Synced Variable Changed")]
     [UnitSurtitle("Synced Variables")]
     [UnitShortTitle("On Synced Variable Changed")]
     [UnitCategory("Events\\Reflectis")]

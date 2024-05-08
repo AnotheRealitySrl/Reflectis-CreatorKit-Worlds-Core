@@ -4,15 +4,15 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Scene: On Setup")]
+    [UnitTitle("Reflectis Scene: On Load")]
     [UnitSurtitle("Scene")]
-    [UnitShortTitle("On Setup")]
+    [UnitShortTitle("On Load")]
     [UnitCategory("Events\\Reflectis")]
-    public class OnSceneSetupEventNode : AwaitableEventNode<string>
+    public class OnSceneLoadEventNode : AwaitableEventNode<string>
     {
-        public static string eventName = "OnSceneSetup";
+        public static string eventName = "OnSceneLoad";
 
-        public static Dictionary<GraphReference, List<OnSceneSetupEventNode>> instances = new Dictionary<GraphReference, List<OnSceneSetupEventNode>>();
+        public static Dictionary<GraphReference, List<OnSceneLoadEventNode>> instances = new Dictionary<GraphReference, List<OnSceneLoadEventNode>>();
 
         protected override bool register => true;
 
@@ -27,7 +27,7 @@ namespace Reflectis.SDK.CreatorKit
             }
             else
             {
-                List<OnSceneSetupEventNode> variableList = new List<OnSceneSetupEventNode>
+                List<OnSceneLoadEventNode> variableList = new List<OnSceneLoadEventNode>
                 {
                     this
                 };
