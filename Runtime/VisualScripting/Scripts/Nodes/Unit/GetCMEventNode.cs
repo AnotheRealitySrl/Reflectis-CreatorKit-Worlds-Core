@@ -1,5 +1,5 @@
-using Reflectis.SDK.ClientModels;
-using Reflectis.SDK.Core;
+
+using Reflectis.SDK.ApplicationManagement;
 using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
@@ -17,7 +17,7 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void Definition()
         {
-            CMEvent = ValueOutput(nameof(CMEvent), (f) => SM.GetSystem<IClientModelSystem>().CurrentEvent);
+            CMEvent = ValueOutput(nameof(CMEvent), (f) => IReflectisApplicationManager.Instance.CurrentEvent);
         }
     }
 }
