@@ -383,6 +383,8 @@ namespace Reflectis.SDK.CreatorKitEditor
         private bool IsAddressablesSettingsConfigured()
         {
             return
+                settings.RemoteCatalogLoadPath.GetName(settings) == remote_load_path_variable_name &&
+                settings.RemoteCatalogBuildPath.GetName(settings) == remote_build_path_variable_name &&
                 !settings.BundleLocalCatalog &&
                 settings.BuildRemoteCatalog &&
                 settings.CheckForContentUpdateRestrictionsOption
@@ -401,6 +403,8 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         private void ConfigureAddressablesSettings()
         {
+            settings.RemoteCatalogLoadPath.SetVariableByName(settings, remote_load_path_variable_name);
+            settings.RemoteCatalogBuildPath.SetVariableByName(settings, remote_build_path_variable_name);
             settings.BundleLocalCatalog = false;
             settings.BuildRemoteCatalog = true;
             settings.CheckForContentUpdateRestrictionsOption = CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions;
