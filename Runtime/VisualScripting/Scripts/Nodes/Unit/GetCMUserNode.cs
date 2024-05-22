@@ -1,4 +1,5 @@
-using Reflectis.SDK.ApplicationManagement;
+using Reflectis.SDK.ClientModels;
+using Reflectis.SDK.Core;
 using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
@@ -16,7 +17,7 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void Definition()
         {
-            CMUser = ValueOutput(nameof(CMUser), (f) => IReflectisApplicationManager.Instance.UserData);
+            CMUser = ValueOutput(nameof(CMUser), (f) => SM.GetSystem<IClientModelSystem>().UserData);
         }
     }
 }

@@ -1,5 +1,5 @@
-
-using Reflectis.SDK.ApplicationManagement;
+using Reflectis.SDK.ClientModels;
+using Reflectis.SDK.Core;
 using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
@@ -17,7 +17,7 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void Definition()
         {
-            CMEnvironment = ValueOutput(nameof(CMEnvironment), (f) => IReflectisApplicationManager.Instance.CurrentEvent.Environment);
+            CMEnvironment = ValueOutput(nameof(CMEnvironment), (f) => SM.GetSystem<IClientModelSystem>().CurrentEvent.Environment);
         }
     }
 }
