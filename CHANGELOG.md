@@ -1,5 +1,17 @@
 # Release notes
 
+## v3.1.2
+
+### Fixed
+
+- Added cache for placeholder types in `SceneComponentsMapper`, to improve loading times and avoid operation involving reflection when possible.
+
+## v3.1.1
+
+### Fixed
+
+- Fixed missing validity check of build and load paths in the top-level Addressables settings, which may result in catalogs being built in the wrong folder.
+
 ## v3.1.0
 
 ### Added
