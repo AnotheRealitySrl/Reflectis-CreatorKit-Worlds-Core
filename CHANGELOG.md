@@ -1,5 +1,11 @@
 # Release notes
 
+## v3.1.2
+
+### Fixed
+
+- Added cache for placeholder types in `SceneComponentsMapper`, to improve loading times and avoid operation involving reflection when possible.
+
 ## v3.1.1
 
 ### Fixed
