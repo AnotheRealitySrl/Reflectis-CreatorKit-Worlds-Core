@@ -45,10 +45,6 @@ public static class VisualScriptingSetupEditor
                 Debug.LogError("Found Null type!");
                 continue;
             }
-            if (type == null)
-            {
-                continue;
-            }
             if (!BoltCore.Configuration.typeOptions.Contains(type))
             {
                 if (type.Namespace != null && !BoltCore.Configuration.assemblyOptions.Exists(x => x.name == type.Namespace))
