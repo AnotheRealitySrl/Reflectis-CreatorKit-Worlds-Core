@@ -1,10 +1,17 @@
 # Release notes
 
+## v3.1.3
+
+### Added
+
+- Added localization logic to write and translate custom keys.
+
+### Fixed
+
 ## v3.1.2
 
 ### Fixed
 
-- Added localization logic to write and translate custom keys.
 - Added cache for placeholder types in `SceneComponentsMapper`, to improve loading times and avoid operation involving reflection when possible.
 
 ## v3.1.1
