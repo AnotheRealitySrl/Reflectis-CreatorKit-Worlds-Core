@@ -1,5 +1,15 @@
 # Release notes
 
+## v3.1.3
+
+### Added
+
+- Added localization logic to write and translate custom keys.
+
+### Fixed
+
+- Fixed the configuration of the scale of the environmental dashboard (now support also the collider the dashboard itself).
+
 ## v3.1.2
 
 ### Fixed

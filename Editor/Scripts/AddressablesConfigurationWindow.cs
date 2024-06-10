@@ -510,7 +510,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                         bundledAssetGroupSchema.IncludeLabelsInCatalog == true &&
                         bundledAssetGroupSchema.InternalIdNamingMode == BundledAssetGroupSchema.AssetNamingMode.FullPath &&
                         bundledAssetGroupSchema.InternalBundleIdMode == BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash &&
-                        bundledAssetGroupSchema.AssetBundledCacheClearBehavior == BundledAssetGroupSchema.CacheClearBehavior.ClearWhenSpaceIsNeededInCache &&
+                        bundledAssetGroupSchema.AssetBundledCacheClearBehavior == BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded &&
                         bundledAssetGroupSchema.BundleMode == (group.IsDefaultGroup()
                             ? BundledAssetGroupSchema.BundlePackingMode.PackTogether
                             : BundledAssetGroupSchema.BundlePackingMode.PackSeparately) &&
@@ -547,7 +547,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                     bundledAssetGroupSchema.IncludeLabelsInCatalog = true;
                     bundledAssetGroupSchema.InternalIdNamingMode = BundledAssetGroupSchema.AssetNamingMode.FullPath;
                     bundledAssetGroupSchema.InternalBundleIdMode = BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash;
-                    bundledAssetGroupSchema.AssetBundledCacheClearBehavior = BundledAssetGroupSchema.CacheClearBehavior.ClearWhenSpaceIsNeededInCache;
+                    bundledAssetGroupSchema.AssetBundledCacheClearBehavior = BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded;
                     bundledAssetGroupSchema.BundleMode = group.IsDefaultGroup()
                             ? BundledAssetGroupSchema.BundlePackingMode.PackTogether
                             : BundledAssetGroupSchema.BundlePackingMode.PackSeparately;
