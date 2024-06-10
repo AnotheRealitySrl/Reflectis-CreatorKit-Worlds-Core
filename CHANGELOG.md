@@ -8,6 +8,8 @@
 
 ### Fixed
 
+- Fixed the configuration of the scale of the environmental dashboard (now support also the collider the dashboard itself).
+
 ## v3.1.2
 
 ### Fixed
