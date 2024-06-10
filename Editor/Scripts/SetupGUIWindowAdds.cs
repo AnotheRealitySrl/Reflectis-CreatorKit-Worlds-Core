@@ -1,3 +1,4 @@
+#if SETUP_WINDOW_INSTALLED
 using Reflectis.SetupEditor;
 using UnityEditor;
 using UnityEngine;
@@ -35,3 +36,4 @@ namespace Reflectis.SDK.CreatorKitEditor
         }
     }
 }
+#endif

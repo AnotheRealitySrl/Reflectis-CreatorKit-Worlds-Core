@@ -24,6 +24,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.anotherealitysrl.reflectis-setup",
+            "expression": "0.0.0",
+            "define": "SETUP_WINDOW_INSTALLED"
+        }
+    ],
     "noEngineReferences": false
 }
