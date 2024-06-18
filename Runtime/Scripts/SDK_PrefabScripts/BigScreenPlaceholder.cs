@@ -3,6 +3,7 @@ using Reflectis.SDK.CreatorKit;
 using Reflectis.SDK.Utilities;
 
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
 {
@@ -76,6 +77,9 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
     public FileTypeExt MediaType => mediaType;
     public string DefaultUrl => defaultUrl;
     public bool IsLocked => isLocked;
+
+    public UnityEvent onVideoPaused = default; //trigger soemthing when the video gets paused
+    public UnityEvent onVideoPlayed = default; //trigger something when the video is set to play
 
 
     public void OnWidthChanged()
