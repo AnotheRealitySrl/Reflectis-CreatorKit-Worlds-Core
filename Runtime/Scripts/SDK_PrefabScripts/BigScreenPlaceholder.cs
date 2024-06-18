@@ -45,7 +45,6 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
     [OnChangedCall(nameof(OnPanTransformChanged))]
     private float cameraPanDistance = 1f;
 
-
     [Header("Use this section to load a default media on this screen during startup.")]
 
     [SerializeField, Tooltip("If this flag is set, a default media is loaded in the big screen.")]
@@ -64,6 +63,9 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
     [SerializeField, Tooltip("If set to true, it won't be possible to change the media on this screen.")]
     [DrawIf(nameof(defaultMedia), true)]
     private bool isLocked;
+
+    [SerializeField, Tooltip("Whether or not the video should play when spawned")]
+    public bool startPaused = false;
 
 
     public Transform ScreenTransform => screenTransform;
