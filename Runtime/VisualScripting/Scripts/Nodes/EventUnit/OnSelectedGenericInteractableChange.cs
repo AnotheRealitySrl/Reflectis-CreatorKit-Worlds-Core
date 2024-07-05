@@ -45,7 +45,8 @@ namespace Reflectis.SDK.CreatorKit
 
         private void OnSelectedChange(GenericInteractable newSelection)
         {
-            Trigger(graphReference, newSelection);
+            interactableReference = newSelection;
+            Trigger(graphReference, interactableReference);
         }
     }
 }
