@@ -1,5 +1,12 @@
 # Release notes
 
+## Unreleased
+
+### Added
+
+- Added `OnSelectedGenericInteractableChangeNode` that will be triggered whenever the current selected generic interactable changes, and its argument is a reference to the new selected item. The event is also fired when the user clicks on an empty area, in which case the reference is null.
+- Added `SetFirstPersonCameraModeNode` and `SetThirdPersonCameraModeNode`. They can be used to switch the character controller to first person or third person view respectively. Note that when entering a Reflectis event the view will be reset to third person mode.
+
 ## v3.1.3
 
 ### Added
