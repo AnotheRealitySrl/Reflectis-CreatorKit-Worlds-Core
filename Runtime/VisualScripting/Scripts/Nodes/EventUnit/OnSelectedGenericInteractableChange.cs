@@ -43,6 +43,13 @@ namespace Reflectis.SDK.CreatorKit
             return new EventHook("GenericInteractable" + this.ToString().Split("EventUnit")[0]);
         }
 
+        public override void Uninstantiate(GraphReference instance)
+        {
+            base.Uninstantiate(instance);
+            
+            SM.GetSystem<IGenericInteractionSystem>().OnSelectedInteractableChange.RemoveListener(OnSelectedChange);
+        }
+
         private void OnSelectedChange(GenericInteractable newSelection)
         {
             interactableReference = newSelection;
