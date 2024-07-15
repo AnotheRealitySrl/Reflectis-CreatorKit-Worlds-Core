@@ -1,5 +1,13 @@
 # Release notes
 
+## v3.2.0
+
+### Added
+
+- Added `startPaused` variable to `BigScreenPlaceholder` to switch off autoplay on start.
+- Added `onVideoPlayed` and `onVideoPaused` callbacks in `BigScreenPlaceholder`.
+- Added `OnVideoPlayedEventUnit` and `OnVideoPausedEventUnit` scripts to provide callbacks for video player play/pause events when triggered by visual scripting.
+
 ## v3.1.3
 
 ### Added
