@@ -3,6 +3,7 @@ using Reflectis.SDK.CreatorKit;
 using Reflectis.SDK.Utilities;
 
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
 {
@@ -45,7 +46,6 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
     [OnChangedCall(nameof(OnPanTransformChanged))]
     private float cameraPanDistance = 1f;
 
-
     [Header("Use this section to load a default media on this screen during startup.")]
 
     [SerializeField, Tooltip("If this flag is set, a default media is loaded in the big screen.")]
@@ -65,6 +65,9 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
     [DrawIf(nameof(defaultMedia), true)]
     private bool isLocked;
 
+    [SerializeField, Tooltip("Whether or not the video should play when spawned")]
+    public bool startPaused = false;
+
 
     public Transform ScreenTransform => screenTransform;
     public Transform ContentTransform => contentTransform;
@@ -74,6 +77,9 @@ public class BigScreenPlaceholder : SceneComponentPlaceholderNetwork
     public FileTypeExt MediaType => mediaType;
     public string DefaultUrl => defaultUrl;
     public bool IsLocked => isLocked;
+
+    public UnityEvent onVideoPaused = default; //trigger soemthing when the video gets paused
+    public UnityEvent onVideoPlayed = default; //trigger something when the video is set to play
 
 
     public void OnWidthChanged()
