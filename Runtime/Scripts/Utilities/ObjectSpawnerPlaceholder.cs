@@ -1,4 +1,3 @@
-using Reflectis.SDK.ObjectSpawner;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,7 +6,7 @@ namespace Reflectis.SDK.CreatorKit
     public class ObjectSpawnerPlaceholder : SceneComponentPlaceholderBase
     {
         [SerializeField]
-        private SpawnableData spawnableData;
+        private GameObject prefab;
         [SerializeField]
         private InputActionReference vrInput;
         [SerializeField]
@@ -15,6 +14,7 @@ namespace Reflectis.SDK.CreatorKit
 
         public InputActionReference VrInput { get => vrInput; }
         public InputActionReference DesktopInput { get => desktopInput; }
-        public SpawnableData Data { get => spawnableData; }
+
+        public GameObject Prefab;
     }
 }

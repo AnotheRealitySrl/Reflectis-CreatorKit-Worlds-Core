@@ -1,12 +1,11 @@
-using Reflectis.SDK.ObjectSpawner;
 using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
     public class HelpSpawnObjectPlaceholder : SceneComponentPlaceholderBase
     {
-        [SerializeField] private SpawnableData spawnableData;
+        [SerializeField] private GameObject prefab;
 
-        public SpawnableData SpawnableData { get => spawnableData; }
+        public GameObject Prefab { get => prefab; }
     }
 }
