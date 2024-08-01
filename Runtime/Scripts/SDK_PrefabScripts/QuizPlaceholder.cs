@@ -2,12 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
-using Reflectis.SDK.ClientModels;
-using Reflectis.SDK.CreatorKit;
 using Reflectis.SDK.Utilities;
-
-using UnityEngine.Events;
 
 namespace Reflectis.SDK.CreatorKit
 {
@@ -88,6 +83,14 @@ namespace Reflectis.SDK.CreatorKit
         [Header("Quiz details")]
         [SerializeField] string titleLabel = string.Empty;
         [SerializeField] string descriptionLabel = string.Empty;
+
+        [SerializeField] bool allowMultipleAnswers = true;
+        [DrawIf(nameof(allowMultipleAnswers), true)]
+        [Min(0)]
+        [SerializeField] int maxAnswers = 100;
+        
+        [Space]
+
         [SerializeField] EQuizLayout quizLayout = EQuizLayout.Horizontal;
         [SerializeField] EQuizElementLayout quizElementLayout = EQuizElementLayout.Line;
         [SerializeField] ScriptMachine quizEventsScriptMachine;
@@ -99,10 +102,15 @@ namespace Reflectis.SDK.CreatorKit
         public Transform CameraPanTransform => cameraPanTransform;
         public string TitleLabel => titleLabel;
         public string DescriptionLabel => descriptionLabel;
+        public bool AllowMultipleAnswers => allowMultipleAnswers;
         public EQuizLayout QuizLayout => quizLayout;
         public EQuizElementLayout QuizElementLayout => quizElementLayout;
         public ScriptMachine QuizEventsScriptMachine => quizEventsScriptMachine;
         public List<QuizAnswer> QuizAnswers => quizAnswers;
+
+        // MaxAnswers: if multiple answers are not allowed, automatically reduce to 1.
+        // In every case, MaxAnswers can't be negative.
+        public int MaxAnswers => AllowMultipleAnswers ? Mathf.Max(maxAnswers, 0) : 1;
 
         public void OnWidthChanged()
         {
