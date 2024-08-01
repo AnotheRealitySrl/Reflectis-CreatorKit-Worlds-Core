@@ -323,7 +323,7 @@ TextMesh:
   m_CharacterSize: 0.1
   m_LineSpacing: 1
   m_Anchor: 4
-  m_Alignment: 0
+  m_Alignment: 1
   m_TabSize: 4
   m_FontSize: 0
   m_FontStyle: 0
