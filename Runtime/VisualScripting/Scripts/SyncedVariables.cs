@@ -54,7 +54,7 @@ namespace Reflectis.SDK.CreatorKit
                         data.declaration = declarations.GetDeclaration(data.name);
                     }
                     object value = data.Value;
-                    variableDictBackup.Add(data.name, value);
+                    //variableDictBackup.Add(data.name, value);
                     //variableDictLock.Add(data.name, -1);
                 }
             }

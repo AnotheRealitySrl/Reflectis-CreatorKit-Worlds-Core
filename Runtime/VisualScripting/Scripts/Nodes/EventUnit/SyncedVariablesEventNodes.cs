@@ -89,7 +89,10 @@ namespace Reflectis.SDK.CreatorKit
                     if (data.declaration == null)
                         return false;
                     else
+                    {
                         return true;
+                    }
+                        
                 }
             }
             return false;
