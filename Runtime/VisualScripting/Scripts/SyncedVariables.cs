@@ -16,11 +16,24 @@ namespace Reflectis.SDK.CreatorKit
             public byte id;
             public string name;
             public bool saveThroughSessions;
+            /// <summary>
+            /// Keeps track of wheter or not the value has been changed on the network
+            /// if the variable is not synced it is always false
+            /// </summary>
             public bool hasChanged = false;
-
+            /// <summary>
+            /// The value of the variable used to check if the variables in VS are changed
+            /// it is used to check if we have to invoke event nodes
+            /// </summary>
+            public object previousValue;
+            /// <summary>
+            /// Whter or not the variable is sinchronized on network
+            /// </summary>
             [HideInInspector]
             public bool isSynced;
-
+            /// <summary>
+            /// The VS related variable
+            /// </summary>
             public VariableDeclaration declaration { get; set; }
 
             public object DeclarationValue
@@ -30,34 +43,33 @@ namespace Reflectis.SDK.CreatorKit
                     return declaration.value;
                 }
             }
+
+            public bool AreValuesSynced { get  { return previousValue.Equals(DeclarationValue); } }
+
+            public void SyncValues()
+            {
+                previousValue = DeclarationValue;
+                // if the synced variable is not synced we do not update the sync change state in the dictionary
+                hasChanged = isSynced;
+            }
         }
 
         public List<Data> variableSettings = new List<Data>();
-        public Dictionary<string, (bool, object)> variableDictBackup = new Dictionary<string, (bool,object)>();
-        public Dictionary<string, object> variableDictBackupJson = new Dictionary<string, object>();
         //public Dictionary<string, int> variableDictLock = new Dictionary<string, int>();
-
-        private void Awake()
-        {
-            VariableSet();
-        }
 
         public void VariableSet()
         {
-            if (variableDictBackup.Count != variableSettings.Count)
+            Debug.LogError("SetVariable");
+            foreach (Data data in variableSettings)
             {
-                foreach (Data data in variableSettings)
+                if (data.declaration == null)
                 {
-                    if (data.declaration == null)
-                    {
-                        var declarations = GetComponentInChildren<Variables>(true).declarations;
-                        data.declaration = declarations.GetDeclaration(data.name);
-                    }
-                    object value = data.DeclarationValue;
-                    //variableDictBackup.Add(data.name, value);
-                    //variableDictLock.Add(data.name, -1);
+                    var declarations = GetComponentInChildren<Variables>(true).declarations;
+                    data.declaration = declarations.GetDeclaration(data.name);
                 }
+                data.previousValue = data.DeclarationValue;
             }
         }
+                 
     }
 }
