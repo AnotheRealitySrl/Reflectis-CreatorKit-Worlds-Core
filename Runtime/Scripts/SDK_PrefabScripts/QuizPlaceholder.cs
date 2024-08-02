@@ -80,6 +80,7 @@ namespace Reflectis.SDK.CreatorKit
         private const string QUIZ_SIZE_FORMAT = "W: <b>{0}</b> - H: <b>{1}</b>";
         private const string QUIZ_LAYOUT_FORMAT = "Layout: <b>{0}</b> with <b>{1}</b> answers";
         private const string QUIZ_MAXANSWERS_FORMAT = "Max Answer items: <b>{0}{1}</b> out of <b>{2}</b>";
+        private const string QUIZ_MAXSELECTIONS_FORMAT = "Max Selections: <b>{0}</b>";
 
         [HelpBox("Do not change the value of \"IsNetworked\" field", HelpBoxMessageType.Warning)]
 
@@ -124,6 +125,10 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField]
         private TextMesh quizMaxAnswersTextMesh;
 
+        [DrawIf(nameof(showReferences), true)]
+        [SerializeField]
+        private TextMesh quizMaxSelectionsTextMesh;
+
         #endregion
 
         #region Quiz Panel Size
@@ -167,11 +172,13 @@ namespace Reflectis.SDK.CreatorKit
         [Space]
 
         [SerializeField]
+        [OnChangedCall(nameof(OnMaxSelectableAnswersChanged))]
         private bool allowMultipleSelection = true;
 
         [DrawIf(nameof(allowMultipleSelection), true)]
         [Min(0)]
         [SerializeField]
+        [OnChangedCall(nameof(OnMaxSelectableAnswersChanged))]
         private int maxSelectableAnswers = 100;
 
         [Space]
@@ -362,6 +369,7 @@ namespace Reflectis.SDK.CreatorKit
         public void OnTitleChanged() => UpdateTitleText();
         public void OnLayoutChanged() => UpdateLayoutText();
         public void OnAnswersChanged() => UpdateAnswersText();
+        public void OnMaxSelectableAnswersChanged() => UpdateMaxSelectionsText();
 
         private void UpdateSizeText()
         {
@@ -411,6 +419,20 @@ namespace Reflectis.SDK.CreatorKit
                     quizMaxAnswersTextMesh.text = newVal;
 #if UNITY_EDITOR
                     EditorUtility.SetDirty(quizMaxAnswersTextMesh);
+#endif
+                }
+            }
+        }
+        private void UpdateMaxSelectionsText()
+        {
+            if (quizMaxSelectionsTextMesh != null)
+            {
+                var newVal = string.Format(QUIZ_MAXSELECTIONS_FORMAT, MaxSelectableAnswers);
+                if (quizMaxSelectionsTextMesh.text != newVal)
+                {
+                    quizMaxSelectionsTextMesh.text = newVal;
+#if UNITY_EDITOR
+                    EditorUtility.SetDirty(quizMaxSelectionsTextMesh);
 #endif
                 }
             }
