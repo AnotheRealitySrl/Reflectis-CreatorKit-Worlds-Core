@@ -24,6 +24,7 @@ MonoBehaviour:
   - UnityEngine.WWWForm
   - System.DateTime
   - System.TimeSpan
+  - UnityEngine.Animations.ConstraintSource
   - UnityEngine.Splines.Spline
   - UnityEngine.Splines.SplineComponent
   - UnityEngine.Splines.SplineContainer
