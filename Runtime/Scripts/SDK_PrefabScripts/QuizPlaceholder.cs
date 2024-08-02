@@ -4,6 +4,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Reflectis.SDK.Utilities;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace Reflectis.SDK.CreatorKit
 {
     public enum EQuizLayout
@@ -52,6 +56,10 @@ namespace Reflectis.SDK.CreatorKit
 
     public class QuizPlaceholder : SceneComponentPlaceholderNetwork
     {
+        private const string QUIZ_SIZE_FORMAT = "W: <b>{0}</b> - H: <b>{1}</b>";
+        private const string QUIZ_LAYOUT_FORMAT = "Layout: <b>{0}</b> with <b>{1}</b> answers";
+        private const string QUIZ_MAXANSWERS_FORMAT = "Max Answer items: <b>{0}{1}</b> out of <b>{2}</b>";
+
         [HelpBox("Do not change the value of \"IsNetworked\" field", HelpBoxMessageType.Warning)]
 
         #region Quiz Placeholder References
@@ -77,6 +85,24 @@ namespace Reflectis.SDK.CreatorKit
             "Do not change its local position, it will be automatically updated by using the panel settings.")]
         private Transform cameraPanTransform;
 
+        [Header("Placeholder Info Text Fields")]
+
+        [DrawIf(nameof(showReferences), true)]
+        [SerializeField]
+        private TextMesh quizTitleTextMesh;
+
+        [DrawIf(nameof(showReferences), true)]
+        [SerializeField]
+        private TextMesh quizSizeTextMesh;
+
+        [DrawIf(nameof(showReferences), true)]
+        [SerializeField]
+        private TextMesh quizLayoutTextMesh;
+
+        [DrawIf(nameof(showReferences), true)]
+        [SerializeField]
+        private TextMesh quizMaxAnswersTextMesh;
+
         #endregion
 
         #region Quiz Panel Size
@@ -93,6 +119,9 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField, /*Range(0.5f, 10),*/ Tooltip("The height of the panel.")]
         [OnChangedCall(nameof(OnHeightChanged))]
         private float panelHeight = 1f;
+
+        [SerializeField]
+        private bool panelLockRatio = false;
 
         [SerializeField/*, Range(0.5f, 10)*/, Tooltip("The distance of the transform to which the camera pans (WebGL only).")]
         [OnChangedCall(nameof(OnPanTransformChanged))]
@@ -121,24 +150,29 @@ namespace Reflectis.SDK.CreatorKit
         [Space]
 
         [SerializeField]
+        [OnChangedCall(nameof(OnAnswersChanged))]
         private bool shuffleAnswers = false;
 
         [DrawIf(nameof(shuffleAnswers), true)]
         [SerializeField]
+        [OnChangedCall(nameof(OnAnswersChanged))]
         private bool pickSubset = false;
 
         [DrawIf(nameof(shuffleAnswers), true)]
         [DrawIf(nameof(pickSubset), true)]
         [Min(1)]
         [SerializeField]
+        [OnChangedCall(nameof(OnAnswersChanged))]
         private int answersSubsetQuantity = 100;
 
         [Space]
 
         [SerializeField]
+        [OnChangedCall(nameof(OnLayoutChanged))]
         private EQuizLayout quizLayout = EQuizLayout.Horizontal;
 
         [SerializeField]
+        [OnChangedCall(nameof(OnLayoutChanged))]
         private EQuizElementLayout quizElementLayout = EQuizElementLayout.Line;
 
         [SerializeField]
@@ -157,8 +191,7 @@ namespace Reflectis.SDK.CreatorKit
         public string DescriptionLabel => descriptionLabel.Trim(); // Removes white spaces at start and end of the string.
         public bool AllowMultipleSelection => allowMultipleSelection;
         public bool ShuffleAnswers => shuffleAnswers;
-        public bool PickSubset => pickSubset;
-        public int AnswersSubsetQuantity => answersSubsetQuantity;
+        public bool PickSubset => ShuffleAnswers ? pickSubset : false;
         public EQuizLayout QuizLayout => quizLayout;
         public EQuizElementLayout QuizElementLayout => quizElementLayout;
         public ScriptMachine QuizEventsScriptMachine => quizEventsScriptMachine;
@@ -166,36 +199,165 @@ namespace Reflectis.SDK.CreatorKit
 
         // MaxAnswers: if multiple answers are not allowed, automatically reduce to 1.
         // In every case, MaxAnswers can't be negative.
-        public int MaxSelectableAnswers => AllowMultipleSelection ? Mathf.Max(maxSelectableAnswers, 0) : 1;
+        public int MaxSelectableAnswers => AllowMultipleSelection ? Mathf.Clamp(maxSelectableAnswers, 0, QuizAnswers.Count) : 1;
 
+        // AnswersSubsetQuantity
+        // In every case, AnswersSubsetQuantity can't be negative.
+        public int AnswersSubsetQuantity => PickSubset ? Mathf.Clamp(answersSubsetQuantity, 0, QuizAnswers.Count) : QuizAnswers.Count;
+
+        private float lastWidth = -1f;
+        private float lastHeight = -1f;
+        private float lastAspectRatio = -1f;
+
+        private void Awake()
+        {
+            if (panelLockRatio)
+            {
+                lastWidth = panelWidth;
+                lastHeight = panelHeight;
+            }
+        }
+
+        private void UpdateAspectRatio()
+        {
+            // Recalculate the ratio only if not locked.
+            if (!panelLockRatio)
+            {
+                if (lastHeight != 0f)
+                {
+                    lastAspectRatio = lastWidth / lastHeight;
+                }
+                else
+                {
+                    lastAspectRatio = 0f;
+                }
+            }
+        }
         public void OnWidthChanged()
         {
-            panelTransform.localScale = new Vector3(panelWidth, panelTransform.localScale.y, panelTransform.localScale.z);
-        }
+            if (lastWidth != panelWidth)
+            {
+                lastWidth = panelWidth;
 
+                panelTransform.localScale = new Vector3(panelWidth, panelTransform.localScale.y, panelTransform.localScale.z);
+
+                if (panelLockRatio)
+                {
+                    panelHeight = panelWidth / lastAspectRatio;
+                    OnHeightChanged();
+                }
+                else
+                {
+                    UpdateSizeText();
+                    UpdateAspectRatio();
+                }
+            }
+        }
         public void OnHeightChanged()
         {
-            panelTransform.localScale = new Vector3(panelTransform.localScale.x, panelHeight, panelTransform.localScale.z);
-        }
+            if (lastHeight != panelHeight)
+            {
+                lastHeight = panelHeight;
 
+                panelTransform.localScale = new Vector3(panelTransform.localScale.x, panelHeight, panelTransform.localScale.z);
+
+                if (panelLockRatio)
+                {
+                    panelWidth = panelHeight * lastAspectRatio;
+                    OnWidthChanged();
+                }
+                else
+                {
+                    UpdateSizeText();
+                    UpdateAspectRatio();
+                }
+            }
+        }
         public void OnPanTransformChanged()
         {
             cameraPanTransform.localPosition = new Vector3(cameraPanTransform.localPosition.x, cameraPanTransform.localPosition.y, -cameraPanDistance);
         }
 
+        public void OnTitleChanged() => UpdateTitleText();
+        public void OnLayoutChanged() => UpdateLayoutText();
+        public void OnAnswersChanged() => UpdateAnswersText();
+
+        private void UpdateSizeText()
+        {
+            if (quizSizeTextMesh != null)
+            {
+                var newVal = string.Format(QUIZ_SIZE_FORMAT, panelWidth, panelHeight);
+                if (quizSizeTextMesh.text != newVal)
+                {
+                    quizSizeTextMesh.text = string.Format(QUIZ_SIZE_FORMAT, panelWidth, panelHeight);
 #if UNITY_EDITOR
-        TextMesh placeholderLabelEditor;
+                    EditorUtility.SetDirty(quizSizeTextMesh);
+#endif
+                }
+            }
+        }
+        private void UpdateTitleText()
+        {
+            if (quizTitleTextMesh != null && quizTitleTextMesh.text != TitleLabel)
+            {
+                quizTitleTextMesh.text = TitleLabel;
+#if UNITY_EDITOR
+                EditorUtility.SetDirty(quizTitleTextMesh);
+#endif
+            }
+        }
+        private void UpdateLayoutText()
+        {
+            if (quizLayoutTextMesh != null)
+            {
+                var newVal = string.Format(QUIZ_LAYOUT_FORMAT, QuizLayout, QuizElementLayout);
+                if (quizLayoutTextMesh.text != newVal)
+                {
+                    quizLayoutTextMesh.text = newVal;
+#if UNITY_EDITOR
+                    EditorUtility.SetDirty(quizLayoutTextMesh);
+#endif
+                }
+            }
+        }
+        private void UpdateAnswersText()
+        {
+            if (quizMaxAnswersTextMesh != null)
+            {
+                var newVal = string.Format(QUIZ_MAXANSWERS_FORMAT, AnswersSubsetQuantity, (ShuffleAnswers ? " shuffled" : string.Empty), QuizAnswers.Count);
+                if (quizMaxAnswersTextMesh.text != newVal)
+                {
+                    quizMaxAnswersTextMesh.text = newVal;
+#if UNITY_EDITOR
+                    EditorUtility.SetDirty(quizMaxAnswersTextMesh);
+#endif
+                }
+            }
+        }
+
+        [ContextMenu("Update all Texts!")]
+        private void UpdateAllTexts()
+        {
+            UpdateSizeText();
+            UpdateTitleText();
+            UpdateLayoutText();
+            UpdateAnswersText();
+        }
+
+#if UNITY_EDITOR
+        int lastAnswersCount = 0;
         private void OnValidate()
         {
-            if (placeholderLabelEditor == null)
-            {
-                placeholderLabelEditor = GetComponentInChildren<TextMesh>();
-            }
+            // Title TextArea and Answers List can't be managed with "OnChangedCall" attribute.
 
-            // Setting quiz info on each quiz placeholder text.
-            if (placeholderLabelEditor != null)
+            // Title
+            UpdateTitleText();
+
+            // Answers
+            if (lastAnswersCount != QuizAnswers.Count)
             {
-                placeholderLabelEditor.text = TitleLabel;
+                lastAnswersCount = QuizAnswers.Count;
+                UpdateAnswersText();
             }
         }
 #endif
