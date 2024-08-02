@@ -104,7 +104,7 @@ namespace Reflectis.SDK.CreatorKit
             {
                 if (data.name == args.Item2)
                 {
-                    flow.SetValue(Value, data.Value);
+                    flow.SetValue(Value, data.DeclarationValue);
                     break;
                 }
             }

@@ -23,7 +23,7 @@ namespace Reflectis.SDK.CreatorKit
 
             public VariableDeclaration declaration { get; set; }
 
-            public object Value
+            public object DeclarationValue
             {
                 get
                 {
@@ -50,10 +50,10 @@ namespace Reflectis.SDK.CreatorKit
                 {
                     if (data.declaration == null)
                     {
-                        var declarations = GetComponent<Variables>().declarations;
+                        var declarations = GetComponentInChildren<Variables>(true).declarations;
                         data.declaration = declarations.GetDeclaration(data.name);
                     }
-                    object value = data.Value;
+                    object value = data.DeclarationValue;
                     //variableDictBackup.Add(data.name, value);
                     //variableDictLock.Add(data.name, -1);
                 }
