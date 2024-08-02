@@ -19,10 +19,13 @@ namespace Reflectis.SDK.CreatorKit
     public enum EQuizSizeRatio
     {
         Free = 0,
-        _1_1 = 1,
-        _4_3 = 2,
-        _16_9 = 3,
-        _16_10 = 4
+        Square_1_1 = 1,
+        Landscape_4_3 = 2,
+        Landscape_16_9 = 3,
+        Landscape_16_10 = 4,
+        Portrait_3_4 = 20,
+        Portrait_9_16 = 21,
+        Portrait_10_16 = 22
     }
     public enum EQuizElementLayout
     {
@@ -40,17 +43,26 @@ namespace Reflectis.SDK.CreatorKit
         private Sprite image = null;
 
         [SerializeField]
-        private float score = 0;
+        private bool correctAnswer = false;
+
+        [SerializeField]
+        private float scoreIfGood = 1f;
+
+        [SerializeField]
+        private float scoreIfBad = 0f;
 
         [SerializeField, TextArea]
         private string feedbackLabel = string.Empty;
 
         public string TitleLabel => titleLabel.Trim();  // Removes white spaces at start and end of the string.
         public Sprite Image => image;
-        public float Score => score;
+        public bool CorrectAnswer => correctAnswer;
+        public float ScoreIfGood => scoreIfGood;
+        public float ScoreIfBad => scoreIfBad;
         public string FeedbackLabel => feedbackLabel.Trim();  // Removes white spaces at start and end of the string.
 
         public bool IsSelected { get; private set; }
+        public float CurrentScore => IsSelected == correctAnswer ? ScoreIfGood : ScoreIfBad;
 
         public void Select()
         {
@@ -93,7 +105,7 @@ namespace Reflectis.SDK.CreatorKit
             "Do not change its local position, it will be automatically updated by using the panel settings.")]
         private Transform cameraPanTransform;
 
-        [Header("Placeholder Info Text Fields")]
+        [Space]
 
         [DrawIf(nameof(showReferences), true)]
         [SerializeField]
@@ -253,18 +265,30 @@ namespace Reflectis.SDK.CreatorKit
 
                 switch (lastSizeRatio)
                 {
-                    case EQuizSizeRatio._1_1:
+                    case EQuizSizeRatio.Square_1_1:
                         lastAspectRatio = 1f;
                         break;
-                    case EQuizSizeRatio._4_3:
+
+                    case EQuizSizeRatio.Landscape_4_3:
                         lastAspectRatio = 4f / 3f;
                         break;
-                    case EQuizSizeRatio._16_9:
+                    case EQuizSizeRatio.Landscape_16_9:
                         lastAspectRatio = 16f / 9f;
                         break;
-                    case EQuizSizeRatio._16_10:
+                    case EQuizSizeRatio.Landscape_16_10:
                         lastAspectRatio = 16f / 10f;
                         break;
+
+                    case EQuizSizeRatio.Portrait_3_4:
+                        lastAspectRatio = 3f / 4f;
+                        break;
+                    case EQuizSizeRatio.Portrait_9_16:
+                        lastAspectRatio = 9f / 16f;
+                        break;
+                    case EQuizSizeRatio.Portrait_10_16:
+                        lastAspectRatio = 10f / 16f;
+                        break;
+
                     default:
                         break;
                 }
