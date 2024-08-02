@@ -16,6 +16,14 @@ namespace Reflectis.SDK.CreatorKit
         Vertical = 1,
         Grid = 2
     }
+    public enum EQuizSizeRatio
+    {
+        Free = 0,
+        _1_1 = 1,
+        _4_3 = 2,
+        _16_9 = 3,
+        _16_10 = 4
+    }
     public enum EQuizElementLayout
     {
         Line = 0,
@@ -121,7 +129,13 @@ namespace Reflectis.SDK.CreatorKit
         private float panelHeight = 1f;
 
         [SerializeField]
+        [OnChangedCall(nameof(OnPanelLockRatioChanged))]
         private bool panelLockRatio = false;
+
+        [SerializeField]
+        [DrawIf(nameof(panelLockRatio), true)]
+        [OnChangedCall(nameof(OnPanelSizeRatioChanged))]
+        private EQuizSizeRatio panelSizeRatio = EQuizSizeRatio.Free;
 
         [SerializeField/*, Range(0.5f, 10)*/, Tooltip("The distance of the transform to which the camera pans (WebGL only).")]
         [OnChangedCall(nameof(OnPanTransformChanged))]
@@ -208,6 +222,7 @@ namespace Reflectis.SDK.CreatorKit
         private float lastWidth = -1f;
         private float lastHeight = -1f;
         private float lastAspectRatio = -1f;
+        private EQuizSizeRatio lastSizeRatio = EQuizSizeRatio.Free;
 
         private void Awake()
         {
@@ -230,6 +245,28 @@ namespace Reflectis.SDK.CreatorKit
                 else
                 {
                     lastAspectRatio = 0f;
+                }
+            }
+            else if (lastSizeRatio != panelSizeRatio)
+            {
+                lastSizeRatio = panelSizeRatio;
+
+                switch (lastSizeRatio)
+                {
+                    case EQuizSizeRatio._1_1:
+                        lastAspectRatio = 1f;
+                        break;
+                    case EQuizSizeRatio._4_3:
+                        lastAspectRatio = 4f / 3f;
+                        break;
+                    case EQuizSizeRatio._16_9:
+                        lastAspectRatio = 16f / 9f;
+                        break;
+                    case EQuizSizeRatio._16_10:
+                        lastAspectRatio = 16f / 10f;
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -271,6 +308,25 @@ namespace Reflectis.SDK.CreatorKit
                     UpdateSizeText();
                     UpdateAspectRatio();
                 }
+            }
+        }
+        public void OnPanelLockRatioChanged()
+        {
+            if (!panelLockRatio)
+            {
+                panelSizeRatio = EQuizSizeRatio.Free;
+                lastSizeRatio = panelSizeRatio;
+            }
+        }
+        public void OnPanelSizeRatioChanged()
+        {
+            if (panelLockRatio && panelSizeRatio != EQuizSizeRatio.Free)
+            {
+                UpdateAspectRatio();
+
+                // Keep width to change height.
+                panelHeight = panelWidth / lastAspectRatio;
+                OnHeightChanged();
             }
         }
         public void OnPanTransformChanged()
