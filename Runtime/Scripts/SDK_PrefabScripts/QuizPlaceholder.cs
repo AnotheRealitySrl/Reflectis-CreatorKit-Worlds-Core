@@ -62,7 +62,8 @@ namespace Reflectis.SDK.CreatorKit
         public string FeedbackLabel => feedbackLabel.Trim();  // Removes white spaces at start and end of the string.
 
         public bool IsSelected { get; private set; }
-        public float CurrentScore => IsSelected == correctAnswer ? ScoreIfGood : ScoreIfBad;
+        public bool IsCorrectSelection => IsSelected == correctAnswer;
+        public float CurrentScore => IsCorrectSelection ? ScoreIfGood : ScoreIfBad;
 
         public void Select()
         {
