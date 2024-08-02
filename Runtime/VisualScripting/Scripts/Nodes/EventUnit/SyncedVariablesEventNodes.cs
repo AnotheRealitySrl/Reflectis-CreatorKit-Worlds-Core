@@ -78,7 +78,7 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override bool ShouldTrigger(Flow flow, (SyncedVariables, string) args)
         {
-            if (flow.GetValue<string>(VariableName) != args.Item2) { Debug.LogError("STOP BEACAUSE OF NAME " + args.Item2); return false; }
+            if (flow.GetValue<string>(VariableName) != args.Item2) { Debug.LogError("STOP BEACAUSE OF NAME " + args.Item2 + " | " + flow.GetValue<string>(VariableName));); return false; }
 
 
             if (flow.GetValue<SyncedVariables>(SyncedVariablesRef) == args.Item1 && flow.GetValue<string>(VariableName) == args.Item2 && args.Item1.variableSettings.Count != 0)
