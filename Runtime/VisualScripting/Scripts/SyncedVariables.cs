@@ -44,7 +44,7 @@ namespace Reflectis.SDK.CreatorKit
                 }
             }
 
-            public bool AreValuesSynced { get  { return previousValue.Equals(DeclarationValue); } }
+            public bool AreValuesSynced { get { return previousValue.Equals(DeclarationValue); } }
 
             public void SyncValues()
             {
@@ -59,7 +59,6 @@ namespace Reflectis.SDK.CreatorKit
 
         public void VariableSet()
         {
-            Debug.LogError("SetVariable");
             foreach (Data data in variableSettings)
             {
                 if (data.declaration == null)
@@ -70,6 +69,6 @@ namespace Reflectis.SDK.CreatorKit
                 data.previousValue = data.DeclarationValue;
             }
         }
-                 
+
     }
 }
