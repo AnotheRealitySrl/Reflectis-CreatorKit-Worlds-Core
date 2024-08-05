@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
@@ -12,7 +10,6 @@ namespace Reflectis.SDK.CreatorKit
     {
         public static string eventName = "SyncedVariablesOnVariableChangedInit";
 
-        public static Dictionary<GraphReference, List<OnSyncedVariableInitEventUnit>> instances = new Dictionary<GraphReference, List<OnSyncedVariableInitEventUnit>>();
         [NullMeansSelf]
         [PortLabelHidden]
         [DoNotSerialize]
@@ -25,45 +22,10 @@ namespace Reflectis.SDK.CreatorKit
         [PortLabelHidden]
         public ValueOutput Value { get; private set; }
 
-        public static Dictionary<GameObject, List<GraphReference>> graphReferences = new Dictionary<GameObject, List<GraphReference>>();
-
         protected override bool register => true;
+
         public override EventHook GetHook(GraphReference reference)
         {
-            if (graphReferences.TryGetValue(reference.gameObject, out List<GraphReference> graphRef))
-            {
-                if (!graphRef.Contains(reference))
-                {
-                    graphRef.Add(reference);
-                }
-            }
-            else
-            {
-                List<GraphReference> graphReferencesList = new List<GraphReference>
-                {
-                    reference
-                };
-
-                graphReferences.Add(reference.gameObject, graphReferencesList);
-            }
-
-            if (instances.TryGetValue(reference, out var value))
-            {
-                if (!value.Contains(this))
-                {
-                    value.Add(this);
-                }
-            }
-            else
-            {
-                List<OnSyncedVariableInitEventUnit> variableList = new List<OnSyncedVariableInitEventUnit>
-                {
-                    this
-                };
-
-                instances.Add(reference, variableList);
-            }
-
             return new EventHook(eventName);
         }
 
@@ -77,28 +39,8 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override bool ShouldTrigger(Flow flow, (SyncedVariables, string) args)
         {
-            if (flow.GetValue<string>(VariableName) != args.Item2) { Debug.LogError("STOP BEACAUSE OF NAME " + args.Item2 + " | " + flow.GetValue<string>(VariableName)); return false; }
-
-
-            if (flow.GetValue<SyncedVariables>(SyncedVariablesRef) == args.Item1 && flow.GetValue<string>(VariableName) == args.Item2 && args.Item1.variableSettings.Count != 0)
-            {
-                foreach (SyncedVariables.Data data in args.Item1.variableSettings)
-                {
-                    if (data.declaration == null)
-                    {
-                        Debug.LogError("STOPED BECAUSe NO DECLARATION");
-                        return false;
-                    }
-                    else
-                    {
-                        Debug.LogError("LAUNCH " + args.Item2);
-                        return true;
-                    }
-
-                }
-            }
-            Debug.LogError("NOT LAUNCH for no reason");
-            return false;
+            return args.Item1 != null && args.Item1.variableSettings.Exists(x => x.name == args.Item2)
+                && flow.GetValue<string>(VariableName) == args.Item2;
         }
 
         protected override void AssignArguments(Flow flow, (SyncedVariables, string) args)
