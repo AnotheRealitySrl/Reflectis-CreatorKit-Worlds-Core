@@ -9,9 +9,29 @@ namespace Reflectis.SDK.CreatorKit
     [RequireComponent(typeof(Variables))]
     public class SyncedVariables : MonoBehaviour
     {
+        public override string ToString()
+        {
+            //Data.ToString();
+            string value = "";
+            foreach (Data data in variableSettings)
+            {
+                if (data.isSynced)
+                {
+                    value = value + data.ToString() + "\n";
+                }
+            }
+            return value;
+        }
+
         [System.Serializable]
         public class Data
         {
+            public override string ToString()
+            {
+                string value = "name: " + name + "value: " + DeclarationValue + " { hasChanged: " + hasChanged + " + AreSynced: " + AreValuesSynced + " }";
+                return value;
+            }
+
             [HideInInspector]
             public byte id;
             public string name;
