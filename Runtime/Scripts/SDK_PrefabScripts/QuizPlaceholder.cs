@@ -96,8 +96,10 @@ namespace Reflectis.SDK.CreatorKit
 
         [Header("Quiz Placeholder references (internal). \n=> Do not change unless making a custom prefab.")]
 
+#pragma warning disable 0414 // suppress value not used warning
         [SerializeField]
         private bool showReferences = false;
+#pragma warning restore 0414 // restore value not used warning
 
         [DrawIf(nameof(showReferences), true)]
         [SerializeField, Tooltip("The transform that contains the body of the media player (the panel, optional graphics, and so on). " +
