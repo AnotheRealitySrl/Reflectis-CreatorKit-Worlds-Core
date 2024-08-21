@@ -77,10 +77,16 @@ namespace Reflectis.SDK.CreatorKit
 
     public class QuizPlaceholder : SceneComponentPlaceholderNetwork
     {
+        #region Constants
+
         private const string QUIZ_SIZE_FORMAT = "W: <b>{0}</b> - H: <b>{1}</b>";
         private const string QUIZ_LAYOUT_FORMAT = "Layout: <b>{0}</b> with <b>{1}</b> answers";
         private const string QUIZ_MAXANSWERS_FORMAT = "Max Answer items: <b>{0}{1}</b> out of <b>{2}</b>";
         private const string QUIZ_MAXSELECTIONS_FORMAT = "Max Selections: <b>{0}</b>";
+
+        #endregion
+
+        #region Inspector Info
 
         [HelpBox("Do not change the value of \"IsNetworked\" field", HelpBoxMessageType.Warning)]
 
@@ -217,6 +223,18 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField]
         private List<QuizAnswer> quizAnswers;
 
+        #endregion
+
+        #region Private variables
+
+        private float lastWidth = -1f;
+        private float lastHeight = -1f;
+        private float lastAspectRatio = -1f;
+        private EQuizSizeRatio lastSizeRatio = EQuizSizeRatio.Free;
+
+        #endregion
+
+        #region Properties based on Inspecor Info
 
         public Transform ContentTransform => contentTransform;
         public Transform PanelTransform => panelTransform;
@@ -239,19 +257,23 @@ namespace Reflectis.SDK.CreatorKit
         // In every case, AnswersSubsetQuantity can't be negative.
         public int AnswersSubsetQuantity => PickSubset ? Mathf.Clamp(answersSubsetQuantity, 0, QuizAnswers.Count) : QuizAnswers.Count;
 
-        private float lastWidth = -1f;
-        private float lastHeight = -1f;
-        private float lastAspectRatio = -1f;
-        private EQuizSizeRatio lastSizeRatio = EQuizSizeRatio.Free;
+        #endregion
+
+        #region Unity Events
 
         private void Awake()
         {
+            // Placeholder setup, not related to runtime features.
             if (panelLockRatio)
             {
                 lastWidth = panelWidth;
                 lastHeight = panelHeight;
             }
         }
+
+        #endregion
+
+        #region Placeholder Setup Methods! Not Runtime
 
         private void UpdateAspectRatio()
         {
@@ -366,7 +388,6 @@ namespace Reflectis.SDK.CreatorKit
             cameraPanTransform.localPosition = new Vector3(cameraPanTransform.localPosition.x, cameraPanTransform.localPosition.y, -cameraPanDistance);
         }
 
-        public void OnTitleChanged() => UpdateTitleText();
         public void OnLayoutChanged() => UpdateLayoutText();
         public void OnAnswersChanged() => UpdateAnswersText();
         public void OnMaxSelectableAnswersChanged() => UpdateMaxSelectionsText();
@@ -464,5 +485,7 @@ namespace Reflectis.SDK.CreatorKit
             }
         }
 #endif
+
+        #endregion
     }
 }
