@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using Reflectis.SDK.Utilities;
+using System.Linq;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -225,12 +227,18 @@ namespace Reflectis.SDK.CreatorKit
 
         #endregion
 
-        #region Private variables
+        #region Private variables (Editor)
 
         private float lastWidth = -1f;
         private float lastHeight = -1f;
         private float lastAspectRatio = -1f;
         private EQuizSizeRatio lastSizeRatio = EQuizSizeRatio.Free;
+
+        #endregion
+
+        #region Private variables (Runtime)
+
+        private List<QuizAnswer> quizInstanceAnswers = new List<QuizAnswer>();
 
         #endregion
 
@@ -259,6 +267,21 @@ namespace Reflectis.SDK.CreatorKit
 
         #endregion
 
+        #region Properties based on Runtime
+
+        public IReadOnlyList<QuizAnswer> QuizInstanceAnswers => quizInstanceAnswers;
+
+        public int QuizInstanceAnswersCount => QuizInstanceAnswers.Count;
+
+        public float QuizInstanceAllGoodScore { get; private set; }
+        public float QuizInstanceAllBadScore { get; private set; }
+
+        public float QuizInstanceScore => QuizInstanceAnswers.Sum(x => x.CurrentScore);
+
+        public int QuizInstanceCorrectAnswersCount => QuizInstanceAnswers.Count(x => x.IsCorrectSelection);
+
+        #endregion
+
         #region Unity Events
 
         private void Awake()
@@ -270,6 +293,33 @@ namespace Reflectis.SDK.CreatorKit
                 lastHeight = panelHeight;
             }
         }
+
+        #endregion
+
+        #region Public Methods (Runtime)
+
+        public void ClearInstanceAnswers()
+        {
+            quizInstanceAnswers.Clear();
+            QuizInstanceAllGoodScore = 0f;
+            QuizInstanceAllBadScore = 0f;
+        }
+
+        public void AddInstanceAnswer(QuizAnswer answer)
+        {
+            quizInstanceAnswers.Add(answer);
+        }
+
+        public void SetupInstanceConstants()
+        {
+            foreach (var answer in QuizInstanceAnswers)
+            {
+                QuizInstanceAllGoodScore += answer.ScoreIfGood;
+                QuizInstanceAllBadScore += answer.ScoreIfBad;
+            }
+        }
+
+
 
         #endregion
 
