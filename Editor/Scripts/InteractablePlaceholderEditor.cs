@@ -51,6 +51,8 @@ namespace Reflectis.SDK.CreatorKitEditor
 
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("desktopAllowedStates"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("vrAllowedStates"));
+
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("vrGenericInteraction"));
             }
 
             if (interactablePlaceholder.InteractionModes.HasFlag(InteractionNew.IInteractable.EInteractableType.ContextualMenuInteractable))

@@ -124,6 +124,12 @@ namespace Reflectis.SDK.CreatorKit
         public EAllowedGenericInteractableState DesktopAllowedStates => desktopAllowedStates;
         public EAllowedGenericInteractableState VRAllowedStates => vrAllowedStates;
 
+
+        [SerializeField, Tooltip("Enables hand and ray interaction on this object")]
+        private EVRGenericInteraction vrGenericInteraction = (EVRGenericInteraction)~0;
+
+        public EVRGenericInteraction VrGenericInteraction { get => vrGenericInteraction; set => vrGenericInteraction = value; }
+
         #endregion
 
         #region Contextual menu
