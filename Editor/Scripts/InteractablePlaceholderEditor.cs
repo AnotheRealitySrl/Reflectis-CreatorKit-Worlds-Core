@@ -40,6 +40,7 @@ namespace Reflectis.SDK.CreatorKitEditor
 
             if (interactablePlaceholder.InteractionModes.HasFlag(InteractionNew.IInteractable.EInteractableType.GenericInteractable))
             {
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("vrGenericInteraction"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("lockHoverDuringInteraction"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("interactionsScriptMachine"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("needUnselectOnDestroyScriptMachine"));
@@ -51,8 +52,6 @@ namespace Reflectis.SDK.CreatorKitEditor
 
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("desktopAllowedStates"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("vrAllowedStates"));
-
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("vrGenericInteraction"));
             }
 
             if (interactablePlaceholder.InteractionModes.HasFlag(InteractionNew.IInteractable.EInteractableType.ContextualMenuInteractable))
