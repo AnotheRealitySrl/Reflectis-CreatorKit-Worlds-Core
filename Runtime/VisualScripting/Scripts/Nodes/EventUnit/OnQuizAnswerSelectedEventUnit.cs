@@ -17,7 +17,7 @@ namespace Reflectis.SDK.CreatorKit
             base.Definition();
             // Setting the value on our port.
             Quiz = ValueOutput<QuizPlaceholder>(nameof(Quiz));
-            Answer = ValueOutput<QuizPlaceholder>(nameof(Answer));
+            Answer = ValueOutput<QuizAnswer>(nameof(Answer));
         }
 
         // Setting the value on our port.
