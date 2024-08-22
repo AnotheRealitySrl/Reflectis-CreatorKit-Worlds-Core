@@ -64,12 +64,18 @@ namespace Reflectis.SDK.CreatorKit
                 }
             }
 
-            public bool AreValuesSynced { get { return previousValue.Equals(DeclarationValue); } }
+            public bool AreValuesSynced
+            {
+                get
+                {
+                    return Equals(DeclarationValue, previousValue);
+                }
+            }
 
             public void SyncValues()
             {
                 previousValue = DeclarationValue;
-                // if the synced variable is not synced we do not update the sync change state in the dictionary
+                // if the synced variable is not synced we do not update the sync change state
                 hasChanged = isSynced;
             }
         }
