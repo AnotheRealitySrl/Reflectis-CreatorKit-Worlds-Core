@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Reflectis.SDK.Utilities;
 using System.Linq;
-
+using UnityEngine.Events;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -284,6 +284,14 @@ namespace Reflectis.SDK.CreatorKit
 
         #endregion
 
+        #region Public Events
+
+        public UnityEvent onFinish = default;
+        public UnityEvent onEdit = default;
+        public UnityEvent onReset = default;
+
+        #endregion
+
         #region Unity Events
 
         private void Awake()
@@ -319,6 +327,19 @@ namespace Reflectis.SDK.CreatorKit
                 QuizInstanceAllGoodScore += answer.ScoreIfGood;
                 QuizInstanceAllBadScore += answer.ScoreIfBad;
             }
+        }
+
+        public void VSNode_Finish()
+        {
+            onFinish?.Invoke();
+        }
+        public void VSNode_Edit()
+        {
+            onEdit?.Invoke();
+        }
+        public void VSNode_Reset()
+        {
+            onReset?.Invoke();
         }
 
         #endregion
