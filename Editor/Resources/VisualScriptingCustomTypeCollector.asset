@@ -29,3 +29,8 @@ MonoBehaviour:
   - UnityEngine.Splines.SplineComponent
   - UnityEngine.Splines.SplineContainer
   - UnityEngine.Splines.SplineAnimate
+  - ExposeSplineAnimateUnit
+  - GetSplineAnimateUnit
+  - SetSplineAnimateContainerUnit
+  - SetSplineAnimateMaxSpeedUnit
+  - SplineAnimatePlayCoroutineUnit
