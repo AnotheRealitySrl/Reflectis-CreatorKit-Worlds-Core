@@ -13,11 +13,16 @@ namespace Reflectis.SDK.CreatorKit
         {
             //Data.ToString();
             string value = "";
-            foreach (Data data in variableSettings)
+            for (int i = 0; i < variableSettings.Count; i++)
             {
+                Data data = variableSettings[i];
                 if (data.isSynced)
                 {
-                    value = value + data.ToString() + "\n";
+                    if (i > 0)
+                    {
+                        value += "\n";
+                    }
+                    value += data.ToString();
                 }
             }
             return value;
@@ -28,7 +33,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             public override string ToString()
             {
-                string value = "name: " + name + "value: " + DeclarationValue + " { hasChanged: " + hasChanged + " + AreSynced: " + AreValuesSynced + " }";
+                string value = "name: " + name + ", value: " + DeclarationValue + " { hasChanged: " + hasChanged + " + AreSynced: " + AreValuesSynced + " }";
                 return value;
             }
 
