@@ -15,10 +15,9 @@ namespace Reflectis.SDK.CreatorKit
             string value = "";
             foreach (Data data in variableSettings)
             {
-                if (data.isSynced)
-                {
-                    value = value + data.ToString() + "\n";
-                }
+
+                value = value + data.ToString() + "\n";
+
             }
             return value;
         }
@@ -76,7 +75,8 @@ namespace Reflectis.SDK.CreatorKit
             {
                 previousValue = DeclarationValue;
                 // if the synced variable is not synced we do not update the sync change state
-                hasChanged = isSynced;
+                //hasChanged = isSynced;
+                hasChanged = true;
             }
         }
 
@@ -87,12 +87,18 @@ namespace Reflectis.SDK.CreatorKit
         {
             foreach (Data data in variableSettings)
             {
+                Debug.LogError($"SETUP VARIABLE {data.name} {gameObject}: " +
+                    $"is synced {data.isSynced} ");
+                //if (!data.isSynced)
+                //{
+                //    continue;
+                //}
                 if (data.declaration == null)
                 {
                     var declarations = GetComponentInChildren<Variables>(true).declarations;
                     data.declaration = declarations.GetDeclaration(data.name);
+                    data.previousValue = data.DeclarationValue;
                 }
-                data.previousValue = data.DeclarationValue;
             }
         }
 
