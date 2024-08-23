@@ -66,12 +66,38 @@ namespace Reflectis.SDK.CreatorKitEditor
             };
 
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, false);
-
-            foreach (var placeholder in networkPlaceholders)
             {
-                EditorGUILayout.LabelField($"<b>{placeholder.gameObject.name}</b>: {((INetworkPlaceholder)placeholder).InitializationId}", style);
-            }
+                Dictionary<int, string> usedCodes = new Dictionary<int, string>();
 
+                foreach (var placeholder in networkPlaceholders)
+                {
+                    int tmpCode = ((INetworkPlaceholder)placeholder).InitializationId;
+                    bool tmpIsUsed = usedCodes.TryGetValue(tmpCode, out string alreadyUsedGOName);
+
+                    string tmpCodeStr = tmpCode.ToString();
+                    string tmpFeedback = string.Empty;
+
+                    if (tmpIsUsed)
+                    {
+                        tmpCodeStr = "<color=red>" + tmpCodeStr + "</color>";
+                        tmpFeedback = "Used by: <b>" + alreadyUsedGOName + "</b>";
+                    }
+                    else
+                    {
+                        usedCodes.Add(tmpCode, placeholder.gameObject.name);
+                    }
+
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        EditorGUILayout.LabelField($"<b>{placeholder.gameObject.name}</b>", style, GUILayout.Width(EditorGUIUtility.currentViewWidth * 0.4f));
+
+                        EditorGUILayout.LabelField($"{tmpCodeStr}", style, GUILayout.Width(EditorGUIUtility.currentViewWidth * 0.15f));
+
+                        EditorGUILayout.LabelField($"{tmpFeedback}", style, GUILayout.Width(EditorGUIUtility.currentViewWidth * 0.4f));
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
             GUILayout.EndScrollView();
         }
     }
