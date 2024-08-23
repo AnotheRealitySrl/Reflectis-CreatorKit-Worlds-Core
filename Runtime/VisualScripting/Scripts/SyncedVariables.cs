@@ -36,7 +36,7 @@ namespace Reflectis.SDK.CreatorKit
             public string name;
             public bool saveThroughSessions;
             /// <summary>
-            /// Keeps track of wheter or not the value has been changed on the network
+            /// Keeps track of wheter or not the value has ever been changed on the network from the initial value
             /// if the variable is not synced it is always false
             /// </summary>
             public bool hasChanged = false;
@@ -45,11 +45,6 @@ namespace Reflectis.SDK.CreatorKit
             /// it is used to check if we have to invoke event nodes
             /// </summary>
             public object previousValue;
-            /// <summary>
-            /// Whter or not the variable is sinchronized on network
-            /// </summary>
-            [HideInInspector]
-            public bool isSynced;
             /// <summary>
             /// The VS related variable
             /// </summary>
@@ -74,8 +69,7 @@ namespace Reflectis.SDK.CreatorKit
             public void SyncValues()
             {
                 previousValue = DeclarationValue;
-                // if the synced variable is not synced we do not update the sync change state
-                //hasChanged = isSynced;
+
                 hasChanged = true;
             }
         }
@@ -87,12 +81,6 @@ namespace Reflectis.SDK.CreatorKit
         {
             foreach (Data data in variableSettings)
             {
-                Debug.LogError($"SETUP VARIABLE {data.name} {gameObject}: " +
-                    $"is synced {data.isSynced} ");
-                //if (!data.isSynced)
-                //{
-                //    continue;
-                //}
                 if (data.declaration == null)
                 {
                     var declarations = GetComponentInChildren<Variables>(true).declarations;
