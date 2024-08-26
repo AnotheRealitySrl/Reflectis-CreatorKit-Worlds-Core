@@ -13,17 +13,11 @@ namespace Reflectis.SDK.CreatorKit
         {
             //Data.ToString();
             string value = "";
-            for (int i = 0; i < variableSettings.Count; i++)
+            foreach (Data data in variableSettings)
             {
-                Data data = variableSettings[i];
-                if (data.isSynced)
-                {
-                    if (i > 0)
-                    {
-                        value += "\n";
-                    }
-                    value += data.ToString();
-                }
+
+                value = value + data.ToString() + "\n";
+
             }
             return value;
         }
@@ -33,7 +27,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             public override string ToString()
             {
-                string value = "name: " + name + ", value: " + DeclarationValue + " { hasChanged: " + hasChanged + " + AreSynced: " + AreValuesSynced + " }";
+                string value = "name: " + name + "value: " + DeclarationValue + " { hasChanged: " + hasChanged + " + AreSynced: " + AreNetworkValuesSynced + " }";
                 return value;
             }
 
@@ -42,20 +36,20 @@ namespace Reflectis.SDK.CreatorKit
             public string name;
             public bool saveThroughSessions;
             /// <summary>
-            /// Keeps track of wheter or not the value has been changed on the network
+            /// Keeps track of wheter or not the value has ever been changed on the network from the initial value
             /// if the variable is not synced it is always false
             /// </summary>
             public bool hasChanged = false;
             /// <summary>
             /// The value of the variable used to check if the variables in VS are changed
+            /// it is used to check if we have to invoke event nodes in case someone from the ne
+            /// </summary>
+            public object previousNetworkValue;
+            /// <summary>
+            /// The value of the variable used to check if the variables in VS are changed
             /// it is used to check if we have to invoke event nodes
             /// </summary>
-            public object previousValue;
-            /// <summary>
-            /// Whter or not the variable is sinchronized on network
-            /// </summary>
-            [HideInInspector]
-            public bool isSynced;
+            public object previousLocalValue;
             /// <summary>
             /// The VS related variable
             /// </summary>
@@ -69,13 +63,26 @@ namespace Reflectis.SDK.CreatorKit
                 }
             }
 
-            public bool AreValuesSynced { get { return previousValue.Equals(DeclarationValue); } }
+            public bool AreNetworkValuesSynced
+            {
+                get
+                {
+                    return Equals(DeclarationValue, previousNetworkValue);
+                }
+            }
+            public bool AreLocalValuesSynced
+            {
+                get
+                {
+                    return Equals(DeclarationValue, previousLocalValue);
+                }
+            }
 
             public void SyncValues()
             {
-                previousValue = DeclarationValue;
-                // if the synced variable is not synced we do not update the sync change state in the dictionary
-                hasChanged = isSynced;
+                previousNetworkValue = DeclarationValue;
+                previousLocalValue = DeclarationValue;
+                hasChanged = true;
             }
         }
 
@@ -90,8 +97,9 @@ namespace Reflectis.SDK.CreatorKit
                 {
                     var declarations = GetComponentInChildren<Variables>(true).declarations;
                     data.declaration = declarations.GetDeclaration(data.name);
+                    data.previousNetworkValue = data.DeclarationValue;
+                    data.previousLocalValue = data.DeclarationValue;
                 }
-                data.previousValue = data.DeclarationValue;
             }
         }
 

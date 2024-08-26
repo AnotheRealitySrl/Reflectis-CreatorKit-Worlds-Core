@@ -1,5 +1,11 @@
 # Release notes
 
+## v3.3.1
+
+### Fixed
+
+- Fixed synced variables parameters (`OnSyncedVariableInit`,`OnSyncedVariableEventUnit`,`OnSyncedVariablesEventNodes`), removed unused value input and unuesed isSynced variable
+
 ## v3.3.0
 
 ### Added
