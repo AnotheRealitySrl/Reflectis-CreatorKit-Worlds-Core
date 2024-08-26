@@ -27,7 +27,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             public override string ToString()
             {
-                string value = "name: " + name + "value: " + DeclarationValue + " { hasChanged: " + hasChanged + " + AreSynced: " + AreNetworkValuesSynced + " }";
+                string value = "name: " + name + "value: " + DeclarationValue + " { hasChanged: " + hasChanged + " + AreSynced: " + AreValuesSynced + " }";
                 return value;
             }
 
@@ -42,14 +42,10 @@ namespace Reflectis.SDK.CreatorKit
             public bool hasChanged = false;
             /// <summary>
             /// The value of the variable used to check if the variables in VS are changed
-            /// it is used to check if we have to invoke event nodes in case someone from the ne
+            /// it holds the value of the variable before any changes
             /// </summary>
-            public object previousNetworkValue;
-            /// <summary>
-            /// The value of the variable used to check if the variables in VS are changed
-            /// it is used to check if we have to invoke event nodes
-            /// </summary>
-            public object previousLocalValue;
+            public object previousValue;
+
             /// <summary>
             /// The VS related variable
             /// </summary>
@@ -63,25 +59,17 @@ namespace Reflectis.SDK.CreatorKit
                 }
             }
 
-            public bool AreNetworkValuesSynced
+            public bool AreValuesSynced
             {
                 get
                 {
-                    return Equals(DeclarationValue, previousNetworkValue);
-                }
-            }
-            public bool AreLocalValuesSynced
-            {
-                get
-                {
-                    return Equals(DeclarationValue, previousLocalValue);
+                    return Equals(DeclarationValue, previousValue);
                 }
             }
 
             public void SyncValues()
             {
-                previousNetworkValue = DeclarationValue;
-                previousLocalValue = DeclarationValue;
+                previousValue = DeclarationValue;
                 hasChanged = true;
             }
         }
@@ -97,8 +85,7 @@ namespace Reflectis.SDK.CreatorKit
                 {
                     var declarations = GetComponentInChildren<Variables>(true).declarations;
                     data.declaration = declarations.GetDeclaration(data.name);
-                    data.previousNetworkValue = data.DeclarationValue;
-                    data.previousLocalValue = data.DeclarationValue;
+                    data.previousValue = data.DeclarationValue;
                 }
             }
         }
