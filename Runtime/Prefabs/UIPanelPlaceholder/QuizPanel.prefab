@@ -120,6 +120,18 @@ MonoBehaviour:
     scoreIfGood: 1
     scoreIfBad: 0
     feedbackLabel: 
+  onFinish:
+    m_PersistentCalls:
+      m_Calls: []
+  onGoToResults:
+    m_PersistentCalls:
+      m_Calls: []
+  onEdit:
+    m_PersistentCalls:
+      m_Calls: []
+  onReset:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2052830806718343360
 GameObject:
   m_ObjectHideFlags: 0

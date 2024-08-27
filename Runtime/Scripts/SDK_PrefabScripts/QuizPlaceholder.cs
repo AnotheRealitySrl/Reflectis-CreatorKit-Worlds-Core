@@ -287,8 +287,10 @@ namespace Reflectis.SDK.CreatorKit
         #region Public Events
 
         public UnityEvent onFinish = default;
+        public UnityEvent<bool, bool, bool> onGoToResults = default;
         public UnityEvent onEdit = default;
         public UnityEvent onReset = default;
+        public UnityEvent onContinue = default;
 
         #endregion
 
@@ -333,6 +335,10 @@ namespace Reflectis.SDK.CreatorKit
         {
             onFinish?.Invoke();
         }
+        public void VSNode_GoToResults(bool showEditButton, bool showResetButton, bool showContinueButton)
+        {
+            onGoToResults?.Invoke(showEditButton, showResetButton, showContinueButton);
+        }
         public void VSNode_Edit()
         {
             onEdit?.Invoke();
@@ -340,6 +346,10 @@ namespace Reflectis.SDK.CreatorKit
         public void VSNode_Reset()
         {
             onReset?.Invoke();
+        }
+        public void VSNode_Continue()
+        {
+            onContinue?.Invoke();
         }
 
         #endregion
