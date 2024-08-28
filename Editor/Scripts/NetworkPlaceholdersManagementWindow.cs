@@ -147,11 +147,21 @@ namespace Reflectis.SDK.CreatorKitEditor
 
                     EditorGUILayout.BeginHorizontal();
                     {
-                        EditorGUILayout.LabelField($"<b>{placeholder.gameObject.name}</b>", style, GUILayout.Width(EditorGUIUtility.currentViewWidth * 0.4f));
+                        float codeWidth = 50f;
+                        float btnWidth = 20f;
+                        float margin = 35f;
+                        float remainingWidth = EditorGUIUtility.currentViewWidth - codeWidth - btnWidth - margin;
+                        
+                        if (GUILayout.Button(">", GUILayout.Width(btnWidth)))
+                        {
+                            EditorGUIUtility.PingObject(placeholder.gameObject);
+                        }
 
-                        EditorGUILayout.LabelField($"{tmpCodeStr}", style, GUILayout.Width(EditorGUIUtility.currentViewWidth * 0.15f));
+                        EditorGUILayout.LabelField($"<b>{placeholder.gameObject.name}</b>", style, GUILayout.Width(remainingWidth * 0.4f));
 
-                        EditorGUILayout.LabelField($"{tmpFeedback}", style, GUILayout.Width(EditorGUIUtility.currentViewWidth * 0.4f));
+                        EditorGUILayout.LabelField($"{tmpCodeStr}", style, GUILayout.Width(codeWidth));
+
+                        EditorGUILayout.LabelField($"{tmpFeedback}", style, GUILayout.Width(remainingWidth * 0.6f));
                     }
                     EditorGUILayout.EndHorizontal();
                 }
