@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -8,15 +7,12 @@ namespace Reflectis.SDK.CreatorKit
     [UnitSurtitle("Synced Variables Init")]
     [UnitShortTitle("On Synced Variable Init")]
     [UnitCategory("Events\\Reflectis")]
-    public class OnSyncedVariableInit : EventUnit<(SyncedVariables, string)>
+    ///this unit is always called during the first deserialization, it will start a flow and will comunicate if the value of
+    ///the variable was changed or not
+    ///it differs from OnSyncedVariableInitEventUnit
+    public class OnSyncedVariableInit : EventUnit<(string, object, bool)>
     {
         public static string eventName = "SyncedVariablesOnVariableInit";
-
-        public static Dictionary<GraphReference, List<OnSyncedVariableInit>> instances = new Dictionary<GraphReference, List<OnSyncedVariableInit>>();
-        [NullMeansSelf]
-        [PortLabelHidden]
-        [DoNotSerialize]
-        public ValueInput SyncedVariablesRef { get; private set; }
 
         [DoNotSerialize]
         public ValueInput VariableName { get; private set; }
@@ -28,106 +24,30 @@ namespace Reflectis.SDK.CreatorKit
         [Tooltip("This variable returns true if the variable in the variable name field has been changed at least once from its default state. Otherwise it returns false")]
         public ValueOutput IsChanged { get; private set; }
 
-        public static Dictionary<GameObject, List<GraphReference>> graphReferences = new Dictionary<GameObject, List<GraphReference>>();
 
         protected override bool register => true;
         public override EventHook GetHook(GraphReference reference)
         {
-            if (graphReferences.TryGetValue(reference.gameObject, out List<GraphReference> graphRef))
-            {
-                if (!graphRef.Contains(reference))
-                {
-                    graphRef.Add(reference);
-                }
-            }
-            else
-            {
-                List<GraphReference> graphReferencesList = new List<GraphReference>
-                {
-                    reference
-                };
-
-                graphReferences.Add(reference.gameObject, graphReferencesList);
-            }
-
-            if (instances.TryGetValue(reference, out var value))
-            {
-                if (!value.Contains(this))
-                {
-                    value.Add(this);
-                }
-            }
-            else
-            {
-                List<OnSyncedVariableInit> variableList = new List<OnSyncedVariableInit>
-                {
-                    this
-                };
-
-                instances.Add(reference, variableList);
-            }
-
             return new EventHook(eventName);
         }
 
         protected override void Definition()
         {
             base.Definition();
-            SyncedVariablesRef = ValueInput<SyncedVariables>(nameof(SyncedVariablesRef), null).NullMeansSelf();
             VariableName = ValueInput<string>(nameof(VariableName), null);
             Value = ValueOutput<object>(nameof(Value));
             IsChanged = ValueOutput<bool>(nameof(IsChanged));
         }
 
-        protected override bool ShouldTrigger(Flow flow, (SyncedVariables, string) args)
+        protected override bool ShouldTrigger(Flow flow, (string, object, bool) args)
         {
-            if (flow.GetValue<string>(VariableName) != args.Item2) { return false; }
-            if (flow.GetValue<SyncedVariables>(SyncedVariablesRef) == args.Item1) { }
-            else if (args.Item1.variableSettings.Count != 0) { }
-
-            if (args.Item1.variableSettings.Count != 0)
-            {
-                if (flow.GetValue<SyncedVariables>(SyncedVariablesRef) == args.Item1 && flow.GetValue<string>(VariableName) == args.Item2 && args.Item1.variableSettings.Count != 0)
-                {
-                    //int i = 0;
-                    foreach (SyncedVariables.Data data in args.Item1.variableSettings)
-                    {
-                        if (data.declaration == null)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    }
-                    return true;
-                }
-
-            }
-            return false;
+            return flow.GetValue<string>(VariableName) == args.Item1;
         }
 
-        protected override void AssignArguments(Flow flow, (SyncedVariables, string) args)
+        protected override void AssignArguments(Flow flow, (string, object, bool) args)
         {
-            int i = 0;
-            foreach (SyncedVariables.Data data in args.Item1.variableSettings)
-            {
-                if (data.name == args.Item2)
-                {
-                    flow.SetValue(Value, data.Value);
-                    if (args.Item1.variableSettings[i].hasChanged)
-                    {
-                        flow.SetValue(IsChanged, true);
-                    }
-                    else
-                    {
-                        flow.SetValue(IsChanged, false);
-                    }
-                    break;
-                }
-                i++;
-            }
+            flow.SetValue(Value, args.Item2);
+            flow.SetValue(IsChanged, args.Item3);
         }
     }
 }

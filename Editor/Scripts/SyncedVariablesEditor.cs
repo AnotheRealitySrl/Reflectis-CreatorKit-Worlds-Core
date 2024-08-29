@@ -58,29 +58,6 @@ namespace Reflectis.SDK.CreatorKit
                             newIsSynced = !isSynced;
                         }
 
-                        if (!isSynced)
-                        {
-                            EditorGUI.BeginDisabledGroup(true);
-                        }
-
-                        if (isSynced)
-                        {
-                            if (syncedVariableData != null)
-                            {
-                                syncedVariableData.isSynced = isSynced;
-                            }
-                        }
-                        else
-                        {
-                            if (syncedVariableData != null)
-                            {
-                                syncedVariableData.isSynced = isSynced;
-                            }
-
-                            EditorGUI.EndDisabledGroup();
-                        }
-
-
                         EditorGUILayout.EndHorizontal();
 
                         if (newIsSynced && !isSynced)
@@ -154,8 +131,18 @@ namespace Reflectis.SDK.CreatorKit
         {
             if (
                 type == typeof(bool) ||
+                type == typeof(byte) ||
+                type == typeof(sbyte) ||
+                type == typeof(char) ||
+                type == typeof(short) ||
+                type == typeof(ushort) ||
                 type == typeof(int) ||
+                type == typeof(uint) ||
+                type == typeof(long) ||
+                type == typeof(ulong) ||
                 type == typeof(float) ||
+                type == typeof(double) ||
+                type == typeof(decimal) ||
                 type == typeof(string) ||
                 type == typeof(Vector2) ||
                 type == typeof(Vector3))
