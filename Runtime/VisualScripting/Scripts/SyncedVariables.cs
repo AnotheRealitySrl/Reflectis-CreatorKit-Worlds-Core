@@ -15,10 +15,9 @@ namespace Reflectis.SDK.CreatorKit
             string value = "";
             foreach (Data data in variableSettings)
             {
-                if (data.isSynced)
-                {
-                    value = value + data.ToString() + "\n";
-                }
+
+                value = value + data.ToString() + "\n";
+
             }
             return value;
         }
@@ -37,20 +36,16 @@ namespace Reflectis.SDK.CreatorKit
             public string name;
             public bool saveThroughSessions;
             /// <summary>
-            /// Keeps track of wheter or not the value has been changed on the network
+            /// Keeps track of wheter or not the value has ever been changed on the network from the initial value
             /// if the variable is not synced it is always false
             /// </summary>
             public bool hasChanged = false;
             /// <summary>
             /// The value of the variable used to check if the variables in VS are changed
-            /// it is used to check if we have to invoke event nodes
+            /// it holds the value of the variable before any changes
             /// </summary>
             public object previousValue;
-            /// <summary>
-            /// Whter or not the variable is sinchronized on network
-            /// </summary>
-            [HideInInspector]
-            public bool isSynced;
+
             /// <summary>
             /// The VS related variable
             /// </summary>
@@ -64,13 +59,18 @@ namespace Reflectis.SDK.CreatorKit
                 }
             }
 
-            public bool AreValuesSynced { get { return previousValue.Equals(DeclarationValue); } }
+            public bool AreValuesSynced
+            {
+                get
+                {
+                    return Equals(DeclarationValue, previousValue);
+                }
+            }
 
             public void SyncValues()
             {
                 previousValue = DeclarationValue;
-                // if the synced variable is not synced we do not update the sync change state in the dictionary
-                hasChanged = isSynced;
+                hasChanged = true;
             }
         }
 
@@ -85,8 +85,8 @@ namespace Reflectis.SDK.CreatorKit
                 {
                     var declarations = GetComponentInChildren<Variables>(true).declarations;
                     data.declaration = declarations.GetDeclaration(data.name);
+                    data.previousValue = data.DeclarationValue;
                 }
-                data.previousValue = data.DeclarationValue;
             }
         }
 
