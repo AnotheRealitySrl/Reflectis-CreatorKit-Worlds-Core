@@ -25,7 +25,11 @@ namespace Reflectis.SDK.CreatorKitEditor
         public SceneAsset SceneAsset => sceneAsset;
         public Texture ThumbnailAsset => thumbnailAsset;
     }
-
+    
+    /*
+     * Freezed! Right not we are not compatible with custom addressable assets that are not managed as we do with localization and envs!
+     * 
+    
     [Serializable]
     public class CustomAddressableAssetDefinition
     {
@@ -38,6 +42,7 @@ namespace Reflectis.SDK.CreatorKitEditor
         public string AddressableAssetName => addressableAssetName;
         public UnityEngine.Object Asset => asset;
     }
+    */
 
     #endregion
 
@@ -63,8 +68,13 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         [Space]
 
+        /*
+         * See note above!
+         * 
+        
         [SerializeField]
         private List<CustomAddressableAssetDefinition> customAssets = new List<CustomAddressableAssetDefinition>();
+        */
 
         [SerializeField]
         private List<EnvironmentAssetDefinition> environmentAssets = new List<EnvironmentAssetDefinition>();
@@ -104,6 +114,10 @@ namespace Reflectis.SDK.CreatorKitEditor
                             entriesAdded.Add(localizationEntry);
                         }
 
+                        /*
+                         * See note above!
+                         * 
+                        
                         for (int i = 0; i < customAssets.Count; i++)
                         {
                             var asset = customAssets[i];
@@ -116,6 +130,7 @@ namespace Reflectis.SDK.CreatorKitEditor
 
                             entriesAdded.Add(entry);
                         }
+                        */
 
                         foreach (AddressableAssetEntry entry in group.entries.Except(entriesAdded).ToArray())
                             group.RemoveAssetEntry(entry);
