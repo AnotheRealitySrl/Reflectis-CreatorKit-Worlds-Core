@@ -215,6 +215,11 @@ namespace Reflectis.SDK.CreatorKit
         [OnChangedCall(nameof(OnLayoutChanged))]
         private EQuizLayout quizLayout = EQuizLayout.Horizontal;
 
+        [DrawIf(nameof(quizLayout), EQuizLayout.Grid)]
+        [SerializeField]
+        [OnChangedCall(nameof(OnLayoutChanged))]
+        private int quizGridColumns = 3;
+
         [SerializeField]
         [OnChangedCall(nameof(OnLayoutChanged))]
         private EQuizElementLayout quizElementLayout = EQuizElementLayout.Line;
@@ -255,6 +260,7 @@ namespace Reflectis.SDK.CreatorKit
         public bool ShuffleAnswers => shuffleAnswers;
         public bool PickSubset => ShuffleAnswers ? pickSubset : false;
         public EQuizLayout QuizLayout => quizLayout;
+        public int QuizGridColumns => quizGridColumns;
         public EQuizElementLayout QuizElementLayout => quizElementLayout;
         public ScriptMachine QuizEventsScriptMachine => quizEventsScriptMachine;
         public List<QuizAnswer> QuizAnswers => quizAnswers;
@@ -502,6 +508,10 @@ namespace Reflectis.SDK.CreatorKit
             if (quizLayoutTextMesh != null)
             {
                 var newVal = string.Format(QUIZ_LAYOUT_FORMAT, QuizLayout, QuizElementLayout);
+                if (QuizLayout == EQuizLayout.Grid)
+                {
+                    newVal += " (" + QuizGridColumns + ")";
+                }
                 if (quizLayoutTextMesh.text != newVal)
                 {
                     quizLayoutTextMesh.text = newVal;
