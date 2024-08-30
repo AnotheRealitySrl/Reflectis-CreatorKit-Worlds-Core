@@ -14,6 +14,12 @@ namespace Reflectis.SDK.CreatorKitEditor
 {
     public class AddressablesConfigurationWindow : EditorWindow
     {
+        #region Public consts
+
+        public const string window_name ="Configure and build Addressables";
+
+        #endregion
+
         #region Private variables
 
         private const string alphanumeric_string_pattern = @"^[a-zA-Z0-9]*$";
@@ -47,7 +53,7 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         #region Unity callbacks
 
-        [MenuItem("Reflectis/Configure and build Addressables")]
+        [MenuItem("Reflectis/" + window_name)]
         public static void ShowWindow()
         {
             //Show existing window instance. If one doesn't exist, make one.
