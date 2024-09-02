@@ -517,9 +517,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                         bundledAssetGroupSchema.InternalIdNamingMode == BundledAssetGroupSchema.AssetNamingMode.FullPath &&
                         bundledAssetGroupSchema.InternalBundleIdMode == BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash &&
                         bundledAssetGroupSchema.AssetBundledCacheClearBehavior == BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded &&
-                        bundledAssetGroupSchema.BundleMode == (group.IsDefaultGroup()
-                            ? BundledAssetGroupSchema.BundlePackingMode.PackTogether
-                            : BundledAssetGroupSchema.BundlePackingMode.PackSeparately) &&
+                        bundledAssetGroupSchema.BundleMode == BundledAssetGroupSchema.BundlePackingMode.PackSeparately &&
                         bundledAssetGroupSchema.BundleNaming == BundledAssetGroupSchema.BundleNamingStyle.NoHash;
                 });
             });
@@ -554,9 +552,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                     bundledAssetGroupSchema.InternalIdNamingMode = BundledAssetGroupSchema.AssetNamingMode.FullPath;
                     bundledAssetGroupSchema.InternalBundleIdMode = BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash;
                     bundledAssetGroupSchema.AssetBundledCacheClearBehavior = BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded;
-                    bundledAssetGroupSchema.BundleMode = group.IsDefaultGroup()
-                            ? BundledAssetGroupSchema.BundlePackingMode.PackTogether
-                            : BundledAssetGroupSchema.BundlePackingMode.PackSeparately;
+                    bundledAssetGroupSchema.BundleMode = BundledAssetGroupSchema.BundlePackingMode.PackSeparately;
                     bundledAssetGroupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash;
                 });
             });
