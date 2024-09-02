@@ -1,9 +1,11 @@
+using Reflectis.SDK.Core;
 using Reflectis.SDK.Diagnostics;
-using Reflectis.SDK.InteractionNew;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
@@ -15,7 +17,7 @@ namespace Reflectis.SDK.CreatorKit
     public class SendExperienceDiagnosticUnitBase : Unit
     {
         [SerializeAs(nameof(Verb))]
-        private EExperienceDiagnosticVerb verb;
+        private EExperienceDiagnosticVerb verb = EExperienceDiagnosticVerb.ExpStart;
 
         [DoNotSerialize]
         [Inspectable, UnitHeaderInspectable(nameof(verb))]
@@ -37,7 +39,10 @@ namespace Reflectis.SDK.CreatorKit
         }
 
         [DoNotSerialize]
-        public List<ValueInput> arguments { get; private set; }
+        public List<ValueInput> Arguments { get; private set; }
+
+        [DoNotSerialize]
+        public List<ValueInput> CustomProperties { get; private set; }
 
         [DoNotSerialize]
         [PortLabelHidden]
@@ -46,37 +51,23 @@ namespace Reflectis.SDK.CreatorKit
         [PortLabelHidden]
         public ControlOutput OutputTrigger { get; private set; }
 
-        [NullMeansSelf]
-        [DoNotSerialize]
-        public ValueInput ContextualMenuManageable { get; private set; }
-
-        [NullMeansSelf]
-        [DoNotSerialize]
-        public ValueInput BlockValue { get; private set; }
 
         protected override void Definition()
         {
-            ContextualMenuManageable = ValueInput<ContextualMenuManageable>(nameof(ContextualMenuManageable));
-
-            BlockValue = ValueInput<bool>(nameof(BlockValue), false);
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
 
-                if (f.GetValue<bool>(BlockValue))
-                {
-                    f.GetValue<ContextualMenuManageable>(ContextualMenuManageable).CurrentBlockedState |= InteractableBehaviourBase.EBlockedState.BlockedBySelection;
-                }
-                else
-                {
-                    f.GetValue<ContextualMenuManageable>(ContextualMenuManageable).CurrentBlockedState = f.GetValue<ContextualMenuManageable>(ContextualMenuManageable).CurrentBlockedState & ~InteractableBehaviourBase.EBlockedState.BlockedBySelection;
-                }
+                var customProperties = this.CustomProperties.Select((x) => { return f.GetConvertedValue(x) as VisualScriptingCustomProperty; }).ToArray();
+
+                Debug.LogError("Sending experience diagnostic: " + CreateJSON(Arguments, customProperties, f));
+                SM.GetSystem<IDiagnosticsSystem>().SendExperienceDiagnostic(Verb, CreateJSON(Arguments, customProperties, f));
                 return OutputTrigger;
             });
 
             OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
-            arguments = new List<ValueInput>();
+            Arguments = new List<ValueInput>();
 
             Type t = null;
 
@@ -84,6 +75,15 @@ namespace Reflectis.SDK.CreatorKit
             {
                 case EExperienceDiagnosticVerb.ExpStart:
                     t = typeof(ExperienceStartDTO);
+                    break;
+                case EExperienceDiagnosticVerb.ExpComplete:
+                    t = typeof(ExperienceCompleteDTO);
+                    break;
+                case EExperienceDiagnosticVerb.StepStart:
+                    t = typeof(ExperienceStepStartDTO);
+                    break;
+                case EExperienceDiagnosticVerb.StepComplete:
+                    t = typeof(ExperienceStepCompleteDTO);
                     break;
                 default:
                     break;
@@ -99,23 +99,38 @@ namespace Reflectis.SDK.CreatorKit
                     if (attr != null)
                     {
                         var argument = ValueInput(field.FieldType, field.Name);
-                        arguments.Add(argument);
+                        Arguments.Add(argument);
                         Requirement(argument, InputTrigger);
                     }
                 }
             }
 
+            CustomProperties = new List<ValueInput>();
+
             for (var i = 0; i < CustomEntriesCount; i++)
             {
-                var argument = ValueInput<object>("Entry_" + i);
-                arguments.Add(argument);
-                Requirement(argument, InputTrigger);
+                var customProperty = ValueInput<VisualScriptingCustomProperty>("Custom_property_" + i);
+                CustomProperties.Add(customProperty);
+                Requirement(customProperty, InputTrigger);
             }
-
-            Requirement(ContextualMenuManageable, InputTrigger);
-            Requirement(BlockValue, InputTrigger);
 
             Succession(InputTrigger, OutputTrigger);
         }
+
+        private string CreateJSON(List<ValueInput> arguments, VisualScriptingCustomProperty[] customProperties, Flow f)
+        {
+            string json = "{";
+            foreach (var argument in arguments)
+            {
+                json += $"\"{argument.key}\":{Newtonsoft.Json.JsonConvert.SerializeObject(f.GetConvertedValue(argument))}, ";
+            }
+            foreach (var customProperty in customProperties)
+            {
+                json += $"\"{customProperty.propertyName}\":{Newtonsoft.Json.JsonConvert.SerializeObject(customProperty.value)}, ";
+            }
+            //remove last comma
+            return json.Substring(0, json.Length - 2) + "}";
+        }
+
     }
 }
