@@ -108,7 +108,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                             guid = AssetDatabase.AssetPathToGUID(path);
 
                             var localizationEntry = settings.CreateOrMoveEntry(guid, group, readOnly: false, postEvent: false);
-                            localizationEntry.address = "localizationcsv";
+                            localizationEntry.address = bundleName + "-localizationcsv";
                             localizationEntry.labels.Clear();
 
                             entriesAdded.Add(localizationEntry);
