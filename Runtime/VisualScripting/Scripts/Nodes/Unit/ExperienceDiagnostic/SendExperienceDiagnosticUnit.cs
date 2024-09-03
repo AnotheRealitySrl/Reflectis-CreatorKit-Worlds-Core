@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Unity.VisualScripting;
-using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
@@ -14,7 +13,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitSurtitle("Reflectis ExperienceDiagnostic")]
     [UnitShortTitle("Send Data")]
     [UnitCategory("Reflectis\\Flow")]
-    public class SendExperienceDiagnosticUnitBase : Unit
+    public class SendExperienceDiagnosticUnit : Unit
     {
         [SerializeAs(nameof(Verb))]
         private EExperienceDiagnosticVerb verb = EExperienceDiagnosticVerb.ExpStart;
@@ -60,7 +59,6 @@ namespace Reflectis.SDK.CreatorKit
 
                 var customProperties = this.CustomProperties.Select((x) => { return f.GetConvertedValue(x) as VisualScriptingCustomProperty; }).ToArray();
 
-                Debug.LogError("Sending experience diagnostic: " + CreateJSON(Arguments, customProperties, f));
                 SM.GetSystem<IDiagnosticsSystem>().SendExperienceDiagnostic(Verb, CreateJSON(Arguments, customProperties, f));
                 return OutputTrigger;
             });
