@@ -25,3 +25,12 @@ MonoBehaviour:
   - System.DateTime
   - System.TimeSpan
   - UnityEngine.Animations.ConstraintSource
+  - UnityEngine.Splines.Spline
+  - UnityEngine.Splines.SplineComponent
+  - UnityEngine.Splines.SplineContainer
+  - UnityEngine.Splines.SplineAnimate
+  - ExposeSplineAnimateUnit
+  - GetSplineAnimateUnit
+  - SetSplineAnimateContainerUnit
+  - SetSplineAnimateMaxSpeedUnit
+  - SplineAnimatePlayCoroutineUnit

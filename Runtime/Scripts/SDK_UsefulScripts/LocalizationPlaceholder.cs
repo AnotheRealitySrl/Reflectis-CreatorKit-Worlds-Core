@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -5,10 +6,37 @@ namespace Reflectis.SDK.CreatorKit
 {
     public class LocalizationPlaceholder : SceneComponentPlaceholderBase
     {
+        #region Inspector info
+
         [SerializeField, Tooltip("String key relative to the text description")]
-        public string key;
+        private string key;
 
         [SerializeField, Tooltip("the text of the textMeshPro where you want to display the description")]
-        public TextMeshProUGUI textField;
+        private TextMeshProUGUI textField;
+
+        #endregion
+
+        #region Public Events
+
+        public Action<string> onKeyChanged;
+
+        #endregion
+
+        #region Properties
+
+        public string Key => key;
+        public TextMeshProUGUI TextField => textField;
+
+        #endregion
+
+        #region Public Methods
+
+        public void SetKey(string newKey)
+        {
+            key = newKey;
+            onKeyChanged?.Invoke(key);
+        }
+
+        #endregion
     }
 }
