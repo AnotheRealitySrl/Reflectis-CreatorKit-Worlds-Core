@@ -1,13 +1,15 @@
 using Reflectis.SDK.Utilities;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Apply Image URL To Sprite")]
+    [UnitTitle("Reflectis image: Set sprite from URL")]
     [UnitSurtitle("Image")]
-    [UnitShortTitle("URL To Image")]
+    [UnitShortTitle("Set sprite from URL")]
     [UnitCategory("Reflectis\\Flow")]
     public class URLImageToTexture : Unit
     {
@@ -27,24 +29,40 @@ namespace Reflectis.SDK.CreatorKit
 
         public ValueInput ImageValue { get; private set; }
 
+        private List<Flow> runningFlows = new List<Flow>();
+
+        private Sprite sprite;
+
+        //Convert to coroutine
         protected override void Definition()
         {
             ImageURL = ValueInput<string>(nameof(ImageURL), null);
             ImageValue = ValueInput<Image>(nameof(ImageValue), null).NullMeansSelf();
 
-            InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
-            {
-                ImageDownloader.DownloadImage(f.GetValue<string>(ImageURL), (tex) =>
-                {
-                    Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
-                    f.GetValue<Image>(ImageValue).sprite = sprite;
-                });
-
-                return OutputTrigger;
-            });
+            InputTrigger = ControlInputCoroutine(nameof(InputTrigger), ImageFromURLCoroutine);
 
             OutputTrigger = ControlOutput(nameof(OutputTrigger));
             Succession(InputTrigger, OutputTrigger);
+        }
+
+        private IEnumerator ImageFromURLCoroutine(Flow flow)
+        {
+            runningFlows.Add(flow);
+
+            CallAwaitableMethod(flow);
+
+            yield return new WaitUntil(() => !runningFlows.Contains(flow));
+
+            yield return OutputTrigger;
+        }
+        private async void CallAwaitableMethod(Flow flow)
+        {
+            ImageDownloader.DownloadImage(flow.GetValue<string>(ImageURL), (tex) =>
+            {
+                sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
+                flow.GetValue<Image>(ImageValue).sprite = sprite;
+                runningFlows.Remove(flow);
+            });
         }
     }
 }
