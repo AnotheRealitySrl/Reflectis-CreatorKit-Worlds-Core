@@ -50,6 +50,8 @@ namespace Reflectis.SDK.CreatorKitEditor
         private GUIStyle _toolbarButtonStyle;
         private Vector2 scrollPosition = Vector2.zero;
 
+        private bool chooseOthersFoldout = false;
+
         #endregion
 
         #region Unity callbacks
@@ -420,38 +422,43 @@ namespace Reflectis.SDK.CreatorKitEditor
                 }
                 EditorGUILayout.EndHorizontal();
 
-                if (addressablesBundleScriptableObjects.Count > 1) // Do it only if 2+ configurations
+                chooseOthersFoldout = EditorGUILayout.Foldout(chooseOthersFoldout, "Choose others");
+                if (chooseOthersFoldout)
                 {
-                    EditorGUILayout.LabelField("Choose others:", style, GUILayout.Width(100));
-                    btnIndex = -1;
-                    foreach (var item in addressablesBundleScriptableObjects)
+                    EditorGUI.indentLevel++;
+                    if (addressablesBundleScriptableObjects.Count > 1) // Do it only if 2+ configurations
                     {
-                        if (item.name != currentSO.name)
+                        btnIndex = -1;
+                        foreach (var item in addressablesBundleScriptableObjects)
                         {
-                            if (++btnIndex % 2f == 0)
+                            if (item.name != currentSO.name)
                             {
-                                EditorGUILayout.BeginHorizontal();
-                            }
-                            if (GUILayout.Button(item.name, GUILayout.Width(bundleBtnWidth)))
-                            {
-                                Selection.activeObject = item;
-                                EditorGUIUtility.PingObject(item);
-                            }
-                            if (btnIndex % 2f == 1)
-                            {
-                                EditorGUILayout.EndHorizontal();
+                                if (++btnIndex % 2f == 0)
+                                {
+                                    EditorGUILayout.BeginHorizontal();
+                                }
+                                if (GUILayout.Button(item.name, GUILayout.Width(bundleBtnWidth)))
+                                {
+                                    Selection.activeObject = item;
+                                    EditorGUIUtility.PingObject(item);
+                                }
+                                if (btnIndex % 2f == 1)
+                                {
+                                    EditorGUILayout.EndHorizontal();
+                                }
                             }
                         }
+                        if (btnIndex % 2f == 0) // Compensate
+                        {
+                            EditorGUILayout.EndHorizontal();
+                        }
                     }
-                    if (btnIndex % 2f == 0) // Compensate
-                    {
-                        EditorGUILayout.EndHorizontal();
-                    }
-                }
 
-                if (GUILayout.Button("[Create new]", GUILayout.Width(bundleNewBtnWidth)))
-                {
-                    CreateNewAddressablesBundle();
+                    if (GUILayout.Button("[Create new]", GUILayout.Width(bundleNewBtnWidth)))
+                    {
+                        CreateNewAddressablesBundle();
+                    }
+                    EditorGUI.indentLevel--;
                 }
             }
             else if (addressablesBundleScriptableObjects.Count > 0)
