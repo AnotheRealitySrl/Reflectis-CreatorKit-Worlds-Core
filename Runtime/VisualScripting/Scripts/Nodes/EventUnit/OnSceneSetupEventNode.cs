@@ -8,7 +8,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitSurtitle("Scene")]
     [UnitShortTitle("On Setup")]
     [UnitCategory("Events\\Reflectis")]
-    public class OnSceneSetupEventNode : AwaitableEventNode<string>
+    public class OnSceneSetupEventNode : AwaitableEventUnit<string>
     {
         public static string eventName = "OnSceneSetup";
 

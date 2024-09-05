@@ -6,7 +6,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitSurtitle("Quiz")]
     [UnitShortTitle("On Quiz Continue")]
     [UnitCategory("Events\\Reflectis")]
-    public class OnQuizContinueEventUnit : AwaitableEventNode<QuizPlaceholder>
+    public class OnQuizContinueEventUnit : AwaitableEventUnit<QuizPlaceholder>
     {
         [DoNotSerialize]
         public ValueOutput Quiz { get; private set; }
