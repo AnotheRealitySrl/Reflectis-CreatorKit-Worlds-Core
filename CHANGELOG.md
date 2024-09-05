@@ -1,5 +1,13 @@
 # Release notes
 
+## v3.4.0
+
+### Added
+
+- Added `GetCMUserByIDNode` to get a CMUser data by using its ID
+- Added `URLImageToTexture` to apply a sprite to an image from a URL link
+- Added `ProfileImageURL` to thee exposed data of the already existing `CollectPlayerDataNode` node
+ 
 ## v3.3.1
 
 ### Fixed
