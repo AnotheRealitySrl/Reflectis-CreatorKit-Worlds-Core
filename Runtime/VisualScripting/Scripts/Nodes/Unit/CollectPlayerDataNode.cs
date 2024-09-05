@@ -21,6 +21,9 @@ namespace Reflectis.SDK.CreatorKit
         [DoNotSerialize]
         public ValueOutput Roles { get; private set; }
 
+        [DoNotSerialize]
+        public ValueOutput ProfileImageURL { get; private set; }
+
         protected override void Definition()
         {
             CMUser = ValueInput<CMUser>(nameof(CMUser), null).NullMeansSelf();
@@ -30,6 +33,8 @@ namespace Reflectis.SDK.CreatorKit
             Name = ValueOutput(nameof(Name), (flow) => flow.GetValue<CMUser>(CMUser).DisplayName);
 
             EMail = ValueOutput(nameof(EMail), (flow) => flow.GetValue<CMUser>(CMUser).Email);
+
+            ProfileImageURL = ValueOutput(nameof(ProfileImageURL), (flow) => flow.GetValue<CMUser>(CMUser).Preferences.AvatarConfig.AvatarPng);
 
             Roles = ValueOutput(nameof(Roles), (flow) =>
             {
