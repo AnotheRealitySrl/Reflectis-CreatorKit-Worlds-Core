@@ -1,6 +1,7 @@
 using Reflectis.SDK.Utilities;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,14 +12,8 @@ namespace Reflectis.SDK.CreatorKit
     [UnitSurtitle("Image")]
     [UnitShortTitle("Set sprite from URL")]
     [UnitCategory("Reflectis\\Flow")]
-    public class URLImageToTexture : Unit
+    public class URLImageToTexture : AwaitableUnit
     {
-        [DoNotSerialize]
-        [PortLabelHidden]
-        public ControlInput InputTrigger { get; private set; }
-        [DoNotSerialize]
-        [PortLabelHidden]
-        public ControlOutput OutputTrigger { get; private set; }
 
         [NullMeansSelf]
         [DoNotSerialize]
@@ -39,23 +34,10 @@ namespace Reflectis.SDK.CreatorKit
             ImageURL = ValueInput<string>(nameof(ImageURL), null);
             ImageValue = ValueInput<Image>(nameof(ImageValue), null).NullMeansSelf();
 
-            InputTrigger = ControlInputCoroutine(nameof(InputTrigger), ImageFromURLCoroutine);
-
-            OutputTrigger = ControlOutput(nameof(OutputTrigger));
-            Succession(InputTrigger, OutputTrigger);
+            base.Definition();
         }
 
-        private IEnumerator ImageFromURLCoroutine(Flow flow)
-        {
-            runningFlows.Add(flow);
-
-            CallAwaitableMethod(flow);
-
-            yield return new WaitUntil(() => !runningFlows.Contains(flow));
-
-            yield return OutputTrigger;
-        }
-        private async void CallAwaitableMethod(Flow flow)
+        protected async override Task AwaitableAction(Flow flow)
         {
             ImageDownloader.DownloadImage(flow.GetValue<string>(ImageURL), (tex) =>
             {

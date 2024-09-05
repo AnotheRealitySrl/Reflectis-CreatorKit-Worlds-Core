@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Threading.Tasks;
 
 namespace Reflectis.SDK.CreatorKit
 {
@@ -11,7 +12,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitSurtitle("CMUserByID")]
     [UnitShortTitle("Get CMUserByID")]
     [UnitCategory("Reflectis\\Get")]
-    public class GetCMUserByIDNode : Unit
+    public class GetCMUserByIDNode : AwaitableUnit
     {
         [NullMeansSelf]
         [DoNotSerialize]
@@ -19,13 +20,6 @@ namespace Reflectis.SDK.CreatorKit
         public ValueOutput CMUser { get; private set; }
 
         public ValueInput UserID { get; private set; }
-
-        [DoNotSerialize]
-        [PortLabelHidden]
-        public ControlInput InputTrigger { get; private set; }
-        [DoNotSerialize]
-        [PortLabelHidden]
-        public ControlOutput OutputTrigger { get; private set; }
 
         private List<Flow> runningFlows = new List<Flow>();
 
@@ -35,26 +29,13 @@ namespace Reflectis.SDK.CreatorKit
         {
             UserID = ValueInput<int>(nameof(UserID));
             CMUser = ValueOutput<CMUser>(nameof(CMUser), f => cmUserData);
-            InputTrigger = ControlInputCoroutine(nameof(InputTrigger), CMUserCoroutine);
 
-            OutputTrigger = ControlOutput(nameof(OutputTrigger));
-            Succession(InputTrigger, OutputTrigger);
+            base.Definition();
         }
 
-        private IEnumerator CMUserCoroutine(Flow flow)
-        {
-            runningFlows.Add(flow);
-
-            CallAwaitableMethod(flow);
-
-            yield return new WaitUntil(() => !runningFlows.Contains(flow));
-
-            yield return OutputTrigger;
-        }
-        private async void CallAwaitableMethod(Flow flow)
+        protected async override Task AwaitableAction(Flow flow)
         {         
             cmUserData = await SM.GetSystem<IClientModelSystem>().GetUserData(flow.GetValue<int>(UserID));
-            runningFlows.Remove(flow);
         }
 
     }
