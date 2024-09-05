@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -16,7 +17,7 @@ namespace Reflectis.SDK.CreatorKitEditor
     {
         #region Public consts
 
-        public const string window_name ="Configure and build Addressables";
+        public const string window_name = "Configure and build Addressables";
 
         #endregion
 
@@ -161,7 +162,16 @@ namespace Reflectis.SDK.CreatorKitEditor
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField($"{(IsPlayerVersionOverrideValid() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
                 EditorGUILayout.LabelField($"Catalog name: ", style, GUILayout.Width(100));
-                playerVersionOverride = EditorGUILayout.TextField(playerVersionOverride);
+
+                //playerVersionOverride = EditorGUILayout.TextField(playerVersionOverride);
+                GUI.enabled = false;
+                if (playerVersionOverride != settings.OverridePlayerVersion)
+                {
+                    playerVersionOverride = settings.OverridePlayerVersion;
+                }
+                EditorGUILayout.TextField(playerVersionOverride);
+                GUI.enabled = true;
+
                 EditorGUILayout.EndHorizontal();
 
                 if (string.IsNullOrEmpty(playerVersionOverride))
@@ -173,10 +183,12 @@ namespace Reflectis.SDK.CreatorKitEditor
                     EditorGUILayout.LabelField($"<color=red>Only alphanumeric values are allowed!</color>", style);
                 }
 
-                if (settings.OverridePlayerVersion != playerVersionOverride)
-                {
-                    UpdatePlayerVersion();
-                }
+                //if (settings.OverridePlayerVersion != playerVersionOverride)
+                //{
+                //    UpdatePlayerVersion();
+                //}
+
+                ShowAddressablesBundles();
 
                 EditorGUILayout.HelpBox("Catalog names should be univoque within the same world. If a new catalog is loaded through the Back office " +
                     "with the same name of another one, the previous one is overridden.", MessageType.Info);
@@ -364,6 +376,125 @@ namespace Reflectis.SDK.CreatorKitEditor
             }
         }
 
+        private void ShowAddressablesBundles()
+        {
+            GUIStyle style = new(EditorStyles.label)
+            {
+                richText = true,
+            };
+
+            // Get Addressables Bundles SO
+            List<AddressablesBundleScriptableObject> addressablesBundleScriptableObjects = new List<AddressablesBundleScriptableObject>();
+            List<string> addressablesBundleScriptableObjectsStr = AssetDatabase.FindAssets("t:" + typeof(AddressablesBundleScriptableObject).Name).ToList();
+            foreach (string str in addressablesBundleScriptableObjectsStr)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(str);
+                addressablesBundleScriptableObjects.Add(AssetDatabase.LoadAssetAtPath<AddressablesBundleScriptableObject>(path));
+            }
+
+            // Addressables Bundle detail.
+            // If found, then show the button to focus it, otherwise list all buttons and ask user to configure one of them.
+
+            AddressablesBundleScriptableObject currentSO = null;
+            foreach (var item in addressablesBundleScriptableObjects)
+            {
+                if (!string.IsNullOrEmpty(item.BundleName) && item.BundleName == playerVersionOverride)
+                {
+                    currentSO = item;
+                    break;
+                }
+            }
+
+            float bundleBtnWidth = (EditorGUIUtility.currentViewWidth - 30f) / 2f;
+            float bundleNewBtnWidth = (EditorGUIUtility.currentViewWidth - 30f) / 3f;
+            int btnIndex = -1;
+
+            if (currentSO != null)
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField($"Bundle Asset: ", style, GUILayout.Width(100));
+                if (GUILayout.Button(currentSO.name, GUILayout.Width(bundleBtnWidth)))
+                {
+                    Selection.activeObject = currentSO;
+                    EditorGUIUtility.PingObject(currentSO);
+                }
+                EditorGUILayout.EndHorizontal();
+
+                if (addressablesBundleScriptableObjects.Count > 1) // Do it only if 2+ configurations
+                {
+                    EditorGUILayout.LabelField("Choose others:", style, GUILayout.Width(100));
+                    btnIndex = -1;
+                    foreach (var item in addressablesBundleScriptableObjects)
+                    {
+                        if (item.name != currentSO.name)
+                        {
+                            if (++btnIndex % 2f == 0)
+                            {
+                                EditorGUILayout.BeginHorizontal();
+                            }
+                            if (GUILayout.Button(item.name, GUILayout.Width(bundleBtnWidth)))
+                            {
+                                Selection.activeObject = item;
+                                EditorGUIUtility.PingObject(item);
+                            }
+                            if (btnIndex % 2f == 1)
+                            {
+                                EditorGUILayout.EndHorizontal();
+                            }
+                        }
+                    }
+                    if (btnIndex % 2f == 0) // Compensate
+                    {
+                        EditorGUILayout.EndHorizontal();
+                    }
+                }
+
+                if (GUILayout.Button("[Create new]", GUILayout.Width(bundleNewBtnWidth)))
+                {
+                    CreateNewAddressablesBundle();
+                }
+            }
+            else if (addressablesBundleScriptableObjects.Count > 0)
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField($"Choose a bundle and configure it from its Inspector.", style, GUILayout.Width(100));
+                EditorGUILayout.EndHorizontal();
+                btnIndex = -1;
+                foreach (var item in addressablesBundleScriptableObjects)
+                {
+                    if (++btnIndex % 2f == 0)
+                    {
+                        EditorGUILayout.BeginHorizontal();
+                    }
+                    if (GUILayout.Button(item.name, GUILayout.Width(bundleBtnWidth)))
+                    {
+                        Selection.activeObject = item;
+                        EditorGUIUtility.PingObject(item);
+                    }
+                    if (btnIndex % 2f == 1)
+                    {
+                        EditorGUILayout.EndHorizontal();
+                    }
+                }
+                if (btnIndex % 2f == 0) // Compensate
+                {
+                    EditorGUILayout.EndHorizontal();
+                }
+                if (GUILayout.Button("[Create new]", GUILayout.Width(bundleNewBtnWidth)))
+                {
+                    CreateNewAddressablesBundle();
+                }
+            }
+            else
+            {
+                EditorGUILayout.LabelField($"You need to create an Addressable Bundle to proceed!", style, GUILayout.Width(100));
+                if (GUILayout.Button("[Create new]", GUILayout.Width(bundleNewBtnWidth)))
+                {
+                    CreateNewAddressablesBundle();
+                }
+            }
+        }
+
         private void CreateSeparator()
         {
             Rect rect = EditorGUILayout.GetControlRect(false, 1);
@@ -384,6 +515,29 @@ namespace Reflectis.SDK.CreatorKitEditor
             settings.ShaderBundleCustomNaming = playerVersionOverride;
 
             SaveChanges();
+        }
+
+        private void CreateNewAddressablesBundle()
+        {
+            string newBundleName = "new" + System.DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            string configFolder = "Assets/ReflectisSettings/Editor/AddressablesConfigurations";
+            string configName = "AddressablesBundle-" + newBundleName;
+
+            AddressablesBundleScriptableObject ab = null;
+            var path = configFolder + "/" + configName + ".asset";
+            ab = CreateInstance<AddressablesBundleScriptableObject>();
+
+            // Maybe initialize something here...
+            // (here)
+
+            Directory.CreateDirectory(configFolder);
+            AssetDatabase.CreateAsset(ab, path);
+            ab = AssetDatabase.LoadAssetAtPath<AddressablesBundleScriptableObject>(path);
+
+            Selection.activeObject = ab;
+            EditorGUIUtility.PingObject(ab);
+
+            AssetDatabase.SaveAssets();
         }
 
         private bool IsAddressablesSettingsConfigured()

@@ -81,6 +81,12 @@ namespace Reflectis.SDK.CreatorKitEditor
 
         #endregion
 
+        #region Properties
+
+        public string BundleName => bundleName;
+
+        #endregion
+
         #region Execution: Setup
 
         internal void Setup()
