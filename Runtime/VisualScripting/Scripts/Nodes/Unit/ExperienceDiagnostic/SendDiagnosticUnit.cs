@@ -1,5 +1,6 @@
 using Reflectis.SDK.Core;
 using Reflectis.SDK.Diagnostics;
+using Reflectis.SDK.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +14,14 @@ namespace Reflectis.SDK.CreatorKit
     [UnitSurtitle("Reflectis ExperienceDiagnostic")]
     [UnitShortTitle("Send Data")]
     [UnitCategory("Reflectis\\Flow")]
-    public class SendExperienceDiagnosticUnit : Unit
+    public class SendDiagnosticUnit : Unit
     {
         [SerializeAs(nameof(Verb))]
-        private EExperienceDiagnosticVerb verb = EExperienceDiagnosticVerb.ExpStart;
+        private EDiagnosticVerb verb = EDiagnosticVerb.ExpStart;
 
         [DoNotSerialize]
         [Inspectable, UnitHeaderInspectable(nameof(verb))]
-        public EExperienceDiagnosticVerb Verb
+        public EDiagnosticVerb Verb
         {
             get => verb;
             set => verb = value;
@@ -53,13 +54,16 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void Definition()
         {
-
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-
-                var customProperties = this.CustomProperties.Select((x) => { return f.GetConvertedValue(x) as VisualScriptingCustomProperty; }).ToArray();
-
-                SM.GetSystem<IDiagnosticsSystem>().SendExperienceDiagnostic(Verb, CreateJSON(Arguments, customProperties, f));
+                var customProperties = this.Arguments.Select((x) =>
+                {
+                    return new Property(x.key, f.GetConvertedValue(x));
+                }).Concat(CustomProperties.Select((x) =>
+                {
+                    return new Property(x.key, f.GetConvertedValue(x));
+                })).ToList();
+                SM.GetSystem<IDiagnosticsSystem>().SendDiagnostic(Verb, customProperties);
                 return OutputTrigger;
             });
 
@@ -67,28 +71,17 @@ namespace Reflectis.SDK.CreatorKit
 
             Arguments = new List<ValueInput>();
 
-            Type t = null;
-
-            switch (Verb)
-            {
-                case EExperienceDiagnosticVerb.ExpStart:
-                    t = typeof(ExperienceStartDTO);
-                    break;
-                case EExperienceDiagnosticVerb.ExpComplete:
-                    t = typeof(ExperienceCompleteDTO);
-                    break;
-                case EExperienceDiagnosticVerb.StepStart:
-                    t = typeof(ExperienceStepStartDTO);
-                    break;
-                case EExperienceDiagnosticVerb.StepComplete:
-                    t = typeof(ExperienceStepCompleteDTO);
-                    break;
-                default:
-                    break;
-            }
+            Type t = IDiagnosticsSystem.VerbsDTOs[Verb];
 
             if (t != null)
             {
+                if (IDiagnosticsSystem.VerbsTypes[EDiagnosticType.Experience].Contains(Verb))
+                {
+                    var keyArgument = ValueInput<string>(ExperienceDiagnosticDTO.KEY_FIELD_NAME);
+                    Arguments.Add(keyArgument);
+                    Requirement(keyArgument, InputTrigger);
+                }
+
                 BindingFlags bf = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
                 //Since the variable "OnVariableChange" is marked as internal we are using reflection to get the variable and set its value
                 foreach (var field in t.GetFields(bf))
@@ -98,7 +91,6 @@ namespace Reflectis.SDK.CreatorKit
                     {
                         var argument = ValueInput(field.FieldType, field.Name);
                         Arguments.Add(argument);
-                        Requirement(argument, InputTrigger);
                     }
                 }
             }
@@ -107,28 +99,12 @@ namespace Reflectis.SDK.CreatorKit
 
             for (var i = 0; i < CustomEntriesCount; i++)
             {
-                var customProperty = ValueInput<VisualScriptingCustomProperty>("Custom_property_" + i);
+                var customProperty = ValueInput<Property>("Custom_property_" + i);
                 CustomProperties.Add(customProperty);
                 Requirement(customProperty, InputTrigger);
             }
 
             Succession(InputTrigger, OutputTrigger);
         }
-
-        private string CreateJSON(List<ValueInput> arguments, VisualScriptingCustomProperty[] customProperties, Flow f)
-        {
-            string json = "{";
-            foreach (var argument in arguments)
-            {
-                json += $"\"{argument.key}\":{Newtonsoft.Json.JsonConvert.SerializeObject(f.GetConvertedValue(argument))}, ";
-            }
-            foreach (var customProperty in customProperties)
-            {
-                json += $"\"{customProperty.propertyName}\":{Newtonsoft.Json.JsonConvert.SerializeObject(customProperty.value)}, ";
-            }
-            //remove last comma
-            return json.Substring(0, json.Length - 2) + "}";
-        }
-
     }
 }

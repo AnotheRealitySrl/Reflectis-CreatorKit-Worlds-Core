@@ -1,12 +1,13 @@
+using Reflectis.SDK.Utilities;
 using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis CustomProperty: New")]
-    [UnitSurtitle("Reflectis CustomProperty")]
+    [UnitTitle("Reflectis Property: New")]
+    [UnitSurtitle("Reflectis Property")]
     [UnitShortTitle("New")]
     [UnitCategory("Reflectis\\New")]
-    public class NewVisualScriptingCustomPropertyUnit : Unit
+    public class NewPropertyUnit : Unit
     {
         [DoNotSerialize]
         public ValueInput Name { get; private set; }
@@ -16,7 +17,7 @@ namespace Reflectis.SDK.CreatorKit
 
         [DoNotSerialize]
         [PortLabelHidden]
-        public ValueOutput CustomProperty { get; private set; }
+        public ValueOutput Property { get; private set; }
 
         protected override void Definition()
         {
@@ -24,12 +25,8 @@ namespace Reflectis.SDK.CreatorKit
 
             Value = ValueInput<object>(nameof(Value), null);
 
-            CustomProperty = ValueOutput(nameof(CustomProperty),
-                (flow) => new VisualScriptingCustomProperty()
-                {
-                    propertyName = (string)flow.GetConvertedValue(Name),
-                    value = flow.GetConvertedValue(Value)
-                });
+            Property = ValueOutput(nameof(Property),
+                (flow) => new Property((string)flow.GetConvertedValue(Name), flow.GetConvertedValue(Value)));
         }
 
 
