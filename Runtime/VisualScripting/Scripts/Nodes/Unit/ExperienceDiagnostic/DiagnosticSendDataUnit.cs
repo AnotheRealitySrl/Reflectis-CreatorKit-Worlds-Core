@@ -6,16 +6,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
 
-    [UnitTitle("Reflectis ExperienceDiagnostic: Send Data")]
-    [UnitSurtitle("Reflectis ExperienceDiagnostic")]
+
+    [UnitTitle(UNIT_TITLE)]
+    [UnitSurtitle("Reflectis Diagnostic")]
     [UnitShortTitle("Send Data")]
     [UnitCategory("Reflectis\\Flow")]
-    public class SendDiagnosticUnit : Unit
+    public class DiagnosticSendDataUnit : Unit
     {
+
+        public const string UNIT_TITLE = "Reflectis Diagnostic: Send Data";
+
         [SerializeAs(nameof(Verb))]
         private EDiagnosticVerb verb = EDiagnosticVerb.ExpStart;
 
@@ -51,6 +56,14 @@ namespace Reflectis.SDK.CreatorKit
         [PortLabelHidden]
         public ControlOutput OutputTrigger { get; private set; }
 
+        private GameObject gameObject;
+
+        public override void Instantiate(GraphReference instance)
+        {
+            base.Instantiate(instance);
+
+            gameObject = instance.gameObject;
+        }
 
         protected override void Definition()
         {
@@ -61,9 +74,23 @@ namespace Reflectis.SDK.CreatorKit
                     return new Property(x.key, f.GetConvertedValue(x));
                 }).Concat(CustomProperties.Select((x) =>
                 {
-                    return new Property(x.key, f.GetConvertedValue(x));
+
+                    return f.GetConvertedValue(x) as Property;
                 })).ToList();
-                SM.GetSystem<IDiagnosticsSystem>().SendDiagnostic(Verb, customProperties);
+                try
+                {
+                    SM.GetSystem<IDiagnosticsSystem>().SendDiagnostic(Verb, customProperties);
+                }
+                catch (Exception exception)
+                {
+                    string message = $"Error during execution of \"{UNIT_TITLE}\" on gameObject {gameObject}: {exception.Message} ";
+                    if (IDiagnosticsSystem.VerbsTypes[EDiagnosticType.Experience].Contains(Verb))
+                    {
+                        message = message +
+                        $"Remember to call the node {DiagnosticGenerateExperienceIDUnit.UNIT_TITLE} to generate the ExperienceID before trying to send diagnostics data!";
+                    }
+                    Debug.LogError(message, gameObject);
+                }
                 return OutputTrigger;
             });
 
