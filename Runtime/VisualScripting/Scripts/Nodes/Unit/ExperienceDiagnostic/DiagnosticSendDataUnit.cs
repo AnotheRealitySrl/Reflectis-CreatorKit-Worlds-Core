@@ -119,7 +119,14 @@ namespace Reflectis.SDK.CreatorKit
                     if (attr != null)
                     {
                         var argument = ValueInput(field.FieldType, field.Name);
-                        argument.SetDefaultValue(t.Default());
+                        if (t.IsNullable())
+                        {
+                            argument.unit.defaultValues[field.Name] = null;
+                        }
+                        else
+                        {
+                            argument.SetDefaultValue(t.Default());
+                        }
                         Arguments.Add(argument);
                     }
                 }
