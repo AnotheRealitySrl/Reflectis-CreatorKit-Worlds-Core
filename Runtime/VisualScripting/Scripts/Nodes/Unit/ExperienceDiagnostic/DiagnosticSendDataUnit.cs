@@ -69,7 +69,9 @@ namespace Reflectis.SDK.CreatorKit
         {
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                var customProperties = this.Arguments.Select((x) =>
+                var customProperties = this.Arguments
+                .Where(x => f.GetValue(x) != null)
+                .Select((x) =>
                 {
                     return new Property(x.key, f.GetConvertedValue(x));
                 }).Concat(CustomProperties.Select((x) =>
