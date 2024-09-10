@@ -106,7 +106,7 @@ namespace Reflectis.SDK.CreatorKit
             {
                 if (IDiagnosticsSystem.VerbsTypes[EDiagnosticType.Experience].Contains(Verb))
                 {
-                    var keyArgument = ValueInput<string>(ExperienceDiagnosticDTO.KEY_FIELD_NAME);
+                    var keyArgument = ValueInput<string>(ExperienceDiagnosticDTO.KEY_FIELD_NAME, null);
                     Arguments.Add(keyArgument);
                     Requirement(keyArgument, InputTrigger);
                 }
@@ -119,6 +119,7 @@ namespace Reflectis.SDK.CreatorKit
                     if (attr != null)
                     {
                         var argument = ValueInput(field.FieldType, field.Name);
+                        argument.SetDefaultValue(t.Default());
                         Arguments.Add(argument);
                     }
                 }
