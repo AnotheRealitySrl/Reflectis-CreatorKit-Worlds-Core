@@ -1,6 +1,7 @@
 using Reflectis.SDK.Core;
 using Reflectis.SDK.Diagnostics;
 using Reflectis.SDK.Utilities;
+using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,6 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-
-
     [UnitTitle(UNIT_TITLE)]
     [UnitSurtitle("Reflectis Diagnostic")]
     [UnitShortTitle("Send Data")]
@@ -69,30 +68,45 @@ namespace Reflectis.SDK.CreatorKit
         {
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                var customProperties = this.Arguments
-                .Where(x => f.GetValue(x) != null)
-                .Select((x) =>
+                var customProperties = CustomProperties.Select((x) =>
                 {
-                    return new Property(x.key, f.GetConvertedValue(x));
-                }).Concat(CustomProperties.Select((x) =>
-                {
-
                     return f.GetConvertedValue(x) as Property;
-                })).ToList();
-                try
+                });
+                Type t = IDiagnosticsSystem.VerbsDTOs[Verb];
+
+                if (t != null)
                 {
-                    SM.GetSystem<IDiagnosticsSystem>().SendDiagnostic(Verb, customProperties);
-                }
-                catch (Exception exception)
-                {
-                    string message = $"Error during execution of \"{UNIT_TITLE}\" on gameObject {gameObject}: {exception.Message} ";
-                    if (IDiagnosticsSystem.VerbsTypes[EDiagnosticType.Experience].Contains(Verb))
+                    var diagnosticDTO = t.Instantiate();
+
+                    foreach (var argument in Arguments)
                     {
-                        message = message +
-                        $"Remember to call the node {DiagnosticGenerateExperienceIDUnit.UNIT_TITLE} to generate the ExperienceID before trying to send diagnostics data!";
+                        var value = f.GetConvertedValue(argument);
+                        if (value != null)
+                        {
+                            //Set field value
+                            t.GetRuntimeFields().FirstOrDefault(x => x.Name.Equals(argument.key))?.SetValue(diagnosticDTO, value);
+                        }
                     }
-                    Debug.LogError(message, gameObject);
+                    try
+                    {
+                        SM.GetSystem<IDiagnosticsSystem>().SendDiagnostic(Verb, (DiagnosticDTO)diagnosticDTO, customProperties);
+                    }
+                    catch (Exception exception)
+                    {
+                        string message = $"Error during execution of \"{UNIT_TITLE}\" on gameObject {gameObject}: {exception.Message} ";
+                        if (IDiagnosticsSystem.VerbsTypes[EDiagnosticType.Experience].Contains(Verb))
+                        {
+                            message = message +
+                            $"Remember to call the node {DiagnosticGenerateExperienceIDUnit.UNIT_TITLE} to generate the ExperienceID before trying to send diagnostics data!";
+                        }
+                        Debug.LogError(message, gameObject);
+                    }
                 }
+                else
+                {
+                    Debug.LogError("There are no DTOs for the selected VERB");
+                }
+
                 return OutputTrigger;
             });
 
@@ -104,30 +118,28 @@ namespace Reflectis.SDK.CreatorKit
 
             if (t != null)
             {
-                if (IDiagnosticsSystem.VerbsTypes[EDiagnosticType.Experience].Contains(Verb))
+                foreach (var field in t.GetRuntimeFields())
                 {
-                    var keyArgument = ValueInput<string>(ExperienceDiagnosticDTO.KEY_FIELD_NAME, null);
-                    Arguments.Add(keyArgument);
-                    Requirement(keyArgument, InputTrigger);
-                }
-
-                BindingFlags bf = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-                //Since the variable "OnVariableChange" is marked as internal we are using reflection to get the variable and set its value
-                foreach (var field in t.GetFields(bf))
-                {
-                    var attr = field.GetCustomAttribute<SettableFieldExperienceAttribute>();
+                    var attr = field.GetCustomAttribute<SettableFieldAttribute>();
                     if (attr != null)
                     {
                         var argument = ValueInput(field.FieldType, field.Name);
-                        if (t.IsNullable())
+                        if (!attr.isRequired)
                         {
-                            argument.unit.defaultValues[field.Name] = null;
-                        }
-                        else
-                        {
-                            argument.SetDefaultValue(t.Default());
+                            if (t.IsNullable())
+                            {
+                                argument.unit.defaultValues[field.Name] = null;
+                            }
+                            else
+                            {
+                                argument.SetDefaultValue(t.Default());
+                            }
                         }
                         Arguments.Add(argument);
+                        if (attr.isRequired)
+                        {
+                            Requirement(argument, InputTrigger);
+                        }
                     }
                 }
             }
