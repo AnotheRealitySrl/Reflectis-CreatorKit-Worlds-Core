@@ -72,11 +72,11 @@ namespace Reflectis.SDK.CreatorKit
                 {
                     return f.GetConvertedValue(x) as Property;
                 });
-                Type t = IDiagnosticsSystem.VerbsDTOs[Verb];
+                Type type = IDiagnosticsSystem.VerbsDTOs[Verb];
 
-                if (t != null)
+                if (type != null)
                 {
-                    var diagnosticDTO = t.Instantiate();
+                    var diagnosticDTO = type.Instantiate();
 
                     foreach (var argument in Arguments)
                     {
@@ -84,7 +84,7 @@ namespace Reflectis.SDK.CreatorKit
                         if (value != null)
                         {
                             //Set field value
-                            t.GetRuntimeFields().FirstOrDefault(x => x.Name.Equals(argument.key))?.SetValue(diagnosticDTO, value);
+                            type.GetRuntimeFields().FirstOrDefault(x => x.Name.Equals(argument.key))?.SetValue(diagnosticDTO, value);
                         }
                     }
                     try
@@ -114,11 +114,11 @@ namespace Reflectis.SDK.CreatorKit
 
             Arguments = new List<ValueInput>();
 
-            Type t = IDiagnosticsSystem.VerbsDTOs[Verb];
+            Type type = IDiagnosticsSystem.VerbsDTOs[Verb];
 
-            if (t != null)
+            if (type != null)
             {
-                foreach (var field in t.GetRuntimeFields())
+                foreach (var field in type.GetRuntimeFields())
                 {
                     var attr = field.GetCustomAttribute<SettableFieldAttribute>();
                     if (attr != null)
@@ -126,13 +126,13 @@ namespace Reflectis.SDK.CreatorKit
                         var argument = ValueInput(field.FieldType, field.Name);
                         if (!attr.isRequired)
                         {
-                            if (t.IsNullable())
+                            if (type.IsNullable())
                             {
                                 argument.unit.defaultValues[field.Name] = null;
                             }
                             else
                             {
-                                argument.SetDefaultValue(t.Default());
+                                argument.SetDefaultValue(type.Default());
                             }
                         }
                         Arguments.Add(argument);
