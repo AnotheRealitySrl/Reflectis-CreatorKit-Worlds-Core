@@ -7,8 +7,12 @@
 - Added `GetCMUserByIDNode` to get a CMUser data by using its ID.
 - Added `URLImageToTexture` to apply a sprite to an image from a URL link.
 - Added `ProfileImageURL` to the exposed data of the already existing `CollectPlayerDataNode` node.
-- Added new VS node `InitializePlaceholder`. It can be used to initialize the placeholder component of a GameObject that has been instantiated dynamically.
+- Added new visual scripting node `InitializePlaceholder`. It can be used to initialize the placeholder component of a GameObject that has been instantiated dynamically.
 - Added `ConstraintSource` type to visual scripting type library.
+
+### Changed
+
+- Updated visual scripting node `EnableOtherCharacters` so that it uses the new method `EnableOtherAvatarsMeshes` from the AvatarSystem. The node now works as intended (up until now it was considered as not implemented).
  
 ## v3.3.1
 
