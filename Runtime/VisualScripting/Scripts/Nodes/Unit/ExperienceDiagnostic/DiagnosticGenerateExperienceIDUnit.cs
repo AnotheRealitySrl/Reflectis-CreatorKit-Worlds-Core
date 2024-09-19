@@ -9,7 +9,7 @@ namespace Reflectis.SDK.CreatorKit
     [UnitTitle(UNIT_TITLE)]
     [UnitSurtitle("Reflectis Diagnostic")]
     [UnitShortTitle("Generate ExperienceID")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Reflectis\\Flow")]
     public class DiagnosticGenerateExperienceIDUnit : AwaitableUnit
     {
         public const string UNIT_TITLE = "Reflectis Diagnostic: Generate ExperienceID";
@@ -17,7 +17,6 @@ namespace Reflectis.SDK.CreatorKit
         private const int MAX_KEY_LENGTH = 15;
 
         [DoNotSerialize]
-        [PortLabelHidden]
         public ValueInput Key { get; private set; }
 
         private GameObject gameObject;

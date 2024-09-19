@@ -3,10 +3,10 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKitEditor
 {
-    [Descriptor(typeof(OnSceneUnloadEventNode))]
-    public class OnSceneUnloadEventDescriptor : UnitDescriptor<OnSceneUnloadEventNode>
+    [Descriptor(typeof(OnSceneUnloadEventUnit))]
+    public class OnSceneUnloadEventDescriptor : UnitDescriptor<OnSceneUnloadEventUnit>
     {
-        public OnSceneUnloadEventDescriptor(OnSceneUnloadEventNode unit) : base(unit) { }
+        public OnSceneUnloadEventDescriptor(OnSceneUnloadEventUnit unit) : base(unit) { }
 
         protected override string DefinedSummary()
         {

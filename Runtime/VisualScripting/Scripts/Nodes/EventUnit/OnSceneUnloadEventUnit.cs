@@ -8,11 +8,11 @@ namespace Reflectis.SDK.CreatorKit
     [UnitSurtitle("Scene")]
     [UnitShortTitle("On Unload")]
     [UnitCategory("Events\\Reflectis")]
-    public class OnSceneUnloadEventNode : AwaitableEventUnit<string>
+    public class OnSceneUnloadEventUnit : AwaitableEventUnit<string>
     {
         public static string eventName = "OnSceneLoad";
 
-        public static Dictionary<GraphReference, List<OnSceneUnloadEventNode>> instances = new Dictionary<GraphReference, List<OnSceneUnloadEventNode>>();
+        public static Dictionary<GraphReference, List<OnSceneUnloadEventUnit>> instances = new Dictionary<GraphReference, List<OnSceneUnloadEventUnit>>();
 
         protected override bool register => true;
 
@@ -27,7 +27,7 @@ namespace Reflectis.SDK.CreatorKit
             }
             else
             {
-                List<OnSceneUnloadEventNode> variableList = new List<OnSceneUnloadEventNode>
+                List<OnSceneUnloadEventUnit> variableList = new List<OnSceneUnloadEventUnit>
                 {
                     this
                 };
