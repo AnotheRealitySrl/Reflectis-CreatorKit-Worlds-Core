@@ -1,7 +1,6 @@
 using Reflectis.SDK.Core;
 using Reflectis.SDK.Diagnostics;
 using Reflectis.SDK.Utilities;
-using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
