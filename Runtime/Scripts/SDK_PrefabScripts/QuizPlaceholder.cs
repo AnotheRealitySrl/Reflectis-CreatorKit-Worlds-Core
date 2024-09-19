@@ -209,6 +209,13 @@ namespace Reflectis.SDK.CreatorKit
         [OnChangedCall(nameof(OnAnswersChanged))]
         private int answersSubsetQuantity = 100;
 
+        [DrawIf(nameof(shuffleAnswers), true)]
+        [DrawIf(nameof(pickSubset), true)]
+        [Min(0)]
+        [SerializeField]
+        [OnChangedCall(nameof(OnAnswersChanged))]
+        private int minCorrectAnswersQuantity = 0;
+
         [Space]
 
         [SerializeField]
@@ -272,6 +279,10 @@ namespace Reflectis.SDK.CreatorKit
         // AnswersSubsetQuantity
         // In every case, AnswersSubsetQuantity can't be negative.
         public int AnswersSubsetQuantity => PickSubset ? Mathf.Clamp(answersSubsetQuantity, 0, QuizAnswers.Count) : QuizAnswers.Count;
+
+        // MinCorrectAnswersQuantity
+        // In every case, MinCorrectAnswersQuantity can't be negative.
+        public int MinCorrectAnswersQuantity => PickSubset ? Mathf.Clamp(minCorrectAnswersQuantity, 0, QuizAnswers.Count) : 0;
 
         #endregion
 
@@ -525,6 +536,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             if (quizMaxAnswersTextMesh != null)
             {
+                // ToDo: add also "MinCorrectAnswersQuantity" value?
                 var newVal = string.Format(QUIZ_MAXANSWERS_FORMAT, AnswersSubsetQuantity, (ShuffleAnswers ? " shuffled" : string.Empty), QuizAnswers.Count);
                 if (quizMaxAnswersTextMesh.text != newVal)
                 {

@@ -110,7 +110,9 @@ MonoBehaviour:
   shuffleAnswers: 0
   pickSubset: 0
   answersSubsetQuantity: 100
+  minCorrectAnswersQuantity: 0
   quizLayout: 0
+  quizGridColumns: 3
   quizElementLayout: 1
   quizEventsScriptMachine: {fileID: 0}
   quizAnswers:
@@ -130,6 +132,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onReset:
+    m_PersistentCalls:
+      m_Calls: []
+  onContinue:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &2052830806718343360
