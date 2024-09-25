@@ -10,12 +10,10 @@ namespace Reflectis.SDK.CreatorKit
     ///this unit is always called during the first deserialization, it will start a flow and will comunicate if the value of
     ///the variable was changed or not
     ///it differs from OnSyncedVariableInitEventUnit
-    public class OnSyncedVariableInit : EventUnit<(string, object, bool)>
+    public class OnSyncedVariableInit : SyncedVariableBaseEventUnit<(string, object, bool)>
     {
         public static string eventName = "SyncedVariablesOnVariableInit";
 
-        [DoNotSerialize]
-        public ValueInput VariableName { get; private set; }
 
         [DoNotSerialize]
         public ValueOutput Value { get; private set; }
@@ -34,7 +32,6 @@ namespace Reflectis.SDK.CreatorKit
         protected override void Definition()
         {
             base.Definition();
-            VariableName = ValueInput<string>(nameof(VariableName), null);
             Value = ValueOutput<object>(nameof(Value));
             IsChanged = ValueOutput<bool>(nameof(IsChanged));
         }

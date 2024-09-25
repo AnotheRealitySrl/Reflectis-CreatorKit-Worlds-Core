@@ -2,27 +2,21 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Synced Variables: On Synced Variable Changed")]
-    [UnitSurtitle("Synced Variables")]
-    [UnitShortTitle("On Synced Variable Changed")]
+    [UnitTitle("Reflectis Synced Variables: On Synced Variable Changed Init")]
+    [UnitSurtitle("Synced Variables Init")]
+    [UnitShortTitle("On Synced Variable Changed Init")]
     [UnitCategory("Events\\Reflectis")]
-    public class SyncedVariablesEventNodes : EventUnit<(string, object)>
+    ///this unit is called once at the first deserialization if the variable was changed at least 1 time
+    ///it is different from OnSyncedVariableInit
+    public class OnSyncedVariableInitEventUnit : SyncedVariableBaseEventUnit<(string, object)>
     {
-        public static string eventName = "SyncedVariablesOnVariableChanged";
-
-        [DoNotSerialize]
-        public ValueInput VariableName { get; private set; }
+        public static string eventName = "SyncedVariablesOnVariableChangedInit";
 
         [DoNotSerialize]
         [PortLabelHidden]
         public ValueOutput Value { get; private set; }
 
         protected override bool register => true;
-
-        public void Init(GraphReference reference)
-        {
-            GetHook(reference);
-        }
 
         public override EventHook GetHook(GraphReference reference)
         {
@@ -32,7 +26,6 @@ namespace Reflectis.SDK.CreatorKit
         protected override void Definition()
         {
             base.Definition();
-            VariableName = ValueInput<string>(nameof(VariableName), null);
             Value = ValueOutput<object>(nameof(Value));
         }
 
@@ -48,4 +41,3 @@ namespace Reflectis.SDK.CreatorKit
         }
     }
 }
-

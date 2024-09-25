@@ -1,5 +1,5 @@
 using Reflectis.SDK.Core;
-using Reflectis.SDK.SceneHierarchy;
+using Reflectis.SDK.Avatars;
 using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
@@ -28,7 +28,7 @@ namespace Reflectis.SDK.CreatorKit
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                SM.GetSystem<ISceneObjectsSystem>().EnableOtherAvatars(f.GetValue<bool>(Enable));
+                SM.GetSystem<IAvatarSystem>().EnableOtherAvatarsMeshes(f.GetValue<bool>(Enable));
 
                 return OutputTrigger;
             });

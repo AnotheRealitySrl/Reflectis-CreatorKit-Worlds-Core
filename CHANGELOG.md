@@ -1,5 +1,25 @@
 # Release notes
 
+## v3.4.0
+
+### Added
+
+- Added `DiagnosticGenerateExperienceIDUnit` to generate unique experienceID
+- Added `DiagnosticSendDataUnit` to allow creators to send diagnostic data
+- Added `SwitchNetworkMasterUnit` to switch visual scripting flow base on if the client is the master client or not
+- Added `OnSceneUnloadEventUnit` to launch events on scene change
+- Added `GetCMUserByIDNode` to get a CMUser data by using its ID.
+- Added `URLImageToTexture` to apply a sprite to an image from a URL link.
+- Added `ProfileImageURL` to the exposed data of the already existing `CollectPlayerDataNode` node.
+- Added new visual scripting node `InitializePlaceholder`. It can be used to initialize the placeholder component of a GameObject that has been instantiated dynamically.
+- Added `ConstraintSource` type to visual scripting type library.
+- Added Scriptable Object class to create addressable bundles to auto-setup when needed.
+
+### Fixed
+
+- Updated visual scripting node `EnableOtherCharacters` so that it uses the new method `EnableOtherAvatarsMeshes` from the AvatarSystem. The node now works as intended (up until now it was considered as not implemented).
+- Updated synced var change unit view to improve their usage.
+
 ## v3.3.1
 
 ### Fixed

@@ -28,9 +28,18 @@ namespace Reflectis.SDK.CreatorKitEditor
             FindNetworkPlaceholders();
             DisplayPlaceholders();
 
-            if (GUILayout.Button("Initialize network placeholders IDs"))
+            GUIStyle btnStyle = new(GUI.skin.button)
+            {
+                richText = true
+            };
+
+            if (GUILayout.Button("Initialize invalid network placeholders IDs", btnStyle))
             {
                 SetPlaceholdersNewIDs();
+            }
+            if (GUILayout.Button("Initialize <b>ALL</b> network placeholders IDs", btnStyle))
+            {
+                SetPlaceholdersNewIDs(true);
             }
         }
 
@@ -48,14 +57,54 @@ namespace Reflectis.SDK.CreatorKitEditor
             }
         }
 
-        private void SetPlaceholdersNewIDs()
+        private void SetPlaceholdersNewIDs(bool overrideAll = false)
         {
             System.Random rnd = new();
-            networkPlaceholders.ForEach(p =>
+
+            if (overrideAll)
             {
-                ((INetworkPlaceholder)p).InitializationId = rnd.Next(1, 99999);
-                EditorUtility.SetDirty(p);
-            });
+                networkPlaceholders.ForEach(p =>
+                {
+                    ((INetworkPlaceholder)p).InitializationId = rnd.Next(1, 99999);
+                    EditorUtility.SetDirty(p);
+                });
+            }
+            else
+            {
+                // Here are stored the recalculated (or preserved if correct) previous IDs during the update session.
+                List<int> updatedIds = new List<int>();
+
+                // First of all, get distinct of all used IDs greater than 0.
+                List<int> oldIds = networkPlaceholders.Select(p => ((INetworkPlaceholder)p).InitializationId).Distinct().Where(id => id > 0).ToList();
+
+                // Then, for each value, keep it if it is the first time it appears.
+                // Else, if it is duplicated or 0, then recalculate it with a brand new value.
+                networkPlaceholders.ForEach(p =>
+                {
+                    int currentId = ((INetworkPlaceholder)p).InitializationId;
+
+                    bool needsOverride = currentId == 0 || !oldIds.Contains(currentId);
+
+                    if (needsOverride)
+                    {
+                        var newId = rnd.Next(1, 99999);
+                        while (oldIds.Contains(newId) || updatedIds.Contains(newId))
+                        {
+                            // Recalculate if this ID is already used!
+                            newId = rnd.Next(1, 99999);
+                        }
+
+                        ((INetworkPlaceholder)p).InitializationId = newId;
+                        EditorUtility.SetDirty(p);
+                    }
+                    else
+                    {
+                        oldIds.Remove(currentId);
+                    }
+
+                    updatedIds.Add(((INetworkPlaceholder)p).InitializationId);
+                });
+            }
         }
 
         private void DisplayPlaceholders()
@@ -66,12 +115,57 @@ namespace Reflectis.SDK.CreatorKitEditor
             };
 
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, false);
-
-            foreach (var placeholder in networkPlaceholders)
             {
-                EditorGUILayout.LabelField($"<b>{placeholder.gameObject.name}</b>: {((INetworkPlaceholder)placeholder).InitializationId}", style);
-            }
+                Dictionary<int, string> usedCodes = new Dictionary<int, string>();
 
+                foreach (var placeholder in networkPlaceholders)
+                {
+                    int tmpCode = ((INetworkPlaceholder)placeholder).InitializationId;
+
+                    string tmpCodeStr = tmpCode.ToString();
+                    string tmpFeedback = string.Empty;
+
+                    if (tmpCode != 0)
+                    {
+                        if (usedCodes.TryGetValue(tmpCode, out string alreadyUsedGOName))
+                        {
+                            // Code already used.
+                            tmpCodeStr = "<color=red>" + tmpCodeStr + "</color>";
+                            tmpFeedback = "Used by: <b>" + alreadyUsedGOName + "</b>";
+                        }
+                        else
+                        {
+                            usedCodes.Add(tmpCode, placeholder.gameObject.name);
+                        }
+                    }
+                    else
+                    {
+                        // Not inizialized.
+                        tmpCodeStr = "<color=red>" + tmpCodeStr + "</color>";
+                        tmpFeedback = "This GameObject is <b>not initialized</b>.";
+                    }
+
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        float codeWidth = 50f;
+                        float btnWidth = 20f;
+                        float margin = 35f;
+                        float remainingWidth = EditorGUIUtility.currentViewWidth - codeWidth - btnWidth - margin;
+                        
+                        if (GUILayout.Button(">", GUILayout.Width(btnWidth)))
+                        {
+                            EditorGUIUtility.PingObject(placeholder.gameObject);
+                        }
+
+                        EditorGUILayout.LabelField($"<b>{placeholder.gameObject.name}</b>", style, GUILayout.Width(remainingWidth * 0.4f));
+
+                        EditorGUILayout.LabelField($"{tmpCodeStr}", style, GUILayout.Width(codeWidth));
+
+                        EditorGUILayout.LabelField($"{tmpFeedback}", style, GUILayout.Width(remainingWidth * 0.6f));
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
             GUILayout.EndScrollView();
         }
     }
