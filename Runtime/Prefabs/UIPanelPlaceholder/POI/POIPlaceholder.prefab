@@ -908,6 +908,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   automaticSetup: 1
+  addressableKey: POIController
+  parent: {fileID: 0}
+  objsToDeactivate:
+  - {fileID: 8780369776450076700}
+  isUI: 0
   activator: {fileID: 3286595494855837857}
   panel: {fileID: 2527569079294279605}
   poiElements:

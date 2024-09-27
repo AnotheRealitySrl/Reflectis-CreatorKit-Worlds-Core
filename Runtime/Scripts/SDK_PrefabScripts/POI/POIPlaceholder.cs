@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    public class POIPlaceholder : SceneComponentPlaceholderBase
+    public class POIPlaceholder : SpawnAddressablePlaceholder
     {
         [Header("Read only references. Do no edit them, unless you need to do some heavy customizations.")]
         [SerializeField] private RectTransform activator;
