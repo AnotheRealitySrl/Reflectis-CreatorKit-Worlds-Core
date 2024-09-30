@@ -57,6 +57,7 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField, Tooltip("The width of the binding line.")]
         private float bindingLineWidth = 1f;
 
+        [Space]
 
         [HelpBox("To edit the content of each block of the POI, please double-click on the item in the list." +
             "You will be redirected to the placeholder where you can customize the content.", HelpBoxMessageType.Info)]
@@ -68,6 +69,8 @@ namespace Reflectis.SDK.CreatorKit
         public Transform Activator => activator;
         public Transform Title => title;
         public Transform Panel => panel;
+        public Transform BindingLineStart => bindingLineStart;
+        public Transform BindingLineEnd => bindingLineEnd;
 
         public ETitleVisibility TitleVisibility => titleVisibility;
         public string TitleText => titleText;
@@ -88,12 +91,13 @@ namespace Reflectis.SDK.CreatorKit
             title.GetComponent<TMP_Text>().fontSize = titleFontSize;
         }
 
-        public void OnGUI()
+        // This shows a preview of the binding line
+        void OnDrawGizmosSelected()
         {
             if (bindingLineVisibility)
             {
-                Debug.DrawLine(bindingLineStart.position, bindingLineEnd.position, bindingLineColor, bindingLineWidth);
-
+                Gizmos.color = bindingLineColor;
+                Gizmos.DrawLine(bindingLineStart.position, bindingLineEnd.position);
             }
         }
     }

@@ -466,7 +466,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -1}
+  m_AnchoredPosition: {x: 0, y: -0.75}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &34787607925814404
@@ -540,10 +540,10 @@ MonoBehaviour:
   layout:
     Size:
       X:
-        Raw: 0.9382631
+        Raw: 1.6701083
         Type: 0
       Y:
-        Raw: 0.22343749
+        Raw: 0.39771873
         Type: 0
       Z:
         Raw: 0
@@ -553,7 +553,7 @@ MonoBehaviour:
         Raw: 0
         Type: 0
       Y:
-        Raw: -1
+        Raw: -0.75
         Type: 0
       Z:
         Raw: 0
@@ -700,7 +700,7 @@ MonoBehaviour:
     LightingModel: 0
     ShadowCastingMode: 2
     ReceiveShadows: 1
-  PreviewSize: {x: 0.9382631, y: 0.22343749, z: 0}
+  PreviewSize: {x: 1.6701083, y: 0.39771873, z: 0}
 --- !u!114 &6082841645435224115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -748,8 +748,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 2
-  m_fontSizeBase: 2
+  m_fontSize: 3.56
+  m_fontSizeBase: 3.56
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1098,7 +1098,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6926296908506544602}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5, y: 0, z: 0}
+  m_LocalPosition: {x: -2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1195,7 +1195,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 2}
+  m_AnchoredPosition: {x: 0, y: 2.5}
   m_SizeDelta: {x: 3, y: 4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6719952971954760685
@@ -1350,9 +1350,9 @@ MonoBehaviour:
   bindingLineEnd: {fileID: 8193608957776067748}
   titleVisibility: 1
   titleText: POI TITLE
-  titleFontSize: 2
+  titleFontSize: 3.56
   bindingLineVisibility: 1
-  bindingLineColor: {r: 1, g: 0, b: 0, a: 0}
+  bindingLineColor: {r: 1, g: 0, b: 0, a: 1}
   bindingLineWidth: 1
   poiElements:
   - {fileID: 6251770761212186731}
@@ -1395,7 +1395,7 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1, y: 1}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8063750624187512193
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1458,7 +1458,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8859679639863257063}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalPosition: {x: -0.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
