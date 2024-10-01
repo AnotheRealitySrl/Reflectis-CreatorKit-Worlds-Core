@@ -10,6 +10,13 @@ namespace Reflectis.SDK.CreatorKit
 {
     public class POIPlaceholder : SpawnAddressablePlaceholder
     {
+        public enum EPanelLayout
+        {
+            None,
+            Horizontal,
+            Vertical
+        }
+
         public enum ETitleVisibility
         {
             AlwaysHidden,
@@ -27,13 +34,21 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private Transform bindingLineEnd;
 
         [Space]
+        [Header("POI panel configuration")]
 
+        [SerializeField, Tooltip("Set how the items of the POI will be ordered within the panel. " +
+            "If None, there will be no particular layout. In this case, it's not possible the usage of a scroller. " +
+            "If VisibleOnHover, the title will be visible only when hovering on the POI activator. " +
+            "If AlwaysHidden, the title is deactivated")]
+        private EPanelLayout panelLayout = EPanelLayout.None;
+
+        [Space]
         [Header("POI title configuration")]
 
         [SerializeField, Tooltip("Set the visibility of the title. " +
             "If AlwaysVisible, the title will always be visible. " +
-            "If VisibleOnHover, the title will be visible only when hovering on the POI activator. " +
-            "If AlwaysHidden, the title is deactivated")]
+            "If Vertical, the items inside the panel will be ordered horizontally. A scrollbar is added automatically, if they exceed the panel size " +
+            "If Vertical, the items inside the panel will be ordered vertically. A scrollbar is added automatically, if they exceed the panel size ")]
         private ETitleVisibility titleVisibility = ETitleVisibility.VisibleOnHover;
 
         [SerializeField, Tooltip("Change the font size.")]
@@ -45,7 +60,6 @@ namespace Reflectis.SDK.CreatorKit
         private float titleFontSize = 2;
 
         [Space]
-
         [Header("POI binding line")]
 
         [SerializeField, Tooltip("Choose whether to draw the binding line or not.")]
@@ -58,7 +72,6 @@ namespace Reflectis.SDK.CreatorKit
         private float bindingLineWidth = 1f;
 
         [Space]
-
         [HelpBox("To edit the content of each block of the POI, please double-click on the item in the list." +
             "You will be redirected to the placeholder where you can customize the content.", HelpBoxMessageType.Info)]
 
@@ -71,6 +84,8 @@ namespace Reflectis.SDK.CreatorKit
         public Transform Panel => panel;
         public Transform BindingLineStart => bindingLineStart;
         public Transform BindingLineEnd => bindingLineEnd;
+
+        public EPanelLayout PanelLayout => panelLayout;
 
         public ETitleVisibility TitleVisibility => titleVisibility;
         public string TitleText => titleText;
