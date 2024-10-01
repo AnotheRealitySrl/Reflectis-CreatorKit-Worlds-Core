@@ -14,7 +14,7 @@ namespace Reflectis.SDK.CreatorKitEditor
         protected override string DefinedSummary()
         {
             return "This event will be triggered when a player enters the Reflectis event where the local " +
-                "player currently is. " +
+                "player currently is.\n" +
                 "It won't be triggered by the local player upon entering a Reflectis event.\n\n" +
                 "UserId is the unique identifier for the player's Reflectis profile.\n" +
                 "ActorNumber is the Photon actor number value assigned to that player " +

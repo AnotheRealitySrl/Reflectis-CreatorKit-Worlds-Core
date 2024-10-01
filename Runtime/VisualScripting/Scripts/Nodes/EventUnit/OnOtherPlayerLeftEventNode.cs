@@ -4,13 +4,13 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Networking: On Other Player Entered")]
+    [UnitTitle("Reflectis Networking: On Other Player Left")]
     [UnitSurtitle("Networking")]
-    [UnitShortTitle("On Other Player Entered")]
+    [UnitShortTitle("On Other Player Left")]
     [UnitCategory("Events\\Reflectis")]
-    public class OnOtherPlayerEnteredEventNode : EventUnit<(int, int)>
+    public class OnOtherPlayerLeftEventNode : EventUnit<(int, int)>
     {
-        public static string eventName = "NetworkingOnOtherPlayerEntered";
+        public static string eventName = "NetworkingOnOtherPlayerLeft";
 
         [DoNotSerialize]
         public ValueOutput UserId { get; private set; }
@@ -24,7 +24,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             graphReference = reference;
 
-            SM.GetSystem<INetworkingSystem>().OtherPlayerJoinedRoom.AddListener(OnPlayerEntered);
+            SM.GetSystem<INetworkingSystem>().OtherPlayerLeftRoom.AddListener(OnPlayerLeft);
 
             return new EventHook(eventName);
         }
@@ -42,7 +42,7 @@ namespace Reflectis.SDK.CreatorKit
             flow.SetValue(ActorNumber, args.Item2);
         }
 
-        private void OnPlayerEntered(int userId, int actorNumber)
+        private void OnPlayerLeft(int userId, int actorNumber)
         {
             Trigger(graphReference, (userId, actorNumber));
         }
