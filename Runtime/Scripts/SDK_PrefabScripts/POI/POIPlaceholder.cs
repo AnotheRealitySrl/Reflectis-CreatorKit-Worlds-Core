@@ -30,6 +30,8 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private RectTransform activator;
         [SerializeField] private RectTransform title;
         [SerializeField] private RectTransform panel;
+        [SerializeField] private RectTransform previousPage;
+        [SerializeField] private RectTransform nextPage;
         [SerializeField] private Transform bindingLineStart;
         [SerializeField] private Transform bindingLineEnd;
 
@@ -77,10 +79,14 @@ namespace Reflectis.SDK.CreatorKit
 
         [SerializeField] private List<POIBlockPlaceholder> poiElements;
 
+        [SerializeField] private List<GameObject> pages;
 
-        public Transform Activator => activator;
-        public Transform Title => title;
-        public Transform Panel => panel;
+
+        public RectTransform Activator => activator;
+        public RectTransform Title => title;
+        public RectTransform Panel => panel;
+        public RectTransform PreviousPage => previousPage;
+        public RectTransform NextPage => nextPage;
         public Transform BindingLineStart => bindingLineStart;
         public Transform BindingLineEnd => bindingLineEnd;
 
@@ -93,6 +99,8 @@ namespace Reflectis.SDK.CreatorKit
         public bool BindingLineVisibility => bindingLineVisibility;
         public Color BindingLineColor => bindingLineColor;
         public float BindingLineWidth => bindingLineWidth;
+
+        public List<GameObject> Pages => pages;
 
 
         public void OnPOITitleTextChanged()
