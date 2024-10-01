@@ -77,7 +77,6 @@ namespace Reflectis.SDK.CreatorKit
 
         [SerializeField] private List<POIBlockPlaceholder> poiElements;
 
-        public List<POIBlockPlaceholder> POIElements => poiElements;
 
         public Transform Activator => activator;
         public Transform Title => title;

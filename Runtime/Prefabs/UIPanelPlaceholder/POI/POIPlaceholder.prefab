@@ -424,16 +424,14 @@ MonoBehaviour:
   panel: {fileID: 2527569079294279605}
   bindingLineStart: {fileID: 3241218913753112371}
   bindingLineEnd: {fileID: 8193608957776067748}
+  panelLayout: 0
   titleVisibility: 1
   titleText: POI TITLE
   titleFontSize: 2
   bindingLineVisibility: 1
   bindingLineColor: {r: 1, g: 0, b: 0, a: 1}
   bindingLineWidth: 1
-  poiElements:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  poiElements: []
 --- !u!1 &8781225104400638550
 GameObject:
   m_ObjectHideFlags: 0
