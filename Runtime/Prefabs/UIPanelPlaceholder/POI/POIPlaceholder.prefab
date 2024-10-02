@@ -669,10 +669,10 @@ MonoBehaviour:
   nextPage: {fileID: 1596428918947650133}
   bindingLineStart: {fileID: 3241218913753112371}
   bindingLineEnd: {fileID: 8193608957776067748}
-  panelLayout: 0
   titleVisibility: 1
   titleText: POI TITLE
   titleFontSize: 2
+  backgroundVisibility: 1
   bindingLineVisibility: 1
   bindingLineColor: {r: 1, g: 0, b: 0, a: 1}
   bindingLineWidth: 1

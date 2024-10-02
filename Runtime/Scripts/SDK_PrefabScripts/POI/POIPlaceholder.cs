@@ -118,9 +118,7 @@ namespace Reflectis.SDK.CreatorKit
 
         public void OnBackgroundVisibilityChanged()
         {
-            SerializedObject so = new(panel.GetComponentInChildren<Image>());
-            so.FindProperty("m_enable").boolValue = backgroundVisibility;
-            so.ApplyModifiedProperties();
+            panel.GetComponentInChildren<Image>().enabled = backgroundVisibility;
         }
 
 
