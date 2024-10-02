@@ -4,6 +4,8 @@ using System;
 
 using TMPro;
 
+using UnityEditor;
+
 using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
@@ -27,12 +29,17 @@ namespace Reflectis.SDK.CreatorKit
 
         public void OnTextChanged()
         {
-            transform.GetComponentInChildren<TMP_Text>().text = text;
+            SerializedObject so = new(transform.GetComponentInChildren<TMP_Text>());
+            so.FindProperty("m_text").stringValue = text;
+            so.ApplyModifiedProperties();
         }
 
         public void OnFontSizeChanged()
         {
-            transform.GetComponentInChildren<TMP_Text>().fontSize = fontSize;
+            SerializedObject so = new(transform.GetComponentInChildren<TMP_Text>());
+            so.FindProperty("m_fontSize").floatValue = fontSize;
+            so.ApplyModifiedProperties();
+
         }
     }
 }

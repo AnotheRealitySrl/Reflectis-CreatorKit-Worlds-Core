@@ -5,6 +5,8 @@ using System.Linq;
 
 using TMPro;
 
+using UnityEditor;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -102,17 +104,23 @@ namespace Reflectis.SDK.CreatorKit
 
         public void OnPOITitleTextChanged()
         {
-            title.GetComponent<TMP_Text>().text = titleText;
+            SerializedObject so = new(title.GetComponentInChildren<TMP_Text>());
+            so.FindProperty("m_text").stringValue = titleText;
+            so.ApplyModifiedProperties();
         }
 
         public void OnPOITitleFontChanged()
         {
-            title.GetComponent<TMP_Text>().fontSize = titleFontSize;
+            SerializedObject so = new(title.GetComponentInChildren<TMP_Text>());
+            so.FindProperty("m_fontSize").floatValue = titleFontSize;
+            so.ApplyModifiedProperties();
         }
 
         public void OnBackgroundVisibilityChanged()
         {
-            panel.GetComponent<Image>().enabled = backgroundVisibility;
+            SerializedObject so = new(panel.GetComponentInChildren<Image>());
+            so.FindProperty("m_enable").boolValue = backgroundVisibility;
+            so.ApplyModifiedProperties();
         }
 
 

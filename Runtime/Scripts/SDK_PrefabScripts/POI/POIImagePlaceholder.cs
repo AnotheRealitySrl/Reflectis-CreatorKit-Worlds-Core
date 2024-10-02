@@ -1,5 +1,7 @@
 using Reflectis.SDK.Utilities;
 
+using UnityEditor;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +20,9 @@ namespace Reflectis.SDK.CreatorKit
 
         public void OnImageChanged()
         {
-            transform.GetComponentInChildren<Image>().sprite = image;
+            SerializedObject so = new(GetComponentInChildren<Image>());
+            so.FindProperty("m_Sprite").objectReferenceValue = image;
+            so.ApplyModifiedProperties();
         }
     }
 }
