@@ -1,22 +1,17 @@
 using Reflectis.SDK.Utilities;
 
 using System.Collections.Generic;
+using System.Linq;
 
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Reflectis.SDK.CreatorKit
 {
     public class POIPlaceholder : SpawnAddressablePlaceholder
     {
-        public enum EPanelLayout
-        {
-            None,
-            Horizontal,
-            Vertical
-        }
-
         public enum ETitleVisibility
         {
             AlwaysHidden,
@@ -35,22 +30,14 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private Transform bindingLineStart;
         [SerializeField] private Transform bindingLineEnd;
 
-        [Space]
-        [Header("POI panel configuration")]
-
-        [SerializeField, Tooltip("Set how the items of the POI will be ordered within the panel. " +
-            "If None, there will be no particular layout. In this case, it's not possible the usage of a scroller. " +
-            "If VisibleOnHover, the title will be visible only when hovering on the POI activator. " +
-            "If AlwaysHidden, the title is deactivated")]
-        private EPanelLayout panelLayout = EPanelLayout.None;
 
         [Space]
         [Header("POI title configuration")]
 
         [SerializeField, Tooltip("Set the visibility of the title. " +
             "If AlwaysVisible, the title will always be visible. " +
-            "If Vertical, the items inside the panel will be ordered horizontally. A scrollbar is added automatically, if they exceed the panel size " +
-            "If Vertical, the items inside the panel will be ordered vertically. A scrollbar is added automatically, if they exceed the panel size ")]
+            "If VisibleOnHover, the title will be visible only when hovering on the POI activator. " +
+            "If AlwaysHidden, the title is deactivated")]
         private ETitleVisibility titleVisibility = ETitleVisibility.VisibleOnHover;
 
         [SerializeField, Tooltip("Change the font size.")]
@@ -60,6 +47,16 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField, Tooltip("Change the font of the title.")]
         [OnChangedCall(nameof(OnPOITitleFontChanged))]
         private float titleFontSize = 2;
+
+
+        [Space]
+        [Header("Panel background configuration")]
+
+
+        [SerializeField, Tooltip("Set the background visibility of the POI.")]
+        [OnChangedCall(nameof(OnBackgroundVisibilityChanged))]
+        private bool backgroundVisibility = true;
+
 
         [Space]
         [Header("POI binding line")]
@@ -90,11 +87,11 @@ namespace Reflectis.SDK.CreatorKit
         public Transform BindingLineStart => bindingLineStart;
         public Transform BindingLineEnd => bindingLineEnd;
 
-        public EPanelLayout PanelLayout => panelLayout;
-
         public ETitleVisibility TitleVisibility => titleVisibility;
         public string TitleText => titleText;
         public float TitleFontSize => titleFontSize;
+
+        public bool BackgroundVisibility => backgroundVisibility;
 
         public bool BindingLineVisibility => bindingLineVisibility;
         public Color BindingLineColor => bindingLineColor;
@@ -113,6 +110,12 @@ namespace Reflectis.SDK.CreatorKit
             title.GetComponent<TMP_Text>().fontSize = titleFontSize;
         }
 
+        public void OnBackgroundVisibilityChanged()
+        {
+            panel.GetComponent<Image>().enabled = backgroundVisibility;
+        }
+
+
         // This shows a preview of the binding line
         void OnDrawGizmosSelected()
         {
@@ -121,6 +124,11 @@ namespace Reflectis.SDK.CreatorKit
                 Gizmos.color = bindingLineColor;
                 Gizmos.DrawLine(bindingLineStart.position, bindingLineEnd.position);
             }
+        }
+
+        private void OnGUI()
+        {
+            poiElements = GetComponentsInChildren<POIBlockPlaceholder>().ToList();
         }
     }
 }
