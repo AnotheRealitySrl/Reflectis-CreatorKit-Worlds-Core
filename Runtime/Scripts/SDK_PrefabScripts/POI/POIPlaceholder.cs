@@ -73,12 +73,21 @@ namespace Reflectis.SDK.CreatorKit
         private float bindingLineWidth = 1f;
 
         [Space]
+        [Header("POI audio")]
+
+        [SerializeField, Tooltip("Should the POI reproduce an audio once opened?")]
+        private AudioClip audioClip;
+
+
+        [Space]
         [HelpBox("To edit the content of each block of the POI, please double-click on the item in the list." +
             "You will be redirected to the placeholder where you can customize the content.", HelpBoxMessageType.Info)]
 
         [SerializeField] private List<POIBlockPlaceholder> poiElements;
 
         [SerializeField] private List<GameObject> pages;
+
+
 
 
         public RectTransform Activator => activator;
@@ -98,6 +107,8 @@ namespace Reflectis.SDK.CreatorKit
         public bool BindingLineVisibility => bindingLineVisibility;
         public Color BindingLineColor => bindingLineColor;
         public float BindingLineWidth => bindingLineWidth;
+
+        public AudioClip AudioClip => audioClip;
 
         public List<GameObject> Pages => pages;
 
