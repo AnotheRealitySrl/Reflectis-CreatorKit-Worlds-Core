@@ -29,17 +29,20 @@ namespace Reflectis.SDK.CreatorKit
 
         public void OnTextChanged()
         {
+#if UNITY_EDITOR
             SerializedObject so = new(transform.GetComponentInChildren<TMP_Text>());
             so.FindProperty("m_text").stringValue = text;
             so.ApplyModifiedProperties();
+#endif
         }
 
         public void OnFontSizeChanged()
         {
+#if UNITY_EDITOR
             SerializedObject so = new(transform.GetComponentInChildren<TMP_Text>());
             so.FindProperty("m_fontSize").floatValue = fontSize;
             so.ApplyModifiedProperties();
-
+#endif
         }
     }
 }

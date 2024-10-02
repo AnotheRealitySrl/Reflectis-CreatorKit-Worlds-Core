@@ -104,16 +104,20 @@ namespace Reflectis.SDK.CreatorKit
 
         public void OnPOITitleTextChanged()
         {
+#if UNITY_EDITOR
             SerializedObject so = new(title.GetComponentInChildren<TMP_Text>());
             so.FindProperty("m_text").stringValue = titleText;
             so.ApplyModifiedProperties();
+#endif
         }
 
         public void OnPOITitleFontChanged()
         {
+#if UNITY_EDITOR
             SerializedObject so = new(title.GetComponentInChildren<TMP_Text>());
             so.FindProperty("m_fontSize").floatValue = titleFontSize;
             so.ApplyModifiedProperties();
+#endif
         }
 
         public void OnBackgroundVisibilityChanged()

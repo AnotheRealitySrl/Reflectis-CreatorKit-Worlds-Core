@@ -20,9 +20,11 @@ namespace Reflectis.SDK.CreatorKit
 
         public void OnImageChanged()
         {
+#if UNITY_EDITOR
             SerializedObject so = new(GetComponentInChildren<Image>());
             so.FindProperty("m_Sprite").objectReferenceValue = image;
             so.ApplyModifiedProperties();
+#endif
         }
     }
 }
