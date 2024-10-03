@@ -13,7 +13,7 @@ namespace Reflectis.SDK.CreatorKit
     [Serializable]
     public class POITextPlaceholder : POIBlockPlaceholder
     {
-        public enum EPOITextFontWidth
+        public enum EPOITextFontStyle
         {
             Normal,
             Bold
@@ -28,14 +28,14 @@ namespace Reflectis.SDK.CreatorKit
         private float fontSize;
 
         [SerializeField, Tooltip("Change the font width.")]
-        [OnChangedCall(nameof(OnFontSizeChanged))]
-        private EPOITextFontWidth fontWidth;
+        [OnChangedCall(nameof(OnFontWidthChanged))]
+        private EPOITextFontStyle fontWidth;
 
         public override string AddressableKey => "POITextBlock";
 
         public string Text => text;
         public float FontSize => fontSize = 1f;
-        public EPOITextFontWidth FontWidth => fontWidth;
+        public EPOITextFontStyle FontWidth => fontWidth;
 
 
         public void OnTextChanged()
@@ -52,6 +52,15 @@ namespace Reflectis.SDK.CreatorKit
 #if UNITY_EDITOR
             SerializedObject so = new(transform.GetComponentInChildren<TMP_Text>());
             so.FindProperty("m_fontSize").floatValue = fontSize;
+            so.ApplyModifiedProperties();
+#endif
+        }
+
+        public void OnFontWidthChanged()
+        {
+#if UNITY_EDITOR
+            SerializedObject so = new(transform.GetComponentInChildren<TMP_Text>());
+            so.FindProperty("m_fontStyle").enumValueFlag = fontWidth == EPOITextFontStyle.Bold ? (int)FontStyles.Bold : (int)FontStyles.Normal;
             so.ApplyModifiedProperties();
 #endif
         }
