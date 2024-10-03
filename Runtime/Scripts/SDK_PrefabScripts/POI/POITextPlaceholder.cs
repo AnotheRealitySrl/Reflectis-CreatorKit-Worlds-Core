@@ -13,6 +13,12 @@ namespace Reflectis.SDK.CreatorKit
     [Serializable]
     public class POITextPlaceholder : POIBlockPlaceholder
     {
+        public enum EPOITextFontWidth
+        {
+            Normal,
+            Bold
+        }
+
         [SerializeField, Tooltip("Add text that will be shown in the POI.")]
         [OnChangedCall(nameof(OnTextChanged))]
         private string text;
@@ -21,10 +27,15 @@ namespace Reflectis.SDK.CreatorKit
         [OnChangedCall(nameof(OnFontSizeChanged))]
         private float fontSize;
 
+        [SerializeField, Tooltip("Change the font width.")]
+        [OnChangedCall(nameof(OnFontSizeChanged))]
+        private EPOITextFontWidth fontWidth;
+
         public override string AddressableKey => "POITextBlock";
 
         public string Text => text;
         public float FontSize => fontSize = 1f;
+        public EPOITextFontWidth FontWidth => fontWidth;
 
 
         public void OnTextChanged()
