@@ -14,18 +14,19 @@ namespace Reflectis.SDK.CreatorKit
     [Serializable]
     public class POILinkPlaceholder : POIBlockPlaceholder
     {
+        [Space]
+        [Header("Configurable stuff")]
+
         [SerializeField, Tooltip("Add a link that will be opened by the application")]
         private string link;
 
-        [SerializeField, Tooltip("Add text that will be shown in the POI.")]
+        [SerializeField, Tooltip("A short text that provides info to the link, like \"see more\" or \"download\".")]
         [OnChangedCall(nameof(OnTextChanged))]
         private string text;
 
-        [SerializeField, Tooltip("Change the font size.")]
+        [SerializeField, Tooltip("Change the font size of the text.")]
         [OnChangedCall(nameof(OnFontSizeChanged))]
         private float fontSize;
-
-        public override string AddressableKey => "POILinkBlock";
 
         public string Link => link;
         public string Text => text;

@@ -1,8 +1,5 @@
 using Reflectis.SDK.Utilities;
 
-using System.Collections.Generic;
-using System.Linq;
-
 using TMPro;
 
 using UnityEditor;
@@ -22,16 +19,42 @@ namespace Reflectis.SDK.CreatorKit
         }
 
         [Space]
+        [HelpBox("Quick guide on how to configure the content of a POI. " +
+            "\n" + "\n" +
+            "Elements of the POI: " +
+            "\n" +
+            "Panel: the body of the POI. A panel consists of one or more pages (see below) " +
+            "and the navigation arrows to change the page. " +
+            "To edit the dimensions of the panel, you can simply resize the width and height of " +
+            "its RectTransform." +
+            "\n" +
+            "Activator: the button that opens/closes the panel of the POI." +
+            "\n" +
+            "Page: to add a page, you can simply duplicate the GameObject \"Page\" " +
+            "as a child of the component \"Pages\". Note that the pages have the same dimensions, " +
+            "which are inherited from the \"Panel\". " +
+            "\n" +
+            "Block: a page consists of one or more blocks. Those blocks can be added, moved and resized " +
+            "within a page to add content to the POI. Note that a block cannot be positioned outside the " +
+            "boundaries of the panel, otherwise it will not be visible due to masking. To edit the content " +
+            "of a block, select the placeholder component provided in its prefab and follow the instructions.",
+            HelpBoxMessageType.Info)]
 
-        [Header("Read only references. Do no edit them, unless you need to do some heavy customizations.")]
+        [Space]
+
+        [Header("Read only references. Do no edit them.")]
         [SerializeField] private RectTransform activator;
         [SerializeField] private RectTransform title;
         [SerializeField] private RectTransform panel;
+        [SerializeField] private RectTransform pagesContainer;
         [SerializeField] private RectTransform previousPage;
         [SerializeField] private RectTransform nextPage;
         [SerializeField] private Transform bindingLineStart;
         [SerializeField] private Transform bindingLineEnd;
 
+
+        [Space]
+        [Header("--- Configurable stuff starts here ---")]
 
         [Space]
         [Header("POI title configuration")]
@@ -42,18 +65,23 @@ namespace Reflectis.SDK.CreatorKit
             "If AlwaysHidden, the title is deactivated")]
         private ETitleVisibility titleVisibility = ETitleVisibility.VisibleOnHover;
 
-        [SerializeField, Tooltip("Change the font size.")]
+        [SerializeField, Tooltip("Set the text of the title.")]
         [OnChangedCall(nameof(OnPOITitleTextChanged))]
         private string titleText;
 
-        [SerializeField, Tooltip("Change the font of the title.")]
+        [SerializeField, Tooltip("Change the font size of the title.")]
         [OnChangedCall(nameof(OnPOITitleFontChanged))]
         private float titleFontSize = 2;
 
 
         [Space]
-        [Header("Panel background configuration")]
+        [Header("POI background configuration")]
 
+        [HelpBox("By default the background is visible, but you can choose to hide it if you want to " +
+            "arrange the content more freely in space. Be aware that, " +
+            "even if the background is not visible, the content of the pages should not be placed outside " +
+            "the boundaries of the panel, or they will not be visible due to masking.",
+            HelpBoxMessageType.Info)]
 
         [SerializeField, Tooltip("Set the background visibility of the POI.")]
         [OnChangedCall(nameof(OnBackgroundVisibilityChanged))]
@@ -61,7 +89,11 @@ namespace Reflectis.SDK.CreatorKit
 
 
         [Space]
-        [Header("POI binding line")]
+        [Header("POI binding line settings")]
+
+        [HelpBox("A binding line can show that the POI is bound to something in space. " +
+            "To change the line, change the position of \"LineStart\" and \"LineEnd\" transforms.",
+            HelpBoxMessageType.Info)]
 
         [SerializeField, Tooltip("Choose whether to draw the binding line or not.")]
         private bool bindingLineVisibility;
@@ -72,27 +104,18 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField, Tooltip("The width of the binding line.")]
         private float bindingLineWidth = 1f;
 
-        [Space]
-        [Header("POI audio")]
 
-        [SerializeField, Tooltip("Should the POI reproduce an audio once opened?")]
+        [Space]
+        [Header("POI audio settings")]
+
+        [SerializeField, Tooltip("If set, the POI reproduces an audio clip while open")]
         private AudioClip audioClip;
-
-
-        [Space]
-        [HelpBox("To edit the content of each block of the POI, please double-click on the item in the list." +
-            "You will be redirected to the placeholder where you can customize the content.", HelpBoxMessageType.Info)]
-
-        [SerializeField] private List<POIBlockPlaceholder> poiElements;
-
-        [SerializeField] private List<GameObject> pages;
-
-
 
 
         public RectTransform Activator => activator;
         public RectTransform Title => title;
         public RectTransform Panel => panel;
+        public RectTransform PagesContainer => pagesContainer;
         public RectTransform PreviousPage => previousPage;
         public RectTransform NextPage => nextPage;
         public Transform BindingLineStart => bindingLineStart;
@@ -109,8 +132,6 @@ namespace Reflectis.SDK.CreatorKit
         public float BindingLineWidth => bindingLineWidth;
 
         public AudioClip AudioClip => audioClip;
-
-        public List<GameObject> Pages => pages;
 
 
         public void OnPOITitleTextChanged()
@@ -145,11 +166,6 @@ namespace Reflectis.SDK.CreatorKit
                 Gizmos.color = bindingLineColor;
                 Gizmos.DrawLine(bindingLineStart.position, bindingLineEnd.position);
             }
-        }
-
-        private void OnGUI()
-        {
-            poiElements = GetComponentsInChildren<POIBlockPlaceholder>().ToList();
         }
     }
 }

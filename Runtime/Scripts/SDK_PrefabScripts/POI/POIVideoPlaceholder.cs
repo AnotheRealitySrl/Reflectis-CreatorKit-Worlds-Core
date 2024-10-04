@@ -4,9 +4,11 @@ namespace Reflectis.SDK.CreatorKit
 {
     public class POIVideoPlaceholder : POIBlockPlaceholder
     {
-        public override string AddressableKey => "POIVideoBlock";
+        [Space]
+        [Header("Configurable stuff")]
 
-        [SerializeField] private string url;
+        [SerializeField, Tooltip("A video must be provided with a public, non authenticated url.")]
+        private string url;
 
         public string Url => url;
     }

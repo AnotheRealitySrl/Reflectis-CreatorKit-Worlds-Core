@@ -19,7 +19,10 @@ namespace Reflectis.SDK.CreatorKit
             Bold
         }
 
-        [SerializeField, Tooltip("Add text that will be shown in the POI.")]
+        [Space]
+        [Header("Configurable stuff")]
+
+        [SerializeField, Tooltip("Configure the text that will be shown.")]
         [OnChangedCall(nameof(OnTextChanged))]
         private string text;
 
@@ -30,8 +33,6 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField, Tooltip("Change the font width.")]
         [OnChangedCall(nameof(OnFontWidthChanged))]
         private EPOITextFontStyle fontWidth;
-
-        public override string AddressableKey => "POITextBlock";
 
         public string Text => text;
         public float FontSize => fontSize = 1f;

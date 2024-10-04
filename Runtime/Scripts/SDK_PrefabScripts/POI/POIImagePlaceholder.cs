@@ -10,9 +10,10 @@ namespace Reflectis.SDK.CreatorKit
     [CreateAssetMenu(menuName = "AnotheReality/CreatorKit/POI/POI media element", fileName = "POIMediaElementConfig")]
     public class POIImagePlaceholder : POIBlockPlaceholder
     {
-        public override string AddressableKey => "POIImageBlock";
+        [Space]
+        [Header("Configurable stuff")]
 
-        [SerializeField, Tooltip("Add an image that will be shown in the POI.")]
+        [SerializeField, Tooltip("An image can be referenced with a sprite.")]
         [OnChangedCall(nameof(OnImageChanged))]
         private Sprite image;
 
