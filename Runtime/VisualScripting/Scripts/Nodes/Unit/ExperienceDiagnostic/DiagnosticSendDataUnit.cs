@@ -1,6 +1,7 @@
 using Reflectis.SDK.Core;
 using Reflectis.SDK.Diagnostics;
 using Reflectis.SDK.Utilities;
+using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace Reflectis.SDK.CreatorKit
         public List<ValueInput> Arguments { get; private set; }
 
         [DoNotSerialize]
-        public List<ValueInput> CustomProperties { get; private set; }
+        public List<ValueInput> CustomObjects { get; private set; }
 
         [DoNotSerialize]
         [PortLabelHidden]
@@ -67,15 +68,15 @@ namespace Reflectis.SDK.CreatorKit
         {
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                var customProperties = CustomProperties.Select((x) =>
+                var customObjects = CustomObjects.Select((x) =>
                 {
-                    return f.GetConvertedValue(x) as Property;
+                    return f.GetConvertedValue(x) as CustomType;
                 });
                 Type type = IDiagnosticsSystem.VerbsDTOs[Verb];
 
                 if (type != null)
                 {
-                    var diagnosticDTO = type.Instantiate();
+                    var typeInstance = type.Instantiate();
 
                     foreach (var argument in Arguments)
                     {
@@ -83,12 +84,14 @@ namespace Reflectis.SDK.CreatorKit
                         if (value != null)
                         {
                             //Set field value
-                            type.GetRuntimeFields().FirstOrDefault(x => x.Name.Equals(argument.key))?.SetValue(diagnosticDTO, value);
+                            type.GetRuntimeFields().FirstOrDefault(x => x.Name.Equals(argument.key))?.SetValue(typeInstance, value);
                         }
                     }
+                    DiagnosticDTO diagnosticDTO = typeInstance as DiagnosticDTO;
+                    diagnosticDTO.CustomAttributes = customObjects.ToArray();
                     try
                     {
-                        SM.GetSystem<IDiagnosticsSystem>().SendDiagnostic(Verb, (DiagnosticDTO)diagnosticDTO, customProperties);
+                        SM.GetSystem<IDiagnosticsSystem>().SendDiagnostic(Verb, diagnosticDTO);
                     }
                     catch (Exception exception)
                     {
@@ -123,17 +126,21 @@ namespace Reflectis.SDK.CreatorKit
                     if (attr != null)
                     {
                         var argument = ValueInput(field.FieldType, field.Name);
-                        if (!attr.isRequired)
+
+                        //if ((!field.FieldType.IsValueType && !field.FieldType.IsPrimitive && !field.FieldType.IsClass)
+                        //|| (field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        //|| field.FieldType.IsEnum)
+
+                        if (field.FieldType.IsNullable() && !field.FieldType.IsClass)
                         {
-                            if (type.IsNullable())
-                            {
-                                argument.unit.defaultValues[field.Name] = null;
-                            }
-                            else
-                            {
-                                argument.SetDefaultValue(type.Default());
-                            }
+                            argument.unit.defaultValues[field.Name] = null;
                         }
+                        else
+                        {
+                            argument.SetDefaultValue(field.FieldType.Default());
+                        }
+
+
                         Arguments.Add(argument);
                         if (attr.isRequired)
                         {
@@ -143,12 +150,12 @@ namespace Reflectis.SDK.CreatorKit
                 }
             }
 
-            CustomProperties = new List<ValueInput>();
+            CustomObjects = new List<ValueInput>();
 
             for (var i = 0; i < CustomEntriesCount; i++)
             {
-                var customProperty = ValueInput<Property>("Custom_property_" + i);
-                CustomProperties.Add(customProperty);
+                var customProperty = ValueInput<CustomType>("Custom_Object_" + i);
+                CustomObjects.Add(customProperty);
                 Requirement(customProperty, InputTrigger);
             }
 

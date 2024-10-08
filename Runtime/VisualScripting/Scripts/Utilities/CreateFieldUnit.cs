@@ -3,11 +3,11 @@ using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis Property: New")]
-    [UnitSurtitle("Reflectis Property")]
-    [UnitShortTitle("New")]
-    [UnitCategory("Reflectis\\New")]
-    public class NewPropertyUnit : Unit
+    [UnitTitle("Reflectis Field: Create")]
+    [UnitSurtitle("Reflectis Field")]
+    [UnitShortTitle("Create")]
+    [UnitCategory("Reflectis\\Create")]
+    public class CreateFieldUnit : Unit
     {
         [DoNotSerialize]
         public ValueInput Name { get; private set; }
@@ -17,7 +17,7 @@ namespace Reflectis.SDK.CreatorKit
 
         [DoNotSerialize]
         [PortLabelHidden]
-        public ValueOutput Property { get; private set; }
+        public ValueOutput Field { get; private set; }
 
         protected override void Definition()
         {
@@ -25,8 +25,8 @@ namespace Reflectis.SDK.CreatorKit
 
             Value = ValueInput<object>(nameof(Value), null);
 
-            Property = ValueOutput(nameof(Property),
-                (flow) => new Property((string)flow.GetConvertedValue(Name), flow.GetConvertedValue(Value)));
+            Field = ValueOutput(nameof(Field),
+                (flow) => new Field((string)flow.GetConvertedValue(Name), flow.GetConvertedValue(Value)));
         }
 
 
