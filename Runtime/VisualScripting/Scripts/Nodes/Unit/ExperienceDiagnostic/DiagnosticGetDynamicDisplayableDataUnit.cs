@@ -9,11 +9,13 @@ namespace Reflectis.SDK.CreatorKit
 {
     [UnitTitle(UNIT_TITLE)]
     [UnitSurtitle("Reflectis Diagnostic")]
-    [UnitShortTitle("Get Displayable Data")]
+    [UnitShortTitle("Get " + TYPE + " Displayable Data")]
     [UnitCategory("Reflectis\\Get")]
     public class DiagnosticGetDynamicDisplayableDataUnit : Unit
     {
-        public const string UNIT_TITLE = "Reflectis Diagnostic: Get Displayable Data";
+        private const string TYPE = "Dynamic";
+
+        public const string UNIT_TITLE = "Reflectis Diagnostic: Get " + TYPE + " Displayable Data";
         //public List<string> Headers { get => headers; set => headers = value; }
         //public List<string> Types { get => types; set => types = value; }
         //public List<List<object>> Records { get => records; set => records = value; }
@@ -53,7 +55,7 @@ namespace Reflectis.SDK.CreatorKit
 
             OutputType = ValueOutput(nameof(OutputType), (f) =>
             {
-                return "Dynamic";
+                return TYPE;
             });
 
             DisplayableData = ValueOutput(nameof(DisplayableData), (f) =>
