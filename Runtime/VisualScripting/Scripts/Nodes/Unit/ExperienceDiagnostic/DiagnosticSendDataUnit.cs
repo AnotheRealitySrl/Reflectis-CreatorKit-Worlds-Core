@@ -40,6 +40,7 @@ namespace Reflectis.SDK.CreatorKit
         //    set => customEntriesCount = value;
         //}
 
+
         [DoNotSerialize]
         public List<ValueInput> Arguments { get; private set; }
 
@@ -70,6 +71,7 @@ namespace Reflectis.SDK.CreatorKit
                 //{
                 //    return f.GetConvertedValue(x) as CustomType;
                 //});
+
                 Type type = IDiagnosticsSystem.VerbsDTOs[Verb];
 
                 if (type != null)
@@ -78,11 +80,14 @@ namespace Reflectis.SDK.CreatorKit
 
                     foreach (var argument in Arguments)
                     {
-                        var value = f.GetConvertedValue(argument);
-                        if (value != null)
+                        if (argument.hasValidConnection || argument.hasDefaultValue)
                         {
-                            //Set field value
-                            type.GetRuntimeFields().FirstOrDefault(x => x.Name.Equals(argument.key))?.SetValue(typeInstance, value);
+                            var value = f.GetConvertedValue(argument);
+                            if (value != null)
+                            {
+                                //Set field value
+                                type.GetRuntimeFields().FirstOrDefault(x => x.Name.Equals(argument.key))?.SetValue(typeInstance, value);
+                            }
                         }
                     }
                     DiagnosticDTO diagnosticDTO = typeInstance as DiagnosticDTO;
