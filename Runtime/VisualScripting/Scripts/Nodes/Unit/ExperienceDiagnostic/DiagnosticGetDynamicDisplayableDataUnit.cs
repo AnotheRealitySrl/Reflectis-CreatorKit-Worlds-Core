@@ -85,7 +85,6 @@ namespace Reflectis.SDK.CreatorKit
                 try
                 {
                     dynamicDisplayableContent.CheckValidity();
-                    Debug.LogError(Newtonsoft.Json.JsonConvert.SerializeObject(dynamicDisplayableContent));
                     return Newtonsoft.Json.JsonConvert.SerializeObject(dynamicDisplayableContent); // SM.GetSystem<IDiagnosticsSystem>().SerializeData(displayableData);
                 }
                 catch (Exception exception)
