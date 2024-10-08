@@ -1,6 +1,5 @@
 using Reflectis.SDK.Core;
 using Reflectis.SDK.Diagnostics;
-using Reflectis.SDK.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,22 +29,22 @@ namespace Reflectis.SDK.CreatorKit
             set => verb = value;
         }
 
-        [SerializeAs(nameof(CustomEntriesCount))]
-        private int customEntriesCount;
+        //[SerializeAs(nameof(CustomEntriesCount))]
+        //private int customEntriesCount;
 
-        [DoNotSerialize]
-        [Inspectable, UnitHeaderInspectable("Custom entries")]
-        public int CustomEntriesCount
-        {
-            get => customEntriesCount;
-            set => customEntriesCount = value;
-        }
+        //[DoNotSerialize]
+        //[Inspectable, UnitHeaderInspectable("Custom entries")]
+        //public int CustomEntriesCount
+        //{
+        //    get => customEntriesCount;
+        //    set => customEntriesCount = value;
+        //}
 
         [DoNotSerialize]
         public List<ValueInput> Arguments { get; private set; }
 
-        [DoNotSerialize]
-        public List<ValueInput> CustomObjects { get; private set; }
+        //[DoNotSerialize]
+        //public List<ValueInput> CustomObjects { get; private set; }
 
         [DoNotSerialize]
         [PortLabelHidden]
@@ -67,10 +66,10 @@ namespace Reflectis.SDK.CreatorKit
         {
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                var customObjects = CustomObjects.Select((x) =>
-                {
-                    return f.GetConvertedValue(x) as CustomType;
-                });
+                //var customObjects = CustomObjects.Select((x) =>
+                //{
+                //    return f.GetConvertedValue(x) as CustomType;
+                //});
                 Type type = IDiagnosticsSystem.VerbsDTOs[Verb];
 
                 if (type != null)
@@ -87,7 +86,6 @@ namespace Reflectis.SDK.CreatorKit
                         }
                     }
                     DiagnosticDTO diagnosticDTO = typeInstance as DiagnosticDTO;
-                    diagnosticDTO.CustomAttributes = customObjects.ToArray();
                     try
                     {
                         SM.GetSystem<IDiagnosticsSystem>().SendDiagnostic(Verb, diagnosticDTO);
@@ -149,14 +147,14 @@ namespace Reflectis.SDK.CreatorKit
                 }
             }
 
-            CustomObjects = new List<ValueInput>();
+            //CustomObjects = new List<ValueInput>();
 
-            for (var i = 0; i < CustomEntriesCount; i++)
-            {
-                var customProperty = ValueInput<CustomType>("Custom_Object_" + i);
-                CustomObjects.Add(customProperty);
-                Requirement(customProperty, InputTrigger);
-            }
+            //for (var i = 0; i < CustomEntriesCount; i++)
+            //{
+            //    var customProperty = ValueInput<CustomType>("Custom_Object_" + i);
+            //    CustomObjects.Add(customProperty);
+            //    Requirement(customProperty, InputTrigger);
+            //}
 
             Succession(InputTrigger, OutputTrigger);
         }
