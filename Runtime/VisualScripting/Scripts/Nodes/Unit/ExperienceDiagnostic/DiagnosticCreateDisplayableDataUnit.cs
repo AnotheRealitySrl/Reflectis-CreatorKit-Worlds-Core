@@ -1,8 +1,7 @@
-using Reflectis.SDK.Core;
 using Reflectis.SDK.Diagnostics;
+using Reflectis.SDK.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,48 +10,31 @@ namespace Reflectis.SDK.CreatorKit
 {
     [UnitTitle(UNIT_TITLE)]
     [UnitSurtitle("Reflectis Diagnostic")]
-    [UnitShortTitle("Send Data")]
-    [UnitCategory("Reflectis\\Flow")]
-    public class DiagnosticSendDataUnit : Unit
+    [UnitShortTitle("Create Displayable Data")]
+    [UnitCategory("Reflectis\\Create")]
+    public class DiagnosticCreateDisplayableDataUnit : Unit
     {
 
-        public const string UNIT_TITLE = "Reflectis Diagnostic: Send Data";
-
-        [SerializeAs(nameof(Verb))]
-        private EDiagnosticVerb verb = EDiagnosticVerb.ExpStart;
+        [SerializeAs(nameof(DisplayableType))]
+        private EAnalyticsDisplayableType displayableType = EAnalyticsDisplayableType.Dynamic;
 
         [DoNotSerialize]
-        [Inspectable, UnitHeaderInspectable(nameof(verb))]
-        public EDiagnosticVerb Verb
+        [Inspectable, UnitHeaderInspectable(nameof(displayableType))]
+        public EAnalyticsDisplayableType DisplayableType
         {
-            get => verb;
-            set => verb = value;
+            get => displayableType;
+            set => displayableType = value;
         }
 
-        //[SerializeAs(nameof(CustomEntriesCount))]
-        //private int customEntriesCount;
-
-        //[DoNotSerialize]
-        //[Inspectable, UnitHeaderInspectable("Custom entries")]
-        //public int CustomEntriesCount
-        //{
-        //    get => customEntriesCount;
-        //    set => customEntriesCount = value;
-        //}
+        public const string UNIT_TITLE = "Reflectis Diagnostic: Create Displayable Data";
 
 
         [DoNotSerialize]
         public List<ValueInput> Arguments { get; private set; }
 
-        //[DoNotSerialize]
-        //public List<ValueInput> CustomObjects { get; private set; }
+        [DoNotSerialize]
+        public ValueOutput DisplayableData { get; private set; }
 
-        [DoNotSerialize]
-        [PortLabelHidden]
-        public ControlInput InputTrigger { get; private set; }
-        [DoNotSerialize]
-        [PortLabelHidden]
-        public ControlOutput OutputTrigger { get; private set; }
 
         private GameObject gameObject;
 
@@ -65,60 +47,63 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void Definition()
         {
-            InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
+            DisplayableData = ValueOutput(nameof(DisplayableData), (f) =>
             {
                 //var customObjects = CustomObjects.Select((x) =>
                 //{
                 //    return f.GetConvertedValue(x) as CustomType;
                 //});
 
-                Type type = IDiagnosticsSystem.VerbsDTOs[Verb];
+                Type type = IDiagnosticsSystem.DisplayableDataTypes[displayableType];
 
                 if (type != null)
                 {
                     var typeInstance = type.Instantiate();
-
+                    List<Field> fields = new List<Field>();
                     foreach (var argument in Arguments)
                     {
                         if (argument.hasValidConnection || argument.hasDefaultValue)
                         {
                             var value = f.GetConvertedValue(argument);
-                            if (value != null)
-                            {
-                                //Set field value
-                                type.GetRuntimeFields().FirstOrDefault(x => x.Name.Equals(argument.key))?.SetValue(typeInstance, value);
-                            }
+
+                            //Set field value
+                            fields.Add(new Field() { name = argument.key, value = value });
+
                         }
                     }
-                    DiagnosticDTO diagnosticDTO = typeInstance as DiagnosticDTO;
-                    try
+                    if (typeInstance is DisplayableContentBase displayableContent)
                     {
-                        SM.GetSystem<IDiagnosticsSystem>().SendDiagnostic(Verb, diagnosticDTO);
+                        //try
+                        //{
+                        displayableContent.AssignValues(fields);
+                        displayableContent.CheckValidity();
+                        return displayableContent;
+                        //}
+                        //catch (Exception exception)
+                        //{
+                        //    string message = $"Error during execution of \"{UNIT_TITLE}\" on gameObject {gameObject} validity check failed with message: {exception.Message} ";
+                        //    Debug.LogError(message, gameObject);
+                        //}
                     }
-                    catch (Exception exception)
+                    else
                     {
-                        string message = $"Error during execution of \"{UNIT_TITLE}\" on gameObject {gameObject}: {exception.Message} ";
-                        if (IDiagnosticsSystem.VerbsTypes[EDiagnosticType.Experience].Contains(Verb))
-                        {
-                            message = message +
-                            $"Remember to call the node {DiagnosticGenerateExperienceIDUnit.UNIT_TITLE} to generate the ExperienceID before trying to send diagnostics data!";
-                        }
-                        Debug.LogError(message, gameObject);
+                        Debug.LogError("Wrong type assigned to the value: " +
+                        displayableType + "! Check the correct setup of the Diagnostic system. ");
                     }
                 }
                 else
                 {
-                    Debug.LogError("There are no DTOs for the selected VERB");
+                    Debug.LogError("There are no Displayable content class rapresenting the given type: " +
+                        displayableType + "! Check the correct setup of the Diagnostic system. ");
                 }
 
-                return OutputTrigger;
+                return null;
             });
 
-            OutputTrigger = ControlOutput(nameof(OutputTrigger));
 
             Arguments = new List<ValueInput>();
 
-            Type type = IDiagnosticsSystem.VerbsDTOs[Verb];
+            Type type = IDiagnosticsSystem.DisplayableDataTypes[displayableType];
 
             if (type != null)
             {
@@ -153,22 +138,13 @@ namespace Reflectis.SDK.CreatorKit
                         Arguments.Add(argument);
                         if (attr.isRequired)
                         {
-                            Requirement(argument, InputTrigger);
+                            Requirement(argument, DisplayableData);
                         }
                     }
                 }
             }
 
-            //CustomObjects = new List<ValueInput>();
 
-            //for (var i = 0; i < CustomEntriesCount; i++)
-            //{
-            //    var customProperty = ValueInput<CustomType>("Custom_Object_" + i);
-            //    CustomObjects.Add(customProperty);
-            //    Requirement(customProperty, InputTrigger);
-            //}
-
-            Succession(InputTrigger, OutputTrigger);
         }
     }
 }
