@@ -77,7 +77,8 @@ namespace Reflectis.SDK.CreatorKit
                         {
                             displayableContent.AssignValues(fields);
                             displayableContent.CheckValidity();
-                            return displayableContent;
+
+                            return new AnalyticsDisplayableData() { type = displayableType, content = displayableContent };
                         }
                         catch (Exception exception)
                         {
