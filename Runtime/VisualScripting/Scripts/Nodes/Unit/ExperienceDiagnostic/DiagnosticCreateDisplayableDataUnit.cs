@@ -73,17 +73,17 @@ namespace Reflectis.SDK.CreatorKit
                     }
                     if (typeInstance is DisplayableContentBase displayableContent)
                     {
-                        //try
-                        //{
-                        displayableContent.AssignValues(fields);
-                        displayableContent.CheckValidity();
-                        return displayableContent;
-                        //}
-                        //catch (Exception exception)
-                        //{
-                        //    string message = $"Error during execution of \"{UNIT_TITLE}\" on gameObject {gameObject} validity check failed with message: {exception.Message} ";
-                        //    Debug.LogError(message, gameObject);
-                        //}
+                        try
+                        {
+                            displayableContent.AssignValues(fields);
+                            displayableContent.CheckValidity();
+                            return displayableContent;
+                        }
+                        catch (Exception exception)
+                        {
+                            string message = $"Error during execution of \"{UNIT_TITLE}\" on gameObject {gameObject} validity check failed with message: {exception.Message} ";
+                            Debug.LogError(message, gameObject);
+                        }
                     }
                     else
                     {
