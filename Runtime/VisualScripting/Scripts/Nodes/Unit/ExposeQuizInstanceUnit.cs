@@ -57,7 +57,6 @@ namespace Reflectis.SDK.CreatorKit
 
             TitleLabel = ValueOutput(nameof(TitleLabel), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).TitleLabel);
 
-            // ToDo: Fill with localized text
             TitleValue = ValueOutput(nameof(TitleValue), (flow) =>
             {
                 QuizPlaceholder ans = flow.GetValue<QuizPlaceholder>(Quiz);
@@ -69,7 +68,6 @@ namespace Reflectis.SDK.CreatorKit
 
             DescriptionLabel = ValueOutput(nameof(DescriptionLabel), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).DescriptionLabel);
 
-            // ToDo: Fill with localized text
             DescriptionValue = ValueOutput(nameof(DescriptionValue), (flow) =>
             {
                 QuizPlaceholder ans = flow.GetValue<QuizPlaceholder>(Quiz);
