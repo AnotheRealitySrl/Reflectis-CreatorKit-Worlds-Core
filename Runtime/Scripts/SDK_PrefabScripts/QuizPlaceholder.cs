@@ -67,6 +67,10 @@ namespace Reflectis.SDK.CreatorKit
         public bool IsCorrectSelection => IsSelected == correctAnswer;
         public float CurrentScore => IsCorrectSelection ? ScoreIfGood : ScoreIfBad;
 
+        // Localizations
+        public string QuizInstanceAnswerTitleValue { get; set; } = string.Empty;
+        public string QuizInstanceAnswerFeedbackValue { get; set; } = string.Empty;
+
         public void Select()
         {
             IsSelected = true;
@@ -298,6 +302,10 @@ namespace Reflectis.SDK.CreatorKit
         public float QuizInstanceScore => QuizInstanceAnswers.Sum(x => x.CurrentScore);
 
         public int QuizInstanceCorrectAnswersCount => QuizInstanceAnswers.Count(x => x.IsCorrectSelection);
+
+        // Localizations
+        public string QuizInstanceTitleValue { get; set; } = string.Empty;
+        public string QuizInstanceDescriptionValue { get; set; } = string.Empty;
 
         #endregion
 

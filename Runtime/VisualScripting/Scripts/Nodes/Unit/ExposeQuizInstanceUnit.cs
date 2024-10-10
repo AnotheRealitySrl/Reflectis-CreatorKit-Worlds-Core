@@ -58,12 +58,26 @@ namespace Reflectis.SDK.CreatorKit
             TitleLabel = ValueOutput(nameof(TitleLabel), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).TitleLabel);
 
             // ToDo: Fill with localized text
-            TitleValue = ValueOutput(nameof(TitleValue), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).TitleLabel);
+            TitleValue = ValueOutput(nameof(TitleValue), (flow) =>
+            {
+                QuizPlaceholder ans = flow.GetValue<QuizPlaceholder>(Quiz);
+                string locLbl = ans.TitleLabel;
+                string locVal = ans.QuizInstanceTitleValue;
+
+                return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
+            });
 
             DescriptionLabel = ValueOutput(nameof(DescriptionLabel), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).DescriptionLabel);
 
             // ToDo: Fill with localized text
-            DescriptionValue = ValueOutput(nameof(DescriptionValue), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).DescriptionLabel);
+            DescriptionValue = ValueOutput(nameof(DescriptionValue), (flow) =>
+            {
+                QuizPlaceholder ans = flow.GetValue<QuizPlaceholder>(Quiz);
+                string locLbl = ans.DescriptionLabel;
+                string locVal = ans.QuizInstanceDescriptionValue;
+
+                return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
+            });
 
             // Instance-related info
 
