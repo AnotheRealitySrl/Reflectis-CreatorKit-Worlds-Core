@@ -1,5 +1,4 @@
-﻿using Reflectis.SDK.InteractionNew;
-using Unity.VisualScripting;
+﻿using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
@@ -16,6 +15,12 @@ namespace Reflectis.SDK.CreatorKit
 
         [DoNotSerialize]
         public ValueOutput GameObjectReference { get; private set; }
+
+        [DoNotSerialize]
+        public ValueOutput HeaderLabel { get; private set; }
+
+        [DoNotSerialize]
+        public ValueOutput HeaderValue { get; private set; }
 
         [DoNotSerialize]
         public ValueOutput TitleLabel { get; private set; }
@@ -54,6 +59,17 @@ namespace Reflectis.SDK.CreatorKit
             GameObjectReference = ValueOutput(nameof(GameObjectReference), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).gameObject);
 
             // Anagraphics
+
+            HeaderLabel = ValueOutput(nameof(HeaderLabel), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).HeaderLabel);
+
+            HeaderValue = ValueOutput(nameof(HeaderValue), (flow) =>
+            {
+                QuizPlaceholder ans = flow.GetValue<QuizPlaceholder>(Quiz);
+                string locLbl = ans.HeaderLabel;
+                string locVal = ans.QuizInstanceHeaderValue;
+
+                return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
+            });
 
             TitleLabel = ValueOutput(nameof(TitleLabel), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).TitleLabel);
 

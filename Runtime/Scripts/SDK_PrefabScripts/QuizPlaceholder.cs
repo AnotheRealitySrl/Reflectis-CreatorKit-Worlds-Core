@@ -178,6 +178,9 @@ namespace Reflectis.SDK.CreatorKit
         [Header("Quiz details")]
 
         [SerializeField, TextArea]
+        private string headerLabel = string.Empty;
+
+        [SerializeField, TextArea]
         private string titleLabel = "Quiz";
 
         [SerializeField, TextArea]
@@ -265,6 +268,7 @@ namespace Reflectis.SDK.CreatorKit
         public Transform ContentTransform => contentTransform;
         public Transform PanelTransform => panelTransform;
         public Transform CameraPanTransform => cameraPanTransform;
+        public string HeaderLabel => headerLabel.Trim(); // Removes white spaces at start and end of the string.
         public string TitleLabel => titleLabel.Trim(); // Removes white spaces at start and end of the string.
         public string DescriptionLabel => descriptionLabel.Trim(); // Removes white spaces at start and end of the string.
         public bool AllowMultipleSelection => allowMultipleSelection;
@@ -304,6 +308,7 @@ namespace Reflectis.SDK.CreatorKit
         public int QuizInstanceCorrectAnswersCount => QuizInstanceAnswers.Count(x => x.IsCorrectSelection);
 
         // Localizations
+        public string QuizInstanceHeaderValue { get; set; } = string.Empty;
         public string QuizInstanceTitleValue { get; set; } = string.Empty;
         public string QuizInstanceDescriptionValue { get; set; } = string.Empty;
 
