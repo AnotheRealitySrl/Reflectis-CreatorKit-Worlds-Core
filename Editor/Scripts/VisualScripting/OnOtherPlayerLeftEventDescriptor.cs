@@ -13,10 +13,22 @@ namespace Reflectis.SDK.CreatorKitEditor
         {
             return "This event will be triggered when a player leaves the Reflectis event where the local " +
                 "player currently is.\n" +
-                "It won't be triggered by the local player upon leaving a Reflectis event.\n\n" +
-                "UserId is the unique identifier for the player's Reflectis profile.\n" +
-                "ActorNumber is the Photon actor number value assigned to that player " +
-                "for the current room.";
+                "It won't be triggered by the local player upon leaving a Reflectis event.";
+        }
+
+        protected override void DefinedPort(IUnitPort port, UnitPortDescription description)
+        {
+            base.DefinedPort(port, description);
+
+            switch (port.key)
+            {
+                case "UserId":
+                    description.summary = "Unique identifier for the player's Reflectis profile.";
+                    break;
+                case "PlayerId":
+                    description.summary = "Identifier assigned to the player for the current shard.";
+                    break;
+            }
         }
     }
 }

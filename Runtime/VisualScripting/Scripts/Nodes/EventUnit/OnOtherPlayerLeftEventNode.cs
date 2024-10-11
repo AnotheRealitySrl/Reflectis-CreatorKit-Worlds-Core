@@ -15,7 +15,7 @@ namespace Reflectis.SDK.CreatorKit
         [DoNotSerialize]
         public ValueOutput UserId { get; private set; }
         [DoNotSerialize]
-        public ValueOutput ActorNumber { get; private set; }
+        public ValueOutput PlayerId { get; private set; }
         protected override bool register => true;
 
         protected GraphReference graphReference;
@@ -33,18 +33,18 @@ namespace Reflectis.SDK.CreatorKit
         {
             base.Definition();
             UserId = ValueOutput<int>(nameof(UserId));
-            ActorNumber = ValueOutput<int>(nameof(ActorNumber));
+            PlayerId = ValueOutput<int>(nameof(PlayerId));
         }
 
         protected override void AssignArguments(Flow flow, (int, int) args)
         {
             flow.SetValue(UserId, args.Item1);
-            flow.SetValue(ActorNumber, args.Item2);
+            flow.SetValue(PlayerId, args.Item2);
         }
 
-        private void OnPlayerLeft(int userId, int actorNumber)
+        private void OnPlayerLeft(int userId, int playerId)
         {
-            Trigger(graphReference, (userId, actorNumber));
+            Trigger(graphReference, (userId, playerId));
         }
     }
 }
