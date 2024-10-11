@@ -35,6 +35,9 @@ namespace Reflectis.SDK.CreatorKit
         public ValueOutput DescriptionValue { get; private set; }
 
         [DoNotSerialize]
+        public ValueOutput IsMultipleChoice { get; private set; }
+
+        [DoNotSerialize]
         public ValueOutput Answers { get; private set; }
 
         [DoNotSerialize]
@@ -92,6 +95,8 @@ namespace Reflectis.SDK.CreatorKit
 
                 return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
             });
+
+            IsMultipleChoice = ValueOutput(nameof(IsMultipleChoice), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).AllowMultipleSelection);
 
             // Instance-related info
 
