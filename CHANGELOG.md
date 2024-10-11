@@ -1,5 +1,13 @@
 # Release notes
 
+## Unreleased
+
+### Added
+
+- Added new visual scripting event nodes `OnOtherPlayerEntered` and `OnOtherPlayerLeft`, that can detect players entering/leaving the Reflectis event where the local player is currently staying.
+
+- Added new visual scripting node `ChangeScene`. It can be used to move local player to a static Reflectis event by providing the name of the environment used by the target event.
+
 ## v3.4.0
 
 ### Added
