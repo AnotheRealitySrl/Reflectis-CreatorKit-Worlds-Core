@@ -147,7 +147,7 @@ namespace Reflectis.SDK.CreatorKit
         {
 #if UNITY_EDITOR
             SerializedObject so = new(title.GetComponentInChildren<TMP_Text>());
-            so.FindProperty("m_fontSize").floatValue = titleFontSize;
+            so.FindProperty("m_fontSize").floatValue = titleFontSize / 10f;
             so.ApplyModifiedProperties();
 #endif
         }
