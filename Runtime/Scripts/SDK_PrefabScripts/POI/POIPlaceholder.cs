@@ -89,23 +89,6 @@ namespace Reflectis.SDK.CreatorKit
 
 
         [Space]
-        [Header("POI binding line settings")]
-
-        [HelpBox("A binding line can show that the POI is bound to something in space. " +
-            "To change the line, change the position of \"LineStart\" and \"LineEnd\" transforms.",
-            HelpBoxMessageType.Info)]
-
-        [SerializeField, Tooltip("Choose whether to draw the binding line or not.")]
-        private bool bindingLineVisibility;
-
-        [SerializeField, Tooltip("The color of the binding line.")]
-        private Color bindingLineColor = Color.red;
-
-        [SerializeField, Tooltip("The width of the binding line.")]
-        private float bindingLineWidth = 1f;
-
-
-        [Space]
         [Header("POI audio settings")]
 
         [SerializeField, Tooltip("If set, the POI reproduces an audio clip while open")]
@@ -118,18 +101,12 @@ namespace Reflectis.SDK.CreatorKit
         public RectTransform PagesContainer => pagesContainer;
         public RectTransform PreviousPage => previousPage;
         public RectTransform NextPage => nextPage;
-        public Transform BindingLineStart => bindingLineStart;
-        public Transform BindingLineEnd => bindingLineEnd;
 
         public ETitleVisibility TitleVisibility => titleVisibility;
         public string TitleText => titleText;
         public float TitleFontSize => titleFontSize;
 
         public bool BackgroundVisibility => backgroundVisibility;
-
-        public bool BindingLineVisibility => bindingLineVisibility;
-        public Color BindingLineColor => bindingLineColor;
-        public float BindingLineWidth => bindingLineWidth;
 
         public AudioClip AudioClip => audioClip;
 
@@ -147,7 +124,7 @@ namespace Reflectis.SDK.CreatorKit
         {
 #if UNITY_EDITOR
             SerializedObject so = new(title.GetComponentInChildren<TMP_Text>());
-            so.FindProperty("m_fontSize").floatValue = titleFontSize;
+            so.FindProperty("m_fontSize").floatValue = titleFontSize / 10f;
             so.ApplyModifiedProperties();
 #endif
         }
@@ -155,17 +132,6 @@ namespace Reflectis.SDK.CreatorKit
         public void OnBackgroundVisibilityChanged()
         {
             panel.GetComponentInChildren<Image>().enabled = backgroundVisibility;
-        }
-
-
-        // This shows a preview of the binding line
-        void OnDrawGizmosSelected()
-        {
-            if (bindingLineVisibility)
-            {
-                Gizmos.color = bindingLineColor;
-                Gizmos.DrawLine(bindingLineStart.position, bindingLineEnd.position);
-            }
         }
     }
 }

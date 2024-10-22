@@ -19,51 +19,86 @@ namespace Reflectis.SDK.CreatorKit
             Bold
         }
 
+        [SerializeField] private TMP_Text header;
+        [SerializeField] private TMP_Text body;
+
         [Space]
         [Header("Configurable stuff")]
 
+        [SerializeField, Tooltip("Choose whether to display an header or not.")]
+        [OnChangedCall(nameof(OnHeaderVisibilityChanged))]
+        private bool showHeader = true;
+
         [SerializeField, Tooltip("Configure the text that will be shown.")]
-        [OnChangedCall(nameof(OnTextChanged))]
-        private string text;
+        [OnChangedCall(nameof(OnHeaderTextChanged))]
+        private string headerText;
 
         [SerializeField, Tooltip("Change the font size.")]
-        [OnChangedCall(nameof(OnFontSizeChanged))]
-        private float fontSize;
-
-        [SerializeField, Tooltip("Change the font width.")]
-        [OnChangedCall(nameof(OnFontWidthChanged))]
-        private EPOITextFontStyle fontWidth;
-
-        public string Text => text;
-        public float FontSize => fontSize = 1f;
-        public EPOITextFontStyle FontWidth => fontWidth;
+        [OnChangedCall(nameof(OnHeaderFontSizeChanged))]
+        private float headerFontSize;
 
 
-        public void OnTextChanged()
+        [SerializeField, Tooltip("Configure the text that will be shown.")]
+        [OnChangedCall(nameof(OnBodyTextChanged))]
+        private string bodyText;
+
+        [SerializeField, Tooltip("Change the font size.")]
+        [OnChangedCall(nameof(OnBodyFontSizeChanged))]
+        private float bodyFontSize;
+
+        public bool ShowHeader => showHeader;
+
+        public string HeaderText => headerText;
+        public float HeaderFontSize => headerFontSize = 2f;
+
+        public string BodyText => bodyText;
+        public float BodyFontSize => bodyFontSize = 1f;
+
+
+        public void OnHeaderVisibilityChanged()
         {
 #if UNITY_EDITOR
-            SerializedObject so = new(transform.GetComponentInChildren<TMP_Text>());
-            so.FindProperty("m_text").stringValue = text;
+            SerializedObject so = new(header.gameObject);
+            so.FindProperty("m_IsActive").boolValue = showHeader;
             so.ApplyModifiedProperties();
 #endif
         }
 
-        public void OnFontSizeChanged()
+        public void OnHeaderTextChanged()
         {
 #if UNITY_EDITOR
-            SerializedObject so = new(transform.GetComponentInChildren<TMP_Text>());
-            so.FindProperty("m_fontSize").floatValue = fontSize;
+            SerializedObject so = new(header);
+            so.FindProperty("m_text").stringValue = headerText;
             so.ApplyModifiedProperties();
 #endif
         }
 
-        public void OnFontWidthChanged()
+        public void OnHeaderFontSizeChanged()
         {
 #if UNITY_EDITOR
-            SerializedObject so = new(transform.GetComponentInChildren<TMP_Text>());
-            so.FindProperty("m_fontStyle").enumValueFlag = fontWidth == EPOITextFontStyle.Bold ? (int)FontStyles.Bold : (int)FontStyles.Normal;
+            SerializedObject so = new(header);
+            so.FindProperty("m_fontSize").floatValue = headerFontSize / 10f;
             so.ApplyModifiedProperties();
 #endif
         }
+
+        public void OnBodyTextChanged()
+        {
+#if UNITY_EDITOR
+            SerializedObject so = new(body);
+            so.FindProperty("m_text").stringValue = bodyText;
+            so.ApplyModifiedProperties();
+#endif
+        }
+
+        public void OnBodyFontSizeChanged()
+        {
+#if UNITY_EDITOR
+            SerializedObject so = new(body);
+            so.FindProperty("m_fontSize").floatValue = bodyFontSize / 10f;
+            so.ApplyModifiedProperties();
+#endif
+        }
+
     }
 }
