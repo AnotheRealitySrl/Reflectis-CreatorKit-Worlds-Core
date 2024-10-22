@@ -35,7 +35,7 @@ namespace Reflectis.SDK.CreatorKit
 
         [SerializeField, Tooltip("Change the font size.")]
         [OnChangedCall(nameof(OnHeaderFontSizeChanged))]
-        private float headerFontSize;
+        private float headerFontSize = 2f;
 
 
         [SerializeField, Tooltip("Configure the text that will be shown.")]
@@ -44,15 +44,15 @@ namespace Reflectis.SDK.CreatorKit
 
         [SerializeField, Tooltip("Change the font size.")]
         [OnChangedCall(nameof(OnBodyFontSizeChanged))]
-        private float bodyFontSize;
+        private float bodyFontSize = 1f;
 
         public bool ShowHeader => showHeader;
 
         public string HeaderText => headerText;
-        public float HeaderFontSize => headerFontSize = 2f;
+        public float HeaderFontSize => headerFontSize;
 
         public string BodyText => bodyText;
-        public float BodyFontSize => bodyFontSize = 1f;
+        public float BodyFontSize => bodyFontSize;
 
 
         public void OnHeaderVisibilityChanged()
