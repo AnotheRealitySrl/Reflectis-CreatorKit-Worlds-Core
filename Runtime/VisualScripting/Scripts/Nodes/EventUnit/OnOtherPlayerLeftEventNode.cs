@@ -24,7 +24,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             graphReference = reference;
 
-            SM.GetSystem<INetworkingSystem>().OtherPlayerLeftRoom.AddListener(OnPlayerLeft);
+            SM.GetSystem<INetworkingSystem>().OtherPlayerLeftShard.AddListener(OnPlayerLeft);
 
             return new EventHook(eventName);
         }

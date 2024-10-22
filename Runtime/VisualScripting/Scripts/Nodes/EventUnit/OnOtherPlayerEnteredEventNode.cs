@@ -24,7 +24,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             graphReference = reference;
 
-            SM.GetSystem<INetworkingSystem>().OtherPlayerJoinedRoom.AddListener(OnPlayerEntered);
+            SM.GetSystem<INetworkingSystem>().OtherPlayerJoinedShard.AddListener(OnPlayerEntered);
 
             return new EventHook(eventName);
         }
