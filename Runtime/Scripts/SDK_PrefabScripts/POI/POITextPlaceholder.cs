@@ -49,7 +49,7 @@ namespace Reflectis.SDK.CreatorKit
         public bool ShowHeader => showHeader;
 
         public string HeaderText => headerText;
-        public float FontSize => headerFontSize = 2f;
+        public float HeaderFontSize => headerFontSize = 2f;
 
         public string BodyText => bodyText;
         public float BodyFontSize => bodyFontSize = 1f;
