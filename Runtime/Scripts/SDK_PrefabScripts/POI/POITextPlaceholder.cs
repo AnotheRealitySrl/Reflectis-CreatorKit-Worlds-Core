@@ -58,8 +58,8 @@ namespace Reflectis.SDK.CreatorKit
         public void OnHeaderVisibilityChanged()
         {
 #if UNITY_EDITOR
-            SerializedObject so = new(header);
-            so.FindProperty("m_IsActive").stringValue = headerText;
+            SerializedObject so = new(header.gameObject);
+            so.FindProperty("m_IsActive").boolValue = showHeader;
             so.ApplyModifiedProperties();
 #endif
         }
