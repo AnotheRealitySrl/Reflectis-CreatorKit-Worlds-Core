@@ -26,6 +26,7 @@ namespace Reflectis.SDK.CreatorKit
         [Header("Configurable stuff")]
 
         [SerializeField, Tooltip("Choose whether to display an header or not.")]
+        [OnChangedCall(nameof(OnHeaderVisibilityChanged))]
         private bool showHeader = true;
 
         [SerializeField, Tooltip("Configure the text that will be shown.")]
@@ -53,6 +54,15 @@ namespace Reflectis.SDK.CreatorKit
         public string BodyText => bodyText;
         public float BodyFontSize => bodyFontSize = 1f;
 
+
+        public void OnHeaderVisibilityChanged()
+        {
+#if UNITY_EDITOR
+            SerializedObject so = new(header);
+            so.FindProperty("m_IsActive").stringValue = headerText;
+            so.ApplyModifiedProperties();
+#endif
+        }
 
         public void OnHeaderTextChanged()
         {
