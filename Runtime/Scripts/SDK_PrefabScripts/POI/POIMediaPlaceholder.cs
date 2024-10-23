@@ -37,7 +37,7 @@ namespace Reflectis.SDK.CreatorKit
         private string url;
 
 
-        public override string AddressableKey => addressableKeys[(int)poiBlockMediaType];
+        public override string AddressableKey => addressableKeys[(int)poiBlockMediaType - 1];
         public Sprite Image => image;
         public string Url => url;
 
