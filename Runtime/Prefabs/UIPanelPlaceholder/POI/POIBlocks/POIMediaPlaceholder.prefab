@@ -281,8 +281,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   addressableKeys:
-  - POIImage
-  - POIVideo
+  - POIImageBlock
+  - POIVideoBlock
   imagePlaceholder: {fileID: 5682507188660639440}
   videoPlaceholder: {fileID: 6089214156209811471}
   poiBlockMediaType: 1

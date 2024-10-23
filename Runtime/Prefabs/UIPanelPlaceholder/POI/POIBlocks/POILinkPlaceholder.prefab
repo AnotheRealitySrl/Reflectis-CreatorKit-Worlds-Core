@@ -306,7 +306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   addressableKeys:
-  - POILink
+  - POILinkBlock
   link: 
   text: External link
   fontSize: 0.5

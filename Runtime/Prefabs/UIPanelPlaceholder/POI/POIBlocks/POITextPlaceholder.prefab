@@ -285,7 +285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   addressableKeys:
-  - POIText
+  - POITextBlock
   header: {fileID: 3674702707403337612}
   body: {fileID: 1249359898749891455}
   showHeader: 1
