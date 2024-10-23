@@ -291,7 +291,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0.5, y: 0.25}
+  m_SizeDelta: {x: 0.5, y: 0.125}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5698389707990085885
 MonoBehaviour:
@@ -305,7 +305,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eca26a3fd3427844891114e34b6236c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addressableKey: POILinkBlock
+  addressableKeys:
+  - POILink
   link: 
   text: External link
   fontSize: 0.5

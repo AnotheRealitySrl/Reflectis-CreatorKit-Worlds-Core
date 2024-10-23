@@ -1,5 +1,7 @@
 using Reflectis.SDK.Utilities;
 
+using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
@@ -12,9 +14,9 @@ namespace Reflectis.SDK.CreatorKit
             "section of this inspector. You will see a preview of how the block will be displayed at runtime. ",
             HelpBoxMessageType.Info)]
 
-        [Tooltip("Do not edit the addressable key.")]
-        [SerializeField] private string addressableKey;
+        [Tooltip("Do not edit the addressable keys.")]
+        [SerializeField] protected List<string> addressableKeys;
 
-        public string AddressableKey => addressableKey;
+        public virtual string AddressableKey => addressableKeys[0];
     }
 }
