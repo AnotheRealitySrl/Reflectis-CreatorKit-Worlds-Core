@@ -144,7 +144,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 383dc5c90508abe44bb587b62acd8268, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e47013aa787eb2045939fec54973974a, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -220,7 +220,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f55b2d961444afa47a875417dacaa670, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 38ca11590ad1dee45998075795721108, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -286,5 +286,5 @@ MonoBehaviour:
   imagePlaceholder: {fileID: 5682507188660639440}
   videoPlaceholder: {fileID: 6089214156209811471}
   poiBlockMediaType: 1
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: e47013aa787eb2045939fec54973974a, type: 3}
   url: 
