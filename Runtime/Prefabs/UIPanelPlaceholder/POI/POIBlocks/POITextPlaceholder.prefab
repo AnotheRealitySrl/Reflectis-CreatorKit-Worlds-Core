@@ -36,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.365, y: 0}
-  m_SizeDelta: {x: 0.73, y: 0}
+  m_AnchoredPosition: {x: 0.185, y: 0}
+  m_SizeDelta: {x: 0.37, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9132507252876279790
 CanvasRenderer:
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.2
+  m_fontSize: 0.1
   m_fontSizeBase: 0.1
   m_fontWeight: 400
   m_enableAutoSizing: 0
@@ -262,7 +262,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2.5, y: 1.5}
+  m_SizeDelta: {x: 1.2, y: 0.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7223720204869975661
 CanvasRenderer:
@@ -284,19 +284,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0beaaf8e3b6ecd74c948b8d8ac65d968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addressableKey: POITextBlock
+  addressableKeys:
+  - POIText
   header: {fileID: 3674702707403337612}
   body: {fileID: 1249359898749891455}
   showHeader: 1
   headerText: Header
-  headerFontSize: 2
+  headerFontSize: 1
   bodyText: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
     tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
     quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
     eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
     in culpa qui officia deserunt mollit anim id est laborum.
-  bodyFontSize: 1
+  bodyFontSize: 0.5
 --- !u!114 &8414926944001920103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,8 +364,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1.2, y: 0}
-  m_SizeDelta: {x: 2.4, y: 0}
+  m_AnchoredPosition: {x: 0.55, y: 0}
+  m_SizeDelta: {x: 1.1, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8677556714998950084
 CanvasRenderer:
@@ -426,7 +427,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.1
+  m_fontSize: 0.05
   m_fontSizeBase: 0.1
   m_fontWeight: 400
   m_enableAutoSizing: 0

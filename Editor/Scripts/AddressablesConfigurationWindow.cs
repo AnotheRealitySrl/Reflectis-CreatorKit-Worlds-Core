@@ -463,9 +463,7 @@ namespace Reflectis.SDK.CreatorKitEditor
             }
             else if (addressablesBundleScriptableObjects.Count > 0)
             {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField($"Choose a bundle and configure it from its Inspector.", style, GUILayout.Width(100));
-                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.LabelField($"Choose a bundle and configure it from its Inspector.", style);
                 btnIndex = -1;
                 foreach (var item in addressablesBundleScriptableObjects)
                 {
@@ -494,7 +492,7 @@ namespace Reflectis.SDK.CreatorKitEditor
             }
             else
             {
-                EditorGUILayout.LabelField($"You need to create an Addressable Bundle to proceed!", style, GUILayout.Width(100));
+                EditorGUILayout.LabelField($"You need to create an Addressable Bundle to proceed!", style);
                 if (GUILayout.Button("[Create new]", GUILayout.Width(bundleNewBtnWidth)))
                 {
                     CreateNewAddressablesBundle();
