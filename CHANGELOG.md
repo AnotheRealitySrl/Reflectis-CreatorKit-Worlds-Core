@@ -8,6 +8,8 @@
 
 - Added new visual scripting node `ChangeScene`. It can be used to move local player to a static Reflectis event by providing the name of the environment used by the target event.
 
+- Added new visual scripting node `SendMultiAnswerQuizData`. It can be used to send quiz results to the server to display its data on the analytics table.
+
 ## v3.4.0
 
 ### Added
