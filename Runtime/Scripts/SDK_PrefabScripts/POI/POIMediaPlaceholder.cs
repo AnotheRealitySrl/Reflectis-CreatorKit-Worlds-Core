@@ -28,8 +28,8 @@ namespace Reflectis.SDK.CreatorKit
         private EPOIBlockMediaType poiBlockMediaType = EPOIBlockMediaType.Image;
 
         [SerializeField, Tooltip("An image can be referenced with a sprite.")]
+        //[DrawIf(nameof(poiBlockMediaType), 1)]
         [OnChangedCall(nameof(OnImageChanged))]
-        [DrawIf(nameof(poiBlockMediaType), 1)]
         private Sprite image;
 
         [SerializeField, Tooltip("A video must be provided with a public, non authenticated url.")]
