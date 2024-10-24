@@ -49,8 +49,7 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private RectTransform pagesContainer;
         [SerializeField] private RectTransform previousPage;
         [SerializeField] private RectTransform nextPage;
-        [SerializeField] private Transform bindingLineStart;
-        [SerializeField] private Transform bindingLineEnd;
+        [SerializeField] private Transform panTransform;
 
 
         [Space]
@@ -95,6 +94,14 @@ namespace Reflectis.SDK.CreatorKit
         private AudioClip audioClip;
 
 
+        [Space]
+        [Header("Pan settings (only WebGL)")]
+
+        [SerializeField, Tooltip("Set the distance of the pan towards the POI panel")]
+        [OnChangedCall(nameof(OnPanTransformChanged))]
+        private float panDistance = 1f;
+
+
         public RectTransform Activator => activator;
         public RectTransform Title => title;
         public RectTransform Panel => panel;
@@ -132,6 +139,11 @@ namespace Reflectis.SDK.CreatorKit
         public void OnBackgroundVisibilityChanged()
         {
             panel.GetComponentInChildren<Image>().enabled = backgroundVisibility;
+        }
+
+        public void OnPanTransformChanged()
+        {
+            panTransform.localPosition = new Vector3(panTransform.localPosition.x, panTransform.localPosition.y, -panDistance);
         }
     }
 }
