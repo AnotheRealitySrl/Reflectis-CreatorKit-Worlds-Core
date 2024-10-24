@@ -117,6 +117,8 @@ namespace Reflectis.SDK.CreatorKit
 
         public AudioClip AudioClip => audioClip;
 
+        public Transform PanTransform => panTransform;
+
 
         public void OnPOITitleTextChanged()
         {
