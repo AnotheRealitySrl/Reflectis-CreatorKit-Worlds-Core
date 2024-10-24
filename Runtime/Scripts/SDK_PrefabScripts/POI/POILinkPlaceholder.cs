@@ -26,11 +26,11 @@ namespace Reflectis.SDK.CreatorKit
 
         [SerializeField, Tooltip("Change the font size of the text.")]
         [OnChangedCall(nameof(OnFontSizeChanged))]
-        private float fontSize;
+        private float fontSize = 1f;
 
         public string Link => link;
         public string Text => text;
-        public float FontSize => fontSize = 1f;
+        public float FontSize => fontSize;
 
 
         public void OnTextChanged()
