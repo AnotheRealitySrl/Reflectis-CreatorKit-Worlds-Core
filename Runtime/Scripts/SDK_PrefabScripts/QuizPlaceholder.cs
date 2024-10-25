@@ -41,6 +41,9 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField, TextArea]
         private string titleLabel = string.Empty;
 
+        [SerializeField, TextArea]
+        private string hiddenTitleLabel = string.Empty;
+
         [SerializeField]
         private Sprite image = null;
 
@@ -57,6 +60,7 @@ namespace Reflectis.SDK.CreatorKit
         private string feedbackLabel = string.Empty;
 
         public string TitleLabel => titleLabel.Trim();  // Removes white spaces at start and end of the string.
+        public string HiddenTitleLabel => hiddenTitleLabel.Trim();  // Removes white spaces at start and end of the string.
         public Sprite Image => image;
         public bool CorrectAnswer => correctAnswer;
         public float ScoreIfGood => scoreIfGood;
@@ -69,6 +73,7 @@ namespace Reflectis.SDK.CreatorKit
 
         // Localizations
         public string QuizInstanceAnswerTitleValue { get; set; } = string.Empty;
+        public string QuizInstanceAnswerHiddenTitleValue { get; set; } = string.Empty;
         public string QuizInstanceAnswerFeedbackValue { get; set; } = string.Empty;
 
         public void Select()

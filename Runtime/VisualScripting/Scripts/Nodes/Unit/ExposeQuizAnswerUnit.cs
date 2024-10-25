@@ -20,6 +20,12 @@ namespace Reflectis.SDK.CreatorKit
         public ValueOutput TitleValue { get; private set; }
 
         [DoNotSerialize]
+        public ValueOutput HiddenTitleLabel { get; private set; }
+
+        [DoNotSerialize]
+        public ValueOutput HiddenTitleValue { get; private set; }
+
+        [DoNotSerialize]
         public ValueOutput Image { get; private set; }
 
         [DoNotSerialize]
@@ -59,6 +65,38 @@ namespace Reflectis.SDK.CreatorKit
                 QuizAnswer ans = flow.GetValue<QuizAnswer>(Answer);
                 string locLbl = ans.TitleLabel;
                 string locVal = ans.QuizInstanceAnswerTitleValue;
+
+                return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
+            });
+
+            HiddenTitleLabel = ValueOutput(nameof(HiddenTitleLabel), (flow) =>
+            {
+                var locLbl = flow.GetValue<QuizAnswer>(Answer).HiddenTitleLabel;
+                // If "HiddenTitle" is not specified, it fallbacks using "Title".
+                if (string.IsNullOrEmpty(locLbl))
+                {
+                    locLbl = flow.GetValue<QuizAnswer>(Answer).TitleLabel;
+                }
+
+                return locLbl;
+            });
+
+
+            HiddenTitleValue = ValueOutput(nameof(HiddenTitleValue), (flow) =>
+            {
+                QuizAnswer ans = flow.GetValue<QuizAnswer>(Answer);
+                string locLbl, locVal;
+                // If "HiddenTitle" is not specified, it fallbacks using "Title".
+                if (!string.IsNullOrEmpty(ans.HiddenTitleLabel))
+                {
+                    locLbl = ans.HiddenTitleLabel;
+                    locVal = ans.QuizInstanceAnswerHiddenTitleValue;
+                }
+                else
+                {
+                    locLbl = ans.TitleLabel;
+                    locVal = ans.QuizInstanceAnswerTitleValue;
+                }
 
                 return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
             });
