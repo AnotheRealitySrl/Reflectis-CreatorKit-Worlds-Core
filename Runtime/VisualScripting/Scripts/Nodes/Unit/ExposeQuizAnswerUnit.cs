@@ -1,4 +1,5 @@
 ﻿using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
@@ -87,7 +88,7 @@ namespace Reflectis.SDK.CreatorKit
                 QuizAnswer ans = flow.GetValue<QuizAnswer>(Answer);
                 string locLbl, locVal;
                 // If "HiddenTitle" is not specified, it fallbacks using "Title".
-                if (!string.IsNullOrEmpty(ans.HiddenTitleLabel))
+                if (!string.IsNullOrWhiteSpace(ans.HiddenTitleLabel))
                 {
                     locLbl = ans.HiddenTitleLabel;
                     locVal = ans.QuizInstanceAnswerHiddenTitleValue;
@@ -98,7 +99,7 @@ namespace Reflectis.SDK.CreatorKit
                     locVal = ans.QuizInstanceAnswerTitleValue;
                 }
 
-                return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
+                return !string.IsNullOrWhiteSpace(locVal) ? locVal : locLbl;
             });
 
             Image = ValueOutput(nameof(Image), (flow) => flow.GetValue<QuizAnswer>(Answer).Image);
