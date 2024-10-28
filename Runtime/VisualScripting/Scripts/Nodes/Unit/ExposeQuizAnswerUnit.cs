@@ -1,4 +1,5 @@
 ﻿using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
@@ -18,6 +19,12 @@ namespace Reflectis.SDK.CreatorKit
 
         [DoNotSerialize]
         public ValueOutput TitleValue { get; private set; }
+
+        [DoNotSerialize]
+        public ValueOutput HiddenTitleLabel { get; private set; }
+
+        [DoNotSerialize]
+        public ValueOutput HiddenTitleValue { get; private set; }
 
         [DoNotSerialize]
         public ValueOutput Image { get; private set; }
@@ -61,6 +68,38 @@ namespace Reflectis.SDK.CreatorKit
                 string locVal = ans.QuizInstanceAnswerTitleValue;
 
                 return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
+            });
+
+            HiddenTitleLabel = ValueOutput(nameof(HiddenTitleLabel), (flow) =>
+            {
+                var locLbl = flow.GetValue<QuizAnswer>(Answer).HiddenTitleLabel;
+                // If "HiddenTitle" is not specified, it fallbacks using "Title".
+                if (string.IsNullOrEmpty(locLbl))
+                {
+                    locLbl = flow.GetValue<QuizAnswer>(Answer).TitleLabel;
+                }
+
+                return locLbl;
+            });
+
+
+            HiddenTitleValue = ValueOutput(nameof(HiddenTitleValue), (flow) =>
+            {
+                QuizAnswer ans = flow.GetValue<QuizAnswer>(Answer);
+                string locLbl, locVal;
+                // If "HiddenTitle" is not specified, it fallbacks using "Title".
+                if (!string.IsNullOrWhiteSpace(ans.HiddenTitleLabel))
+                {
+                    locLbl = ans.HiddenTitleLabel;
+                    locVal = ans.QuizInstanceAnswerHiddenTitleValue;
+                }
+                else
+                {
+                    locLbl = ans.TitleLabel;
+                    locVal = ans.QuizInstanceAnswerTitleValue;
+                }
+
+                return !string.IsNullOrWhiteSpace(locVal) ? locVal : locLbl;
             });
 
             Image = ValueOutput(nameof(Image), (flow) => flow.GetValue<QuizAnswer>(Answer).Image);
