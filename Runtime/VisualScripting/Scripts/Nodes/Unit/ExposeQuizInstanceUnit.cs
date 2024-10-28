@@ -1,5 +1,4 @@
-﻿using Reflectis.SDK.InteractionNew;
-using Unity.VisualScripting;
+﻿using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
 {
@@ -18,6 +17,12 @@ namespace Reflectis.SDK.CreatorKit
         public ValueOutput GameObjectReference { get; private set; }
 
         [DoNotSerialize]
+        public ValueOutput HeaderLabel { get; private set; }
+
+        [DoNotSerialize]
+        public ValueOutput HeaderValue { get; private set; }
+
+        [DoNotSerialize]
         public ValueOutput TitleLabel { get; private set; }
 
         [DoNotSerialize]
@@ -28,6 +33,9 @@ namespace Reflectis.SDK.CreatorKit
 
         [DoNotSerialize]
         public ValueOutput DescriptionValue { get; private set; }
+
+        [DoNotSerialize]
+        public ValueOutput IsMultipleChoice { get; private set; }
 
         [DoNotSerialize]
         public ValueOutput Answers { get; private set; }
@@ -55,15 +63,40 @@ namespace Reflectis.SDK.CreatorKit
 
             // Anagraphics
 
+            HeaderLabel = ValueOutput(nameof(HeaderLabel), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).HeaderLabel);
+
+            HeaderValue = ValueOutput(nameof(HeaderValue), (flow) =>
+            {
+                QuizPlaceholder ans = flow.GetValue<QuizPlaceholder>(Quiz);
+                string locLbl = ans.HeaderLabel;
+                string locVal = ans.QuizInstanceHeaderValue;
+
+                return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
+            });
+
             TitleLabel = ValueOutput(nameof(TitleLabel), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).TitleLabel);
 
-            // ToDo: Fill with localized text
-            TitleValue = ValueOutput(nameof(TitleValue), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).TitleLabel);
+            TitleValue = ValueOutput(nameof(TitleValue), (flow) =>
+            {
+                QuizPlaceholder ans = flow.GetValue<QuizPlaceholder>(Quiz);
+                string locLbl = ans.TitleLabel;
+                string locVal = ans.QuizInstanceTitleValue;
+
+                return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
+            });
 
             DescriptionLabel = ValueOutput(nameof(DescriptionLabel), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).DescriptionLabel);
 
-            // ToDo: Fill with localized text
-            DescriptionValue = ValueOutput(nameof(DescriptionValue), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).DescriptionLabel);
+            DescriptionValue = ValueOutput(nameof(DescriptionValue), (flow) =>
+            {
+                QuizPlaceholder ans = flow.GetValue<QuizPlaceholder>(Quiz);
+                string locLbl = ans.DescriptionLabel;
+                string locVal = ans.QuizInstanceDescriptionValue;
+
+                return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
+            });
+
+            IsMultipleChoice = ValueOutput(nameof(IsMultipleChoice), (flow) => flow.GetValue<QuizPlaceholder>(Quiz).AllowMultipleSelection);
 
             // Instance-related info
 

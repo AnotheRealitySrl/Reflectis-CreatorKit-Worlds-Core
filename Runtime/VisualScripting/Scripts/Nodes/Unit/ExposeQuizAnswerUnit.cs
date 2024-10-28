@@ -1,4 +1,5 @@
 ﻿using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
@@ -18,6 +19,12 @@ namespace Reflectis.SDK.CreatorKit
 
         [DoNotSerialize]
         public ValueOutput TitleValue { get; private set; }
+
+        [DoNotSerialize]
+        public ValueOutput HiddenTitleLabel { get; private set; }
+
+        [DoNotSerialize]
+        public ValueOutput HiddenTitleValue { get; private set; }
 
         [DoNotSerialize]
         public ValueOutput Image { get; private set; }
@@ -54,8 +61,46 @@ namespace Reflectis.SDK.CreatorKit
 
             TitleLabel = ValueOutput(nameof(TitleLabel), (flow) => flow.GetValue<QuizAnswer>(Answer).TitleLabel);
 
-            // ToDo: Fill with localized text
-            TitleValue = ValueOutput(nameof(TitleValue), (flow) => flow.GetValue<QuizAnswer>(Answer).TitleLabel);
+            TitleValue = ValueOutput(nameof(TitleValue), (flow) =>
+            {
+                QuizAnswer ans = flow.GetValue<QuizAnswer>(Answer);
+                string locLbl = ans.TitleLabel;
+                string locVal = ans.QuizInstanceAnswerTitleValue;
+
+                return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
+            });
+
+            HiddenTitleLabel = ValueOutput(nameof(HiddenTitleLabel), (flow) =>
+            {
+                var locLbl = flow.GetValue<QuizAnswer>(Answer).HiddenTitleLabel;
+                // If "HiddenTitle" is not specified, it fallbacks using "Title".
+                if (string.IsNullOrEmpty(locLbl))
+                {
+                    locLbl = flow.GetValue<QuizAnswer>(Answer).TitleLabel;
+                }
+
+                return locLbl;
+            });
+
+
+            HiddenTitleValue = ValueOutput(nameof(HiddenTitleValue), (flow) =>
+            {
+                QuizAnswer ans = flow.GetValue<QuizAnswer>(Answer);
+                string locLbl, locVal;
+                // If "HiddenTitle" is not specified, it fallbacks using "Title".
+                if (!string.IsNullOrWhiteSpace(ans.HiddenTitleLabel))
+                {
+                    locLbl = ans.HiddenTitleLabel;
+                    locVal = ans.QuizInstanceAnswerHiddenTitleValue;
+                }
+                else
+                {
+                    locLbl = ans.TitleLabel;
+                    locVal = ans.QuizInstanceAnswerTitleValue;
+                }
+
+                return !string.IsNullOrWhiteSpace(locVal) ? locVal : locLbl;
+            });
 
             Image = ValueOutput(nameof(Image), (flow) => flow.GetValue<QuizAnswer>(Answer).Image);
 
@@ -67,8 +112,14 @@ namespace Reflectis.SDK.CreatorKit
 
             FeedbackLabel = ValueOutput(nameof(FeedbackLabel), (flow) => flow.GetValue<QuizAnswer>(Answer).FeedbackLabel);
 
-            // ToDo: Fill with localized text
-            FeedbackValue = ValueOutput(nameof(FeedbackValue), (flow) => flow.GetValue<QuizAnswer>(Answer).FeedbackLabel);
+            FeedbackValue = ValueOutput(nameof(FeedbackValue), (flow) =>
+            {
+                QuizAnswer ans = flow.GetValue<QuizAnswer>(Answer);
+                string locLbl = ans.FeedbackLabel;
+                string locVal = ans.QuizInstanceAnswerFeedbackValue;
+
+                return !string.IsNullOrEmpty(locVal) ? locVal : locLbl;
+            });
 
             // Instance-related info
 

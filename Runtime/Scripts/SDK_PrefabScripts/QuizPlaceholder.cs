@@ -41,6 +41,9 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField, TextArea]
         private string titleLabel = string.Empty;
 
+        [SerializeField, TextArea]
+        private string hiddenTitleLabel = string.Empty;
+
         [SerializeField]
         private Sprite image = null;
 
@@ -57,6 +60,7 @@ namespace Reflectis.SDK.CreatorKit
         private string feedbackLabel = string.Empty;
 
         public string TitleLabel => titleLabel.Trim();  // Removes white spaces at start and end of the string.
+        public string HiddenTitleLabel => hiddenTitleLabel.Trim();  // Removes white spaces at start and end of the string.
         public Sprite Image => image;
         public bool CorrectAnswer => correctAnswer;
         public float ScoreIfGood => scoreIfGood;
@@ -66,6 +70,11 @@ namespace Reflectis.SDK.CreatorKit
         public bool IsSelected { get; private set; }
         public bool IsCorrectSelection => IsSelected == correctAnswer;
         public float CurrentScore => IsCorrectSelection ? ScoreIfGood : ScoreIfBad;
+
+        // Localizations
+        public string QuizInstanceAnswerTitleValue { get; set; } = string.Empty;
+        public string QuizInstanceAnswerHiddenTitleValue { get; set; } = string.Empty;
+        public string QuizInstanceAnswerFeedbackValue { get; set; } = string.Empty;
 
         public void Select()
         {
@@ -84,7 +93,7 @@ namespace Reflectis.SDK.CreatorKit
         private const string QUIZ_SIZE_FORMAT = "W: <b>{0}</b> - H: <b>{1}</b>";
         private const string QUIZ_LAYOUT_FORMAT = "Layout: <b>{0}</b> with <b>{1}</b> answers";
         private const string QUIZ_MAXANSWERS_FORMAT = "Max Answer items: <b>{0}{1}</b> out of <b>{2}</b>";
-        private const string QUIZ_MAXSELECTIONS_FORMAT = "Max Selections: <b>{0}</b>";
+        private const string QUIZ_SELECTIONS_FORMAT = "Selections: <b>{0}</b> to <b>{1}</b>";
 
         #endregion
 
@@ -174,6 +183,9 @@ namespace Reflectis.SDK.CreatorKit
         [Header("Quiz details")]
 
         [SerializeField, TextArea]
+        private string headerLabel = string.Empty;
+
+        [SerializeField, TextArea]
         private string titleLabel = "Quiz";
 
         [SerializeField, TextArea]
@@ -182,13 +194,19 @@ namespace Reflectis.SDK.CreatorKit
         [Space]
 
         [SerializeField]
-        [OnChangedCall(nameof(OnMaxSelectableAnswersChanged))]
+        [OnChangedCall(nameof(OnSelectableAnswersChanged))]
         private bool allowMultipleSelection = true;
 
         [DrawIf(nameof(allowMultipleSelection), true)]
         [Min(0)]
         [SerializeField]
-        [OnChangedCall(nameof(OnMaxSelectableAnswersChanged))]
+        [OnChangedCall(nameof(OnSelectableAnswersChanged))]
+        private int minSelectableAnswers = 0;
+
+        [DrawIf(nameof(allowMultipleSelection), true)]
+        [Min(0)]
+        [SerializeField]
+        [OnChangedCall(nameof(OnSelectableAnswersChanged))]
         private int maxSelectableAnswers = 100;
 
         [Space]
@@ -261,6 +279,7 @@ namespace Reflectis.SDK.CreatorKit
         public Transform ContentTransform => contentTransform;
         public Transform PanelTransform => panelTransform;
         public Transform CameraPanTransform => cameraPanTransform;
+        public string HeaderLabel => headerLabel.Trim(); // Removes white spaces at start and end of the string.
         public string TitleLabel => titleLabel.Trim(); // Removes white spaces at start and end of the string.
         public string DescriptionLabel => descriptionLabel.Trim(); // Removes white spaces at start and end of the string.
         public bool AllowMultipleSelection => allowMultipleSelection;
@@ -272,9 +291,14 @@ namespace Reflectis.SDK.CreatorKit
         public ScriptMachine QuizEventsScriptMachine => quizEventsScriptMachine;
         public List<QuizAnswer> QuizAnswers => quizAnswers;
 
+        // MinAnswers: if multiple answers are not allowed, automatically reduce to 1.
+        // In every case, MinAnswers can't be negative.
+        public int MinSelectableAnswers => AllowMultipleSelection ? Mathf.Clamp(minSelectableAnswers, 0, QuizAnswers.Count) : 1;
+
         // MaxAnswers: if multiple answers are not allowed, automatically reduce to 1.
+        // MaxAnswers is clamped at least to MinAnswers.
         // In every case, MaxAnswers can't be negative.
-        public int MaxSelectableAnswers => AllowMultipleSelection ? Mathf.Clamp(maxSelectableAnswers, 0, QuizAnswers.Count) : 1;
+        public int MaxSelectableAnswers => AllowMultipleSelection ? Mathf.Clamp(maxSelectableAnswers, MinSelectableAnswers, QuizAnswers.Count) : 1;
 
         // AnswersSubsetQuantity
         // In every case, AnswersSubsetQuantity can't be negative.
@@ -298,6 +322,11 @@ namespace Reflectis.SDK.CreatorKit
         public float QuizInstanceScore => QuizInstanceAnswers.Sum(x => x.CurrentScore);
 
         public int QuizInstanceCorrectAnswersCount => QuizInstanceAnswers.Count(x => x.IsCorrectSelection);
+
+        // Localizations
+        public string QuizInstanceHeaderValue { get; set; } = string.Empty;
+        public string QuizInstanceTitleValue { get; set; } = string.Empty;
+        public string QuizInstanceDescriptionValue { get; set; } = string.Empty;
 
         #endregion
 
@@ -488,7 +517,7 @@ namespace Reflectis.SDK.CreatorKit
 
         public void OnLayoutChanged() => UpdateLayoutText();
         public void OnAnswersChanged() => UpdateAnswersText();
-        public void OnMaxSelectableAnswersChanged() => UpdateMaxSelectionsText();
+        public void OnSelectableAnswersChanged() => UpdateMaxSelectionsText();
 
         private void UpdateSizeText()
         {
@@ -551,7 +580,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             if (quizMaxSelectionsTextMesh != null)
             {
-                var newVal = string.Format(QUIZ_MAXSELECTIONS_FORMAT, MaxSelectableAnswers);
+                var newVal = string.Format(QUIZ_SELECTIONS_FORMAT, MinSelectableAnswers, MaxSelectableAnswers);
                 if (quizMaxSelectionsTextMesh.text != newVal)
                 {
                     quizMaxSelectionsTextMesh.text = newVal;
