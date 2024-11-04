@@ -8,10 +8,12 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private string initialConversationSentence = "Hello!";
         [SerializeField] private Transform panTarget;
         [SerializeField] private RectTransform chatPanel;
+        [SerializeField] private AudioSource audioSource;
 
         public string InitialConversationSentence => initialConversationSentence;
         public Transform PanTarget => panTarget;
         public RectTransform ChatPanel => chatPanel;
+        public AudioSource AudioSource => audioSource;
 
         public UnityEvent OnConversationStart { get; } = new();
         public UnityEvent OnConversationFinish { get; } = new();
