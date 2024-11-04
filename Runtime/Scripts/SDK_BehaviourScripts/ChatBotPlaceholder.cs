@@ -13,7 +13,7 @@ namespace Reflectis.SDK.CreatorKit
         public Transform PanTarget => panTarget;
         public RectTransform ChatPanel => chatPanel;
 
-        public UnityEvent OnSelectedEvent { get; } = new();
-        public UnityEvent OnDeselectedEvent { get; } = new();
+        public UnityEvent OnConversationStart { get; } = new();
+        public UnityEvent OnConversationFinish { get; } = new();
     }
 }
