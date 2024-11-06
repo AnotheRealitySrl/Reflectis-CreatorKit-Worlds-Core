@@ -284,7 +284,7 @@ GameObject:
   - component: {fileID: 5518190136699973314}
   - component: {fileID: 6232021862487866862}
   m_Layer: 0
-  m_Name: ChatBotAvatarStructure
+  m_Name: ChatBotStructurePlaceholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
