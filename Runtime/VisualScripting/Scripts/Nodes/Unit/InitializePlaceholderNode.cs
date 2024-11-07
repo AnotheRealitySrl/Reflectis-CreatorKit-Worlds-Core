@@ -30,30 +30,11 @@ namespace Reflectis.SDK.CreatorKit
         protected override void Definition()
         {
             Target = ValueInput<GameObject>(nameof(Target), null).NullMeansSelf();
-            PlaceholdersInChildren = ValueInput<bool>(nameof(PlaceholdersInChildren), false);
+            PlaceholdersInChildren = ValueInput(nameof(PlaceholdersInChildren), false);
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                SceneComponentPlaceholderBase[] placeHolders;
-
-                // If the PlaceholdersInChildren is checked, gets all placeholder components 
-                // on the target gameobject and its children. Else, it only gets the placeholder
-                // on the target gameobject.
-                if (f.GetValue<bool>(PlaceholdersInChildren))
-                {
-                    placeHolders = f.GetValue<GameObject>(Target).GetComponentsInChildren<SceneComponentPlaceholderBase>();
-                }
-                else
-                {
-                    placeHolders = new SceneComponentPlaceholderBase[1];
-                    placeHolders[0] = f.GetValue<GameObject>(Target).GetComponent<SceneComponentPlaceholderBase>();
-                }
-                
-                // Initializes all placeholder components found.
-                foreach (var placeHolder in placeHolders)
-                {
-                    IReflectisApplicationManager.Instance.InitializeObject(placeHolder);
-                }
+                IReflectisApplicationManager.Instance.InitializeObject(f.GetValue<GameObject>(Target), f.GetValue<bool>(PlaceholdersInChildren));
 
                 return OutputTrigger;
             });
