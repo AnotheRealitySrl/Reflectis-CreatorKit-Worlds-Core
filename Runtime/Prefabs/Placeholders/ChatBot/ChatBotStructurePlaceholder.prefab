@@ -283,6 +283,7 @@ GameObject:
   - component: {fileID: 3965029285367468011}
   - component: {fileID: 5518190136699973314}
   - component: {fileID: 6232021862487866862}
+  - component: {fileID: 4349207345932121407}
   m_Layer: 0
   m_Name: ChatBotStructurePlaceholder
   m_TagString: Untagged
@@ -356,8 +357,8 @@ MonoBehaviour:
   attachTransform: {fileID: 0}
   lockHoverDuringInteraction: 0
   interactionsScriptMachine: {fileID: 6232021862487866862}
-  needUnselectOnDestroyScriptMachine: 0
-  unselectOnDestroyScriptMachine: {fileID: 0}
+  needUnselectOnDestroyScriptMachine: 1
+  unselectOnDestroyScriptMachine: {fileID: 4349207345932121407}
   desktopAllowedStates: 5
   vrAllowedStates: 5
   vrGenericInteraction: 1
@@ -396,7 +397,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    _json: '{"nest":{"source":"Embed","macro":null,"embed":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":155.523,"y":0.0},"zoom":1.0,"elements":[{"nest":{"source":"Macro","macro":0,"embed":null},"defaultValues":{},"position":{"x":-34.0,"y":-172.0},"guid":"63ea5174-3301-46ee-a7c4-e5d1cd34c351","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"10"},{"coroutine":true,"defaultValues":{},"position":{"x":-343.0,"y":-187.0},"guid":"a2f43d7a-d635-4050-87e4-eb2a8f6b3574","$version":"A","$type":"Reflectis.SDK.InteractionNew.SelectEnterEventUnit","$id":"13"},{"specifyFallback":false,"kind":"Object","defaultValues":{"name":{"$content":"PanTarget","$type":"System.String"},"object":null},"position":{"x":-203.0,"y":26.0},"guid":"cf22c8d9-3d8c-412a-9947-aac3db8732ca","$version":"A","$type":"Unity.VisualScripting.GetVariable","$id":"15"},{"sourceUnit":{"$ref":"13"},"sourceKey":"trigger","destinationUnit":{"$ref":"10"},"destinationKey":"Start","guid":"6ea59ba0-df84-4b78-806f-31ffca5a63b6","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"15"},"sourceKey":"value","destinationUnit":{"$ref":"10"},"destinationKey":"PanTarget","guid":"736436d6-e7c1-4810-9aae-db20cefc4db3","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}}}'
+    _json: '{"nest":{"source":"Embed","macro":null,"embed":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":-184.4463,"y":0.0},"zoom":1.0,"elements":[{"nest":{"source":"Macro","macro":0,"embed":null},"defaultValues":{},"position":{"x":-34.0,"y":-172.0},"guid":"63ea5174-3301-46ee-a7c4-e5d1cd34c351","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"10"},{"coroutine":true,"defaultValues":{},"position":{"x":-343.0,"y":-187.0},"guid":"a2f43d7a-d635-4050-87e4-eb2a8f6b3574","$version":"A","$type":"Reflectis.SDK.InteractionNew.SelectEnterEventUnit","$id":"13"},{"specifyFallback":false,"kind":"Object","defaultValues":{"name":{"$content":"PanTarget","$type":"System.String"},"object":null},"position":{"x":-203.0,"y":26.0},"guid":"cf22c8d9-3d8c-412a-9947-aac3db8732ca","$version":"A","$type":"Unity.VisualScripting.GetVariable","$id":"15"},{"sourceUnit":{"$ref":"13"},"sourceKey":"trigger","destinationUnit":{"$ref":"10"},"destinationKey":"Start","guid":"6ea59ba0-df84-4b78-806f-31ffca5a63b6","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"15"},"sourceKey":"value","destinationUnit":{"$ref":"10"},"destinationKey":"PanTarget","guid":"736436d6-e7c1-4810-9aae-db20cefc4db3","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}}}'
+    _objectReferences:
+    - {fileID: 11400000, guid: 27f439d169885e74ebc3e6f4781f9969, type: 2}
+--- !u!114 &4349207345932121407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2909565667897045315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2fe5546f775c47d2820aa5e8a715f53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"nest":{"source":"Embed","macro":null,"embed":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":0.0,"y":0.0},"zoom":1.0,"elements":[{"nest":{"source":"Macro","macro":0,"embed":null},"defaultValues":{},"position":{"x":15.0,"y":-147.0},"guid":"1719fb9e-4561-4a65-814b-ae41f4209ebe","$version":"A","$type":"Unity.VisualScripting.SubgraphUnit","$id":"10"},{"coroutine":false,"defaultValues":{},"position":{"x":-258.0,"y":-158.0},"guid":"2a250c12-fd1c-473d-96ed-3bd7efe994f7","$version":"A","$type":"Reflectis.SDK.InteractionNew.SelectExitEventUnit","$id":"13"},{"sourceUnit":{"$ref":"13"},"sourceKey":"trigger","destinationUnit":{"$ref":"10"},"destinationKey":"Start","guid":"583ce43c-1b94-4db9-8b5f-aa9b6387c4d9","$type":"Unity.VisualScripting.ControlConnection"}],"$version":"A"}}}'
     _objectReferences:
     - {fileID: 11400000, guid: 27f439d169885e74ebc3e6f4781f9969, type: 2}
 --- !u!1 &3129603090466269337

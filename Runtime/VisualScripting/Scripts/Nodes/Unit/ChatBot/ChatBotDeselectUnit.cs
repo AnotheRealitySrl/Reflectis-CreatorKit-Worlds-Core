@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    [UnitTitle("Reflectis ChatBot: Start Conversation")]
+    [UnitTitle("Reflectis ChatBot: ChatBot Deselect")]
     [UnitSurtitle("ChatBot")]
-    [UnitShortTitle("Start Conversation")]
+    [UnitShortTitle("ChatBot Deselect")]
     [UnitCategory("Reflectis\\Flow")]
-    public class ChatBotUnit : Unit
+    public class ChatBotDeselectUnit : Unit
     {
         [DoNotSerialize]
         [PortLabelHidden]
@@ -31,7 +31,7 @@ namespace Reflectis.SDK.CreatorKit
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                f.GetValue<GameObject>(Target).GetComponent<ChatBotPlaceholder>().OnChatBotSelect?.Invoke();
+                f.GetValue<GameObject>(Target).GetComponent<ChatBotPlaceholder>().OnChatBotUnselected?.Invoke();
 
                 return OutputTrigger;
             });
