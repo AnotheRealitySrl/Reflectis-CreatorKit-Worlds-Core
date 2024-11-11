@@ -31,7 +31,7 @@ namespace Reflectis.SDK.CreatorKit
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                f.GetValue<GameObject>(Target).GetComponent<ChatBotPlaceholder>().OnConversationStart?.Invoke();
+                f.GetValue<GameObject>(Target).GetComponent<ChatBotPlaceholder>().OnChatBotSelect?.Invoke();
 
                 return OutputTrigger;
             });

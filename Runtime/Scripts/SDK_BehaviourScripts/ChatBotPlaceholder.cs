@@ -15,7 +15,7 @@ namespace Reflectis.SDK.CreatorKit
         public RectTransform ChatPanel => chatPanel;
         public AudioSource AudioSource => audioSource;
 
-        public UnityEvent OnConversationStart { get; } = new();
-        public UnityEvent OnConversationFinish { get; } = new();
+        public UnityEvent OnChatBotSelect { get; } = new();
+        public UnityEvent OnChatBotUnselected { get; } = new();
     }
 }
