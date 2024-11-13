@@ -1,4 +1,5 @@
-using Reflectis.SDK.ApplicationManagement;
+using Reflectis.SDK.Core;
+using Reflectis.SDK.NetworkingSystem;
 using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
@@ -23,7 +24,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                if (IReflectisApplicationManager.Instance.IsNetworkMaster)
+                if (SM.GetSystem<INetworkingSystem>().IsMasterClient)
                 {
                     return True;
                 }

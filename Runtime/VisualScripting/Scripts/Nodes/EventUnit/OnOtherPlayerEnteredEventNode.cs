@@ -24,7 +24,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             graphReference = reference;
 
-            SM.GetSystem<INetworkingSystem>().OtherPlayerJoinedShard.AddListener(OnPlayerEntered);
+            SM.GetSystem<INetworkingSystem>().OnOtherPlayerJoinShard.AddListener(OnPlayerEntered);
 
             return new EventHook(eventName);
         }
@@ -42,9 +42,9 @@ namespace Reflectis.SDK.CreatorKit
             flow.SetValue(PlayerId, args.Item2);
         }
 
-        private void OnPlayerEntered(int userId, int playerId)
+        private void OnPlayerEntered(NetworkPlayerData data)
         {
-            Trigger(graphReference, (userId, playerId));
+            Trigger(graphReference, (data.UserId, data.PlayerId));
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             graphReference = reference;
 
-            SM.GetSystem<INetworkingSystem>().OtherPlayerLeftShard.AddListener(OnPlayerLeft);
+            SM.GetSystem<INetworkingSystem>().OnOtherPlayerLeaveShard.AddListener(OnPlayerLeft);
 
             return new EventHook(eventName);
         }
@@ -42,9 +42,9 @@ namespace Reflectis.SDK.CreatorKit
             flow.SetValue(PlayerId, args.Item2);
         }
 
-        private void OnPlayerLeft(int userId, int playerId)
+        private void OnPlayerLeft(NetworkPlayerData data)
         {
-            Trigger(graphReference, (userId, playerId));
+            Trigger(graphReference, (data.UserId, data.PlayerId));
         }
     }
 }
