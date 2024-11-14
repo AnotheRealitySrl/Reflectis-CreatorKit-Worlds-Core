@@ -676,7 +676,7 @@ GameObject:
   - component: {fileID: 8022423781188720475}
   - component: {fileID: 1214839615595480195}
   m_Layer: 0
-  m_Name: 6734dc4fcc0db624e8fa5ca2
+  m_Name: ChatbotAvatarMale
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -716,7 +716,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1141805639834639110}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: 09f062b67cc02424ab64cc738c64545c, type: 3}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
