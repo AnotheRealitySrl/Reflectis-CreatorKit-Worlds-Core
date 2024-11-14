@@ -34,10 +34,16 @@ namespace Reflectis.SDK.CreatorKit
             flow.SetValue(GenericInteractable, interactableReference);
         }
 
+        public override EventHook GetHook(GraphReference reference)
+        {
+            graphReference = reference;
+
+            return new EventHook("GenericInteractable" + this.ToString().Split("EventUnit")[0]);
+        }
+
         public override void Instantiate(GraphReference instance)
         {
             base.Instantiate(instance);
-            graphReference = instance;
 
             SM.GetSystem<IGenericInteractionSystem>().OnSelectedInteractableChange.AddListener(OnSelectedChange);
         }
