@@ -20,13 +20,12 @@ namespace Reflectis.SDK.CreatorKit
 
         protected GraphReference graphReference;
 
-        public override EventHook GetHook(GraphReference reference)
+        public override void Instantiate(GraphReference instance)
         {
-            graphReference = reference;
+            base.Instantiate(instance);
+            graphReference = instance;
 
             SM.GetSystem<INetworkingSystem>().OtherPlayerJoinedShard.AddListener(OnPlayerEntered);
-
-            return new EventHook(eventName);
         }
 
         protected override void Definition()
@@ -45,6 +44,12 @@ namespace Reflectis.SDK.CreatorKit
         private void OnPlayerEntered(int userId, int playerId)
         {
             Trigger(graphReference, (userId, playerId));
+        }
+
+        public override void Uninstantiate(GraphReference instance)
+        {
+            base.Uninstantiate(instance);
+            SM.GetSystem<INetworkingSystem>().OtherPlayerJoinedShard.RemoveListener(OnPlayerEntered);
         }
     }
 }
