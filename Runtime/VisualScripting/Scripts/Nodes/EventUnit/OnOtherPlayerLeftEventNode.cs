@@ -20,10 +20,16 @@ namespace Reflectis.SDK.CreatorKit
 
         protected GraphReference graphReference;
 
+        public override EventHook GetHook(GraphReference reference)
+        {
+            graphReference = reference;
+
+            return new EventHook(eventName);
+        }
+
         public override void Instantiate(GraphReference instance)
         {
             base.Instantiate(instance);
-            graphReference = instance;
             
             SM.GetSystem<INetworkingSystem>().OtherPlayerLeftShard.AddListener(OnPlayerLeft);
         }
