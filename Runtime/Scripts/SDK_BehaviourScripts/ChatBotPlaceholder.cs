@@ -25,7 +25,10 @@ namespace Reflectis.SDK.CreatorKit
     {
         [Header("Chatbot configuration")]
 
-        [SerializeField] private bool startTheConversation;
+        [Header("This will be displayed in the UI panel.")]
+        [SerializeField] private string chatbotName = "ChatBot";
+
+        [SerializeField] private bool startTheConversation = true;
 
         [DrawIf(nameof(startTheConversation), true)]
         [SerializeField] private string initialConversationSentence = "Hello!";
@@ -47,6 +50,8 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private Animator avatarAnimator;
 
+        public string ChatbotName => chatbotName;
+        public bool StartTheConversation => startTheConversation;
         public string InitialConversationSentence => initialConversationSentence;
         public string Instructions => instructions;
         public EChatBotVoice Voice => voice;
