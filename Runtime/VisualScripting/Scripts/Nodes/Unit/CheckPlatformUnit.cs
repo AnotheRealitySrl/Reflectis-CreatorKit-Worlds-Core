@@ -27,9 +27,9 @@ namespace Reflectis.SDK.CreatorKit
             {
                 switch (SM.GetSystem<IPlatformSystem>().RuntimePlatform)
                 {
-                    case UnityEngine.RuntimePlatform.Android:
+                    case ESupportedPlatform.VR:
                         return OutputTriggerVR;
-                    case UnityEngine.RuntimePlatform.WebGLPlayer:
+                    case ESupportedPlatform.WebGL:
                         return OutputTriggerWebGL;
                 }
 #if UNITY_WEBGL
@@ -48,4 +48,40 @@ namespace Reflectis.SDK.CreatorKit
             Succession(InputTrigger, OutputTriggerWebGL);
         }
     }
+
+    //Better way to implement this, we should deprecate the old node and find a way to fix existing graphs before updateing
+    //[UnitTitle("Reflectis Platform: Switch")]
+    //[UnitSurtitle("Platform")]
+    //[UnitShortTitle("Switch")]
+    //[UnitCategory("Reflectis\\Flow")]
+    //public class CheckPlatformUnit : Unit
+    //{
+    //    [DoNotSerialize]
+    //    [PortLabelHidden]
+    //    public ControlInput InputTrigger { get; private set; }
+
+    //    [DoNotSerialize]
+    //    public List<ControlOutput> Outputs { get; private set; }
+
+    //    private Dictionary<ESupportedPlatform, ControlOutput> supportedPlatformsOutputs = new Dictionary<ESupportedPlatform, ControlOutput>();
+
+    //    protected override void Definition()
+    //    {
+
+    //        InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
+    //        {
+    //            return supportedPlatformsOutputs[SM.GetSystem<IPlatformSystem>().RuntimePlatform];
+    //        });
+
+    //        Outputs = new List<ControlOutput>();
+
+    //        foreach (ESupportedPlatform supportedPlatform in Enum.GetValues(typeof(ESupportedPlatform)))
+    //        {
+    //            ControlOutput output = ControlOutput(supportedPlatform.ToString());
+    //            supportedPlatformsOutputs[supportedPlatform] = output;
+    //            Succession(InputTrigger, output);
+    //            Outputs.Add(output);
+    //        }
+    //    }
+    //}
 }
