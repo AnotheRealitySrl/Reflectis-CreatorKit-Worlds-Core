@@ -8,6 +8,8 @@ namespace Reflectis.SDK.CreatorKit
     [UnitSurtitle("Synced Object")]
     [UnitShortTitle("On Owner Lost")]
     [UnitCategory("Events\\Reflectis")]
+
+    //This node is called only by the user that lost the ownership, not by everyone
     public class OnOwnershipLostEventUnit : EventUnit<SyncedObject>
     {
         public static string eventName = "SyncedObjectOnOwnerLost";
