@@ -677,7 +677,7 @@ GameObject:
   - component: {fileID: 1214839615595480195}
   - component: {fileID: 232055753086619967}
   - component: {fileID: 3075338336477956428}
-  - component: {fileID: 3496575816655629599}
+  - component: {fileID: 3699057890394261240}
   m_Layer: 0
   m_Name: ChatbotAvatarMale
   m_TagString: Untagged
@@ -720,8 +720,8 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1141805639834639110}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 09f062b67cc02424ab64cc738c64545c, type: 3}
-  m_Controller: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: 89f358deabe746242a74281b3ca72caf, type: 3}
+  m_Controller: {fileID: 9100000, guid: 7d5498f727d060d43a08fc632df30524, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -786,7 +786,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blinkDuration: 0.1
   blinkInterval: 3
---- !u!114 &3496575816655629599
+--- !u!114 &3699057890394261240
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -795,12 +795,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1141805639834639110}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bf4ff6de4560d44d9b3b0697e00c1b8, type: 3}
+  m_Script: {fileID: 11500000, guid: 8f0553ae1b39d034fb289688c9b79573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AudioClip: {fileID: 0}
   AudioSource: {fileID: 3519578275180163492}
-  AudioProvider: 1
+  AudioProvider: 0
 --- !u!1 &1199885161557744391
 GameObject:
   m_ObjectHideFlags: 0
