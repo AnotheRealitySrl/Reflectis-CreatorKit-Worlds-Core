@@ -7,6 +7,8 @@ using System.Threading;
 using UnityEngine;
 
 #if UNITY_ANDROID
+using System.Threading.Tasks;
+
 using UnityEngine.Android;
 #endif
 
@@ -238,8 +240,8 @@ namespace Reflectis.SDK.CreatorKit
             {
                 await Task.Yield();
             }
-            
-            if(ctx.IsCancellationRequested) return;
+
+            if (ctx.IsCancellationRequested) return;
 
             InitializeAudio();
         }
