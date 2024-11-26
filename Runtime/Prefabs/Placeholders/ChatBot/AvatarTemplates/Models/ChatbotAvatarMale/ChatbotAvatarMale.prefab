@@ -800,7 +800,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AudioClip: {fileID: 0}
   AudioSource: {fileID: 3519578275180163492}
-  AudioProvider: 0
+  AudioProvider: 1
 --- !u!1 &1199885161557744391
 GameObject:
   m_ObjectHideFlags: 0
