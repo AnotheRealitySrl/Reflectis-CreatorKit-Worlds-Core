@@ -8,8 +8,9 @@ namespace Reflectis.SDK.CreatorKit
 {
     public class ChatBotPlaceholder : SceneComponentPlaceholderBase
     {
-        [Header("Chatbot structure. Do not change the references,\n" +
-            "unless you need to create custom avatars.")]
+        [Header("Chatbot structure.\n" +
+            "Do not modify it, unless you need to create custom avatars.")]
+        [SerializeField] private string tempApiKey;
         [SerializeField] private Transform avatarContainer;
         [SerializeField] private RectTransform chatPanel;
 
@@ -17,13 +18,17 @@ namespace Reflectis.SDK.CreatorKit
             "Specify the animator in the case the avatar in use has multiple animators in the hierarchy.")]
         [SerializeField] private Animator animator;
 
-        [HelpBox("How to configure a chatbot\n" +
-            "First of all, drag&drop one of the avatar templates inside the \"AvatarContainer\" transform. " +
+        [Space]
+
+        [Header("Chatbot configuration")]
+        [HelpBox("How to configure a chatbot, using the template avatars:\n" +
+            "First of all, drag&drop one of the avatar templates inside the \"Avatar\" transform in the hierarchy. " +
             "Move or resize its transform, if needed. " +
             "IMPORTANT: to enable user's interaction, " +
             "Add a reference to the collider of the avatar to the \"InteractablePlaceholder\"'s collider list. " +
             "\n" +
-            "How to customize an avatar:\n" +
+            "\n" +
+            "How to integrate a custom avatar:\n" +
             "Add the custom avatar to the \"AvatarContainer\" transform. " +
             "Check that the avatar has a collider, needed for the interaction with the chatbot. " +
             "If the avatar is a RPM avatar and you want to add eye-blink and lip-sync behaviors, " +
@@ -37,9 +42,8 @@ namespace Reflectis.SDK.CreatorKit
             "the trigger that activates the transitions to/from those states must be a boolean" +
             "with the name \"Speak\".", HelpBoxMessageType.Info)]
 
-        [Header("Chatbot configuration")]
 
-        [Header("This will be the name of the avatar, displayed in the chat panel.")]
+        [Tooltip("This will be the name of the avatar, displayed in the chat panel.")]
         [SerializeField] private string chatbotName = "ChatBot";
 
         [Tooltip("Select this if the conversation with the chatbot should start automatically, " +
@@ -58,6 +62,7 @@ namespace Reflectis.SDK.CreatorKit
         [Tooltip("Select avatar voice from the available ones.")]
         [SerializeField] private EChatBotVoice voice = EChatBotVoice.alloy;
 
+        public string TempApiKey => tempApiKey;
         public Transform AvatarContainer => avatarContainer;
         public RectTransform ChatPanel => chatPanel;
         public Animator Animator => animator;
