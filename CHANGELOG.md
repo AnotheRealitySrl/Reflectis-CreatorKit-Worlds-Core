@@ -5,7 +5,7 @@
 ### Added
 
 - Added new visual scripting node `GetLocalPlayerID`, that returns the player ID, which is a numeric identifier that is unique for the user in the current shard context.
-- Added new `ChatBotPlaceholder` that allows to set up a chatbot that works with GPT-4.
+- Added new `ChatBotPlaceholder` that allows to set up a chatbot with multimodal (audio/text) input and output.
 
 ### Fixed
 
