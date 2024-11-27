@@ -29,11 +29,11 @@ namespace Reflectis.SDK.CreatorKit
             "\n" +
             "\n" +
             "How to integrate a custom avatar:\n" +
-            "Add the custom avatar to the \"AvatarContainer\" transform. " +
+            "Add the custom avatar to the \"Avatar\" transform in the hierarchy. " +
             "Check that the avatar has a collider, needed for the interaction with the chatbot. " +
             "If the avatar is a RPM avatar and you want to add eye-blink and lip-sync behaviors, " +
             "add respectively the \"EyeAnimationHandler\" and \"VoiceHandler\" components to the avatar " +
-            "added to the \"AvatarContainer\". " +
+            "added. Set the \"AudioProvider\" field of \"VoiceHandler\" to \"Audio Clip\".\n" +
             "Add a reference of the audio source of the avatar into the \"VoiceHandler\" component. " +
             "If you want to move the audio source, to personalize where comes the audio of the avatar, " +
             "move it into a transform, keeping its reference to \"VoiceHandler\" component. " +
