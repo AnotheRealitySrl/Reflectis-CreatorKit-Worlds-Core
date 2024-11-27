@@ -1846,7 +1846,7 @@ GameObject:
   - component: {fileID: 260368436902846896}
   - component: {fileID: 3349748484751329910}
   - component: {fileID: 8632801273803664844}
-  - component: {fileID: -4688255155696302152}
+  - component: {fileID: 2729764786111666076}
   m_Layer: 0
   m_Name: ChatbotAvatarFemale
   m_TagString: Untagged
@@ -1955,7 +1955,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blinkDuration: 0.1
   blinkInterval: 3
---- !u!114 &-4688255155696302152
+--- !u!114 &2729764786111666076
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1964,7 +1964,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5184342918954356507}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bf4ff6de4560d44d9b3b0697e00c1b8, type: 3}
+  m_Script: {fileID: 11500000, guid: 8f0553ae1b39d034fb289688c9b79573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AudioClip: {fileID: 0}

@@ -1,5 +1,20 @@
 # Release notes
 
+## v3.6.0
+
+### Added
+
+- Added new visual scripting node `GetLocalPlayerID`, that returns the player ID, which is a numeric identifier that is unique for the user in the current shard context.
+- Added new `ChatBotPlaceholder` that allows to set up a chatbot with multimodal (audio/text) input and output.
+
+### Fixed
+
+- Updated visual scripting node `OnOtherPlayerEntered` and `OnOtherPlayerLeft` to correct faulty management of networking events and prevent null reference exceptions after leaving and joining events multiple times.
+
+### Deprecated
+
+- Environment thumbnails loading has been deprecated. Now it is necessary to load thumbnails from the backoffice instead of using the addressable system
+
 ## v3.5.0
 
 ### Added
