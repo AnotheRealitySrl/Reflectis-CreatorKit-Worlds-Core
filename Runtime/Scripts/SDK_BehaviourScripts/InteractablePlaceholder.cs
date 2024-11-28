@@ -135,7 +135,7 @@ namespace Reflectis.SDK.CreatorKit
         #region Contextual menu
 
         [Header("Contextual menu")]
-        [HelpBox("Please note that only \"Delete\" and \"Color Picker\" options are currently fully supported. " +
+        [HelpBox("Please note that only \"Delete\", \"Lock Transform\" and \"Color Picker\" options are currently fully supported. " +
             " \"Non proportional scale\" is supported only if the interactable mode \"Manipulable\" is selected. " +
             "Other options will not be considered", HelpBoxMessageType.Warning)]
 

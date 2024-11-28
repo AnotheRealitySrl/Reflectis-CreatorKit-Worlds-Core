@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -40,6 +41,7 @@ namespace Reflectis.SDK.CreatorKitEditor
         private const string player_version_override_variable_value = "[Reflectis.SDK.CreatorKitEditor.AddressablesBuildScript.PlayerVersionOverride]";
 
         private const string environments_group_name = "Environments";
+        [Obsolete("Thumbnails have to be uploaded from backoffice since Reflectis version 2024.9!")]
         private const string thumbnails_group_name = "Thumbnails";
 
         private string remoteBuildPath;
@@ -285,12 +287,13 @@ namespace Reflectis.SDK.CreatorKitEditor
                 }
                 EditorGUILayout.EndHorizontal();
 
-                EditorGUILayout.HelpBox($"Every addressable scene must be put inside the {environments_group_name} group, " +
-                        $"and the associated thumbnail inside the {thumbnails_group_name} group. " +
+                EditorGUILayout.HelpBox($"Every addressable scene must be put inside the {environments_group_name} group." +
+                        //$", " +
+                        //    $"and the associated thumbnail inside the {thumbnails_group_name} group. " +
                         $"Note that each addressable asset must have a lower-case, alphanumeric name.",
                         MessageType.Info);
 
-                if (!IsGroupValid(environments_group_name) || !IsGroupValid(thumbnails_group_name))
+                if (!IsGroupValid(environments_group_name) /*|| !IsGroupValid(thumbnails_group_name)*/)
                 {
                     EditorGUILayout.HelpBox($"Could not find one or more required addressables groups. Ckick on the button to fix the issue.",
                         MessageType.Error);
@@ -301,10 +304,10 @@ namespace Reflectis.SDK.CreatorKitEditor
                         {
                             CreateGroup(environments_group_name);
                         }
-                        if (!IsGroupValid(thumbnails_group_name))
-                        {
-                            CreateGroup(thumbnails_group_name);
-                        }
+                        //if (!IsGroupValid(thumbnails_group_name))
+                        //{
+                        //    CreateGroup(thumbnails_group_name);
+                        //}
                         ConfigureAddressablesGroups();
                     }
                 }
@@ -326,7 +329,9 @@ namespace Reflectis.SDK.CreatorKitEditor
                                     UpdateAddressableEntry(entry);
                                 }
                             }
-                            EditorGUILayout.LabelField($"{(isEntryNameValid ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} {entry}", style);
+                            EditorGUILayout.LabelField($"" +
+                                $"{(isEntryNameValid ? (group.name == thumbnails_group_name ? "<b>[<color=yellow>obsolete</color>]</b>" : "<b>[<color=lime>√</color>]</b>") : "<b>[<color=red>X</color>]</b>")}" +
+                                $" {entry}", style);
                             EditorGUILayout.EndHorizontal();
                         }
                         EditorGUILayout.EndVertical();
@@ -334,12 +339,12 @@ namespace Reflectis.SDK.CreatorKitEditor
                     EditorGUILayout.EndHorizontal();
                 }
 
-                if (!IsAddressablesEntriesValid())
-                {
-                    EditorGUILayout.HelpBox($"There are inconsistencies between the {environments_group_name} and the {thumbnails_group_name} asset groups. " +
-                        $"Check if each environment has a corresponding thumbnail and viceversa, and there are not duplicate names within each group",
-                        MessageType.Error);
-                }
+                //if (!IsAddressablesEntriesValid())
+                //{
+                //    EditorGUILayout.HelpBox($"There are inconsistencies between the {environments_group_name} and the {thumbnails_group_name} asset groups. " +
+                //        $"Check if each environment has a corresponding thumbnail and viceversa, and there are not duplicate names within each group",
+                //        MessageType.Error);
+                //}
 
                 EditorGUILayout.Space();
 
@@ -350,10 +355,10 @@ namespace Reflectis.SDK.CreatorKitEditor
                         ConfigureAddressablesGroups();
                     }
                 }
-                else if (IsAddressablesEntriesValid())
-                {
-                    EditorGUILayout.LabelField("<color=lime>The groups settings are properly configured!</color>", style);
-                }
+                //else if (IsAddressablesEntriesValid())
+                //{
+                //    EditorGUILayout.LabelField("<color=lime>The groups settings are properly configured!</color>", style);
+                //}
 
                 EditorGUILayout.Space();
 
@@ -362,7 +367,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                 CreateSeparator();
                 EditorGUILayout.Space();
 
-                if (IsAddressablesSettingsConfigured() && IsPlayerVersionOverrideValid() && IsProfileConfigured() && IsAddressablesGroupsConfigured() && IsAddressablesEntriesValid())
+                if (IsAddressablesSettingsConfigured() && IsPlayerVersionOverrideValid() && IsProfileConfigured() && IsAddressablesGroupsConfigured() /*&& IsAddressablesEntriesValid()*/)
                 {
                     if (GUILayout.Button("Build Addressables", EditorStyles.miniButtonMid))
                     {
@@ -645,7 +650,7 @@ namespace Reflectis.SDK.CreatorKitEditor
         {
             bool configured = true;
 
-            if (!IsGroupValid(environments_group_name) || !IsGroupValid(thumbnails_group_name))
+            if (!IsGroupValid(environments_group_name) /*|| !IsGroupValid(thumbnails_group_name)*/)
             {
                 return false;
             }
@@ -719,20 +724,22 @@ namespace Reflectis.SDK.CreatorKitEditor
             SaveSettings();
         }
 
-        private bool IsAddressablesEntriesValid()
-        {
-            if (settings.groups.Count == 0)
-                return true;
+        //Checks if there is an env with no thumbnail and viceversa
+        //private bool IsAddressablesEntriesValid()
+        //{
+        //    if (settings.groups.Count == 0)
+        //        return true;
 
-            IEnumerable<string> environmentEntries = settings.groups.Find(x => x.Name == environments_group_name).entries.Select(x => x.address);
-            IEnumerable<string> thumbnailEntries = settings.groups.Find(x => x.Name == thumbnails_group_name).entries.Select(x => x.address);
+        //    IEnumerable<string> environmentEntries = settings.groups.Find(x => x.Name == environments_group_name).entries.Select(x => x.address);
+        //    IEnumerable<string> thumbnailEntries = settings.groups.Find(x => x.Name == thumbnails_group_name).entries.Select(x => x.address);
 
-            return
-                environmentEntries.All(new HashSet<string>().Add) &&
-                thumbnailEntries.All(new HashSet<string>().Add) &&
-                !environmentEntries.Except(thumbnailEntries).Any() &&
-                !thumbnailEntries.Except(environmentEntries).Any();
-        }
+        //    return
+        //        environmentEntries.All(new HashSet<string>().Add)
+        //    &&
+        //    thumbnailEntries.All(new HashSet<string>().Add) &&
+        //    !environmentEntries.Except(thumbnailEntries).Any() &&
+        //    !thumbnailEntries.Except(environmentEntries).Any();
+        //}
 
         private void UpdateAddressableEntry(AddressableAssetEntry entry)
         {

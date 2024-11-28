@@ -18,14 +18,17 @@ namespace Reflectis.SDK.CreatorKitEditor
         [SerializeField]
         private SceneAsset sceneAsset = null;
 
-        [SerializeField]
+        [SerializeField, Obsolete("Now environments thumbnail has to be loaded using Reflectis backoffice!"),
+            RenameAttribute("Thumbnail Asset (Obsolete)")]
         private Texture thumbnailAsset = null;
 
         public string AddressableAssetName => addressableAssetName;
         public SceneAsset SceneAsset => sceneAsset;
+
+        [Obsolete("Now environments thumbnail has to be loaded using Reflectis backoffice!")]
         public Texture ThumbnailAsset => thumbnailAsset;
     }
-    
+
     /*
      * Freezed! Right not we are not compatible with custom addressable assets that are not managed as we do with localization and envs!
      * 
