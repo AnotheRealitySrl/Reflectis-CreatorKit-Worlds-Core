@@ -30,8 +30,8 @@ namespace Reflectis.SDK.CreatorKit
         public override void Instantiate(GraphReference instance)
         {
             base.Instantiate(instance);
-            
-            SM.GetSystem<INetworkingSystem>().OtherPlayerLeftShard.AddListener(OnPlayerLeft);
+
+            SM.GetSystem<INetworkingSystem>().OnOtherPlayerLeaveShard.AddListener(OnPlayerLeft);
         }
 
         protected override void Definition()
@@ -47,15 +47,15 @@ namespace Reflectis.SDK.CreatorKit
             flow.SetValue(PlayerId, args.Item2);
         }
 
-        private void OnPlayerLeft(int userId, int playerId)
+        private void OnPlayerLeft(NetworkPlayerData playerData)
         {
-            Trigger(graphReference, (userId, playerId));
+            Trigger(graphReference, (playerData.UserId, playerData.PlayerId));
         }
 
         public override void Uninstantiate(GraphReference instance)
         {
             base.Uninstantiate(instance);
-            SM.GetSystem<INetworkingSystem>().OtherPlayerLeftShard.RemoveListener(OnPlayerLeft);
+            SM.GetSystem<INetworkingSystem>().OnOtherPlayerLeaveShard.RemoveListener(OnPlayerLeft);
         }
     }
 }

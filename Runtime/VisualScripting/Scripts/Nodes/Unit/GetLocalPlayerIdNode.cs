@@ -17,7 +17,7 @@ namespace Reflectis.SDK.CreatorKit
 
         protected override void Definition()
         {
-            PlayerId = ValueOutput(nameof(PlayerId), (f) => SM.GetSystem<INetworkingSystem>().LocalPlayerId);
+            PlayerId = ValueOutput(nameof(PlayerId), (f) => SM.GetSystem<INetworkingSystem>().GetLocalPlayerId());
         }
     }
 }

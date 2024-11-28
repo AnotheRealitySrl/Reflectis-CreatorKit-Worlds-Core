@@ -31,7 +31,7 @@ namespace Reflectis.SDK.CreatorKit
         {
             base.Instantiate(instance);
 
-            SM.GetSystem<INetworkingSystem>().OtherPlayerJoinedShard.AddListener(OnPlayerEntered);
+            SM.GetSystem<INetworkingSystem>().OnOtherPlayerJoinShard.AddListener(OnPlayerEntered);
         }
 
         protected override void Definition()
@@ -47,15 +47,15 @@ namespace Reflectis.SDK.CreatorKit
             flow.SetValue(PlayerId, args.Item2);
         }
 
-        private void OnPlayerEntered(int userId, int playerId)
+        private void OnPlayerEntered(NetworkPlayerData playerData)
         {
-            Trigger(graphReference, (userId, playerId));
+            Trigger(graphReference, (playerData.UserId, playerData.UserId));
         }
 
         public override void Uninstantiate(GraphReference instance)
         {
             base.Uninstantiate(instance);
-            SM.GetSystem<INetworkingSystem>().OtherPlayerJoinedShard.RemoveListener(OnPlayerEntered);
+            SM.GetSystem<INetworkingSystem>().OnOtherPlayerJoinShard.RemoveListener(OnPlayerEntered);
         }
     }
 }
