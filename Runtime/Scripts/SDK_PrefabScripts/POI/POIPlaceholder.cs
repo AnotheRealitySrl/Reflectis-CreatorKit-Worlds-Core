@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    public class POIPlaceholder : SpawnAddressablePlaceholder
+    public class POIPlaceholder : SceneComponentPlaceholderBase
     {
         public enum ETitleVisibility
         {
