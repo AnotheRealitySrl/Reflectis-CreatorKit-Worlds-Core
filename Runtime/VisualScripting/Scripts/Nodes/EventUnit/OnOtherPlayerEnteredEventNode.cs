@@ -49,7 +49,7 @@ namespace Reflectis.SDK.CreatorKit
 
         private void OnPlayerEntered(NetworkPlayerData playerData)
         {
-            Trigger(graphReference, (playerData.UserId, playerData.UserId));
+            Trigger(graphReference, (playerData.UserId, playerData.PlayerId));
         }
 
         public override void Uninstantiate(GraphReference instance)
