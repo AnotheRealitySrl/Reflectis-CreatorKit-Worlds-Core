@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 
 namespace Reflectis.SDK.CreatorKit
 {
-    public class RadialMenuPlaceholder : SceneComponentPlaceholderBase
+    public class RadialMenuPlaceholder : SceneComponentPlaceholderNetwork
     {
         [Tooltip("The list of the items that are going to be seen in the radialMenu.")]
         public List<RadialMenuItemData> itemListData;
@@ -38,9 +38,6 @@ namespace Reflectis.SDK.CreatorKit
 
         public AudioClip itemClickAudio;
 
-        public bool isNetworked; //used to know if we need to add the RadialRPCManager too and also to know if we need to instantiate the RadialMenuNetworked
-
-
         [HideInInspector] public ReflectisRadialItemSpawnerPlaceholder reflectisRadialItemSpawnerPlaceholder;
 
     }
@@ -56,7 +53,7 @@ public class RadialMenuPlaceholderEditor : Editor
 
         RadialMenuPlaceholder script = (RadialMenuPlaceholder)target;
 
-        if (script.isNetworked)
+        if (script.IsNetworked)
         {
             EditorGUILayout.BeginHorizontal();
 
