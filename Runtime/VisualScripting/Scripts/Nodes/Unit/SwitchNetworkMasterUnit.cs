@@ -30,7 +30,8 @@ namespace Reflectis.SDK.CreatorKit
                 }
                 else
                 {
-                    return False;
+                    //you are in a single player event
+                    return True;
                 }
             });
 
