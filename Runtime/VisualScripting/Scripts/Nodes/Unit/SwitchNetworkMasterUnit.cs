@@ -24,14 +24,14 @@ namespace Reflectis.SDK.CreatorKit
         {
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                if (SM.GetSystem<INetworkingSystem>().IsMasterClient)
+                var networkSystem = SM.GetSystem<INetworkingSystem>();
+                if (networkSystem != null && networkSystem.IsMasterClient)
                 {
                     return True;
                 }
                 else
                 {
-                    //you are in a single player event
-                    return True;
+                    return False;
                 }
             });
 
