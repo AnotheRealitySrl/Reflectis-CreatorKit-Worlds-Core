@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Reflectis.SDK.CreatorKit
 {
     [RequireComponent(typeof(BoxCollider))]
-    public class DashboardPlaceholder : SceneComponentPlaceholderNetwork
+    public class DashboardPlaceholder : SceneComponentPlaceholderBase
     {
         public enum DashboardFilter
         {
