@@ -1,5 +1,11 @@
 # Release notes
 
+## v3.7.0
+
+### Added
+
+- Added new visual scripting node `LoadDefaultEvent`, that that loads the default event. Using this node is equivalent to pressing the "home" button on the HUD (or on the VR tablet).
+
 ## v3.6.0
 
 ### Added
