@@ -2,6 +2,11 @@
 
 ## v3.7.0
 
+### Fixed
+
+- Updated visual scripting graph `SendMultiAnswerQuizData` to correctly send the score to the BackOffice for the analytics.
+- Improved animations of ChatBot's humanoid templates.
+
 ### Added
 
 - Added new visual scripting node `LoadDefaultEvent`, that that loads the default event. Using this node is equivalent to pressing the "home" button on the HUD (or on the VR tablet).
