@@ -4,7 +4,8 @@
 
 ### Fixed
 
-- Updated visual scripting graph `SendMultiAnswerQuizData` to correctly send the score to the BackOffice for the analytics. 
+- Updated visual scripting graph `SendMultiAnswerQuizData` to correctly send the score to the BackOffice for the analytics.
+- Improved animations of ChatBot's humanoid templates.
 
 ### Added
 
