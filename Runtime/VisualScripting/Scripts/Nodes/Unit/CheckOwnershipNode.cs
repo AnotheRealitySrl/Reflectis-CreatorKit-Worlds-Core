@@ -1,3 +1,5 @@
+using Reflectis.SDK.ClientModels;
+using Reflectis.SDK.Core;
 using Unity.VisualScripting;
 
 namespace Reflectis.SDK.CreatorKit
@@ -28,7 +30,7 @@ namespace Reflectis.SDK.CreatorKit
             SyncedObject = ValueInput<SyncedObject>(nameof(SyncedObject), null).NullMeansSelf();
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                if (f.GetValue<SyncedObject>(SyncedObject).OnCheckOwnershipFunction())
+                if (!SM.GetSystem<IClientModelSystem>().CurrentEvent.Multiplayer || f.GetValue<SyncedObject>(SyncedObject).OnCheckOwnershipFunction())
                 {
                     return OutputTriggerTrue;
                 }
