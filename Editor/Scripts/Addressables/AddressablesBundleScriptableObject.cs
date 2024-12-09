@@ -152,6 +152,16 @@ namespace Reflectis.SDK.CreatorKitEditor
                         for (int i = 0; i < environmentAssets.Count; i++)
                         {
                             var asset = environmentAssets[i];
+                            if (asset.SceneAsset == null)
+                            {
+                                Debug.LogError($"Scene not assigned for environment asset at index {i}! Environment asset skipped.");
+                                continue;
+                            }
+                            if (string.IsNullOrEmpty(asset.AddressableAssetName))
+                            {
+                                Debug.LogError($"No name assigned to the environment asset at index {i}! Environment asset skipped.");
+                                continue;
+                            }
                             var path = AssetDatabase.GetAssetPath(asset.SceneAsset);
                             var guid = AssetDatabase.AssetPathToGUID(path);
 
@@ -173,6 +183,15 @@ namespace Reflectis.SDK.CreatorKitEditor
                         for (int i = 0; i < environmentAssets.Count; i++)
                         {
                             var asset = environmentAssets[i];
+                            if (asset.ThumbnailAsset == null)
+                            {
+                                continue;
+                            }
+                            if (string.IsNullOrEmpty(asset.AddressableAssetName))
+                            {
+                                Debug.LogError($"No name assigned to the environment asset at index {i}! Environment asset skipped.");
+                                continue;
+                            }
                             var path = AssetDatabase.GetAssetPath(asset.ThumbnailAsset);
                             var guid = AssetDatabase.AssetPathToGUID(path);
 
