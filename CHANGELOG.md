@@ -1,5 +1,11 @@
 # Release notes
 
+## v3.7.2
+
+### Fixed
+
+- Fixed `AddressablesBundleScriptableObject` configure button.
+
 ## v3.7.1
 
 ### Fixed
