@@ -227,33 +227,33 @@ namespace Reflectis.SDK.CreatorKitEditor
             GUI.enabled = !Application.isPlaying;
 
             // Check if configuration is ok.
-            bool isEverythingOk = false;
+            //bool isEverythingOk = false;
 
-            AddressableAssetSettings settings = AddressablesBuildScript.GetSettingsObject(AddressablesBuildScript.settings_asset);
-            if (settings)
-            {
-                var groups = settings.groups;
-                if (groups.Exists(x => x.Name == AddressablesBundleScriptableObject.environments_group_name) && groups.Exists(x => x.Name == AddressablesBundleScriptableObject.thumbnails_group_name))
-                {
-                    // If the two mandatory addressable groups are set, then the configuration is ok.
-                    isEverythingOk = true;
-                }
-            }
+            //AddressableAssetSettings settings = AddressablesBuildScript.GetSettingsObject(AddressablesBuildScript.settings_asset);
+            //if (settings)
+            //{
+            //    var groups = settings.groups;
+            //    if (groups.Exists(x => x.Name == AddressablesBundleScriptableObject.environments_group_name) && groups.Exists(x => x.Name == AddressablesBundleScriptableObject.thumbnails_group_name))
+            //    {
+            //        // If the two mandatory addressable groups are set, then the configuration is ok.
+            //        isEverythingOk = true;
+            //    }
+            //}
 
-            if (isEverythingOk)
+            //if (isEverythingOk)
+            //{
+            if (GUILayout.Button("Configure Addressables Bundle"))
             {
-                if (GUILayout.Button("Configure Addressables Bundle"))
-                {
-                    obj.Setup();
-                }
+                obj.Setup();
             }
-            else
-            {
-                if (GUILayout.Button($"Go to \"{AddressablesConfigurationWindow.window_name}\"!"))
-                {
-                    EditorWindow.GetWindow(typeof(AddressablesConfigurationWindow));
-                }
-            }
+            //}
+            //else
+            //{
+            //    if (GUILayout.Button($"Go to \"{AddressablesConfigurationWindow.window_name}\"!"))
+            //    {
+            //        EditorWindow.GetWindow(typeof(AddressablesConfigurationWindow));
+            //    }
+            //}
 
             GUI.enabled = true;
         }
