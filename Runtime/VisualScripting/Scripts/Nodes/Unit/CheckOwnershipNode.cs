@@ -30,7 +30,9 @@ namespace Reflectis.SDK.CreatorKit
             SyncedObject = ValueInput<SyncedObject>(nameof(SyncedObject), null).NullMeansSelf();
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                if (!SM.GetSystem<IClientModelSystem>().CurrentEvent.Multiplayer || f.GetValue<SyncedObject>(SyncedObject).OnCheckOwnershipFunction())
+                if (!SM.GetSystem<IClientModelSystem>().CurrentEvent.Multiplayer
+                || !f.GetValue<SyncedObject>(SyncedObject).IsNetworked
+                || f.GetValue<SyncedObject>(SyncedObject).OnCheckOwnershipFunction())
                 {
                     return OutputTriggerTrue;
                 }
