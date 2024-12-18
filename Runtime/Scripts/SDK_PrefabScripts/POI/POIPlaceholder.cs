@@ -5,6 +5,7 @@ using TMPro;
 using UnityEditor;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Reflectis.SDK.CreatorKit
@@ -119,6 +120,12 @@ namespace Reflectis.SDK.CreatorKit
 
         public Transform PanTransform => panTransform;
 
+        [Space]
+        [Header("POI event callbacks")]
+        [SerializeField] public UnityEvent OnPOIOpen = default;
+        [SerializeField] public UnityEvent OnPOIClosed = default;
+
+        [HideInInspector] public UnityEvent ClosePOI = default;
 
         public void OnPOITitleTextChanged()
         {
