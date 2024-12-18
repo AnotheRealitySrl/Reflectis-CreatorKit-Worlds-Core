@@ -5,6 +5,7 @@
 ### Fixed
 
 - Removed an unused camera from pan transform in POI placeholder.
+- Add open and close callbacks for POI placeholder
 
 ## v3.7.2
 
