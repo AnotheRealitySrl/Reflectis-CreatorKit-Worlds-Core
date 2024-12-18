@@ -125,7 +125,7 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField] public UnityEvent OnPOIOpen = default;
         [SerializeField] public UnityEvent OnPOIClosed = default;
 
-        [HideInInspector] public UnityEvent closePOI = default;
+        [HideInInspector] public UnityEvent deselectPOI = default;
 
         public void OnPOITitleTextChanged()
         {
@@ -155,9 +155,9 @@ namespace Reflectis.SDK.CreatorKit
             panTransform.localPosition = new Vector3(panTransform.localPosition.x, panTransform.localPosition.y, -panDistance);
         }
 
-        public void ClosePOI()
+        public void DeselectPOI()
         {
-            closePOI.Invoke();
+            deselectPOI.Invoke();
         }
     }
 }
