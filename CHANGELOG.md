@@ -1,5 +1,11 @@
 # Release notes
 
+## v3.7.3
+
+### Fixed
+
+- Removed an unused camera from pan transform in POI placeholder.
+
 ## v3.7.2
 
 ### Fixed
