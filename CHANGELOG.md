@@ -1,5 +1,16 @@
 # Release notes
 
+## v3.8.0
+
+### Added
+
+- Added a "UI starter kit" consisting of a spritesheed useful for faster prototyping.
+
+### Fixed
+
+- Removed an unused camera from pan transform in POI placeholder.
+- Add open and close callbacks for POI placeholder
+
 ## v3.7.2
 
 ### Fixed
