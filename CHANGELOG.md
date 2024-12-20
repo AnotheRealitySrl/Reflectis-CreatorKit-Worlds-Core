@@ -1,6 +1,10 @@
 # Release notes
 
-## v3.7.3
+## v3.8.0
+
+### Added
+
+- Added a "UI starter kit" consisting of a spritesheed useful for faster prototyping.
 
 ### Fixed
 
