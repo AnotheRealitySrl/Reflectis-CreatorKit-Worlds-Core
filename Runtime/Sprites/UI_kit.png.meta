@@ -136,7 +136,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UI_kit_0
+      name: UI_kit_CircleOutline
       rect:
         serializedVersion: 2
         x: 9
@@ -157,7 +157,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_kit_1
+      name: UI_kit_Circle
       rect:
         serializedVersion: 2
         x: 261
@@ -178,7 +178,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_kit_2
+      name: UI_kit_RoundedSquare
       rect:
         serializedVersion: 2
         x: 513
@@ -199,7 +199,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_kit_3
+      name: UI_kit_RoundedSquareOutline
       rect:
         serializedVersion: 2
         x: 764
@@ -220,7 +220,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_kit_4
+      name: UI_kit_Capsule
       rect:
         serializedVersion: 2
         x: 9
@@ -241,7 +241,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_kit_5
+      name: UI_kit_CapsuleOutline
       rect:
         serializedVersion: 2
         x: 239
@@ -262,7 +262,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_kit_6
+      name: UI_kit_WarningIcon
       rect:
         serializedVersion: 2
         x: 477
@@ -283,7 +283,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_kit_7
+      name: UI_kit_Arrow
       rect:
         serializedVersion: 2
         x: 594
@@ -304,7 +304,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_kit_8
+      name: UI_kit_Close
       rect:
         serializedVersion: 2
         x: 660
@@ -325,7 +325,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_kit_9
+      name: UI_kit_Check
       rect:
         serializedVersion: 2
         x: 764
@@ -356,16 +356,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      UI_kit_0: -200982591
-      UI_kit_1: 1932863800
-      UI_kit_2: 854383590
-      UI_kit_3: 1491146470
-      UI_kit_4: 1274161900
-      UI_kit_5: -1792229625
-      UI_kit_6: -1339338938
-      UI_kit_7: -1802337056
-      UI_kit_8: -1823848792
-      UI_kit_9: 1822986543
+      UI_kit_Arrow: -1802337056
+      UI_kit_Capsule: 1274161900
+      UI_kit_CapsuleOutline: -1792229625
+      UI_kit_Check: 1822986543
+      UI_kit_Circle: 1932863800
+      UI_kit_CircleOutline: -200982591
+      UI_kit_Close: -1823848792
+      UI_kit_RoundedSquare: 854383590
+      UI_kit_RoundedSquareOutline: 1491146470
+      UI_kit_WarningIcon: -1339338938
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
