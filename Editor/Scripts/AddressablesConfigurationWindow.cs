@@ -314,7 +314,8 @@ namespace Reflectis.SDK.CreatorKitEditor
                 else
                 {
                     EditorGUILayout.BeginHorizontal();
-                    foreach (var group in settings.groups.Where(x => !x.SchemaTypes.Contains(typeof(PlayerDataGroupSchema)) && x != settings.DefaultGroup))
+                    // Refactor Unity6
+                    foreach (var group in settings.groups.Where(x => !x.SchemaTypes.Contains(typeof(AddressableAssetGroupSchema)) && x != settings.DefaultGroup))
                     {
                         EditorGUILayout.BeginVertical();
                         EditorGUILayout.LabelField($"<b>{group.name}</b>", style);
@@ -522,7 +523,8 @@ namespace Reflectis.SDK.CreatorKitEditor
         private void UpdatePlayerVersion()
         {
             settings.OverridePlayerVersion = playerVersionOverride;
-            settings.ShaderBundleCustomNaming = playerVersionOverride;
+            // Refactor Unity6
+            settings.BuiltInBundleCustomNaming = playerVersionOverride;
 
             SaveChanges();
         }
@@ -555,7 +557,8 @@ namespace Reflectis.SDK.CreatorKitEditor
             return
                 settings.RemoteCatalogLoadPath.GetName(settings) == remote_load_path_variable_name &&
                 settings.RemoteCatalogBuildPath.GetName(settings) == remote_build_path_variable_name &&
-                !settings.BundleLocalCatalog &&
+                // Refactor Unity6
+                //!settings.BundleLocalCatalog &&
                 settings.BuildRemoteCatalog &&
                 settings.CheckForContentUpdateRestrictionsOption
                         == CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions &&
@@ -565,9 +568,12 @@ namespace Reflectis.SDK.CreatorKitEditor
                 !settings.UniqueBundleIds &&
                 settings.ContiguousBundles &&
                 settings.NonRecursiveBuilding &&
-                settings.ShaderBundleNaming == ShaderBundleNaming.Custom &&
-                settings.ShaderBundleCustomNaming == playerVersionOverride &&
-                settings.MonoScriptBundleNaming == MonoScriptBundleNaming.Disabled &&
+                // Refactor Unity6
+                settings.BuiltInBundleNaming == BuiltInBundleNaming.Custom &&
+                // Refactor Unity6
+                settings.BuiltInBundleCustomNaming == playerVersionOverride &&
+                // Refactor Unity6
+                settings.MonoScriptBundleNaming == MonoScriptBundleNaming.ProjectName &&
                 !settings.DisableVisibleSubAssetRepresentations;
         }
 
@@ -575,7 +581,8 @@ namespace Reflectis.SDK.CreatorKitEditor
         {
             settings.RemoteCatalogLoadPath.SetVariableByName(settings, remote_load_path_variable_name);
             settings.RemoteCatalogBuildPath.SetVariableByName(settings, remote_build_path_variable_name);
-            settings.BundleLocalCatalog = false;
+            // Refactor Unity6
+            //settings.BundleLocalCatalog = false;
             settings.BuildRemoteCatalog = true;
             settings.CheckForContentUpdateRestrictionsOption = CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions;
             settings.ContentStateBuildPath = string.Empty;
@@ -585,9 +592,12 @@ namespace Reflectis.SDK.CreatorKitEditor
             settings.UniqueBundleIds = false;
             settings.ContiguousBundles = true;
             settings.NonRecursiveBuilding = true;
-            settings.ShaderBundleNaming = ShaderBundleNaming.Custom;
-            settings.ShaderBundleCustomNaming = playerVersionOverride;
-            settings.MonoScriptBundleNaming = MonoScriptBundleNaming.Disabled;
+            // Refactor Unity6
+            settings.BuiltInBundleNaming = BuiltInBundleNaming.Custom;
+            // Refactor Unity6
+            settings.BuiltInBundleCustomNaming = playerVersionOverride;
+            // Refactor Unity6
+            settings.MonoScriptBundleNaming = MonoScriptBundleNaming.ProjectName;
             settings.DisableVisibleSubAssetRepresentations = false;
             settings.BuildRemoteCatalog = true;
 
