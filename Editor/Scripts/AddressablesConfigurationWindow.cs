@@ -560,6 +560,8 @@ namespace Reflectis.SDK.CreatorKitEditor
                 // Refactor Unity6
                 //!settings.BundleLocalCatalog &&
                 settings.BuildRemoteCatalog &&
+                // Refactir Unity6
+                settings.EnableJsonCatalog &&
                 settings.CheckForContentUpdateRestrictionsOption
                         == CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions &&
                 settings.MaxConcurrentWebRequests == 3 &&
@@ -584,6 +586,8 @@ namespace Reflectis.SDK.CreatorKitEditor
             // Refactor Unity6
             //settings.BundleLocalCatalog = false;
             settings.BuildRemoteCatalog = true;
+            // Refactir Unity6
+            settings.EnableJsonCatalog = true;
             settings.CheckForContentUpdateRestrictionsOption = CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions;
             settings.ContentStateBuildPath = string.Empty;
             settings.MaxConcurrentWebRequests = 3;
