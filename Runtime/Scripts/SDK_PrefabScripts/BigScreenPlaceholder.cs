@@ -1,4 +1,4 @@
-using Reflectis.SDK.ClientModels;
+using Reflectis.ClientModels;
 using Reflectis.SDK.CreatorKit;
 using Reflectis.SDK.Utilities;
 

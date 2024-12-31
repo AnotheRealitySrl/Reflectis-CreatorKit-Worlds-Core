@@ -1,4 +1,4 @@
-using Reflectis.SDK.ClientModels;
+using Reflectis.ClientModels;
 using Reflectis.SDK.Core;
 using System.Collections;
 using System.Collections.Generic;
