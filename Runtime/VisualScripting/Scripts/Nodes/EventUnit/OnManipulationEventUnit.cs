@@ -1,10 +1,14 @@
-using Reflectis.SDK.InteractionNew;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
-using UnityEngine;
-using static Reflectis.SDK.InteractionNew.IInteractable;
+using Reflectis.SDK.Core.Interaction;
 
-namespace Reflectis.SDK.CreatorKit
+using System.Threading.Tasks;
+
+using Unity.VisualScripting;
+
+using UnityEngine;
+
+using static Reflectis.SDK.Core.Interaction.IInteractable;
+
+namespace Reflectis.CreatorKit.Core
 {
     public abstract class OnManipulationEventUnit : EventUnit<Manipulable>
     {

@@ -1,6 +1,6 @@
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Synced Object: Release Ownership")]
     [UnitSurtitle("Synced Object")]

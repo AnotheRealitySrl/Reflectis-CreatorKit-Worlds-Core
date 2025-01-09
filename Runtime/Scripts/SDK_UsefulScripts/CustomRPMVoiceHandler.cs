@@ -13,7 +13,7 @@ using UnityEngine.Android;
 #endif
 
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     /// <summary>
     /// This enumeration describes the options for AudioProviderType.

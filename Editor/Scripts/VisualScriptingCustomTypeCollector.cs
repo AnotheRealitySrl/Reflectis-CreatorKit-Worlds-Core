@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKitEditor
+namespace Reflectis.CreatorKit.CoreEditor
 {
     [CreateAssetMenu(menuName = "AnotheReality/Editor/VisualScriptingCustomTypeCollector", fileName = "VisualScriptingCustomTypeCollector")]
     public class VisualScriptingCustomTypeCollector : ScriptableObject

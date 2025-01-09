@@ -1,8 +1,11 @@
+using Reflectis.SDK.Core.VisualScripting;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Scene: On Load")]
     [UnitSurtitle("Scene")]

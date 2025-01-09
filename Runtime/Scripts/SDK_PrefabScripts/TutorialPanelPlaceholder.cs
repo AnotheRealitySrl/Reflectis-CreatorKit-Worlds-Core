@@ -1,10 +1,10 @@
-using Reflectis.SDK.Transitions;
+using Reflectis.SDK.Core.Transitions;
 
 using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     public class TutorialPanelPlaceholder : SceneComponentPlaceholderBase
     {

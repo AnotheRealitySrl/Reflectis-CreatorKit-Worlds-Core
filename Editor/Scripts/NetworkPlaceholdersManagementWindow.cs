@@ -1,4 +1,4 @@
-using Reflectis.SDK.CreatorKit;
+using Reflectis.CreatorKit.Core;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Reflectis.SDK.CreatorKitEditor
+namespace Reflectis.CreatorKit.CoreEditor
 {
     public class NetworkPlaceholdersManagementWindow : EditorWindow
     {
@@ -151,7 +151,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                         float btnWidth = 20f;
                         float margin = 35f;
                         float remainingWidth = EditorGUIUtility.currentViewWidth - codeWidth - btnWidth - margin;
-                        
+
                         if (GUILayout.Button(">", GUILayout.Width(btnWidth)))
                         {
                             EditorGUIUtility.PingObject(placeholder.gameObject);

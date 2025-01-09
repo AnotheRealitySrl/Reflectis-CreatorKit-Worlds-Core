@@ -1,12 +1,15 @@
-using Reflectis.SDK.CharacterController;
 using Reflectis.SDK.Core;
-using Reflectis.SDK.Fade;
+using Reflectis.SDK.Core.CharacterController;
+using Reflectis.SDK.Core.Fade;
+
 using System.Collections;
 using System.Collections.Generic;
+
 using Unity.VisualScripting;
+
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Character: Teleport")]
     [UnitSurtitle("Character")]

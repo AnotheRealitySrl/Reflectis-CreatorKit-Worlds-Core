@@ -1,7 +1,8 @@
-using Reflectis.ClientModels;
+using Reflectis.CreatorKit.Core.ClientModels;
+
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Expose: CMEvent")]
     [UnitSurtitle("Expose")]

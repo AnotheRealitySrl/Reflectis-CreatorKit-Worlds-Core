@@ -1,8 +1,10 @@
-using Reflectis.SDK.Transitions;
+using Reflectis.SDK.Core.Transitions;
+
 using Unity.VisualScripting;
+
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Transition Provider: Do Transition")]
     [UnitSurtitle("Transition Provider")]

@@ -1,8 +1,9 @@
 using Reflectis.SDK.Core;
-using Reflectis.SDK.Avatars;
+using Reflectis.SDK.Core.Avatars;
+
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Scene: Enable Other Players")]
     [UnitSurtitle("Scene")]

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [RequireComponent(typeof(SpawnObjectData))]
     public class ObjectSpawnerPlaceholder : SceneComponentPlaceholderBase

@@ -12,7 +12,7 @@ using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKitEditor
+namespace Reflectis.CreatorKit.CoreEditor
 {
     public class AddressablesConfigurationWindow : EditorWindow
     {
@@ -38,7 +38,7 @@ namespace Reflectis.SDK.CreatorKitEditor
         private const string build_target_variable_name = "BuildTarget";
         private const string build_target_variable_value = "[UnityEditor.EditorUserBuildSettings.activeBuildTarget]";
         private const string player_version_override_variable_name = "PlayerVersionOverride";
-        private const string player_version_override_variable_value = "[Reflectis.SDK.CreatorKitEditor.AddressablesBuildScript.PlayerVersionOverride]";
+        private const string player_version_override_variable_value = "[Reflectis.CreatorKit.CoreEditor.AddressablesBuildScript.PlayerVersionOverride]";
 
         private const string environments_group_name = "Environments";
         [Obsolete("Thumbnails have to be uploaded from backoffice since Reflectis version 2024.9!")]

@@ -1,9 +1,12 @@
-using Reflectis.SDK.CharacterController;
 using Reflectis.SDK.Core;
+using Reflectis.SDK.Core.CharacterController;
+using Reflectis.SDK.Core.VisualScripting;
+
 using System.Threading.Tasks;
+
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Character: Exit Pan")]
     [UnitSurtitle("Character")]

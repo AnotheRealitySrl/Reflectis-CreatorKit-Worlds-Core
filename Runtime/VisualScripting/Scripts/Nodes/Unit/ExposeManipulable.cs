@@ -1,7 +1,10 @@
-using Reflectis.SDK.InteractionNew;
+using Reflectis.SDK.Core.Interaction;
+
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+using static Reflectis.SDK.Core.Interaction.Manipulable;
+
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis: Expose Manipulable")]
     [UnitSurtitle("Expose")]
@@ -37,7 +40,7 @@ namespace Reflectis.SDK.CreatorKit
 
             InteractionColliders = ValueOutput(nameof(InteractionColliders), (flow) => flow.GetValue<Manipulable>(Manipulable).InteractableRef.InteractionColliders);
 
-            IsManipulated = ValueOutput(nameof(IsManipulated), (flow) => flow.GetValue<Manipulable>(Manipulable).CurrentInteractionState == InteractionNew.Manipulable.EManipulableState.Manipulating);
+            IsManipulated = ValueOutput(nameof(IsManipulated), (flow) => flow.GetValue<Manipulable>(Manipulable).CurrentInteractionState == EManipulableState.Manipulating);
 
             ManipulationInput = ValueOutput(nameof(ManipulationInput), (flow) => flow.GetValue<Manipulable>(Manipulable).CurrentManipulationInput);
         }

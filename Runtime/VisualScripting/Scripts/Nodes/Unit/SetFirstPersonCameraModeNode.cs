@@ -1,8 +1,9 @@
-using Reflectis.SDK.CharacterController;
 using Reflectis.SDK.Core;
+using Reflectis.SDK.Core.CharacterController;
+
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Character: Set First Person Camera Mode")]
     [UnitSurtitle("Character")]

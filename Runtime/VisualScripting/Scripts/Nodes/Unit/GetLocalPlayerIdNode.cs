@@ -1,8 +1,9 @@
 using Reflectis.SDK.Core;
-using Reflectis.SDK.NetworkingSystem;
+using Reflectis.SDK.Core.NetworkingSystem;
+
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Networking: Get Local Player ID")]
     [UnitSurtitle("Networking")]

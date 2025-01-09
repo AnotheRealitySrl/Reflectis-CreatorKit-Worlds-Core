@@ -1,8 +1,10 @@
-using Reflectis.SDK.InteractionNew;
+using Reflectis.SDK.Core.Interaction;
+
 using Unity.VisualScripting;
+
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis GameObject: Get Generic Interactable")]
     [UnitSurtitle("GameObject")]

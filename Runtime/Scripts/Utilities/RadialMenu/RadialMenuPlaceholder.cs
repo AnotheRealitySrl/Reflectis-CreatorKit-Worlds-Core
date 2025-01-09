@@ -1,14 +1,17 @@
-using Reflectis.SDK.CreatorKit;
-using Reflectis.SDK.RadialMenuUtils;
+using Reflectis.SDK.Core.RadialMenuUtils;
+using Reflectis.CreatorKit.Core;
+
 using System.Collections.Generic;
+
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
+
 #endif
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     public class RadialMenuPlaceholder : SceneComponentPlaceholderBase
     {

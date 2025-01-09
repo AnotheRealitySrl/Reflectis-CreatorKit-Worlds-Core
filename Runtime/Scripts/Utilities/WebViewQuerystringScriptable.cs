@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using Reflectis.SDK.CreatorKit;
+using Reflectis.CreatorKit.Core;
 
 [CreateAssetMenu(menuName = "AnotheReality/Utils/WebViewQuerystringScriptable", fileName = "WebViewQuerystringScriptable")]
 public class WebViewQuerystringScriptable

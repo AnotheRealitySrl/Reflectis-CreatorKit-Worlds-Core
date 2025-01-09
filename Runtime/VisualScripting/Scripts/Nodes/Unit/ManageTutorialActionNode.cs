@@ -1,9 +1,11 @@
+using Reflectis.CreatorKit.Core.Help;
 using Reflectis.SDK.Core;
-using Reflectis.SDK.Help;
+
 using System.Collections;
+
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Tutorial: Enable")]
     [UnitSurtitle("Tutorial")]

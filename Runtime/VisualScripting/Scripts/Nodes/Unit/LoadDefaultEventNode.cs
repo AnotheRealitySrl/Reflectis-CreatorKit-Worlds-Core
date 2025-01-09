@@ -1,14 +1,11 @@
-using Reflectis.SDK.ApplicationManagement;
-using Reflectis.SDK.CharacterController;
-using Reflectis.SDK.Core;
-using Reflectis.SDK.Utilities;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
-using UnityEngine;
+using Reflectis.CreatorKit.Core;
+using Reflectis.SDK.Core.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+using System.Threading.Tasks;
+
+using Unity.VisualScripting;
+
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Platform: Load Default Event")]
     [UnitSurtitle("Platform")]

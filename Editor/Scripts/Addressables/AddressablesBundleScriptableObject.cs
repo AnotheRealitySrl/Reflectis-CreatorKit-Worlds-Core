@@ -7,7 +7,7 @@ using UnityEditor.AddressableAssets.Settings;
 
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKitEditor
+namespace Reflectis.CreatorKit.CoreEditor
 {
     #region Addressable Asset Classes
 

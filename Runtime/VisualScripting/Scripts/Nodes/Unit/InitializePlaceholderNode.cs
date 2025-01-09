@@ -1,8 +1,10 @@
-using Reflectis.SDK.ApplicationManagement;
+using Reflectis.CreatorKit.Core;
+
 using Unity.VisualScripting;
+
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Placeholder: Initialize Placeholder")]
     [UnitSurtitle("Placeholder")]

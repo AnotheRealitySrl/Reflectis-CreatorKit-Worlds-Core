@@ -1,11 +1,11 @@
 #if UNITY_EDITOR
-using Reflectis.SDK.CreatorKitEditor;
+using Reflectis.CreatorKit.CoreEditor;
 
 using UnityEditor;
 
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [CustomEditor(typeof(SyncedObject))]
     public class SyncedObjectEditor : NetworkPlaceholderEditor

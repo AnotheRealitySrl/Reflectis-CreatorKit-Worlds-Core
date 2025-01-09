@@ -1,7 +1,8 @@
-using Reflectis.SDK.InteractionNew;
+using Reflectis.SDK.Core.Interaction;
+
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis GenericInteractable: BlockInteractionBySelection")]
     [UnitSurtitle("GenericInteractable")]
