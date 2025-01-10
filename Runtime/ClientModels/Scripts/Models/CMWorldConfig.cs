@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Reflectis.CreatorKit.Core.ClientModels
 {
-    public class CMWorldConfig : MonoBehaviour
+    public class CMWorldConfig
     {
         [SerializeField] private string videoChatAppId;
         [SerializeField] private int maxShardCapacity = 20;
