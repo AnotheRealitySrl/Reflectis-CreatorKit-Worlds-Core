@@ -10,7 +10,6 @@ namespace Reflectis.CreatorKit.Core
     {
         [Header("Chatbot structure.\n" +
             "Do not modify it, unless you need to create custom avatars.")]
-        [SerializeField] private string tempApiKey;
         [SerializeField] private Transform avatarContainer;
         [SerializeField] private RectTransform chatPanel;
 
@@ -62,7 +61,6 @@ namespace Reflectis.CreatorKit.Core
         [Tooltip("Select avatar voice from the available ones.")]
         [SerializeField] private EChatBotVoice voice = EChatBotVoice.alloy;
 
-        public string TempApiKey => tempApiKey;
         public Transform AvatarContainer => avatarContainer;
         public RectTransform ChatPanel => chatPanel;
         public Animator Animator => animator;
