@@ -1,7 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Synced Variables: On Synced Variable Init")]
     [UnitSurtitle("Synced Variables Init")]

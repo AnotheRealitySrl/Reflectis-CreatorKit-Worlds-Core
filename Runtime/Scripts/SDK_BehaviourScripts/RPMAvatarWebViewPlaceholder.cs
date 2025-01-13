@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
 
     public class RPMAvatarWebViewPlaceholder : SceneComponentPlaceholderBase

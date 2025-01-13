@@ -1,5 +1,5 @@
-using Reflectis.ClientModels;
-using Reflectis.SDK.CreatorKit;
+using Reflectis.CreatorKit.Core.ClientModels;
+using Reflectis.CreatorKit.Core;
 using Reflectis.SDK.Utilities;
 
 using UnityEngine;

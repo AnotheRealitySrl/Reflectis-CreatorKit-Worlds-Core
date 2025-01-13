@@ -1,9 +1,9 @@
-using Reflectis.SDK.CreatorKit;
+using Reflectis.CreatorKit.Core;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKitEditor
+namespace Reflectis.CreatorKit.CoreEditor
 {
 
     public abstract class SyncedVariablesEventNodesWidget<T, U> : UnitWidget<T> where T : SyncedVariableBaseEventUnit<U>

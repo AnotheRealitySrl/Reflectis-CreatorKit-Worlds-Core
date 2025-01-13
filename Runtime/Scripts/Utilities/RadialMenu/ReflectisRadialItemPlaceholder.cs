@@ -1,4 +1,4 @@
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     public class ReflectisRadialItemPlaceholder : SceneComponentPlaceholderNetwork
     {

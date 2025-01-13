@@ -9,7 +9,7 @@ using UnityEditor;
 
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [Serializable]
     public class POILinkPlaceholder : POIBlockPlaceholder

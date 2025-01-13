@@ -7,12 +7,13 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 using UnityEngine.Events;
-using static Reflectis.SDK.InteractionNew.ContextualMenuManageable;
-using static Reflectis.SDK.InteractionNew.GenericInteractable;
-using static Reflectis.SDK.InteractionNew.IInteractable;
-using static Reflectis.SDK.InteractionNew.Manipulable;
 
-namespace Reflectis.SDK.CreatorKit
+using static Reflectis.SDK.Core.Interaction.ContextualMenuManageable;
+using static Reflectis.SDK.Core.Interaction.GenericInteractable;
+using static Reflectis.SDK.Core.Interaction.IInteractable;
+using static Reflectis.SDK.Core.Interaction.Manipulable;
+
+namespace Reflectis.CreatorKit.Core
 {
     public class InteractablePlaceholder : SceneComponentPlaceholderNetwork
     {

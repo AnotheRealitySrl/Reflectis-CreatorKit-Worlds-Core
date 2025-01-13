@@ -1,8 +1,10 @@
-using Reflectis.ClientModels;
+using Reflectis.CreatorKit.Core.ClientModels;
+
 using System.Collections.Generic;
+
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Expose: CMUser")]
     [UnitSurtitle("Expose")]

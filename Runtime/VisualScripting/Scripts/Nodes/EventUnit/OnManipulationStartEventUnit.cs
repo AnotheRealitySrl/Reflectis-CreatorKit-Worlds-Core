@@ -1,7 +1,8 @@
-using Reflectis.SDK.InteractionNew;
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+using static Reflectis.SDK.Core.Interaction.Manipulable;
+
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Manipulable: On Manipulation Start")]
     [UnitSurtitle("Manipulable")]
@@ -9,9 +10,9 @@ namespace Reflectis.SDK.CreatorKit
     [UnitCategory("Events\\Reflectis")]
     public class OnManipulationStartEventUnit : OnManipulationEventUnit
     {
-        protected override void OnManipulableStateChange(Manipulable.EManipulableState manipulableState)
+        protected override void OnManipulableStateChange(EManipulableState manipulableState)
         {
-            if (manipulableState == InteractionNew.Manipulable.EManipulableState.Manipulating)
+            if (manipulableState == EManipulableState.Manipulating)
             {
                 Trigger(graphReference, manipulableReference);
             }

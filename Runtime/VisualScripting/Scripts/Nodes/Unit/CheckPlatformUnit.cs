@@ -1,8 +1,9 @@
 using Reflectis.SDK.Core;
-using Reflectis.SDK.Platform;
+using Reflectis.SDK.Core.ApplicationManagement;
+
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Platform: Switch")]
     [UnitSurtitle("Platform")]

@@ -1,7 +1,7 @@
-using Reflectis.SDK.CreatorKit;
+using Reflectis.CreatorKit.Core;
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKitEditor
+namespace Reflectis.CreatorKit.CoreEditor
 {
     [Descriptor(typeof(EnableCharacterMeshNode))]
     public class EnableCharacterMeshDescriptor : UnitDescriptor<EnableCharacterMeshNode>

@@ -1,10 +1,8 @@
-using Reflectis.SDK.InteractionNew;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
+
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Video: On Video Played")]
     [UnitSurtitle("BigScreen")]

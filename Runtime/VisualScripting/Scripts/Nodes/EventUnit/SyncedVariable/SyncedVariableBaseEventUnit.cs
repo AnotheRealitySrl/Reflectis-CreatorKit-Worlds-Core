@@ -1,6 +1,6 @@
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     public abstract class SyncedVariableBaseEventUnit<T> : EventUnit<T>
     {

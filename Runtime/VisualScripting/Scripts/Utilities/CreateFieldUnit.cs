@@ -1,7 +1,7 @@
 using Reflectis.SDK.Utilities;
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Field: Create")]
     [UnitSurtitle("Reflectis Field")]

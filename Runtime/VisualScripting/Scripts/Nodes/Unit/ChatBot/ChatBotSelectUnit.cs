@@ -2,7 +2,7 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis ChatBot: ChatBot Select")]
     [UnitSurtitle("ChatBot")]

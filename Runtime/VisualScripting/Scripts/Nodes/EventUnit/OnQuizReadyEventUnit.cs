@@ -1,6 +1,8 @@
-﻿using Unity.VisualScripting;
+﻿using Reflectis.SDK.Core.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+using Unity.VisualScripting;
+
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Quiz: On Quiz Ready")]
     [UnitSurtitle("Quiz")]

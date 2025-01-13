@@ -1,12 +1,15 @@
-using Reflectis.SDK.Diagnostics;
+using Reflectis.SDK.Core.Diagnostics;
 using Reflectis.SDK.Utilities;
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+
 using Unity.VisualScripting;
+
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle(UNIT_TITLE)]
     [UnitSurtitle("Reflectis Diagnostic")]

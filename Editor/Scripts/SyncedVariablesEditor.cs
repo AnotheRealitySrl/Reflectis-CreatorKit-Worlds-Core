@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [CustomEditor(typeof(SyncedVariables))]
     public class SyncedVariablesEditor : UnityEditor.Editor

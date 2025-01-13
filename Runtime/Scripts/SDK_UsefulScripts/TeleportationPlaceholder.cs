@@ -2,7 +2,7 @@ using System;
 
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     public class TeleportationPlaceholder : SceneComponentPlaceholderBase
     {

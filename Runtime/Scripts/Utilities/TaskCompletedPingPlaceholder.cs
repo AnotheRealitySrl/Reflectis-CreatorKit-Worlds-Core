@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     public enum TasksToPing { MacroTasksOnly, AllTasks }
 
@@ -11,6 +11,6 @@ namespace Reflectis.SDK.CreatorKit
         [SerializeField]
         private TasksToPing taskToPingSetting;
 
-        public TasksToPing TaskToPingSetting { get => taskToPingSetting;}
+        public TasksToPing TaskToPingSetting { get => taskToPingSetting; }
     }
 }

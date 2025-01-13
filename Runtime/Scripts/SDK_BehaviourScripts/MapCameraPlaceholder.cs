@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [RequireComponent(typeof(Camera))]
     public class MapCameraPlaceholder : SceneComponentPlaceholderBase

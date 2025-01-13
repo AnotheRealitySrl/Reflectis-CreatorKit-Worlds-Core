@@ -1,14 +1,15 @@
-using Reflectis.SDK.ApplicationManagement;
-using Reflectis.SDK.Avatars;
-using Reflectis.ClientModels;
+using Reflectis.CreatorKit.Core;
+using Reflectis.CreatorKit.Core.ClientModels;
 using Reflectis.SDK.Core;
-using System.Collections;
-using System.Collections.Generic;
+using Reflectis.SDK.Core.VisualScripting;
+
 using System.Threading.Tasks;
+
 using Unity.VisualScripting;
+
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Platform: Change Scene")]
     [UnitSurtitle("Platform")]

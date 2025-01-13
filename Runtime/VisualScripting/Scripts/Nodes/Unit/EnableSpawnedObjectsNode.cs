@@ -1,10 +1,13 @@
+using Reflectis.CreatorKit.Core.SceneHierarchy;
 using Reflectis.SDK.Core;
-using Reflectis.SDK.SceneHierarchy;
+
 using System.Collections.Generic;
+
 using Unity.VisualScripting;
+
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Scene: Enable Spawned Objects")]
     [UnitSurtitle("Scene")]

@@ -1,8 +1,9 @@
-using Reflectis.ClientModels;
+using Reflectis.CreatorKit.Core.ClientModels;
 using Reflectis.SDK.Core;
+
 using Unity.VisualScripting;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Synced Object: Is Owned Locally")]
     [UnitSurtitle("Synced Object")]

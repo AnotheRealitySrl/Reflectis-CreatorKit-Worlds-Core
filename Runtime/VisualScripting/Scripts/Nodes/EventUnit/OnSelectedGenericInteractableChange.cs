@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using Reflectis.SDK.InteractionNew;
-using static Reflectis.SDK.InteractionNew.IInteractable;
 using Reflectis.SDK.Core;
+using Reflectis.SDK.Core.Interaction;
 
-namespace Reflectis.SDK.CreatorKit
+using Unity.VisualScripting;
+
+namespace Reflectis.CreatorKit.Core
 {
     [UnitTitle("Reflectis Generic Interactable: On Selected Change")]
     [UnitSurtitle("GenericInteractable")]
@@ -51,7 +48,7 @@ namespace Reflectis.SDK.CreatorKit
         public override void Uninstantiate(GraphReference instance)
         {
             base.Uninstantiate(instance);
-            
+
             SM.GetSystem<IGenericInteractionSystem>().OnSelectedInteractableChange.RemoveListener(OnSelectedChange);
         }
 

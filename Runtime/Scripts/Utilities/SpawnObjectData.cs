@@ -1,7 +1,8 @@
-using Reflectis.SDK.ObjectSpawner;
+using Reflectis.ObjectSpawner;
+
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     public class SpawnObjectData : MonoBehaviour
     {

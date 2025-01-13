@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [CreateAssetMenu(menuName = "AnotheReality/CreatorKit/POI/POI media element", fileName = "POIMediaElementConfig")]
     public class POIMediaPlaceholder : POIBlockPlaceholder

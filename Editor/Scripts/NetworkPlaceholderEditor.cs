@@ -1,10 +1,10 @@
-using Reflectis.SDK.CreatorKit;
+using Reflectis.CreatorKit.Core;
 
 using UnityEditor;
 
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKitEditor
+namespace Reflectis.CreatorKit.CoreEditor
 {
     [CustomEditor(typeof(SceneComponentPlaceholderBase), true)]
     public class NetworkPlaceholderEditor : Editor

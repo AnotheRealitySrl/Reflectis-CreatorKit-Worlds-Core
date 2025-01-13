@@ -1,10 +1,10 @@
-using Reflectis.SDK.ChatBot;
+using Reflectis.SDK.Core.ChatBot;
 using Reflectis.SDK.Utilities;
 
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     public class ChatBotPlaceholder : SceneComponentPlaceholderBase
     {

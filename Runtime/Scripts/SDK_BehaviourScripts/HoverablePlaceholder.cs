@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     [RequireComponent(typeof(Collider))]
     public class HoverablePlaceholder : SceneComponentPlaceholderBase

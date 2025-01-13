@@ -1,9 +1,13 @@
-using Reflectis.SDK.CreatorKit;
+using Reflectis.CreatorKit.Core;
 
 using UnityEditor;
+
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKitEditor
+using static Reflectis.SDK.Core.Interaction.ContextualMenuManageable;
+using static Reflectis.SDK.Core.Interaction.IInteractable;
+
+namespace Reflectis.CreatorKit.CoreEditor
 {
     [CustomEditor(typeof(InteractablePlaceholder))]
     public class InteractablePlaceholderEditor : Editor
@@ -19,7 +23,7 @@ namespace Reflectis.SDK.CreatorKitEditor
             EditorGUILayout.PropertyField(serializedObject.FindProperty("interactionColliders"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("interactionModes"));
 
-            if (interactablePlaceholder.InteractionModes.HasFlag(InteractionNew.IInteractable.EInteractableType.Manipulable))
+            if (interactablePlaceholder.InteractionModes.HasFlag(EInteractableType.Manipulable))
             {
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("manipulationMode"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("vrInteraction"));
@@ -38,7 +42,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                 }
             }
 
-            if (interactablePlaceholder.InteractionModes.HasFlag(InteractionNew.IInteractable.EInteractableType.GenericInteractable))
+            if (interactablePlaceholder.InteractionModes.HasFlag(EInteractableType.GenericInteractable))
             {
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("vrGenericInteraction"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("lockHoverDuringInteraction"));
@@ -54,11 +58,11 @@ namespace Reflectis.SDK.CreatorKitEditor
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("vrAllowedStates"));
             }
 
-            if (interactablePlaceholder.InteractionModes.HasFlag(InteractionNew.IInteractable.EInteractableType.ContextualMenuInteractable))
+            if (interactablePlaceholder.InteractionModes.HasFlag(EInteractableType.ContextualMenuInteractable))
             {
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("contextualMenuOptions"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("contextualMenuType"));
-                if (interactablePlaceholder.ContextualMenuOptions.HasFlag(InteractionNew.ContextualMenuManageable.EContextualMenuOption.NonProportionalScale))
+                if (interactablePlaceholder.ContextualMenuOptions.HasFlag(EContextualMenuOption.NonProportionalScale))
                 {
                     bool hasWeirdCollider = false;
                     foreach (var collider in interactablePlaceholder.GetComponentsInChildren<Collider>())

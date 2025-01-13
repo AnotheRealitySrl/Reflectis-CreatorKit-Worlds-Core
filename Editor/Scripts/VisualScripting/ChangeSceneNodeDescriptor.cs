@@ -1,10 +1,10 @@
-using Reflectis.SDK.CreatorKit;
+using Reflectis.CreatorKit.Core;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKitEditor
+namespace Reflectis.CreatorKit.CoreEditor
 {
     [Descriptor(typeof(ChangeSceneNode))]
     public class ChangeSceneNodeDescriptor : UnitDescriptor<ChangeSceneNode>

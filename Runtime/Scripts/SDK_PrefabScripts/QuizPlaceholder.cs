@@ -10,7 +10,7 @@ using UnityEngine.Events;
 using UnityEditor;
 #endif
 
-namespace Reflectis.SDK.CreatorKit
+namespace Reflectis.CreatorKit.Core
 {
     public enum EQuizLayout
     {
