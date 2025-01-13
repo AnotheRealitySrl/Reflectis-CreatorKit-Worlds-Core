@@ -5,6 +5,7 @@ using UnityEngine;
 namespace Reflectis.CreatorKit.Core.ClientModels
 {
     [Serializable]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.Fields)]
     public class CMWorld
     {
         [SerializeField] private int id;

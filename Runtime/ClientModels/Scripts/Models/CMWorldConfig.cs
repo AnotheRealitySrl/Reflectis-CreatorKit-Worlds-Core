@@ -1,7 +1,11 @@
+using System;
+
 using UnityEngine;
 
 namespace Reflectis.CreatorKit.Core.ClientModels
 {
+    [Serializable]
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.Fields)]
     public class CMWorldConfig
     {
         [SerializeField] private string videoChatAppId;
