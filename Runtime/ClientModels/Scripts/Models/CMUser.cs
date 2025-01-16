@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
 
 namespace Reflectis.CreatorKit.Core.ClientModels
@@ -8,8 +9,6 @@ namespace Reflectis.CreatorKit.Core.ClientModels
     [Serializable]
     public class CMUser
     {
-        public static bool showFullNickname;
-
         [SerializeField] private int id;
         [SerializeField] private string nickname;
         [SerializeField] private int code;
