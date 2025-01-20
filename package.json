@@ -1,6 +1,6 @@
 {
-  "name": "com.anotherealitysrl.reflectis-sdk-creatorkit",
-  "displayName": "Reflectis-SDK-CreatorKit",
+  "name": "com.anotherealitysrl.reflectis-creatorkit-core",
+  "displayName": "Reflectis-CreatorKit-Core",
   "version": "3.8.0",
   "unity": "2020.1",
   "description": "Reflectis Creator Kit module",
