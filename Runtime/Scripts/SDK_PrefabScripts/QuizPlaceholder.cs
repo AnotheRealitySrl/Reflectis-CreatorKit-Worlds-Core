@@ -466,6 +466,7 @@ namespace Reflectis.CreatorKit.Core
 
                 if (panelLockRatio)
                 {
+                    UpdateAspectRatio();
                     panelHeight = panelWidth / lastAspectRatio;
                     OnHeightChanged();
                 }
@@ -486,6 +487,7 @@ namespace Reflectis.CreatorKit.Core
 
                 if (panelLockRatio)
                 {
+                    UpdateAspectRatio();
                     panelWidth = panelHeight * lastAspectRatio;
                     OnWidthChanged();
                 }
