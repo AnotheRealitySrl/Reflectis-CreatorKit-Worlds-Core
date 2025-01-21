@@ -569,7 +569,7 @@ namespace Reflectis.SDK.CreatorKitEditor
                 !settings.IgnoreUnsupportedFilesInBuild &&
                 !settings.UniqueBundleIds &&
                 settings.ContiguousBundles &&
-                settings.NonRecursiveBuilding &&
+                !settings.NonRecursiveBuilding &&
                 // Refactor Unity6
                 settings.BuiltInBundleNaming == BuiltInBundleNaming.Custom &&
                 // Refactor Unity6
@@ -595,7 +595,7 @@ namespace Reflectis.SDK.CreatorKitEditor
             settings.IgnoreUnsupportedFilesInBuild = false;
             settings.UniqueBundleIds = false;
             settings.ContiguousBundles = true;
-            settings.NonRecursiveBuilding = true;
+            settings.NonRecursiveBuilding = false;
             // Refactor Unity6
             settings.BuiltInBundleNaming = BuiltInBundleNaming.Custom;
             // Refactor Unity6
