@@ -7,10 +7,10 @@ namespace Reflectis.CreatorKit.Core.ClientModels
     [Serializable]
     public class CMWorldCCU
     {
-        [SerializeField] private int id;
-        [SerializeField] private int ccu;
+        [SerializeField] private int worldId;
+        [SerializeField] private int onlineUsersCount;
 
-        public int Id { get => id; set => id = value; }
-        public int CCU { get => ccu; set => ccu = value; }
+        public int WorldId { get => worldId; set => worldId = value; }
+        public int OnlineUsersCount { get => onlineUsersCount; set => onlineUsersCount = value; }
     }
 }

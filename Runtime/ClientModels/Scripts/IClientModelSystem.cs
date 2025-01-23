@@ -69,15 +69,17 @@ namespace Reflectis.CreatorKit.Core.ClientModels
         /// </summary>
         Task<List<CMWorld>> GetAllWorlds();
 
+        void RegisterToWorldsCCUs();
+
+        Task<bool> JoinWorld(int worldId);
+
         Task<CMWorld> GetWorld(int worldId);
 
         Task<CMWorldConfig> GetWorldConfig(int id);
 
         Task<List<CMCatalog>> GetWorldCatalogs(int worldId);
 
-        Task ConnectToWorldCCU();
 
-        Task DisconnectFromWorldCCU();
         #endregion
 
         #region Events
