@@ -151,7 +151,7 @@ namespace Reflectis.CreatorKit.Core
         private void SetAudioClipSource()
         {
             //AudioSource.clip = AudioClip;
-            AudioSource.loop = false;
+            //AudioSource.loop = false;
             AudioSource.mute = false;
             //AudioSource.Stop();
         }

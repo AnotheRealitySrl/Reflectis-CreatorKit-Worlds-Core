@@ -1,5 +1,16 @@
 # Release notes
 
+## v4.0.0
+
+### Changed
+
+- Changed package name, from Reflectis-SDK-CreatorKit to Reflecits-CreatorKit-Core, and updated namespaces according to new package name.
+
+### Added
+
+- Added ClientModels, Help, ObjectSpawner, ApplicationManagement and SceneObjects modules, previously located in SDK.
+  ApplicationManagement does not contain all the logic contained in SDK, but only the part that is specific to Reflectis.
+
 ## v3.8.0
 
 ### Added
