@@ -1,0 +1,26 @@
+{
+  "name": "Reflectis.CreatorKit.Worlds.CoreEditor",
+  "rootNamespace": "Reflectis.CreatorKit.Worlds.CoreEditor",
+  "references": [
+    "GUID:69448af7b92c7f342b298e06a37122aa",
+    "GUID:e1e4f83f6c2796445b9ea45a4dca9090",
+    "GUID:21b0c8d1703a94250bfac916590cea4f",
+    "GUID:54cb1906aeb4e4264bc1d2aa3818a43f",
+    "GUID:2aa54ddaa48744e1caddee916e39805e",
+    "GUID:ab59f74e483e1ee4595bfefea56493f2",
+    "GUID:23f3c6063e13e4fd9addce3606ff4e42",
+    "GUID:ea715009a4efd4c6cbc85be3ae097dd3",
+    "GUID:aa13245f3cf702a42b84f0cf5d0b0848"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

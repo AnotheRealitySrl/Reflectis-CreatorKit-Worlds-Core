@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Core.SceneHierarchy
+namespace Reflectis.CreatorKit.Worlds.Core.SceneHierarchy
 {
     public interface ISceneObjectsSystem : ISystem
     {

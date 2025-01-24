@@ -1,5 +1,5 @@
 #if UNITY_EDITOR
-using Reflectis.CreatorKit.CoreEditor;
+using Reflectis.CreatorKit.Worlds.CoreEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;

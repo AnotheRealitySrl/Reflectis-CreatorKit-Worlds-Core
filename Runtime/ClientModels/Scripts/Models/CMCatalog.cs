@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Core.ClientModels
+namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 {
     public class CMCatalog
     {

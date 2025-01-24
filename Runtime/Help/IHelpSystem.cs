@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using UnityEngine.Events;
 
-namespace Reflectis.CreatorKit.Core.Help
+namespace Reflectis.CreatorKit.Worlds.Core.Help
 {
     public enum HelpState
     {

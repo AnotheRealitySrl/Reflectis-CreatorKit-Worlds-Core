@@ -1,11 +1,11 @@
-using Reflectis.CreatorKit.Core.ClientModels;
+using Reflectis.CreatorKit.Worlds.Core.ClientModels;
 using Reflectis.SDK.Core.ApplicationManagement;
 
 using System.Threading.Tasks;
 
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Core
+namespace Reflectis.CreatorKit.Worlds.Core
 {
     public interface IReflectisApplicationManager : IApplicationManager
     {

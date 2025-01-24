@@ -1,16 +1,16 @@
 {
-  "name": "com.anotherealitysrl.reflectis-creatorkit-core",
-  "displayName": "Reflectis-CreatorKit-Core",
+  "name": "com.anotherealitysrl.reflectis-creatorkit-worlds-core",
+  "displayName": "Reflectis-CreatorKit-Worlds-Core",
   "version": "3.8.0",
   "unity": "2020.1",
-  "description": "Reflectis Creator Kit module",
+  "description": "Reflectis Creator Kit Worlds Core module",
   "keywords": [
     "unity"
   ],
   "category": "Unity",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AnotheRealitySrl/Reflectis-SDK-CreatorKit"
+    "url": "https://github.com/AnotheRealitySrl/Reflectis-CreatorKit-Worlds-Core"
   },
   "samples": [
     {
