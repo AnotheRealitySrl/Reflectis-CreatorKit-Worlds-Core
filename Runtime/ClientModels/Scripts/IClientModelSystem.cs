@@ -61,17 +61,20 @@ namespace Reflectis.CreatorKit.Core.ClientModels
         float PlayerPingRateSeconds { get; }
 
         #region Worlds
-
-        public Action<List<CMWorldCCU>> onWorldListUpdate { get; set; }
+        /// <summary>
+        /// Action called on changes on online users.
+        /// The first int represent the worldId the second one the Users count
+        /// </summary>
+        public Action<int /*worldID*/, int /*usersCount*/> onOnlineUsersPerWorld { get; set; }
 
         /// <summary>
         /// Returns all the available worlds
         /// </summary>
         Task<List<CMWorld>> GetAllWorlds();
 
-        void RegisterToWorldsCCUs();
+        void ConnnectToOnlineUsersPerWorld();
 
-        Task<bool> JoinWorld(int worldId);
+        Task<bool> JoinWorld(int worldId, int eventId);
 
         Task<CMWorld> GetWorld(int worldId);
 
