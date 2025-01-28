@@ -1,3 +1,4 @@
+using Reflectis.CreatorKit.Core.ClientModels;
 using Reflectis.SDK.Core;
 using Reflectis.SDK.Core.NetworkingSystem;
 
@@ -30,10 +31,12 @@ namespace Reflectis.CreatorKit.Core
             {
                 if (f.GetValue<bool>(Open))
                 {
+                    SM.GetSystem<IClientModelSystem>().EnableShard(true);
                     SM.GetSystem<INetworkingSystem>().OpenCurrentShard();
                 }
                 else
                 {
+                    SM.GetSystem<IClientModelSystem>().EnableShard(false);
                     SM.GetSystem<INetworkingSystem>().CloseCurrentShard();
                 }
                 return OutputTrigger;

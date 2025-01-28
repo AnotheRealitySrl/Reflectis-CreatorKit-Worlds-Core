@@ -72,9 +72,7 @@ namespace Reflectis.CreatorKit.Core.ClientModels
         /// </summary>
         Task<List<CMWorld>> GetAllWorlds();
 
-        void ConnnectToOnlineUsersPerWorld();
-
-        Task<bool> JoinWorld(int worldId, int eventId);
+        void ConnectToOnlineUsersPerWorld();
 
         Task<CMWorld> GetWorld(int worldId);
 
@@ -82,7 +80,7 @@ namespace Reflectis.CreatorKit.Core.ClientModels
 
         Task<List<CMCatalog>> GetWorldCatalogs(int worldId);
 
-
+        public void DisconnectFromWorld();
         #endregion
 
         #region Events
@@ -378,22 +376,12 @@ namespace Reflectis.CreatorKit.Core.ClientModels
 
         #region Online presence
         UnityEvent OnlineUsersUpdated { get; }
-        Task<List<CMOnlinePresence>> ForceOnlineUsersRefresh();
         List<CMOnlinePresence> GetOnlineUsers();
         CMOnlinePresence GetOnlineUser(int userId);
         bool IsOnlineUser(int userId);
-        Task<EPingStatus> PingMyOnlinePresence(int? worldId, int? eventId, int? shardId, bool? isShardClosed, bool isMultiplayer);
-
-        Task<List<CMOnlinePresence>> GetUsersInEvent(int eventId, bool forceRefresh = true);
-
-        /// <summary>
-        /// If value the cache variables that have to be auto refreshed will start their refresh
-        /// otherwise they will stop refreshing
-        /// </summary>
-        /// <param name="value"></param>
-        Task EnableCacheAutoRefresh(bool value);
-
+        List<CMOnlinePresence> GetUsersInEvent(int eventId);
         Task<bool> CheckMaxCCU(int worldId);
+        Task EnableShard(bool enable);
         #endregion
 
         #region Shards
