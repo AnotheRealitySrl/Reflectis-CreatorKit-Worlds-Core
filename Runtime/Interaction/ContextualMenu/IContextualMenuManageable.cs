@@ -4,8 +4,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 {
     public interface IContextualMenuManageable : IInteractableBehaviour
     {
-        EContextualMenuType ContextualMenuType { get; }
-
         public enum EContextualMenuInteractableState
         {
             Idle,
@@ -31,6 +29,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
             Explodable = 32,
             NonProportionalScale = 64,
         }
+
+        EContextualMenuType ContextualMenuType { get; }
+        EContextualMenuOption ContextualMenuOptions { get; }
 
         void OnContextualMenuButtonClicked(EContextualMenuOption option);
     }
