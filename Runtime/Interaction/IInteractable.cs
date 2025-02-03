@@ -15,7 +15,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         [Flags]
         public enum EInteractableType
         {
-            GenericInteractable = 1,
+            VisualScriptingInteractable = 1,
             Manipulable = 2,
             ContextualMenuInteractable = 4
         }

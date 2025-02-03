@@ -13,13 +13,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         UnityEvent OnHoverRayExit { get; }
         UnityEvent OnHoverMouseEnter { get; }
         UnityEvent OnHoverMouseExit { get; }
-        EGenericInteractableState CurrentInteractionState { get; }
+        EVisualScriptingInteractableState CurrentInteractionState { get; }
         bool SkipSelectState { get; }
 
         Task Interact();
 
         [Flags]
-        public enum EGenericInteractableState
+        public enum EVisualScriptingInteractableState
         {
             Idle = 0,
             SelectEntering = 1,
@@ -29,7 +29,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         }
 
         [Flags]
-        public enum EAllowedGenericInteractableState
+        public enum EAllowedVisualScriptingInteractableState
         {
             Selected = 1,
             Interacting = 2,
@@ -37,7 +37,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         }
 
         [Flags]
-        public enum EVRGenericInteraction
+        public enum EVRVisualScriptingInteraction
         {
             RayInteraction = 1,
             Hands = 2
