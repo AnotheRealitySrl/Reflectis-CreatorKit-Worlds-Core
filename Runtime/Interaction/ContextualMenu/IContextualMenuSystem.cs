@@ -12,6 +12,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         IContextualMenuManageable SelectedInteractable { get; }
 
         void CreateMenu(Transform parent = null);
+
+        Task ShowContextualMenu(IContextualMenuManageable manageable);
         Task HideContextualMenu();
         Task HideContextualMenu(IContextualMenuController contextualMenu);
     }
