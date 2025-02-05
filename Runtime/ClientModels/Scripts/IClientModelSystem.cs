@@ -46,7 +46,7 @@ namespace Reflectis.CreatorKit.Core.ClientModels
         #endregion
 
         #region Session
-        public int SessionId { get; }
+        public string SessionId { get; }
         #endregion
 
         //#region Facets
@@ -59,6 +59,14 @@ namespace Reflectis.CreatorKit.Core.ClientModels
         #endregion
 
         float PlayerPingRateSeconds { get; }
+
+        #region Session
+        Task StartSession();
+
+        void EndSession();
+
+        Task<int> JoinWorld(int worldId, int eventId);
+        #endregion
 
         #region Worlds
         /// <summary>
@@ -80,7 +88,7 @@ namespace Reflectis.CreatorKit.Core.ClientModels
 
         Task<List<CMCatalog>> GetWorldCatalogs(int worldId);
 
-        public void DisconnectFromWorld();
+        public void LeaveWorld();
         #endregion
 
         #region Events
@@ -104,7 +112,7 @@ namespace Reflectis.CreatorKit.Core.ClientModels
         /// <summary>
         /// Returns the default event of a world
         /// </summary>
-        Task<CMEvent> GetDefaultWorldEvent();
+        Task<CMEvent> GetDefaultWorldEvent(int worldId);
 
         /// <summary>
         /// Returns the static events
