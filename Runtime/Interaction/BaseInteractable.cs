@@ -51,7 +51,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         public UnityEvent OnInteractableSetupComplete { get; } = new();
 
         [HideInInspector]
-        public bool setupCompleted = false;
+        public bool SetupCompleted { get; private set; } = false;
 
         private void Awake()
         {
@@ -84,7 +84,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
             {
                 await interactable.Setup();
             }
-            setupCompleted = true;
+            SetupCompleted = true;
         }
 
         public void OnHoverEnter()
