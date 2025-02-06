@@ -2,7 +2,7 @@ using System;
 
 using UnityEngine;
 
-namespace Reflectis.ObjectSpawner
+namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
 {
     [Serializable]
     public class SpawnPosition
