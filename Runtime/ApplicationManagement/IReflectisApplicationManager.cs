@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.Core
+namespace Reflectis.CreatorKit.Worlds.Core.ApplicationManagement
 {
     public interface IReflectisApplicationManager : IApplicationManager
     {

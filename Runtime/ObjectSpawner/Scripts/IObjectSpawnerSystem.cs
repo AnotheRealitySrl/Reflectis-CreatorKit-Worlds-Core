@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using UnityEngine;
 
-namespace Reflectis.ObjectSpawner
+namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
 {
     public interface IObjectSpawnerSystem : ISystem
     {

@@ -1,4 +1,4 @@
-namespace Reflectis.ObjectSpawner
+namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
 {
     public interface ISpawnedObjectCallback
     {

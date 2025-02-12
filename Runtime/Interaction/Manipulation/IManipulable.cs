@@ -37,16 +37,5 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
             RayInteraction = 1,
             Hands = 2
         }
-
-        [Flags]
-        public enum EManipulationInput
-        {
-            None = 0,
-            LeftRayInteraction = 1,
-            RightRayInteraction = 2,
-            LeftHand = 4,
-            RightHand = 8,
-            Mouse = 16,
-        }
     }
 }

@@ -1,5 +1,5 @@
 
-namespace Reflectis.ObjectSpawner
+namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
 {
     public abstract class SpawnData
     {
