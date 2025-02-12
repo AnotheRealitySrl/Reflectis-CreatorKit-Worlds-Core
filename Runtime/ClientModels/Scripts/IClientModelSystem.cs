@@ -58,8 +58,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #endregion
         #endregion
 
-        float PlayerPingRateSeconds { get; }
-
         #region Session
         Task StartSession();
 
