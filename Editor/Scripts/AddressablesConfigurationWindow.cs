@@ -12,7 +12,7 @@ using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 
 using UnityEngine;
 
-namespace Reflectis.SDK.CreatorKitEditor
+namespace Reflectis.CreatorKit.Worlds.CoreEditor
 {
     public class AddressablesConfigurationWindow : EditorWindow
     {
@@ -38,7 +38,7 @@ namespace Reflectis.SDK.CreatorKitEditor
         private const string build_target_variable_name = "BuildTarget";
         private const string build_target_variable_value = "[UnityEditor.EditorUserBuildSettings.activeBuildTarget]";
         private const string player_version_override_variable_name = "PlayerVersionOverride";
-        private const string player_version_override_variable_value = "[Reflectis.SDK.CreatorKitEditor.AddressablesBuildScript.PlayerVersionOverride]";
+        private const string player_version_override_variable_value = "[Reflectis.CreatorKit.Worlds.CoreEditor.AddressablesBuildScript.PlayerVersionOverride]";
 
         private const string environments_group_name = "Environments";
         [Obsolete("Thumbnails have to be uploaded from backoffice since Reflectis version 2024.9!")]
@@ -314,7 +314,8 @@ namespace Reflectis.SDK.CreatorKitEditor
                 else
                 {
                     EditorGUILayout.BeginHorizontal();
-                    foreach (var group in settings.groups.Where(x => !x.SchemaTypes.Contains(typeof(PlayerDataGroupSchema)) && x != settings.DefaultGroup))
+                    // Refactor Unity6
+                    foreach (var group in settings.groups.Where(x => !x.SchemaTypes.Contains(typeof(AddressableAssetGroupSchema)) && x != settings.DefaultGroup))
                     {
                         EditorGUILayout.BeginVertical();
                         EditorGUILayout.LabelField($"<b>{group.name}</b>", style);
@@ -522,7 +523,8 @@ namespace Reflectis.SDK.CreatorKitEditor
         private void UpdatePlayerVersion()
         {
             settings.OverridePlayerVersion = playerVersionOverride;
-            settings.ShaderBundleCustomNaming = playerVersionOverride;
+            // Refactor Unity6
+            settings.BuiltInBundleCustomNaming = playerVersionOverride;
 
             SaveChanges();
         }
@@ -555,8 +557,11 @@ namespace Reflectis.SDK.CreatorKitEditor
             return
                 settings.RemoteCatalogLoadPath.GetName(settings) == remote_load_path_variable_name &&
                 settings.RemoteCatalogBuildPath.GetName(settings) == remote_build_path_variable_name &&
-                !settings.BundleLocalCatalog &&
+                // Refactor Unity6
+                //!settings.BundleLocalCatalog &&
                 settings.BuildRemoteCatalog &&
+                // Refactir Unity6
+                settings.EnableJsonCatalog &&
                 settings.CheckForContentUpdateRestrictionsOption
                         == CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions &&
                 settings.MaxConcurrentWebRequests == 3 &&
@@ -565,9 +570,12 @@ namespace Reflectis.SDK.CreatorKitEditor
                 !settings.UniqueBundleIds &&
                 settings.ContiguousBundles &&
                 settings.NonRecursiveBuilding &&
-                settings.ShaderBundleNaming == ShaderBundleNaming.Custom &&
-                settings.ShaderBundleCustomNaming == playerVersionOverride &&
-                settings.MonoScriptBundleNaming == MonoScriptBundleNaming.Disabled &&
+                // Refactor Unity6
+                settings.BuiltInBundleNaming == BuiltInBundleNaming.Custom &&
+                // Refactor Unity6
+                settings.BuiltInBundleCustomNaming == playerVersionOverride &&
+                // Refactor Unity6
+                settings.MonoScriptBundleNaming == MonoScriptBundleNaming.ProjectName &&
                 !settings.DisableVisibleSubAssetRepresentations;
         }
 
@@ -575,8 +583,11 @@ namespace Reflectis.SDK.CreatorKitEditor
         {
             settings.RemoteCatalogLoadPath.SetVariableByName(settings, remote_load_path_variable_name);
             settings.RemoteCatalogBuildPath.SetVariableByName(settings, remote_build_path_variable_name);
-            settings.BundleLocalCatalog = false;
+            // Refactor Unity6
+            //settings.BundleLocalCatalog = false;
             settings.BuildRemoteCatalog = true;
+            // Refactir Unity6
+            settings.EnableJsonCatalog = true;
             settings.CheckForContentUpdateRestrictionsOption = CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions;
             settings.ContentStateBuildPath = string.Empty;
             settings.MaxConcurrentWebRequests = 3;
@@ -585,9 +596,12 @@ namespace Reflectis.SDK.CreatorKitEditor
             settings.UniqueBundleIds = false;
             settings.ContiguousBundles = true;
             settings.NonRecursiveBuilding = true;
-            settings.ShaderBundleNaming = ShaderBundleNaming.Custom;
-            settings.ShaderBundleCustomNaming = playerVersionOverride;
-            settings.MonoScriptBundleNaming = MonoScriptBundleNaming.Disabled;
+            // Refactor Unity6
+            settings.BuiltInBundleNaming = BuiltInBundleNaming.Custom;
+            // Refactor Unity6
+            settings.BuiltInBundleCustomNaming = playerVersionOverride;
+            // Refactor Unity6
+            settings.MonoScriptBundleNaming = MonoScriptBundleNaming.ProjectName;
             settings.DisableVisibleSubAssetRepresentations = false;
             settings.BuildRemoteCatalog = true;
 
