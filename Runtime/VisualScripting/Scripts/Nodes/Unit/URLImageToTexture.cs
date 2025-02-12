@@ -39,10 +39,11 @@ namespace Reflectis.SDK.CreatorKit
 
         protected async override Task AwaitableAction(Flow flow)
         {
+            Image myImage = flow.GetValue<Image>(ImageValue);
             ImageDownloader.DownloadImage(flow.GetValue<string>(ImageURL), (tex) =>
             {
                 sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
-                flow.GetValue<Image>(ImageValue).sprite = sprite;
+                myImage.sprite = sprite;
                 runningFlows.Remove(flow);
             });
         }
