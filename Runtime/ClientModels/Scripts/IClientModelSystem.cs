@@ -1,4 +1,4 @@
-using Reflectis.SDK.Core;
+using Reflectis.SDK.Core.SystemFramework;
 
 using System;
 using System.Collections.Generic;
@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 using UnityEngine.Events;
 
-using static Reflectis.CreatorKit.Core.ClientModels.CMPermission;
+using static Reflectis.CreatorKit.Worlds.Core.ClientModels.CMPermission;
 
-namespace Reflectis.CreatorKit.Core.ClientModels
+namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 {
     public enum FileTypeExt
     {
