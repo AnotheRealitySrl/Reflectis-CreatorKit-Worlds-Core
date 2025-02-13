@@ -36,6 +36,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Shards
         public CMShard CurrentShard { get; }
+        public List<CMShard> CurrentEventShards { get; }
+        public Action onShardsChange { get; set; }
         #endregion
 
         #region Worlds
@@ -86,10 +88,24 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         Task<List<CMCatalog>> GetWorldCatalogs(int worldId);
 
+        public Task KickPlayer(string kickedUserSession);
+
         public void LeaveWorld();
         #endregion
 
         #region Events
+        /// <summary>
+        /// Try to join event with given id at shard shardId
+        /// Id shardId is null the system will try to join the event in any shard
+        /// Response is the shard id where the player has been joined
+        /// if the response is null the join has failed
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="shardId"></param>
+        /// <returns></returns>
+        Task<int?> JoinEvent(int id, int? shardId);
+
+        void LeaveEvent();
 
         void InvalidateEventCache();
         /// <summary>

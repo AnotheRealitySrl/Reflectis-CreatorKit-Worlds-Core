@@ -10,10 +10,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
     {
         [SerializeField] private int eventId;
         [SerializeField] private int shardId;
-        [SerializeField] private string kickerId;
+        [SerializeField] private int kickerId;
 
         public int EventId { get => eventId; set => eventId = value; }
         public int ShardId { get => shardId; set => shardId = value; }
-        public string KickerId { get => kickerId; set => kickerId = value; }
+        public int KickerId { get => kickerId; set => kickerId = value; }
     }
 }
