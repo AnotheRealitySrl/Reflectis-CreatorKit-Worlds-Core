@@ -105,6 +105,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <returns></returns>
         Task<int?> JoinEvent(int id, int? shardId);
 
+        /// <summary>
+        /// Setup current event entering data and starts downloading data for the given event
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <param name="shard"></param>
+        /// <returns></returns>
+        public Task LoadEventShardData(int eventId, int shard);
+
         void LeaveEvent();
 
         void InvalidateEventCache();
@@ -406,19 +414,5 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         Task EnableShard(bool enable);
         #endregion
 
-        #region Shards
-
-        /// <summary>
-        /// Retrieves the current shards of an event.
-        /// </summary>
-        Task<List<CMShard>> GetEventShards(int eventId);
-
-        /// <summary>
-        /// Retrieves the current shards of an event.
-        /// </summary>
-        List<CMShard> GetCachedEventShards(int eventId);
-
-
-        #endregion
     }
 }
