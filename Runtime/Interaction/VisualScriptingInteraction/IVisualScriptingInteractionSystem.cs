@@ -9,6 +9,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 {
     public interface IVisualScriptingInteractionSystem : ISystem
     {
+        IVisualScriptingInteractable SelectedInteractable { get; }
+
         InteractableBehaviourBase SetupInteractableBehaviour(GameObject obj);
         Task SelectInteractable(IVisualScriptingInteractable interactableToDisable);
         Task UnselectCurrentInteractable(IVisualScriptingInteractable interactableToDisable);
