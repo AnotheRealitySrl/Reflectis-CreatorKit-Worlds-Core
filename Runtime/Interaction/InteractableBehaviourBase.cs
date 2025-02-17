@@ -9,7 +9,18 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
     {
         [SerializeField] private bool lockHoverDuringInteraction = true;
 
-        public IInteractable InteractableRef => GetComponentInParent<IInteractable>(true);
+        public IInteractable InteractableRef {
+            get {
+                try
+                {
+                    return GetComponentInParent<IInteractable>(true);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
 
         public abstract bool IsIdleState { get; }
 
@@ -53,7 +64,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 
         public virtual Task ExitInteractionState()
         {
-            InteractableRef.InteractionState = IInteractable.EInteractionState.Idle;
+            if (InteractableRef != null)
+            {
+                InteractableRef.InteractionState = IInteractable.EInteractionState.Idle;
+            }
             return Task.CompletedTask;
         }
     }
