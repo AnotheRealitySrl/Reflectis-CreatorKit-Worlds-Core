@@ -90,7 +90,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         public Task KickPlayer(string kickedUserSession);
 
-        public void LeaveWorld();
+        //public void LeaveWorld();
         #endregion
 
         #region Events
