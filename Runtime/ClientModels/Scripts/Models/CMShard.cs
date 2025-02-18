@@ -34,6 +34,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
             this.eventId = eventId;
             this.currentParticipants = currentParticipants;
             this.maxParticipants = maxParticipants;
+            this.isClosed = isClosed;
         }
     }
 }
