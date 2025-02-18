@@ -1,5 +1,16 @@
 # Release notes
 
+## v4.1.0
+
+### Added
+
+- Added CreatorKitUpgradeWindow to allow migrate scenes to Reflectis Worlds 2025.1.x versions.
+
+### Fixed 
+
+- Add `SelectedInteractable` reference in `IVisualScriptingInteractionSystem` interface.
+- Added extra checks to prevent a null reference in case a visual scripting interactable has already been removed from scene.
+
 ## v4.0.0
 
 ### Changed
