@@ -9,9 +9,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
     public class CMKickData
     {
         [SerializeField] private int eventId;
-        [SerializeField] private int shardId;
+        [SerializeField] private int shardNumber;
 
         public int EventId { get => eventId; set => eventId = value; }
-        public int ShardId { get => shardId; set => shardId = value; }
+        public int ShardNumber { get => shardNumber; set => shardNumber = value; }
     }
 }
