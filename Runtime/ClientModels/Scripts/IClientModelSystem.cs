@@ -36,6 +36,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Shards
         public CMShard CurrentShard { get; }
+        public List<CMShard> CurrentEventShards { get; }
+        public Action onShardsChange { get; set; }
         #endregion
 
         #region Worlds
@@ -46,7 +48,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #endregion
 
         #region Session
-        public int SessionId { get; }
+        public string SessionId { get; }
         #endregion
 
         //#region Facets
@@ -58,16 +60,27 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #endregion
         #endregion
 
-        float PlayerPingRateSeconds { get; }
+        #region Session
+        Task StartSession();
+
+        void EndSession();
+
+        Task<int> JoinWorld(int worldId, int eventId);
+        #endregion
 
         #region Worlds
-
-        public Action<List<CMWorldCCU>> onWorldListUpdate { get; set; }
+        /// <summary>
+        /// Action called on changes on online users.
+        /// The first int represent the worldId the second one the Users count
+        /// </summary>
+        public Action<int /*worldID*/, int /*usersCount*/> onOnlineUsersPerWorld { get; set; }
 
         /// <summary>
         /// Returns all the available worlds
         /// </summary>
         Task<List<CMWorld>> GetAllWorlds();
+
+        void ConnectToOnlineUsersPerWorld();
 
         Task<CMWorld> GetWorld(int worldId);
 
@@ -75,12 +88,32 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         Task<List<CMCatalog>> GetWorldCatalogs(int worldId);
 
-        Task ConnectToWorldCCU();
+        public Task KickPlayer(string kickedUserSession);
 
-        Task DisconnectFromWorldCCU();
+        //public void LeaveWorld();
         #endregion
 
         #region Events
+        /// <summary>
+        /// Try to join event with given id at shard shardId
+        /// Id shardId is null the system will try to join the event in any shard
+        /// Response is the shard id where the player has been joined
+        /// if the response is null the join has failed
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="shardId"></param>
+        /// <returns></returns>
+        Task<int?> JoinEvent(int id, int? shardId);
+
+        /// <summary>
+        /// Setup current event entering data and starts downloading data for the given event
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <param name="shard"></param>
+        /// <returns></returns>
+        public Task LoadEventShardData(int eventId, int shard);
+
+        void LeaveEvent();
 
         void InvalidateEventCache();
         /// <summary>
@@ -101,7 +134,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <summary>
         /// Returns the default event of a world
         /// </summary>
-        Task<CMEvent> GetDefaultWorldEvent();
+        Task<CMEvent> GetDefaultWorldEvent(int worldId);
 
         /// <summary>
         /// Returns the static events
@@ -373,37 +406,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Online presence
         UnityEvent OnlineUsersUpdated { get; }
-        Task<List<CMOnlinePresence>> ForceOnlineUsersRefresh();
         List<CMOnlinePresence> GetOnlineUsers();
         CMOnlinePresence GetOnlineUser(int userId);
         bool IsOnlineUser(int userId);
-        Task<EPingStatus> PingMyOnlinePresence(int? worldId, int? eventId, int? shardId, bool? isShardClosed, bool isMultiplayer);
-
-        Task<List<CMOnlinePresence>> GetUsersInEvent(int eventId, bool forceRefresh = true);
-
-        /// <summary>
-        /// If value the cache variables that have to be auto refreshed will start their refresh
-        /// otherwise they will stop refreshing
-        /// </summary>
-        /// <param name="value"></param>
-        Task EnableCacheAutoRefresh(bool value);
-
+        List<CMOnlinePresence> GetUsersInEvent(int eventId);
         Task<bool> CheckMaxCCU(int worldId);
+        Task EnableShard(bool enable);
         #endregion
 
-        #region Shards
-
-        /// <summary>
-        /// Retrieves the current shards of an event.
-        /// </summary>
-        Task<List<CMShard>> GetEventShards(int eventId);
-
-        /// <summary>
-        /// Retrieves the current shards of an event.
-        /// </summary>
-        List<CMShard> GetCachedEventShards(int eventId);
-
-
-        #endregion
     }
 }

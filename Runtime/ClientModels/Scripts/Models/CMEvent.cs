@@ -36,6 +36,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private bool canWrite;
         [SerializeField] private bool startingPoint;
         [SerializeField] private bool staticEvent;
+        [SerializeField] private bool isLimited;
 
         public int Id { get => id; set => id = value; }
         public string Title { get => title; set => title = value; }
@@ -83,8 +84,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public bool StartingPoint { get => startingPoint; set => startingPoint = value; }
         public bool StaticEvent { get => staticEvent; set => staticEvent = value; }
         public List<CMPermission> Permissions { get => permissions; set => permissions = value; }
-
-        public bool IsLimited { get => maxParticipants != -1 && maxParticipants <= CMShard.maxShardCapacity; }
+        public bool IsLimited { get => isLimited; set => isLimited = value; }
     }
 
 }

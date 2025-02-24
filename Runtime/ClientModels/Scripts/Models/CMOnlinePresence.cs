@@ -15,6 +15,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         }
 
         [SerializeField] private int id;
+        [SerializeField] private string sessionId;
         [SerializeField] private string nickname;
         [SerializeField] private int code;
         [SerializeField] private string email;
@@ -27,6 +28,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private List<CMTag> tags;
 
         public int Id { get => id; set => id = value; }
+        public string SessionId { get => sessionId; set => sessionId = value; }
         public string Nickname
         {
             get => nickname; set
@@ -62,5 +64,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
                 return color;
             }
         }
+
     }
 }
