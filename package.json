@@ -20,6 +20,6 @@
     }
   ],
   "dependencies": {
-    "com.unity.addressables": "1.21.20"
+    "com.unity.addressables": "2.2.2"
   }
 }
