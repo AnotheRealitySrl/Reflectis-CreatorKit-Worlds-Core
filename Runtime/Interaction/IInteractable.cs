@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 {
@@ -30,10 +29,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         List<IInteractableBehaviour> InteractableBehaviours { get; }
         EInteractionState InteractionState { get; set; }
 
+        bool LockHoverDuringInteraction { get; }
+
         GameObject GameObjectRef { get; }
         List<Collider> InteractionColliders { get; }
-
-        UnityEvent OnInteractableSetupComplete { get; }
 
         Task Setup();
         void OnHoverEnter();

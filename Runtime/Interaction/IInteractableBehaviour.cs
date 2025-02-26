@@ -10,7 +10,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
     {
         IInteractable InteractableRef { get; }
         bool IsIdleState { get; }
-        bool LockHoverDuringInteraction { get; }
         public EBlockedState CurrentBlockedState { get; set; }
 
         UnityEvent<EBlockedState> OnCurrentBlockedChanged { get; }
