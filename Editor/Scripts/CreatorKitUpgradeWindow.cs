@@ -13,11 +13,12 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
         private readonly List<KeyValuePair<string, string>> stringsToReplace = new()
         {
             new KeyValuePair<string, string>("Reflectis.PLG.Graphs", "Reflectis.SDK.Graphs"),
-            new KeyValuePair<string, string>("Reflectis.PLG.Tasks", "Reflectis.SDK.Tasks"),
             new KeyValuePair<string, string>("Reflectis.PLG.TasksReflectis", "Reflectis.CreatorKit.Worlds.Tasks"),
+            new KeyValuePair<string, string>("Reflectis.PLG.Tasks", "Reflectis.SDK.Tasks"),
             new KeyValuePair<string, string>("Reflectis.SDK.CreatorKit", "Reflectis.CreatorKit.Worlds.VisualScripting"),
             new KeyValuePair<string, string>("Reflectis.SDK.InteractionNew", "Reflectis.CreatorKit.Worlds.VisualScripting"),
             new KeyValuePair<string, string>("GenericInteract", "VisualScriptingInteract"),
+            new KeyValuePair<string, string>("VisualScripting.Diagnostic", "Analytics.Analytic"),
 
             // Splines
             new KeyValuePair<string, string>("Reflectis.CreatorKit.Worlds.VisualScripting.Splines.ExposeSplineAnimateUnit", "ExposeSplineAnimateUnit"),
