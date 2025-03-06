@@ -21,13 +21,15 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
             new KeyValuePair<string, string>("VisualScripting.Diagnostic", "Analytics.Analytic"),
 
             // Splines
-            new KeyValuePair<string, string>("Reflectis.CreatorKit.Worlds.VisualScripting.Splines.ExposeSplineAnimateUnit", "ExposeSplineAnimateUnit"),
-            new KeyValuePair<string, string>("Reflectis.CreatorKit.Worlds.VisualScripting.Splines.ExposeSplineContainerUnit", "ExposeSplineContainerUnit"),
-            new KeyValuePair<string, string>("Reflectis.CreatorKit.Worlds.VisualScripting.Splines.GetSplineAnimateUnit", "GetSplineAnimateUnit"),
-            new KeyValuePair<string, string>("Reflectis.CreatorKit.Worlds.VisualScripting.Splines.GetSplineContainerUnit", "GetSplineContainerUnit"),
-            new KeyValuePair<string, string>("Reflectis.CreatorKit.Worlds.VisualScripting.Splines.SetSplineAnimateContainerUnit", "SetSplineAnimateContainerUnit"),
-            new KeyValuePair<string, string>("Reflectis.CreatorKit.Worlds.VisualScripting.Splines.SetSplineAnimateMaxSpeedUnit", "SetSplineAnimateMaxSpeedUnit"),
-            new KeyValuePair<string, string>("Reflectis.CreatorKit.Worlds.VisualScripting.Splines.SplineAnimatePlayCoroutineUnit", "SplineAnimatePlayCoroutineUnit"),
+            new KeyValuePair<string, string>("ExposeSplineAnimateUnit", "Reflectis.CreatorKit.Worlds.VisualScripting.Splines.ExposeSplineAnimateUnit"),
+            new KeyValuePair<string, string>("ExposeSplineContainerUnit", "Reflectis.CreatorKit.Worlds.VisualScripting.Splines.ExposeSplineContainerUnit"),
+            new KeyValuePair<string, string>("GetSplineAnimateUnit", "Reflectis.CreatorKit.Worlds.VisualScripting.Splines.GetSplineAnimateUnit"),
+            new KeyValuePair<string, string>("GetSplineContainerUnit", "Reflectis.CreatorKit.Worlds.VisualScripting.Splines.GetSplineContainerUnit"),
+            new KeyValuePair<string, string>("SetSplineAnimateContainerUnit", "Reflectis.CreatorKit.Worlds.VisualScripting.Splines.SetSplineAnimateContainerUnit"),
+            new KeyValuePair<string, string>("SetSplineAnimateMaxSpeedUnit", "Reflectis.CreatorKit.Worlds.VisualScripting.Splines.SetSplineAnimateMaxSpeedUnit"),
+            new KeyValuePair<string, string>("SplineAnimatePlayCoroutineUnit", "Reflectis.CreatorKit.Worlds.VisualScripting.Splines.SplineAnimatePlayCoroutineUnit"),
+            // Multiple runs of the update window
+            new KeyValuePair<string, string>("Reflectis.CreatorKit.Worlds.VisualScripting.Splines.Reflectis.CreatorKit.Worlds.VisualScripting.Splines.", "Reflectis.CreatorKit.Worlds.VisualScripting.Splines."),
         };
 
         private readonly List<string> extensions = new()
