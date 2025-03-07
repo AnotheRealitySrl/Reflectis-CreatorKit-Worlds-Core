@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Reflectis.CreatorKit.Worlds.Core.Editor;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -192,6 +194,7 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
                 //    UpdatePlayerVersion();
                 //}
 
+                ShowAddressablesBundlesTest();
                 ShowAddressablesBundles();
 
                 EditorGUILayout.HelpBox("Catalog names should be univoque within the same world. If a new catalog is loaded through the Back office " +
@@ -381,6 +384,37 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
                 }
 
                 GUILayout.EndScrollView();
+            }
+        }
+
+
+        private void ShowAddressablesBundlesTest()
+        {
+            GUIStyle style = new(EditorStyles.label)
+            {
+                richText = true,
+            };
+
+            string addressablesBundleScriptableObjectsStr = AssetDatabase.FindAssets("t:" + typeof(SceneListScriptableObject).Name).ToList()[0];
+            string path = AssetDatabase.GUIDToAssetPath(addressablesBundleScriptableObjectsStr);
+            SceneListScriptableObject sceneList = AssetDatabase.LoadAssetAtPath<SceneListScriptableObject>(path);
+
+            if (sceneList != null)
+            {
+                SerializedObject serializedObject = new(sceneList);
+                SerializedProperty property = serializedObject.GetIterator();
+                property.NextVisible(true);
+
+                while (property.NextVisible(false))
+                {
+                    EditorGUILayout.PropertyField(property, true);
+                }
+
+                serializedObject.ApplyModifiedProperties();
+            }
+            else
+            {
+                EditorGUILayout.HelpBox("SceneListScriptableObject not found at the specified path.", MessageType.Error);
             }
         }
 
