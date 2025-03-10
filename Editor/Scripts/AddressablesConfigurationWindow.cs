@@ -14,6 +14,8 @@ using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 
 using UnityEngine;
 
+using static Reflectis.CreatorKit.Worlds.Core.Editor.SceneListScriptableObject;
+
 namespace Reflectis.CreatorKit.Worlds.CoreEditor
 {
     public class AddressablesConfigurationWindow : EditorWindow
@@ -388,6 +390,7 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
         }
 
 
+        private List<SceneConfiguration> sceneConfiguration;
         private void ShowAddressablesBundlesTest()
         {
             GUIStyle style = new(EditorStyles.label)
@@ -398,6 +401,8 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
             string addressablesBundleScriptableObjectsStr = AssetDatabase.FindAssets("t:" + typeof(SceneListScriptableObject).Name).ToList()[0];
             string path = AssetDatabase.GUIDToAssetPath(addressablesBundleScriptableObjectsStr);
             SceneListScriptableObject sceneList = AssetDatabase.LoadAssetAtPath<SceneListScriptableObject>(path);
+
+            sceneConfiguration ??= sceneList.SceneConfigurations;
 
             if (sceneList != null)
             {
@@ -415,6 +420,17 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
             else
             {
                 EditorGUILayout.HelpBox("SceneListScriptableObject not found at the specified path.", MessageType.Error);
+            }
+
+            if (GUILayout.Button("Build Addressables"))
+            {
+                foreach (var scene in sceneConfiguration)
+                {
+                    if (scene.IncludeInBuild)
+                    {
+                        CreateAddressableGroup(scene);
+                    }
+                }
             }
         }
 
@@ -770,6 +786,26 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
             });
 
             SaveSettings();
+        }
+
+        private void CreateAddressableGroup(SceneConfiguration configuration)
+        {
+            AddressableAssetGroup assetGroup = settings.FindGroup(environments_group_name);
+
+            foreach (AddressableAssetEntry entry in assetGroup.entries)
+            {
+                bool success = settings.RemoveAssetEntry(entry.guid);
+            }
+
+            AssetDatabase.TryGetGUIDAndLocalFileIdentifier(configuration.Scene, out string guid, out long localId);
+            AddressableAssetEntry addressableEntry = settings.CreateOrMoveEntry(guid, assetGroup);
+
+            string addressableAddress = Regex.Replace(configuration.Scene.name.ToLower(), alphanumeric_lowercase_string_pattern_negated, string.Empty);
+            addressableEntry.SetAddress(addressableAddress);
+
+            settings.OverridePlayerVersion = addressableAddress;
+
+            AddressablesBuildScript.BuildAddressablesForAllPlatforms();
         }
 
         //Checks if there is an env with no thumbnail and viceversa
