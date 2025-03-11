@@ -1,6 +1,5 @@
 ﻿using Reflectis.CreatorKit.Worlds.Core.Editor;
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -50,11 +49,13 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
         private GUIStyle _toolbarButtonStyle;
         private Vector2 scrollPosition = Vector2.zero;
 
-        private List<SceneConfiguration> sceneConfigurations;
+        private SceneListScriptableObject sceneConfigurations;
 
+        private bool addressablesSettingsFoldout;
         private bool topLevelSettingsFoldout;
         private bool profileSettingsFoldout;
         private bool groupsSettingsFoldout;
+
 
         #endregion
 
@@ -75,8 +76,14 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
             }
         }
 
+        GUIStyle titleStyle = new GUIStyle(GUI.skin.label);
+
         private void OnGUI()
         {
+            titleStyle.fontSize = 20;
+            titleStyle.fontStyle = FontStyle.Bold;
+            titleStyle.alignment = TextAnchor.MiddleCenter;
+
             DisplayAddressablesSettings();
         }
 
@@ -132,6 +139,10 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
             {
                 richText = true,
             };
+            GUIStyle dropdownStyle = new(EditorStyles.foldoutHeader)
+            {
+                richText = true,
+            };
 
             if (!settings)
             {
@@ -150,153 +161,15 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
             {
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, false);
 
-                #region Top-level settings
-
-                EditorGUILayout.BeginVertical();
-
-                EditorGUILayout.BeginHorizontal();
-                topLevelSettingsFoldout = EditorGUILayout.Foldout(topLevelSettingsFoldout, $"{(IsAddressablesSettingsConfigured() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} Top-level settings", true, style);
-                if (GUILayout.Button("Select", GUILayout.ExpandWidth(false)))
-                {
-                    EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Settings");
-                }
-                EditorGUILayout.EndHorizontal();
-
-                if (topLevelSettingsFoldout)
-                {
-                    EditorGUILayout.BeginVertical();
-
-                    string activeProfileName = settings.profileSettings.GetProfileName(settings.activeProfileId);
-                    EditorGUILayout.LabelField($"Active addressables profile: <b>{activeProfileName}</b>", style);
-
-                    EditorGUILayout.EndVertical();
-                }
-
-                EditorGUILayout.EndVertical();
-
-                EditorGUILayout.Space();
-
-                #endregion
-
-                #region Profiles settings
-
-                EditorGUILayout.BeginVertical();
-
-                EditorGUILayout.BeginHorizontal();
-                profileSettingsFoldout = EditorGUILayout.Foldout(profileSettingsFoldout, $"{(IsProfileConfigured() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} Profile settings", true, style);
-                if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
-                {
-                    EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Profiles");
-                }
-                EditorGUILayout.EndHorizontal();
-
-                if (profileSettingsFoldout)
-                {
-                    EditorGUILayout.BeginVertical();
-
-                    string remoteBuildPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name);
-                    bool isRemoteBuildPathConfigured = remoteBuildPath == this.remoteBuildPath;
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField($"{(isRemoteBuildPathConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-                    EditorGUILayout.LabelField($"<b>{remote_build_path_variable_name}: </b>{remoteBuildPath}", style);
-                    EditorGUILayout.EndHorizontal();
-
-                    string remoteLoadPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_load_path_variable_name);
-                    bool isRemoteLoadPathConfigured = remoteLoadPath == this.remoteLoadPath;
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField($"{(isRemoteLoadPathConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-                    EditorGUILayout.LabelField($"<b>{remote_load_path_variable_name}: </b>{remoteLoadPath}", style);
-                    EditorGUILayout.EndHorizontal();
-
-                    string buildTarget = settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name);
-                    bool isBuildTargetConfigured = buildTarget == build_target_variable_value;
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField($"{(isBuildTargetConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-                    EditorGUILayout.LabelField($"<b>{build_target_variable_name}: </b>{buildTarget}", style);
-                    EditorGUILayout.EndHorizontal();
-
-                    string playerVersionOverrideVariable = settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name);
-                    bool isPlayerVersionOverrideConfiugred = playerVersionOverrideVariable == player_version_override_variable_value;
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField($"{(isPlayerVersionOverrideConfiugred ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-                    EditorGUILayout.LabelField($"<b>{player_version_override_variable_name}: </b>{playerVersionOverrideVariable}", style);
-                    EditorGUILayout.EndHorizontal();
-
-                    EditorGUILayout.EndVertical();
-                }
-
-                EditorGUILayout.EndVertical();
-
-                EditorGUILayout.Space();
-
-
-                #endregion
-
-                #region Groups settings
-
-                EditorGUILayout.BeginVertical();
-
-                EditorGUILayout.BeginHorizontal();
-                groupsSettingsFoldout = EditorGUILayout.Foldout(groupsSettingsFoldout, $"{(AreAddressablesGroupsConfigured() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} Groups settings", true, style);
-                if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
-                {
-                    EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Groups");
-                }
-                EditorGUILayout.EndHorizontal();
-
-                if (groupsSettingsFoldout)
-                {
-                    EditorGUILayout.BeginVertical();
-
-                    foreach (var group in settings.groups)
-                    {
-                        EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
-
-                        EditorGUILayout.LabelField($"{(IsAddresableGroupConfigured(group) ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} {group.Name}", style);
-                        if (GUILayout.Button("Select", GUILayout.ExpandWidth(false)))
-                        {
-                            Selection.activeObject = group;
-                        }
-
-                        EditorGUILayout.EndHorizontal();
-                    }
-
-                    EditorGUILayout.EndVertical();
-                }
-
-                EditorGUILayout.EndVertical();
-
-                EditorGUILayout.Space();
-
-                #endregion
-
-                if (!IsAddressablesSettingsConfigured() || !IsProfileConfigured() || !AreAddressablesGroupsConfigured())
-                {
-                    if (GUILayout.Button("Configure addressables settings", EditorStyles.miniButtonMid))
-                    {
-                        ConfigureAddressablesSettings();
-                        ConfigureProfile();
-                        ConfigureAddressablesGroups();
-                    }
-                }
-                else
-                {
-                    EditorGUILayout.LabelField("<color=green>Addressables settings are configured properly.</color>", style);
-                }
-
-                CreateSeparator();
-
                 #region Scene Configuration
 
                 string addressablesBundleScriptableObjectsStr = AssetDatabase.FindAssets("t:" + typeof(SceneListScriptableObject).Name).ToList()[0];
                 string path = AssetDatabase.GUIDToAssetPath(addressablesBundleScriptableObjectsStr);
-                SceneListScriptableObject sceneList = AssetDatabase.LoadAssetAtPath<SceneListScriptableObject>(path);
+                sceneConfigurations = AssetDatabase.LoadAssetAtPath<SceneListScriptableObject>(path);
 
-                sceneConfigurations ??= sceneList.SceneConfigurations;
-
-                if (sceneList != null)
+                if (sceneConfigurations != null)
                 {
-                    SerializedObject serializedObject = new(sceneList);
+                    SerializedObject serializedObject = new(sceneConfigurations);
                     SerializedProperty property = serializedObject.GetIterator();
                     property.NextVisible(true);
 
@@ -309,10 +182,9 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
                 }
                 else
                 {
-                    EditorGUILayout.HelpBox("SceneListScriptableObject not found at the specified path.", MessageType.Error);
+
                 }
 
-                CreateSeparator();
                 EditorGUILayout.Space();
 
                 if (IsAddressablesSettingsConfigured() && IsProfileConfigured() && AreAddressablesGroupsConfigured() /*&& IsAddressablesEntriesValid()*/)
@@ -324,7 +196,150 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
                 }
                 else
                 {
+                    EditorGUILayout.BeginVertical();
+
                     EditorGUILayout.LabelField("<color=red>There are some configuration issue in the addressables. Please fix them before building.</color>", style);
+
+                    if (GUILayout.Button("Fix addressables configuration", EditorStyles.miniButtonMid))
+                    {
+                        ConfigureAddressablesSettings();
+                        ConfigureProfile();
+                        ConfigureAddressablesGroups();
+                    }
+
+                    EditorGUILayout.EndVertical();
+                }
+
+                EditorGUILayout.Space();
+                CreateSeparator();
+                EditorGUILayout.Space();
+
+                #endregion
+
+                #region Addressables settings configuration
+
+                addressablesSettingsFoldout = EditorGUILayout.Foldout(addressablesSettingsFoldout, $" Show advanced addressables configurations", true, dropdownStyle);
+
+                if (addressablesSettingsFoldout)
+                {
+                    #region Top-level settings
+
+                    EditorGUILayout.BeginVertical();
+
+                    EditorGUILayout.BeginHorizontal();
+                    topLevelSettingsFoldout = EditorGUILayout.Foldout(topLevelSettingsFoldout, $"{(IsAddressablesSettingsConfigured() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} Top-level settings", true, dropdownStyle);
+                    if (GUILayout.Button("Select", GUILayout.ExpandWidth(false)))
+                    {
+                        EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Settings");
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    if (topLevelSettingsFoldout)
+                    {
+                        EditorGUILayout.BeginVertical(new GUIStyle { margin = new RectOffset(20, 0, 0, 0) });
+
+                        string activeProfileName = settings.profileSettings.GetProfileName(settings.activeProfileId);
+                        EditorGUILayout.LabelField($"Active addressables profile: <b>{activeProfileName}</b>", style);
+
+                        EditorGUILayout.EndVertical();
+                    }
+
+                    EditorGUILayout.EndVertical();
+
+                    EditorGUILayout.Space();
+
+                    #endregion
+
+                    #region Profiles settings
+
+                    EditorGUILayout.BeginVertical();
+
+                    EditorGUILayout.BeginHorizontal();
+                    profileSettingsFoldout = EditorGUILayout.Foldout(profileSettingsFoldout, $"{(IsProfileConfigured() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} Profile settings", true, dropdownStyle);
+                    if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
+                    {
+                        EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Profiles");
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    if (profileSettingsFoldout)
+                    {
+                        EditorGUILayout.BeginVertical(new GUIStyle { margin = new RectOffset(20, 0, 0, 0) });
+
+                        string remoteBuildPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name);
+                        bool isRemoteBuildPathConfigured = remoteBuildPath == this.remoteBuildPath;
+                        EditorGUILayout.BeginHorizontal();
+                        EditorGUILayout.LabelField($"{(isRemoteBuildPathConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
+                        EditorGUILayout.LabelField($"<b>{remote_build_path_variable_name}: </b>{remoteBuildPath}", style);
+                        EditorGUILayout.EndHorizontal();
+
+                        string remoteLoadPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_load_path_variable_name);
+                        bool isRemoteLoadPathConfigured = remoteLoadPath == this.remoteLoadPath;
+                        EditorGUILayout.BeginHorizontal();
+                        EditorGUILayout.LabelField($"{(isRemoteLoadPathConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
+                        EditorGUILayout.LabelField($"<b>{remote_load_path_variable_name}: </b>{remoteLoadPath}", style);
+                        EditorGUILayout.EndHorizontal();
+
+                        string buildTarget = settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name);
+                        bool isBuildTargetConfigured = buildTarget == build_target_variable_value;
+                        EditorGUILayout.BeginHorizontal();
+                        EditorGUILayout.LabelField($"{(isBuildTargetConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
+                        EditorGUILayout.LabelField($"<b>{build_target_variable_name}: </b>{buildTarget}", style);
+                        EditorGUILayout.EndHorizontal();
+
+                        string playerVersionOverrideVariable = settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name);
+                        bool isPlayerVersionOverrideConfiugred = playerVersionOverrideVariable == player_version_override_variable_value;
+                        EditorGUILayout.BeginHorizontal();
+                        EditorGUILayout.LabelField($"{(isPlayerVersionOverrideConfiugred ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
+                        EditorGUILayout.LabelField($"<b>{player_version_override_variable_name}: </b>{playerVersionOverrideVariable}", style);
+                        EditorGUILayout.EndHorizontal();
+
+                        EditorGUILayout.EndVertical();
+                    }
+
+                    EditorGUILayout.EndVertical();
+
+                    EditorGUILayout.Space();
+
+                    #endregion
+
+                    #region Groups settings
+
+                    EditorGUILayout.BeginVertical();
+
+                    EditorGUILayout.BeginHorizontal();
+                    groupsSettingsFoldout = EditorGUILayout.Foldout(groupsSettingsFoldout, $"{(AreAddressablesGroupsConfigured() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} Groups settings", true, dropdownStyle);
+                    if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
+                    {
+                        EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Groups");
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    if (groupsSettingsFoldout)
+                    {
+                        EditorGUILayout.BeginVertical(new GUIStyle { margin = new RectOffset(20, 0, 0, 0) });
+
+                        foreach (var group in settings.groups)
+                        {
+                            EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
+
+                            EditorGUILayout.LabelField($"{(IsAddresableGroupConfigured(group) ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} {group.Name}", style);
+                            if (GUILayout.Button("Select", GUILayout.ExpandWidth(false)))
+                            {
+                                Selection.activeObject = group;
+                            }
+
+                            EditorGUILayout.EndHorizontal();
+                        }
+
+                        EditorGUILayout.EndVertical();
+                    }
+
+                    EditorGUILayout.EndVertical();
+
+                    EditorGUILayout.Space();
+
+                    #endregion
                 }
 
                 #endregion
@@ -439,9 +454,7 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
         private bool AreAddressablesGroupsConfigured()
         {
             bool configured = true;
-
             settings.groups.ForEach(group => configured &= IsAddresableGroupConfigured(group));
-
             return configured;
         }
 
@@ -552,7 +565,7 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
                 bool success = settings.RemoveAssetEntry(entry.guid);
             }
 
-            foreach (var scene in sceneConfigurations)
+            foreach (var scene in sceneConfigurations.SceneConfigurations)
             {
                 if (scene.IncludeInBuild)
                 {
