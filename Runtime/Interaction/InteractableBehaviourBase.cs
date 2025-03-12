@@ -51,22 +51,18 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 
         public abstract Task Setup();
 
-        public abstract void OnHoverStateEntered();
-        public abstract void OnHoverStateExited();
 
-        public virtual Task EnterInteractionState()
+        public void EnterInteractionState()
         {
-            InteractableRef.InteractionState = IInteractable.EInteractionState.Interaction;
-            return Task.CompletedTask;
+            InteractableRef.IsInteracted = true;
         }
 
-        public virtual Task ExitInteractionState()
+        public void ExitInteractionState()
         {
             if (InteractableRef != null)
             {
-                InteractableRef.InteractionState = IInteractable.EInteractionState.Idle;
+                InteractableRef.IsInteracted = false;
             }
-            return Task.CompletedTask;
         }
     }
 }
