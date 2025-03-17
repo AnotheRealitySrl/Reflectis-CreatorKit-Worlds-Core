@@ -16,7 +16,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         EVisualScriptingInteractableState CurrentInteractionState { get; }
         bool SkipSelectState { get; }
 
-        Task Interact();
+        public Task EnterInteractionState();
+        public Task ExitInteractionState();
+        public Task Interact();
 
         [Flags]
         public enum EVisualScriptingInteractableState

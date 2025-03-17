@@ -55,7 +55,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 
         UnityEvent<EBlockedState> OnCurrentBlockedChanged { get; }
 
-        Task Setup(bool boundingBox, List<Collider> customColliders, bool submeshes);
+        Task Setup(bool submeshes);
         void EnableColliders(bool value);
     }
 }

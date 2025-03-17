@@ -7,6 +7,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 {
     public abstract class InteractableBehaviourBase : MonoBehaviour, IInteractableBehaviour
     {
+        [SerializeField]
+        public bool setupOnAwake;
+
         public IInteractable InteractableRef
         {
             get
@@ -21,6 +24,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
                 }
             }
         }
+        protected abstract bool needSubmeshes { get; }
 
         public abstract bool IsIdleState { get; }
 
@@ -51,18 +55,28 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 
         public abstract Task Setup();
 
-
-        public void EnterInteractionState()
+        protected virtual async void Awake()
         {
-            InteractableRef.IsInteracted = true;
-        }
-
-        public void ExitInteractionState()
-        {
-            if (InteractableRef != null)
+            if (setupOnAwake)
             {
-                InteractableRef.IsInteracted = false;
+                await InteractableRef.Setup(needSubmeshes);
+                await Setup();
             }
         }
+
+
+
+        //public void EnterInteractionState()
+        //{
+        //    InteractableRef.IsInteracted = true;
+        //}
+
+        //public void ExitInteractionState()
+        //{
+        //    if (InteractableRef != null)
+        //    {
+        //        InteractableRef.IsInteracted = false;
+        //    }
+        //}
     }
 }
