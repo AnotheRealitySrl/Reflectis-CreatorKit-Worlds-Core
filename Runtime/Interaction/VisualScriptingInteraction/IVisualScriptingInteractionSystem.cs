@@ -1,8 +1,6 @@
 using Reflectis.SDK.Core.SystemFramework;
 
 using System.Threading.Tasks;
-
-using UnityEngine;
 using UnityEngine.Events;
 
 namespace Reflectis.CreatorKit.Worlds.Core.Interaction
@@ -10,8 +8,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
     public interface IVisualScriptingInteractionSystem : ISystem
     {
         IVisualScriptingInteractable SelectedInteractable { get; }
-
-        InteractableBehaviourBase SetupInteractableBehaviour(GameObject obj);
         Task SelectInteractable(IVisualScriptingInteractable interactableToDisable);
         Task UnselectCurrentInteractable(IVisualScriptingInteractable interactableToDisable);
         void UnselectCurrentInteractable();
