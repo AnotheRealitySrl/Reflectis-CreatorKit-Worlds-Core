@@ -19,6 +19,7 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
             new KeyValuePair<string, string>("Reflectis.SDK.InteractionNew", "Reflectis.CreatorKit.Worlds.VisualScripting"),
             new KeyValuePair<string, string>("GenericInteract", "VisualScriptingInteract"),
             new KeyValuePair<string, string>("VisualScripting.Diagnostic", "Analytics.Analytic"),
+            new KeyValuePair<string, string>("Reflectis.SDK.Diagnostic", "Reflectis.CreatorKit.Worlds.Analytics"),
 
             // Splines
             new KeyValuePair<string, string>("ExposeSplineAnimateUnit", "Reflectis.CreatorKit.Worlds.VisualScripting.Splines.ExposeSplineAnimateUnit"),
