@@ -37,9 +37,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 
         bool IsHovered { get; set; }
 
-        bool IsInteracted { get; set; }
-
-        public bool LockHoverDuringInteraction { get; set; }
         /// <summary>
         /// Gameobject that rapresents the bounding box of the interactable entity.
         /// The scale of this object is used to calculate the size of the interactable entity.
@@ -54,8 +51,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         public bool IsBlocked { get; }
 
         UnityEvent<EBlockedState> OnCurrentBlockedChanged { get; }
-
-        Vector3 ObjectCenter { get; }
 
         Task Setup(bool submeshes);
         void EnableColliders(bool value);
