@@ -55,6 +55,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 
         UnityEvent<EBlockedState> OnCurrentBlockedChanged { get; }
 
+        Vector3 ObjectCenter { get; }
+
         Task Setup(bool submeshes);
         void EnableColliders(bool value);
     }
