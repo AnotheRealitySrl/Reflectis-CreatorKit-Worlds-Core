@@ -9,14 +9,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
     public interface IContextualMenuSystem : ISystem
     {
         IContextualMenuController ContextualMenuInstance { get; }
-        IContextualMenuManageable SelectedInteractable { get; }
+        IContextualMenuManageable SelectedContextualMenuInteractable { get; }
 
         void CreateMenu(Transform parent = null);
         Task DestroyContextualMenu();
 
         Task ShowContextualMenu(IContextualMenuManageable manageable);
         Task HideContextualMenu();
-        Task HideContextualMenu(IContextualMenuController contextualMenu);
 
         void ResetContextualMenuCache();
     }

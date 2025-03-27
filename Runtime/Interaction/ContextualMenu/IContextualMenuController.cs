@@ -6,7 +6,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
     {
         Task Hide();
         void Setup(IContextualMenuManageable manageable);
-        Task Show();
+        Task Show(IContextualMenuManageable manageable);
         void Unsetup();
     }
 }
