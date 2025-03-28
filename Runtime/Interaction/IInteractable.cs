@@ -44,7 +44,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         /// </summary>
         GameObject BoundingBox { get; }
 
-        List<Collider> InteractionColliders { get; }
+        List<Collider> ActiveInteractionColliders { get; }
 
         public EBlockedState CurrentBlockedState { get; set; }
 
@@ -52,7 +52,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 
         UnityEvent<EBlockedState> OnCurrentBlockedChanged { get; }
 
-        Task Setup(bool submeshes);
+        Task SetupColliders();
+        Task SetupSubmeshes();
         void EnableColliders(bool value);
+
+        bool IsNetworked { get; }
     }
 }
