@@ -18,5 +18,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         Task HideContextualMenu();
 
         void ResetContextualMenuCache();
+        void RefreshContextualMenu();
     }
 }

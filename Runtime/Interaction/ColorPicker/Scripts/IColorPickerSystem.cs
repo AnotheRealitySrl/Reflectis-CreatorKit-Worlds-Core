@@ -8,8 +8,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ColorPicker
 {
     public interface IColorPickerSystem : ISystem
     {
-        Task AssignColorPicker(GameObject obj, bool networkedContext = true);
-
+        Task<IColorPicker> AssignColorPicker(GameObject obj, bool networkedContext = true);
     }
 }
 
