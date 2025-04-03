@@ -15,6 +15,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 
         EManipulableState CurrentInteractionState { get; }
         EManipulationInput CurrentManipulationInput { get; }
+        EManipulationMode ManipulationMode { get; }
 
         public enum EManipulableState
         {

@@ -10,7 +10,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
     {
         IContextualMenuController ContextualMenuInstance { get; }
         IContextualMenuManageable SelectedContextualMenuInteractable { get; }
-
+        IContextualMenuManageable AddContextualMenu(GameObject contextualMenuGameObject);
         void CreateMenu(Transform parent = null);
         Task DestroyContextualMenu();
 
