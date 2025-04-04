@@ -17,7 +17,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private int multiplayerUsersCount;
         [SerializeField] private int? maxOnlineUsers;
         [SerializeField] private CMWorldConfig config;
-
+        [SerializeField] private int defaultEventId;
 
         public int Id { get => id; set => id = value; }
         public string Label { get => label; set => label = value; }
@@ -32,5 +32,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// </summary>
         public int? MaxOnlineUsers { get => maxOnlineUsers; set => maxOnlineUsers = value; }
         public int MultiplayerUsersCount { get => multiplayerUsersCount; set => multiplayerUsersCount = value; }
+        public int DefaultEventId { get => defaultEventId; set => defaultEventId = value; }
     }
 }
