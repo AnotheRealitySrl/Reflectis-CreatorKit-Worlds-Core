@@ -1,5 +1,5 @@
 using System;
-
+using System.Threading.Tasks;
 using UnityEngine.Events;
 
 namespace Reflectis.CreatorKit.Worlds.Core.Interaction
@@ -10,7 +10,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         UnityEvent OnGrabManipulableEnd { get; set; }
         UnityEvent OnRayGrabManipulableStart { get; set; }
         UnityEvent OnRayGrabManipulableEnd { get; set; }
-
         UnityEvent<EManipulableState> OnCurrentStateChange { get; }
 
         EManipulableState CurrentInteractionState { get; }
@@ -38,5 +37,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
             RayInteraction = 1,
             Hands = 2
         }
+
+        public Task Setup();
     }
 }
