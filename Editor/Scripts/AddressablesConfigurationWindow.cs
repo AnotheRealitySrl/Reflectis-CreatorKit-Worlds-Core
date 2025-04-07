@@ -76,10 +76,11 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
             }
         }
 
-        GUIStyle titleStyle = new GUIStyle(GUI.skin.label);
+        GUIStyle titleStyle;
 
         private void OnGUI()
         {
+            titleStyle = new GUIStyle(GUI.skin.label);
             titleStyle.fontSize = 20;
             titleStyle.fontStyle = FontStyle.Bold;
             titleStyle.alignment = TextAnchor.MiddleCenter;

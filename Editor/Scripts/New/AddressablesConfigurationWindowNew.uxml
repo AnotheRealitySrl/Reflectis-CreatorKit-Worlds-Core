@@ -1,0 +1,64 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.anotherealitysrl.reflectis-creatorkit-worlds-core/Editor/Scripts/New/AddressablesConfigurationWindowNew.uss?fileID=7433441132597879392&amp;guid=515b32a0c8a91b84482ae7efefc66dfe&amp;type=3#AddressablesConfigurationWindowNew" />
+    <engine:ScrollView>
+        <engine:Label text="Creator Kit Configuration Window" name="Header" style="-unity-text-align: upper-center; -unity-font-style: bold; font-size: 24px;" />
+        <engine:VisualElement name="separator" class="separator" style="flex-grow: 1;" />
+        <engine:GroupBox name="scene-configuration">
+            <engine:Button text="Build Addressables" name="build-addressables-button" />
+        </engine:GroupBox>
+        <engine:VisualElement name="separator" class="separator" style="flex-grow: 1;" />
+        <engine:GroupBox name="project-settings">
+            <engine:Label text="Project settings" name="advanced-configurations-foldout" class="h1" style="-unity-font-style: bold;" />
+            <engine:GroupBox name="top-level-settings" class="settings-group" style="flex-direction: row; align-items: flex-start;">
+                <engine:Foldout text="Top-level settings" name="top-level-settings-foldout" value="false" style="-unity-font-style: bold;">
+                    <engine:VisualElement name="project-settings-git-instance" class="settings-item" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; align-self: stretch; flex-direction: row;">
+                        <engine:VisualElement name="addressables-profile-check" class="settings-item-green-icon" />
+                        <engine:Label text="Installed Git instance:" name="addressables-profile-label" />
+                        <engine:Label text="&lt;value&gt;" name="addressables-profile-value" />
+                    </engine:VisualElement>
+                </engine:Foldout>
+                <engine:GroupBox name="top-level-settings-button-container" class="settings-button-container" style="max-height: 30px; margin-top: 0; margin-bottom: 0;">
+                    <engine:Button text="Select" name="top-level-settings-button" />
+                </engine:GroupBox>
+            </engine:GroupBox>
+            <engine:GroupBox name="profile-settings" class="settings-group" style="flex-direction: row;">
+                <engine:Foldout text="Profile settings" name="profile-settings-foldout" value="false" style="-unity-font-style: bold;">
+                    <engine:VisualElement name="remote-buildpath" class="settings-item" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; align-self: stretch; flex-direction: row;">
+                        <engine:VisualElement name="remote-buildpath-check" class="settings-item-green-icon" />
+                        <engine:Label text="Unity version:" name="remote-buildpath-text" />
+                        <engine:Label text="&lt;value&gt;" name="remote-buildpath-value" />
+                    </engine:VisualElement>
+                    <engine:VisualElement name="remote-loadpath" class="settings-item" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; align-self: stretch; flex-direction: row;">
+                        <engine:VisualElement name="remote-loadpath-check" class="settings-item-green-icon" />
+                        <engine:Label text="Unity version:" name="remote-loadpath-text" />
+                        <engine:Label text="&lt;value&gt;" name="remote-loadpath-value" />
+                    </engine:VisualElement>
+                    <engine:VisualElement name="build-target" class="settings-item" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; align-self: stretch; flex-direction: row;">
+                        <engine:VisualElement name="build-target-check" class="settings-item-green-icon" />
+                        <engine:Label text="Unity version:" name="build-target-text" />
+                        <engine:Label text="&lt;value&gt;" name="build-target-value" />
+                    </engine:VisualElement>
+                    <engine:VisualElement name="player-version-override" class="settings-item" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; align-self: stretch; flex-direction: row;">
+                        <engine:VisualElement name="player-version-override-check" class="settings-item-green-icon" />
+                        <engine:Label text="Unity version:" name="player-version-override-text" />
+                        <engine:Label text="&lt;value&gt;" name="player-version-override-value" />
+                    </engine:VisualElement>
+                </engine:Foldout>
+                <engine:GroupBox name="profile-settings-button-container" class="settings-button-container" style="justify-content: space-between; align-items: auto; margin-top: 0; margin-bottom: 0;">
+                    <engine:Button text="Open" name="profile-settings-button" />
+                </engine:GroupBox>
+            </engine:GroupBox>
+            <engine:GroupBox name="groups-settings" class="settings-group" style="flex-direction: row;">
+                <engine:Foldout text="Groups settings" name="groups-settings-foldout" value="false" style="-unity-font-style: bold;">
+                    <engine:VisualElement name="default-local-group" class="settings-item" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; align-self: stretch; flex-direction: row;">
+                        <engine:VisualElement name="default-local-group-check" class="settings-item-green-icon" />
+                        <engine:Label text="Configure URP as render pipeline" name="default-local-group-text" />
+                    </engine:VisualElement>
+                </engine:Foldout>
+                <engine:GroupBox name="default-local-group-button-container" class="settings-button-container" style="justify-content: space-between; align-items: auto; margin-top: 0; margin-bottom: 0;">
+                    <engine:Button text="Select" name="default-local-group-button" />
+                </engine:GroupBox>
+            </engine:GroupBox>
+        </engine:GroupBox>
+    </engine:ScrollView>
+</engine:UXML>
