@@ -1,0 +1,32 @@
+.separator {
+    background-color: rgb(0, 0, 0);
+    height: 1px;
+}
+
+.settings-item {
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.settings-item-green-icon {
+    background-image: url("project://database/Packages/com.unity.multiplayer.center/Editor/MultiplayerCenterWindow/UI/Icons/Check.png?fileID=2800000&guid=4f78a544322c742b89e63fb68557b1d2&type=3#Check");
+    width: 20px;
+    height: 20px;
+    align-self: center;
+}
+
+.settings-item-red-icon {
+    background-image: url("project://database/Packages/com.unity.collab-proxy/Editor/Assets/Images/iconconflicted.png?fileID=2800000&guid=d1c88f142eee55b4eb2b2cfd7b3624ce&type=3#iconconflicted");
+    width: 20px;
+    height: 20px;
+    align-self: center;
+}
+
+.settings-group {
+    flex-direction: row;
+    justify-content: space-between;
+}
