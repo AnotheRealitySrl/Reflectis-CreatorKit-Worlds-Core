@@ -1,8 +1,8 @@
 using Reflectis.CreatorKit.Worlds.CoreEditor;
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 using Unity.Properties;
 
@@ -21,6 +21,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 {
     public class AddressablesConfigurationWindowNew : EditorWindow
     {
+        private enum EBuildError
+        {
+            None,
+            FolderMissing,
+            BinaryCatalog,
+        }
+
         [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
 
         private VisualElement root;
@@ -29,9 +36,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         private AddressableAssetSettings settings;
 
-        private const string alphanumeric_string_pattern = @"^[a-zA-Z0-9]*$";
-        private const string alphanumeric_lowercase_string_pattern = @"^[a-z0-9]*$";
-        private const string alphanumeric_lowercase_string_pattern_negated = @"[^a-z0-9]";
+        private const string scenes_settings_path = "Assets/ReflectisConfiguration/Addressables/AddressablesSceneList.asset";
+
 
         private const string addressables_output_folder = "ServerData";
 
@@ -46,34 +52,30 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private string remoteBuildPath;
         private string remoteLoadPath;
 
-        private string playerVersionOverride;
+        [SerializeField] private EBuildError buildResult = EBuildError.None;
 
         [CreateProperty] private string ActiveProfileName => settings.profileSettings.GetProfileName(settings.activeProfileId);
 
-        [CreateProperty] private string CurrentRemoteBuildPath => settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name);
-        [CreateProperty] private bool IsRemoteBuildPathConfigured => CurrentRemoteBuildPath == remoteBuildPath;
+        [CreateProperty] private string CurrentRemoteBuildPathVariableValue => settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name);
+        [CreateProperty] private bool IsRemoteBuildPathConfigured => CurrentRemoteBuildPathVariableValue == remoteBuildPath;
 
-        [CreateProperty] private string CurrentRemoteLoadPath => settings.profileSettings.GetValueByName(settings.activeProfileId, remote_load_path_variable_name);
-        [CreateProperty] private bool IsRemoteLoadPathConfigured => CurrentRemoteLoadPath == remoteLoadPath;
+        [CreateProperty] private string CurrentRemoteLoadPathVariableValue => settings.profileSettings.GetValueByName(settings.activeProfileId, remote_load_path_variable_name);
+        [CreateProperty] private bool IsRemoteLoadPathConfigured => CurrentRemoteLoadPathVariableValue == remoteLoadPath;
 
-        [CreateProperty] private string CurrentBuildTarget => settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name);
-        [CreateProperty] private bool IsBuildTargetConfigured => CurrentBuildTarget == build_target_variable_value;
+        [CreateProperty] private string CurrentBuildTargetVariableValue => settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name);
+        [CreateProperty] private bool IsBuildTargetConfigured => CurrentBuildTargetVariableValue == build_target_variable_value;
 
-        [CreateProperty] private string CurrentPlayerVersionOverride => settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name);
-        [CreateProperty] private bool IsPlayerVersionOverrideConfigured => CurrentPlayerVersionOverride == player_version_override_variable_value;
+        [CreateProperty] private string CurrentPlayerVersionOverrideVariableValue => settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name);
+        [CreateProperty] private bool IsPlayerVersionOverrideConfigured => CurrentPlayerVersionOverrideVariableValue == player_version_override_variable_value;
 
         [CreateProperty] private bool AreAddressablesConfigured => IsAddressablesSettingsConfigured && IsProfileConfigured && AreAddressablesGroupsConfigured;
+
 
         [MenuItem("Reflectis/AddressablesConfigurationWindowNew")]
         public static void ShowExample()
         {
             AddressablesConfigurationWindowNew wnd = GetWindow<AddressablesConfigurationWindowNew>();
             wnd.titleContent = new GUIContent("AddressablesConfigurationWindow");
-
-            wnd.LoadScenes();
-            wnd.LoadAddressablesSettings();
-
-            wnd.CreateDataBindings();
         }
 
         public void CreateGUI()
@@ -85,61 +87,83 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             VisualElement labelFromUXML = m_VisualTreeAsset.Instantiate();
             root.Add(labelFromUXML);
 
+            InitializeWindow();
         }
 
-        private void LoadScenes()
+        private void OnEnable()
         {
-            string addressablesBundleScriptableObjectsStr = AssetDatabase.FindAssets("t:" + typeof(SceneListScriptableObject).Name).ToList()[0];
-            string path = AssetDatabase.GUIDToAssetPath(addressablesBundleScriptableObjectsStr);
+            // Registra la callback per l'importazione dei pacchetti
+            AssetDatabase.importPackageCompleted += OnImportPackageCompleted;
+            // Registra la callback per l'aggiornamento dell'editor
+            //EditorApplication.update += InitializeWindow;
+        }
+
+        private void OnDisable()
+        {
+            // Rimuovi la callback per l'importazione dei pacchetti
+            AssetDatabase.importPackageCompleted -= OnImportPackageCompleted;
+            // Rimuovi la callback per l'aggiornamento dell'editor
+            //EditorApplication.update -= InitializeWindow;
+        }
+
+        private void OnImportPackageCompleted(string packageName)
+        {
+            // Esegui il refresh della finestra
+            InitializeWindow();
+        }
+
+        private void InitializeWindow()
+        {
+
+            LoadSettings();
+            CreateDataBindings();
+        }
+
+        private void LoadSettings()
+        {
+            string addressablesBundleScriptableObjectsStr = AssetDatabase.FindAssets("t:" + typeof(SceneListScriptableObject).Name).ToList().FirstOrDefault();
+            string path = addressablesBundleScriptableObjectsStr != null ? AssetDatabase.GUIDToAssetPath(addressablesBundleScriptableObjectsStr) : scenes_settings_path;
             sceneConfigurations = AssetDatabase.LoadAssetAtPath<SceneListScriptableObject>(path);
 
-            if (sceneConfigurations != null)
+            if (sceneConfigurations == null)
             {
-                SerializedObject serializedObject = new(sceneConfigurations);
-                SerializedProperty property = serializedObject.GetIterator();
-                property.NextVisible(true);
-
-                while (property.NextVisible(false))
-                {
-                    PropertyField propertyField = new(property);
-                    propertyField.Bind(serializedObject);
-                    root.Q<VisualElement>("scene-configuration-scriptable").Add(propertyField);
-                }
-
-                serializedObject.ApplyModifiedProperties();
+                sceneConfigurations = CreateInstance<SceneListScriptableObject>();
+                AssetDatabase.CreateAsset(sceneConfigurations, scenes_settings_path);
+                AssetDatabase.SaveAssets();
             }
-            else
-            {
-                // Handle the case where sceneConfigurations is null
-            }
-        }
 
-        private void LoadAddressablesSettings()
-        {
             settings = AddressablesBuildScript.GetSettingsObject(AddressablesBuildScript.settings_asset);
 
-            if (settings)
-            {
-                playerVersionOverride = settings.OverridePlayerVersion;
+            remoteBuildPath = string.Join('/',
+                addressables_output_folder,
+                BuildtimeVariable(player_version_override_variable_name),
+                BuildtimeVariable(build_target_variable_name));
 
-                remoteBuildPath = string.Join('/',
-                    addressables_output_folder,
-                    BuildtimeVariable(player_version_override_variable_name),
-                    BuildtimeVariable(build_target_variable_name));
-
-                var addressablesVariables = typeof(AddressablesVariables).GetProperties();
-                string baseUrl = addressablesVariables.First(x => x.PropertyType == typeof(string)).Name;
-                string worldId = addressablesVariables.First(x => x.PropertyType == typeof(int)).Name;
-                remoteLoadPath = string.Join('/',
-                    RuntimeVariable($"{typeof(AddressablesVariables)}.{baseUrl}"),
-                    RuntimeVariable($"{typeof(AddressablesVariables)}.{worldId}"),
-                    BuildtimeVariable(player_version_override_variable_name),
-                    BuildtimeVariable(build_target_variable_name));
-            }
+            var addressablesVariables = typeof(AddressablesVariables).GetProperties();
+            string baseUrl = addressablesVariables.First(x => x.PropertyType == typeof(string)).Name;
+            string worldId = addressablesVariables.First(x => x.PropertyType == typeof(int)).Name;
+            remoteLoadPath = string.Join('/',
+                RuntimeVariable($"{typeof(AddressablesVariables)}.{baseUrl}"),
+                RuntimeVariable($"{typeof(AddressablesVariables)}.{worldId}"),
+                BuildtimeVariable(player_version_override_variable_name),
+                BuildtimeVariable(build_target_variable_name));
         }
 
         private void CreateDataBindings()
         {
+            SerializedObject serializedObject = new(sceneConfigurations);
+            SerializedProperty property = serializedObject.GetIterator();
+            property.NextVisible(true);
+
+            while (property.NextVisible(false))
+            {
+                PropertyField propertyField = new(property);
+                propertyField.Bind(serializedObject);
+                root.Q<VisualElement>("scene-configuration-scriptable").Add(propertyField);
+            }
+
+            serializedObject.ApplyModifiedProperties();
+
             VisualElement addressablesSettings = root.Q<VisualElement>("addressables-settings");
             addressablesSettings.dataSource = this;
 
@@ -150,7 +174,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 { ("remote-loadpath-check", nameof(IsRemoteLoadPathConfigured)) },
                 { ("build-target-check", nameof(IsBuildTargetConfigured)) },
                 { ("player-version-override-check", nameof(IsPlayerVersionOverrideConfigured)) },
-                //{ ("project-settings-max-texture-size-check", nameof(projectConfig.MaxTextureSizeOverride)) },
             };
             foreach (var entry in settingIcons)
             {
@@ -177,26 +200,26 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             Label remoteBuildPathValue = addressablesSettings.Q<Label>("remote-buildpath-value");
             remoteBuildPathValue.SetBinding(nameof(remoteBuildPathValue.text), new DataBinding()
             {
-                dataSourcePath = PropertyPath.FromName(nameof(CurrentRemoteBuildPath)),
+                dataSourcePath = PropertyPath.FromName(nameof(CurrentRemoteBuildPathVariableValue)),
                 bindingMode = BindingMode.ToTarget
             });
 
             Label remoteLoadPathValue = addressablesSettings.Q<Label>("remote-loadpath-value");
             remoteLoadPathValue.SetBinding(nameof(remoteLoadPathValue.text), new DataBinding()
             {
-                dataSourcePath = PropertyPath.FromName(nameof(CurrentRemoteLoadPath)),
+                dataSourcePath = PropertyPath.FromName(nameof(CurrentRemoteLoadPathVariableValue)),
                 bindingMode = BindingMode.ToTarget
             });
 
             Label buildTargetValue = addressablesSettings.Q<Label>("build-target-value");
             buildTargetValue.SetBinding(nameof(buildTargetValue.text), new DataBinding()
             {
-                dataSourcePath = PropertyPath.FromName(nameof(CurrentBuildTarget)),
+                dataSourcePath = PropertyPath.FromName(nameof(CurrentBuildTargetVariableValue)),
                 bindingMode = BindingMode.ToTarget
             });
 
             Label playerVersionOverrideValue = addressablesSettings.Q<Label>("player-version-override-value");
-            playerVersionOverrideValue.SetBinding(nameof(playerVersionOverrideValue.text), new DataBinding() { dataSourcePath = PropertyPath.FromName(nameof(CurrentPlayerVersionOverride)) });
+            playerVersionOverrideValue.SetBinding(nameof(playerVersionOverrideValue.text), new DataBinding() { dataSourcePath = PropertyPath.FromName(nameof(CurrentPlayerVersionOverrideVariableValue)) });
 
             Button topLevelSettingsButton = root.Q<Button>("top-level-settings-button");
             topLevelSettingsButton.clicked += () => EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Settings");
@@ -228,6 +251,28 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                     ConfigureAddressablesGroups();
                 }
             };
+
+
+            VisualElement buildErrors = root.Q<VisualElement>("build-result-errors");
+            buildErrors.dataSource = this;
+
+            VisualElement folderMissing = buildErrors.Q<VisualElement>("folder-missing");
+            DataBinding folderMissingDataBinding = new()
+            {
+                dataSourcePath = PropertyPath.FromName(nameof(buildResult)),
+                bindingMode = BindingMode.ToTarget
+            };
+            folderMissingDataBinding.sourceToUiConverters.AddConverter((ref EBuildError value) => buildResult == EBuildError.FolderMissing);
+            folderMissing.SetBinding(nameof(folderMissing.visible), folderMissingDataBinding);
+
+            VisualElement binaryCatalog = buildErrors.Q<VisualElement>("binary-catalog");
+            DataBinding binaryCatalogDataBinding = new()
+            {
+                dataSourcePath = PropertyPath.FromName(nameof(buildResult)),
+                bindingMode = BindingMode.ToTarget
+            };
+            binaryCatalogDataBinding.sourceToUiConverters.AddConverter((ref EBuildError value) => buildResult == EBuildError.BinaryCatalog);
+            binaryCatalog.SetBinding(nameof(binaryCatalog.visible), binaryCatalogDataBinding);
         }
 
         #region Top-Level settings configuration
@@ -248,9 +293,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                  settings.ContiguousBundles &&
                  settings.NonRecursiveBuilding &&
                  settings.BuiltInBundleNaming == BuiltInBundleNaming.Custom &&
-                 settings.BuiltInBundleCustomNaming == playerVersionOverride &&
                  settings.MonoScriptBundleNaming == MonoScriptBundleNaming.Custom &&
-                 settings.MonoScriptBundleCustomNaming == playerVersionOverride &&
                  !settings.DisableVisibleSubAssetRepresentations;
 
 
@@ -269,9 +312,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             settings.ContiguousBundles = true;
             settings.NonRecursiveBuilding = true;
             settings.BuiltInBundleNaming = BuiltInBundleNaming.Custom;
-            settings.BuiltInBundleCustomNaming = playerVersionOverride;
             settings.MonoScriptBundleNaming = MonoScriptBundleNaming.Custom;
-            settings.MonoScriptBundleCustomNaming = playerVersionOverride;
             settings.DisableVisibleSubAssetRepresentations = false;
             settings.BuildRemoteCatalog = true;
 
@@ -280,8 +321,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         private void ConfigureAddressablesSettingsForBuild()
         {
-            settings.BuiltInBundleCustomNaming = playerVersionOverride;
-            settings.BuiltInBundleCustomNaming = playerVersionOverride;
+            settings.BuiltInBundleCustomNaming = settings.OverridePlayerVersion;
+            settings.MonoScriptBundleCustomNaming = settings.OverridePlayerVersion;
         }
 
         #endregion
@@ -332,12 +373,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             get
             {
                 bool configured = true;
-                settings.groups.ForEach(group => configured &= IsAddresableGroupConfigured(group));
+                settings.groups.ForEach(group => configured &= IsAddressableGroupConfigured(group));
                 return configured;
             }
         }
 
-        private bool IsAddresableGroupConfigured(AddressableAssetGroup group)
+        private bool IsAddressableGroupConfigured(AddressableAssetGroup group)
         {
             bool configured = true;
 
@@ -432,6 +473,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
             BuildAddressablesForSelectedPlatform();
+
+            buildResult = CheckBuildResult();
         }
 
         private void BuildAddressablesForSelectedPlatform()
@@ -458,15 +501,50 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             AssetDatabase.TryGetGUIDAndLocalFileIdentifier(configuration.Scene, out string guid, out long _);
             AddressableAssetEntry addressableEntry = settings.CreateOrMoveEntry(guid, assetGroup);
 
-            string addressableAddress = Regex.Replace(configuration.Scene.name.ToLower(), alphanumeric_lowercase_string_pattern_negated, string.Empty);
-            addressableEntry.SetAddress(addressableAddress);
+            string sceneNameFiltered = configuration.SceneNameFiltered;
+            addressableEntry.SetAddress(sceneNameFiltered);
 
-            settings.OverridePlayerVersion = addressableAddress;
+            settings.OverridePlayerVersion = sceneNameFiltered;
             ConfigureAddressablesSettingsForBuild();
 
             AddressablesBuildScript.BuildAddressables();
 
             settings.RemoveAssetEntry(guid);
+
+            settings.OverridePlayerVersion = string.Empty;
+        }
+
+        private EBuildError CheckBuildResult()
+        {
+            List<string> builtScenes = sceneConfigurations.SceneConfigurations
+                .Where(x => x.IncludeInBuild)
+                .Select(x => x.SceneNameFiltered)
+                .ToList();
+
+            foreach (string scene in builtScenes)
+            {
+                string sceneFolderPath = Path.Combine(addressables_output_folder, scene);
+                string[] requiredSubfolders = { "WebGL", "StandaloneWindows64", "Android" };
+
+                foreach (string subfolder in requiredSubfolders)
+                {
+                    string subfolderPath = Path.Combine(sceneFolderPath, subfolder);
+                    if (!Directory.Exists(subfolderPath))
+                    {
+                        Debug.LogError($"Subfolder {subfolder} not found in {sceneFolderPath}");
+                        return EBuildError.FolderMissing;
+                    }
+
+                    bool catalogFileExists = Directory.GetFiles(subfolderPath, "*catalog*.json").Any();
+                    if (!catalogFileExists)
+                    {
+                        Debug.LogError($"Catalog file not found in {subfolderPath}");
+                        return EBuildError.BinaryCatalog;
+                    }
+                }
+            }
+
+            return EBuildError.None;
         }
 
         #endregion

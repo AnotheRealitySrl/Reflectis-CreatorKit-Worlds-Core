@@ -3,6 +3,16 @@
     <engine:ScrollView>
         <engine:Label text="Creator Kit Configuration Window" name="Header" style="-unity-text-align: upper-center; -unity-font-style: bold; font-size: 24px;" />
         <engine:VisualElement name="separator" class="separator" style="flex-grow: 1;" />
+        <engine:VisualElement name="build-result-errors" style="flex-grow: 1;">
+            <engine:VisualElement name="folder-missing" class="build-error-item">
+                <engine:VisualElement name="folder-missing-icon" class="build-error-item-icon" />
+                <engine:Label text="There was an issue building the scene for one or more platforms. Please restart the Editor, and try building again" name="folder-missing-text" class="build-error-item-text" />
+            </engine:VisualElement>
+            <engine:VisualElement name="binary-catalog" class="build-error-item">
+                <engine:VisualElement name="binary-catalog-icon" class="build-error-item-icon" />
+                <engine:Label text="Unable to build Addressables correctly. Plese go to &lt;i&gt;&quot;Asset Management/Addressables/Settings&quot;&lt;/i&gt;, remove the check from the &quot;Enable Json catalog&quot;, add it again, save the project, and then restart the Editor. Finally, launch the build again." name="binary-catalog-text" class="build-error-item-text" style="white-space: normal;" />
+            </engine:VisualElement>
+        </engine:VisualElement>
         <engine:GroupBox name="scene-configuration">
             <engine:VisualElement name="scene-configuration-scriptable" style="flex-grow: 1; margin-top: 8px; margin-right: 4px; margin-bottom: 8px; margin-left: 4px;" />
             <engine:Button text="Build Addressables" name="build-addressables-button" />
@@ -12,7 +22,7 @@
             <engine:Foldout text="Show advanced addressables configurations" name="addressables-settings-foldout" style="-unity-font-style: bold;">
                 <engine:GroupBox name="top-level-settings" class="settings-group" style="flex-direction: row; align-items: flex-start;">
                     <engine:Foldout text="Top-level settings" name="top-level-settings-foldout" style="-unity-font-style: bold;">
-                        <engine:VisualElement name="project-settings-git-instance" class="settings-item" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; align-self: stretch; flex-direction: row;">
+                        <engine:VisualElement name="project-settings-git-instance" class="settings-item">
                             <engine:VisualElement name="addressables-profile-check" class="settings-item-green-icon" />
                             <engine:Label text="Active addressables profile:" name="addressables-profile-label" style="-unity-font-style: normal;" />
                             <engine:Label text="&lt;value&gt;" name="addressables-profile-value" />
@@ -24,22 +34,22 @@
                 </engine:GroupBox>
                 <engine:GroupBox name="profile-settings" class="settings-group" style="flex-direction: row;">
                     <engine:Foldout text="Profile settings" name="profile-settings-foldout" style="-unity-font-style: bold;">
-                        <engine:VisualElement name="remote-buildpath" class="settings-item" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; align-self: stretch; flex-direction: row;">
+                        <engine:VisualElement name="remote-buildpath" class="settings-item">
                             <engine:VisualElement name="remote-buildpath-check" class="settings-item-green-icon" />
                             <engine:Label text="Remote.BuildPath:" name="remote-buildpath-text" />
                             <engine:Label text="&lt;value&gt;" name="remote-buildpath-value" style="-unity-font-style: normal;" />
                         </engine:VisualElement>
-                        <engine:VisualElement name="remote-loadpath" class="settings-item" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; align-self: stretch; flex-direction: row;">
+                        <engine:VisualElement name="remote-loadpath" class="settings-item">
                             <engine:VisualElement name="remote-loadpath-check" class="settings-item-green-icon" />
                             <engine:Label text="Remote.LoadPath:" name="remote-loadpath-text" />
                             <engine:Label text="&lt;value&gt;" name="remote-loadpath-value" style="-unity-font-style: normal;" />
                         </engine:VisualElement>
-                        <engine:VisualElement name="build-target" class="settings-item" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; align-self: stretch; flex-direction: row;">
+                        <engine:VisualElement name="build-target" class="settings-item">
                             <engine:VisualElement name="build-target-check" class="settings-item-green-icon" />
                             <engine:Label text="BuildTarget:" name="build-target-text" />
                             <engine:Label text="&lt;value&gt;" name="build-target-value" style="-unity-font-style: normal;" />
                         </engine:VisualElement>
-                        <engine:VisualElement name="player-version-override" class="settings-item" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; align-self: stretch; flex-direction: row;">
+                        <engine:VisualElement name="player-version-override" class="settings-item">
                             <engine:VisualElement name="player-version-override-check" class="settings-item-green-icon" />
                             <engine:Label text="PlayerVersionOverride:" name="player-version-override-text" />
                             <engine:Label text="&lt;value&gt;" name="player-version-override-value" style="-unity-font-style: normal;" />
@@ -51,7 +61,7 @@
                 </engine:GroupBox>
                 <engine:GroupBox name="groups-settings" class="settings-group" style="flex-direction: row;">
                     <engine:Foldout text="Groups settings" name="groups-settings-foldout" style="-unity-font-style: bold;">
-                        <engine:VisualElement name="default-local-group" class="settings-item" style="flex-grow: 1; align-items: flex-start; justify-content: flex-start; align-self: stretch; flex-direction: row;">
+                        <engine:VisualElement name="default-local-group" class="settings-item">
                             <engine:VisualElement name="default-local-group-check" class="settings-item-green-icon" />
                             <engine:Label text="Default Local Group" name="default-local-group-text" />
                             <engine:Button text="Select" name="default-local-group-button" />

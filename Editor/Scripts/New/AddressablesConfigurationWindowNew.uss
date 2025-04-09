@@ -10,6 +10,8 @@
     margin-bottom: 2px;
     padding-right: 0;
     padding-left: 0;
+    align-items: center;
+    flex-direction: row;
 }
 
 .settings-item-green-icon {
@@ -29,4 +31,46 @@
 .settings-group {
     flex-direction: row;
     justify-content: space-between;
+}
+
+.build-error-item {
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-left-color: rgba(0, 0, 0, 0.5);
+    border-right-color: rgba(0, 0, 0, 0.5);
+    border-top-color: rgba(0, 0, 0, 0.5);
+    border-bottom-color: rgba(0, 0, 0, 0.5);
+    margin-top: 4px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+    padding-top: 8px;
+    padding-right: 8px;
+    padding-bottom: 8px;
+    padding-left: 8px;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+.build-error-item-icon {
+    background-size: 20px 20px;
+    background-image: url("project://database/Packages/com.unity.timeline/Editor/StyleSheets/Images/Icons/Timeline-Marker-Warning-Overlay.png?fileID=2800000&guid=945f4ecec6df62244b9ebcc363833642&type=3#Timeline-Marker-Warning-Overlay");
+    width: 20px;
+    height: 20px;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.build-error-item-text {
+    white-space: normal;
+    max-width: 95%;
 }
