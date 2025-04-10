@@ -90,33 +90,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             InitializeWindow();
         }
 
-        private void OnEnable()
-        {
-            // Registra la callback per l'importazione dei pacchetti
-            AssetDatabase.importPackageCompleted += OnImportPackageCompleted;
-            // Registra la callback per l'aggiornamento dell'editor
-            //EditorApplication.update += InitializeWindow;
-        }
-
-        private void OnDisable()
-        {
-            // Rimuovi la callback per l'importazione dei pacchetti
-            AssetDatabase.importPackageCompleted -= OnImportPackageCompleted;
-            // Rimuovi la callback per l'aggiornamento dell'editor
-            //EditorApplication.update -= InitializeWindow;
-        }
-
-        private void OnImportPackageCompleted(string packageName)
-        {
-            // Esegui il refresh della finestra
-            InitializeWindow();
-        }
-
         private void InitializeWindow()
         {
-
             LoadSettings();
-            CreateDataBindings();
+            AddDataBindings();
         }
 
         private void LoadSettings()
@@ -149,7 +126,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 BuildtimeVariable(build_target_variable_name));
         }
 
-        private void CreateDataBindings()
+        private void AddDataBindings()
         {
             SerializedObject serializedObject = new(sceneConfigurations);
             SerializedProperty property = serializedObject.GetIterator();
