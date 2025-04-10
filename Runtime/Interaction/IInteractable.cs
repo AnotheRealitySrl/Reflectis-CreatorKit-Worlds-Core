@@ -55,6 +55,5 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         Task Setup();
         Task SetupSubmeshes();
         void EnableColliders(bool value);
-        bool IsNetworked { get; }
     }
 }
