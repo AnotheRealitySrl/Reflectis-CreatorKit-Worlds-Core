@@ -1,9 +1,11 @@
 fileFormatVersion: 2
-guid: b1ab64c9d7edd8a409d019d7e8484b56
+guid: adaddba416c21664f872111c80abd3b7
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - m_VisualTreeAsset: {fileID: 9197481963319205126, guid: 91556a6776ac25645b52ee8f6596d442,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

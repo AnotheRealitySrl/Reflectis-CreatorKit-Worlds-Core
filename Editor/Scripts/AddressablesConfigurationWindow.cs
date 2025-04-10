@@ -1,35 +1,43 @@
-﻿using Reflectis.CreatorKit.Worlds.Core.Editor;
+using Reflectis.CreatorKit.Worlds.CoreEditor;
 
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
+
+using Unity.Properties;
 
 using UnityEditor;
-using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
+using UnityEditor.UIElements;
 
 using UnityEngine;
+using UnityEngine.UIElements;
 
 using static Reflectis.CreatorKit.Worlds.Core.Editor.SceneListScriptableObject;
 
-namespace Reflectis.CreatorKit.Worlds.CoreEditor
+namespace Reflectis.CreatorKit.Worlds.Core.Editor
 {
     public class AddressablesConfigurationWindow : EditorWindow
     {
-        #region Public consts
+        private enum EBuildError
+        {
+            None,
+            FolderMissing,
+            BinaryCatalog,
+        }
 
-        public const string window_name = "Configure and build Addressables";
+        [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
 
-        #endregion
+        private VisualElement root;
 
-        #region Private variables
-
-        private const string alphanumeric_string_pattern = @"^[a-zA-Z0-9]*$";
-        private const string alphanumeric_lowercase_string_pattern = @"^[a-z0-9]*$";
-        private const string alphanumeric_lowercase_string_pattern_negated = @"[^a-z0-9]";
+        private SceneListScriptableObject sceneConfigurations;
 
         private AddressableAssetSettings settings;
+
+        private const string settings_folder_path = "Assets/CreatorKit/Editor/Settings";
+        private const string addressables_configuration_file = "AddressablesSceneList.asset";
 
         private const string addressables_output_folder = "ServerData";
 
@@ -44,341 +52,229 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
         private string remoteBuildPath;
         private string remoteLoadPath;
 
-        private string playerVersionOverride;
+        [SerializeField] private EBuildError buildResult = EBuildError.None;
 
-        private GUIStyle _toolbarButtonStyle;
-        private Vector2 scrollPosition = Vector2.zero;
+        [CreateProperty] private string ActiveProfileName => settings.profileSettings.GetProfileName(settings.activeProfileId);
 
-        private SceneListScriptableObject sceneConfigurations;
+        [CreateProperty] private string CurrentRemoteBuildPathVariableValue => settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name);
+        [CreateProperty] private bool IsRemoteBuildPathConfigured => CurrentRemoteBuildPathVariableValue == remoteBuildPath;
 
-        private bool addressablesSettingsFoldout;
-        private bool topLevelSettingsFoldout;
-        private bool profileSettingsFoldout;
-        private bool groupsSettingsFoldout;
+        [CreateProperty] private string CurrentRemoteLoadPathVariableValue => settings.profileSettings.GetValueByName(settings.activeProfileId, remote_load_path_variable_name);
+        [CreateProperty] private bool IsRemoteLoadPathConfigured => CurrentRemoteLoadPathVariableValue == remoteLoadPath;
+
+        [CreateProperty] private string CurrentBuildTargetVariableValue => settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name);
+        [CreateProperty] private bool IsBuildTargetConfigured => CurrentBuildTargetVariableValue == build_target_variable_value;
+
+        [CreateProperty] private string CurrentPlayerVersionOverrideVariableValue => settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name);
+        [CreateProperty] private bool IsPlayerVersionOverrideConfigured => CurrentPlayerVersionOverrideVariableValue == player_version_override_variable_value;
+
+        [CreateProperty] private bool AreAddressablesConfigured => IsAddressablesSettingsConfigured && IsProfileConfigured && AreAddressablesGroupsConfigured;
 
 
-        #endregion
-
-        #region Unity callbacks
-
-        [MenuItem("Reflectis/" + window_name)]
-        public static void ShowWindow()
+        [MenuItem("Reflectis/AddressablesConfigurationWindowNew")]
+        public static void ShowExample()
         {
-            //Show existing window instance. If one doesn't exist, make one.
-            GetWindow(typeof(AddressablesConfigurationWindow));
+            AddressablesConfigurationWindow wnd = GetWindow<AddressablesConfigurationWindow>();
+            wnd.titleContent = new GUIContent("AddressablesConfigurationWindow");
         }
 
-        private void Awake()
+        public void CreateGUI()
         {
-            if (settings == null)
+            // Each editor window contains a root VisualElement object
+            root = rootVisualElement;
+
+            // Instantiate UXML
+            VisualElement labelFromUXML = m_VisualTreeAsset.Instantiate();
+            root.Add(labelFromUXML);
+
+            InitializeWindow();
+        }
+
+        private void InitializeWindow()
+        {
+            LoadSettings();
+            AddDataBindings();
+        }
+
+        private void LoadSettings()
+        {
+            string addressablesBundleScriptableObjectsStr = AssetDatabase.FindAssets("t:" + typeof(SceneListScriptableObject).Name).ToList().FirstOrDefault();
+            sceneConfigurations = AssetDatabase.LoadAssetAtPath<SceneListScriptableObject>(AssetDatabase.GUIDToAssetPath(addressablesBundleScriptableObjectsStr));
+
+            if (sceneConfigurations == null)
             {
-                LoadProfileSettings();
+                EnsureFolderExists(settings_folder_path);
+
+                sceneConfigurations = CreateInstance<SceneListScriptableObject>();
+                string settingsAssetPath = $"{settings_folder_path}/{addressables_configuration_file}";
+                AssetDatabase.CreateAsset(sceneConfigurations, settingsAssetPath);
+                AssetDatabase.SaveAssets();
             }
-        }
 
-        GUIStyle titleStyle;
-
-        private void OnGUI()
-        {
-            titleStyle = new GUIStyle(GUI.skin.label);
-            titleStyle.fontSize = 20;
-            titleStyle.fontStyle = FontStyle.Bold;
-            titleStyle.alignment = TextAnchor.MiddleCenter;
-
-            DisplayAddressablesSettings();
-        }
-
-        #endregion
-
-        #region Private methods
-
-        private void LoadProfileSettings()
-        {
             settings = AddressablesBuildScript.GetSettingsObject(AddressablesBuildScript.settings_asset);
 
-            if (settings)
-            {
-                playerVersionOverride = settings.OverridePlayerVersion;
+            remoteBuildPath = string.Join('/',
+                addressables_output_folder,
+                BuildtimeVariable(player_version_override_variable_name),
+                BuildtimeVariable(build_target_variable_name));
 
-                remoteBuildPath = string.Join('/',
-                    addressables_output_folder,
-                    BuildtimeVariable(player_version_override_variable_name),
-                    BuildtimeVariable(build_target_variable_name));
-
-                var addressablesVariables = typeof(AddressablesVariables).GetProperties();
-                string baseUrl = addressablesVariables.First(x => x.PropertyType == typeof(string)).Name;
-                string worldId = addressablesVariables.First(x => x.PropertyType == typeof(int)).Name;
-                remoteLoadPath = string.Join('/',
-                    RuntimeVariable($"{typeof(AddressablesVariables)}.{baseUrl}"),
-                    RuntimeVariable($"{typeof(AddressablesVariables)}.{worldId}"),
-                    BuildtimeVariable(player_version_override_variable_name),
-                    BuildtimeVariable(build_target_variable_name));
-            }
+            var addressablesVariables = typeof(AddressablesVariables).GetProperties();
+            string baseUrl = addressablesVariables.First(x => x.PropertyType == typeof(string)).Name;
+            string worldId = addressablesVariables.First(x => x.PropertyType == typeof(int)).Name;
+            remoteLoadPath = string.Join('/',
+                RuntimeVariable($"{typeof(AddressablesVariables)}.{baseUrl}"),
+                RuntimeVariable($"{typeof(AddressablesVariables)}.{worldId}"),
+                BuildtimeVariable(player_version_override_variable_name),
+                BuildtimeVariable(build_target_variable_name));
         }
 
-        /// <summary>
-        /// Draw buttons on toolbar.
-        /// Automatically called by unity.
-        /// </summary>
-        /// <param name="position"></param>
-        private void ShowButton(Rect position)
+        private void AddDataBindings()
         {
-            _toolbarButtonStyle ??= new GUIStyle(GUI.skin.button)
-            {
-                padding = new RectOffset()
-            };
+            SerializedObject serializedObject = new(sceneConfigurations);
+            SerializedProperty property = serializedObject.GetIterator();
+            property.NextVisible(true);
 
-            if (GUI.Button(position, EditorGUIUtility.IconContent("_Help", "Doc|Open documentation"), _toolbarButtonStyle))
+            while (property.NextVisible(false))
             {
-                Application.OpenURL("https://reflectis.io/docs/CK/gettingstarted/startanewproject/Addressable-setup/");
+                PropertyField propertyField = new(property);
+                propertyField.Bind(serializedObject);
+                root.Q<VisualElement>("scene-configuration-scriptable").Add(propertyField);
             }
-        }
 
-        private void DisplayAddressablesSettings()
-        {
-            GUIStyle style = new(EditorStyles.label)
+            serializedObject.ApplyModifiedProperties();
+
+            VisualElement addressablesSettings = root.Q<VisualElement>("addressables-settings");
+            addressablesSettings.dataSource = this;
+
+            List<(string, string)> settingIcons = new()
             {
-                richText = true,
+                { ("addressables-profile-check", nameof(IsAddressablesSettingsConfigured)) },
+                { ("remote-buildpath-check", nameof(IsRemoteBuildPathConfigured)) },
+                { ("remote-loadpath-check", nameof(IsRemoteLoadPathConfigured)) },
+                { ("build-target-check", nameof(IsBuildTargetConfigured)) },
+                { ("player-version-override-check", nameof(IsPlayerVersionOverrideConfigured)) },
             };
-            GUIStyle dropdownStyle = new(EditorStyles.foldoutHeader)
+            foreach (var entry in settingIcons)
             {
-                richText = true,
-            };
-
-            if (!settings)
-            {
-                EditorGUILayout.HelpBox("No Addressables settings found! Click on \"Create Addressable settings\" to create them",
-                  MessageType.Warning);
-
-                if (GUILayout.Button("Create Addressables settings"))
+                VisualElement projectSettingsItemIcon = addressablesSettings.Q<VisualElement>(entry.Item1);
+                DataBinding styleBinding = new() { dataSourcePath = PropertyPath.FromName(entry.Item2) };
+                styleBinding.sourceToUiConverters.AddConverter((ref bool value) =>
                 {
-                    AddressableAssetSettingsDefaultObject.Settings = AddressableAssetSettings.Create(AddressableAssetSettingsDefaultObject.kDefaultConfigFolder,
-                        AddressableAssetSettingsDefaultObject.kDefaultConfigAssetName, true, true);
-
-                    LoadProfileSettings();
-                }
+                    projectSettingsItemIcon.RemoveFromClassList("settings-item-green-icon");
+                    projectSettingsItemIcon.RemoveFromClassList("settings-item-red-icon");
+                    projectSettingsItemIcon.AddToClassList(value ? "settings-item-green-icon" : "settings-item-red-icon");
+                    return true;
+                });
+                // Find the binding that changes directly the class
+                projectSettingsItemIcon.SetBinding(nameof(projectSettingsItemIcon.visible), styleBinding);
             }
-            else
+
+            Label addressablesProfileValue = addressablesSettings.Q<Label>("addressables-profile-value");
+            addressablesProfileValue.SetBinding(nameof(addressablesProfileValue.text), new DataBinding()
             {
-                scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, false);
+                dataSourcePath = PropertyPath.FromName(nameof(ActiveProfileName)),
+                bindingMode = BindingMode.ToTarget
+            });
 
-                #region Scene Configuration
+            Label remoteBuildPathValue = addressablesSettings.Q<Label>("remote-buildpath-value");
+            remoteBuildPathValue.SetBinding(nameof(remoteBuildPathValue.text), new DataBinding()
+            {
+                dataSourcePath = PropertyPath.FromName(nameof(CurrentRemoteBuildPathVariableValue)),
+                bindingMode = BindingMode.ToTarget
+            });
 
-                string addressablesBundleScriptableObjectsStr = AssetDatabase.FindAssets("t:" + typeof(SceneListScriptableObject).Name).ToList()[0];
-                string path = AssetDatabase.GUIDToAssetPath(addressablesBundleScriptableObjectsStr);
-                sceneConfigurations = AssetDatabase.LoadAssetAtPath<SceneListScriptableObject>(path);
+            Label remoteLoadPathValue = addressablesSettings.Q<Label>("remote-loadpath-value");
+            remoteLoadPathValue.SetBinding(nameof(remoteLoadPathValue.text), new DataBinding()
+            {
+                dataSourcePath = PropertyPath.FromName(nameof(CurrentRemoteLoadPathVariableValue)),
+                bindingMode = BindingMode.ToTarget
+            });
 
-                if (sceneConfigurations != null)
+            Label buildTargetValue = addressablesSettings.Q<Label>("build-target-value");
+            buildTargetValue.SetBinding(nameof(buildTargetValue.text), new DataBinding()
+            {
+                dataSourcePath = PropertyPath.FromName(nameof(CurrentBuildTargetVariableValue)),
+                bindingMode = BindingMode.ToTarget
+            });
+
+            Label playerVersionOverrideValue = addressablesSettings.Q<Label>("player-version-override-value");
+            playerVersionOverrideValue.SetBinding(nameof(playerVersionOverrideValue.text), new DataBinding() { dataSourcePath = PropertyPath.FromName(nameof(CurrentPlayerVersionOverrideVariableValue)) });
+
+            Button topLevelSettingsButton = root.Q<Button>("top-level-settings-button");
+            topLevelSettingsButton.clicked += () => EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Settings");
+
+            Button profileSettingsButton = root.Q<Button>("profile-settings-button");
+            profileSettingsButton.clicked += () => EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Profiles");
+
+            Button groupsSettingsButton = root.Q<Button>("default-local-group-button");
+            groupsSettingsButton.clicked += () => EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Groups");
+
+            Button buildAddressablesButton = root.Q<Button>("build-addressables-button");
+            DataBinding buildAddressablesButtonDataBinding = new()
+            {
+                dataSourcePath = PropertyPath.FromName(nameof(AreAddressablesConfigured)),
+                bindingMode = BindingMode.ToTarget
+            };
+            buildAddressablesButtonDataBinding.sourceToUiConverters.AddConverter((ref bool value) => AreAddressablesConfigured ? "Build Addressables" : "Fix Addressables Configurations");
+            buildTargetValue.SetBinding(nameof(buildTargetValue.text), buildAddressablesButtonDataBinding);
+            buildAddressablesButton.clicked += () =>
+            {
+                if (AreAddressablesConfigured)
                 {
-                    SerializedObject serializedObject = new(sceneConfigurations);
-                    SerializedProperty property = serializedObject.GetIterator();
-                    property.NextVisible(true);
-
-                    while (property.NextVisible(false))
-                    {
-                        EditorGUILayout.PropertyField(property, true);
-                    }
-
-                    serializedObject.ApplyModifiedProperties();
+                    BuildSelectedAddressablesForAllPlatforms();
                 }
                 else
                 {
-
+                    ConfigureAddressablesSettings();
+                    ConfigureProfile();
+                    ConfigureAddressablesGroups();
                 }
+            };
 
-                EditorGUILayout.Space();
 
-                if (IsAddressablesSettingsConfigured() && IsProfileConfigured() && AreAddressablesGroupsConfigured() /*&& IsAddressablesEntriesValid()*/)
-                {
-                    if (GUILayout.Button("Build Addressables", EditorStyles.miniButtonMid))
-                    {
-                        BuildSelectedAddressablesForAllPlatforms();
-                    }
-                }
-                else
-                {
-                    EditorGUILayout.BeginVertical();
+            VisualElement buildErrors = root.Q<VisualElement>("build-result-errors");
+            buildErrors.dataSource = this;
 
-                    EditorGUILayout.LabelField("<color=red>There are some configuration issue in the addressables. Please fix them before building.</color>", style);
+            VisualElement folderMissing = buildErrors.Q<VisualElement>("folder-missing");
+            DataBinding folderMissingDataBinding = new()
+            {
+                dataSourcePath = PropertyPath.FromName(nameof(buildResult)),
+                bindingMode = BindingMode.ToTarget
+            };
+            folderMissingDataBinding.sourceToUiConverters.AddConverter((ref EBuildError value) => buildResult == EBuildError.FolderMissing);
+            folderMissing.SetBinding(nameof(folderMissing.visible), folderMissingDataBinding);
 
-                    if (GUILayout.Button("Fix addressables configuration", EditorStyles.miniButtonMid))
-                    {
-                        ConfigureAddressablesSettings();
-                        ConfigureProfile();
-                        ConfigureAddressablesGroups();
-                    }
-
-                    EditorGUILayout.EndVertical();
-                }
-
-                EditorGUILayout.Space();
-                CreateSeparator();
-                EditorGUILayout.Space();
-
-                #endregion
-
-                #region Addressables settings configuration
-
-                addressablesSettingsFoldout = EditorGUILayout.Foldout(addressablesSettingsFoldout, $" Show advanced addressables configurations", true, dropdownStyle);
-
-                if (addressablesSettingsFoldout)
-                {
-                    #region Top-level settings
-
-                    EditorGUILayout.BeginVertical();
-
-                    EditorGUILayout.BeginHorizontal();
-                    topLevelSettingsFoldout = EditorGUILayout.Foldout(topLevelSettingsFoldout, $"{(IsAddressablesSettingsConfigured() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} Top-level settings", true, dropdownStyle);
-                    if (GUILayout.Button("Select", GUILayout.ExpandWidth(false)))
-                    {
-                        EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Settings");
-                    }
-                    EditorGUILayout.EndHorizontal();
-
-                    if (topLevelSettingsFoldout)
-                    {
-                        EditorGUILayout.BeginVertical(new GUIStyle { margin = new RectOffset(20, 0, 0, 0) });
-
-                        string activeProfileName = settings.profileSettings.GetProfileName(settings.activeProfileId);
-                        EditorGUILayout.LabelField($"Active addressables profile: <b>{activeProfileName}</b>", style);
-
-                        EditorGUILayout.EndVertical();
-                    }
-
-                    EditorGUILayout.EndVertical();
-
-                    EditorGUILayout.Space();
-
-                    #endregion
-
-                    #region Profiles settings
-
-                    EditorGUILayout.BeginVertical();
-
-                    EditorGUILayout.BeginHorizontal();
-                    profileSettingsFoldout = EditorGUILayout.Foldout(profileSettingsFoldout, $"{(IsProfileConfigured() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} Profile settings", true, dropdownStyle);
-                    if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
-                    {
-                        EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Profiles");
-                    }
-                    EditorGUILayout.EndHorizontal();
-
-                    if (profileSettingsFoldout)
-                    {
-                        EditorGUILayout.BeginVertical(new GUIStyle { margin = new RectOffset(20, 0, 0, 0) });
-
-                        string remoteBuildPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name);
-                        bool isRemoteBuildPathConfigured = remoteBuildPath == this.remoteBuildPath;
-                        EditorGUILayout.BeginHorizontal();
-                        EditorGUILayout.LabelField($"{(isRemoteBuildPathConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-                        EditorGUILayout.LabelField($"<b>{remote_build_path_variable_name}: </b>{remoteBuildPath}", style);
-                        EditorGUILayout.EndHorizontal();
-
-                        string remoteLoadPath = settings.profileSettings.GetValueByName(settings.activeProfileId, remote_load_path_variable_name);
-                        bool isRemoteLoadPathConfigured = remoteLoadPath == this.remoteLoadPath;
-                        EditorGUILayout.BeginHorizontal();
-                        EditorGUILayout.LabelField($"{(isRemoteLoadPathConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-                        EditorGUILayout.LabelField($"<b>{remote_load_path_variable_name}: </b>{remoteLoadPath}", style);
-                        EditorGUILayout.EndHorizontal();
-
-                        string buildTarget = settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name);
-                        bool isBuildTargetConfigured = buildTarget == build_target_variable_value;
-                        EditorGUILayout.BeginHorizontal();
-                        EditorGUILayout.LabelField($"{(isBuildTargetConfigured ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-                        EditorGUILayout.LabelField($"<b>{build_target_variable_name}: </b>{buildTarget}", style);
-                        EditorGUILayout.EndHorizontal();
-
-                        string playerVersionOverrideVariable = settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name);
-                        bool isPlayerVersionOverrideConfiugred = playerVersionOverrideVariable == player_version_override_variable_value;
-                        EditorGUILayout.BeginHorizontal();
-                        EditorGUILayout.LabelField($"{(isPlayerVersionOverrideConfiugred ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")}", style, GUILayout.Width(20));
-                        EditorGUILayout.LabelField($"<b>{player_version_override_variable_name}: </b>{playerVersionOverrideVariable}", style);
-                        EditorGUILayout.EndHorizontal();
-
-                        EditorGUILayout.EndVertical();
-                    }
-
-                    EditorGUILayout.EndVertical();
-
-                    EditorGUILayout.Space();
-
-                    #endregion
-
-                    #region Groups settings
-
-                    EditorGUILayout.BeginVertical();
-
-                    EditorGUILayout.BeginHorizontal();
-                    groupsSettingsFoldout = EditorGUILayout.Foldout(groupsSettingsFoldout, $"{(AreAddressablesGroupsConfigured() ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} Groups settings", true, dropdownStyle);
-                    if (GUILayout.Button("Open", GUILayout.ExpandWidth(false)))
-                    {
-                        EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Groups");
-                    }
-                    EditorGUILayout.EndHorizontal();
-
-                    if (groupsSettingsFoldout)
-                    {
-                        EditorGUILayout.BeginVertical(new GUIStyle { margin = new RectOffset(20, 0, 0, 0) });
-
-                        foreach (var group in settings.groups)
-                        {
-                            EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
-
-                            EditorGUILayout.LabelField($"{(IsAddresableGroupConfigured(group) ? "<b>[<color=lime>√</color>]</b>" : "<b>[<color=red>X</color>]</b>")} {group.Name}", style);
-                            if (GUILayout.Button("Select", GUILayout.ExpandWidth(false)))
-                            {
-                                Selection.activeObject = group;
-                            }
-
-                            EditorGUILayout.EndHorizontal();
-                        }
-
-                        EditorGUILayout.EndVertical();
-                    }
-
-                    EditorGUILayout.EndVertical();
-
-                    EditorGUILayout.Space();
-
-                    #endregion
-                }
-
-                #endregion
-
-                GUILayout.EndScrollView();
-            }
-        }
-
-        private void CreateSeparator()
-        {
-            Rect rect = EditorGUILayout.GetControlRect(false, 1);
-            rect.height = 1;
-            EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
+            VisualElement binaryCatalog = buildErrors.Q<VisualElement>("binary-catalog");
+            DataBinding binaryCatalogDataBinding = new()
+            {
+                dataSourcePath = PropertyPath.FromName(nameof(buildResult)),
+                bindingMode = BindingMode.ToTarget
+            };
+            binaryCatalogDataBinding.sourceToUiConverters.AddConverter((ref EBuildError value) => buildResult == EBuildError.BinaryCatalog);
+            binaryCatalog.SetBinding(nameof(binaryCatalog.visible), binaryCatalogDataBinding);
         }
 
         #region Top-Level settings configuration
 
-        private bool IsAddressablesSettingsConfigured()
-        {
-            return
-                settings.RemoteCatalogLoadPath.GetName(settings) == remote_load_path_variable_name &&
-                settings.RemoteCatalogBuildPath.GetName(settings) == remote_build_path_variable_name &&
-                settings.BuildRemoteCatalog &&
-                settings.EnableJsonCatalog &&
-                settings.CheckForContentUpdateRestrictionsOption
-                        == CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions &&
-                settings.MaxConcurrentWebRequests == 3 &&
-                settings.CatalogRequestsTimeout == 0 &&
-                !settings.IgnoreUnsupportedFilesInBuild &&
-                !settings.UniqueBundleIds &&
-                settings.ContiguousBundles &&
-                settings.NonRecursiveBuilding &&
-                settings.BuiltInBundleNaming == BuiltInBundleNaming.Custom &&
-                settings.BuiltInBundleCustomNaming == playerVersionOverride &&
-                settings.MonoScriptBundleNaming == MonoScriptBundleNaming.Custom &&
-                settings.MonoScriptBundleCustomNaming == playerVersionOverride &&
-                !settings.DisableVisibleSubAssetRepresentations;
-        }
+
+        [CreateProperty]
+        public bool IsAddressablesSettingsConfigured =>
+                 settings.RemoteCatalogLoadPath.GetName(settings) == remote_load_path_variable_name &&
+                 settings.RemoteCatalogBuildPath.GetName(settings) == remote_build_path_variable_name &&
+                 settings.BuildRemoteCatalog &&
+                 settings.EnableJsonCatalog &&
+                 settings.CheckForContentUpdateRestrictionsOption
+                         == CheckForContentUpdateRestrictionsOptions.ListUpdatedAssetsWithRestrictions &&
+                 settings.MaxConcurrentWebRequests == 3 &&
+                 settings.CatalogRequestsTimeout == 0 &&
+                 !settings.IgnoreUnsupportedFilesInBuild &&
+                 !settings.UniqueBundleIds &&
+                 settings.ContiguousBundles &&
+                 settings.NonRecursiveBuilding &&
+                 settings.BuiltInBundleNaming == BuiltInBundleNaming.Custom &&
+                 settings.MonoScriptBundleNaming == MonoScriptBundleNaming.Custom &&
+                 !settings.DisableVisibleSubAssetRepresentations;
+
 
         private void ConfigureAddressablesSettings()
         {
@@ -395,9 +291,7 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
             settings.ContiguousBundles = true;
             settings.NonRecursiveBuilding = true;
             settings.BuiltInBundleNaming = BuiltInBundleNaming.Custom;
-            settings.BuiltInBundleCustomNaming = playerVersionOverride;
             settings.MonoScriptBundleNaming = MonoScriptBundleNaming.Custom;
-            settings.MonoScriptBundleCustomNaming = playerVersionOverride;
             settings.DisableVisibleSubAssetRepresentations = false;
             settings.BuildRemoteCatalog = true;
 
@@ -406,21 +300,21 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
 
         private void ConfigureAddressablesSettingsForBuild()
         {
-            settings.BuiltInBundleCustomNaming = playerVersionOverride;
-            settings.BuiltInBundleCustomNaming = playerVersionOverride;
+            settings.BuiltInBundleCustomNaming = settings.OverridePlayerVersion;
+            settings.MonoScriptBundleCustomNaming = settings.OverridePlayerVersion;
         }
 
         #endregion
 
         #region Profiles configuration
 
-        private bool IsProfileConfigured()
-        {
-            return settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name) == remoteBuildPath
+        [CreateProperty]
+        private bool IsProfileConfigured =>
+            settings.profileSettings.GetValueByName(settings.activeProfileId, remote_build_path_variable_name) == remoteBuildPath
                 && settings.profileSettings.GetValueByName(settings.activeProfileId, remote_load_path_variable_name) == remoteLoadPath
                 && settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name) == build_target_variable_value
                 && settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name) == player_version_override_variable_value;
-        }
+
 
         private void ConfigureProfile()
         {
@@ -452,14 +346,18 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
 
         #region Groups configuration
 
-        private bool AreAddressablesGroupsConfigured()
+        [CreateProperty]
+        private bool AreAddressablesGroupsConfigured
         {
-            bool configured = true;
-            settings.groups.ForEach(group => configured &= IsAddresableGroupConfigured(group));
-            return configured;
+            get
+            {
+                bool configured = true;
+                settings.groups.ForEach(group => configured &= IsAddressableGroupConfigured(group));
+                return configured;
+            }
         }
 
-        private bool IsAddresableGroupConfigured(AddressableAssetGroup group)
+        private bool IsAddressableGroupConfigured(AddressableAssetGroup group)
         {
             bool configured = true;
 
@@ -541,7 +439,20 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
             AssetDatabase.Refresh();
         }
 
-        #endregion
+        private void EnsureFolderExists(string folderPath)
+        {
+            string[] folders = folderPath.Split('/');
+            string currentPath = "";
+
+            foreach (string folder in folders)
+            {
+                currentPath = Path.Combine(currentPath, folder);
+                if (!AssetDatabase.IsValidFolder(currentPath))
+                {
+                    AssetDatabase.CreateFolder(Path.GetDirectoryName(currentPath), Path.GetFileName(currentPath));
+                }
+            }
+        }
 
 
         #region Test
@@ -556,6 +467,8 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
 
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
             BuildAddressablesForSelectedPlatform();
+
+            buildResult = CheckBuildResult();
         }
 
         private void BuildAddressablesForSelectedPlatform()
@@ -582,15 +495,50 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
             AssetDatabase.TryGetGUIDAndLocalFileIdentifier(configuration.Scene, out string guid, out long _);
             AddressableAssetEntry addressableEntry = settings.CreateOrMoveEntry(guid, assetGroup);
 
-            string addressableAddress = Regex.Replace(configuration.Scene.name.ToLower(), alphanumeric_lowercase_string_pattern_negated, string.Empty);
-            addressableEntry.SetAddress(addressableAddress);
+            string sceneNameFiltered = configuration.SceneNameFiltered;
+            addressableEntry.SetAddress(sceneNameFiltered);
 
-            settings.OverridePlayerVersion = addressableAddress;
+            settings.OverridePlayerVersion = sceneNameFiltered;
             ConfigureAddressablesSettingsForBuild();
 
             AddressablesBuildScript.BuildAddressables();
 
             settings.RemoveAssetEntry(guid);
+
+            settings.OverridePlayerVersion = string.Empty;
+        }
+
+        private EBuildError CheckBuildResult()
+        {
+            List<string> builtScenes = sceneConfigurations.SceneConfigurations
+                .Where(x => x.IncludeInBuild)
+                .Select(x => x.SceneNameFiltered)
+                .ToList();
+
+            foreach (string scene in builtScenes)
+            {
+                string sceneFolderPath = Path.Combine(addressables_output_folder, scene);
+                string[] requiredSubfolders = { "WebGL", "StandaloneWindows64", "Android" };
+
+                foreach (string subfolder in requiredSubfolders)
+                {
+                    string subfolderPath = Path.Combine(sceneFolderPath, subfolder);
+                    if (!Directory.Exists(subfolderPath))
+                    {
+                        Debug.LogError($"Subfolder {subfolder} not found in {sceneFolderPath}");
+                        return EBuildError.FolderMissing;
+                    }
+
+                    bool catalogFileExists = Directory.GetFiles(subfolderPath, "*catalog*.json").Any();
+                    if (!catalogFileExists)
+                    {
+                        Debug.LogError($"Catalog file not found in {subfolderPath}");
+                        return EBuildError.BinaryCatalog;
+                    }
+                }
+            }
+
+            return EBuildError.None;
         }
 
         #endregion
