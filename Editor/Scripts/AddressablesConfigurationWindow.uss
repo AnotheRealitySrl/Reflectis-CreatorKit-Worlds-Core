@@ -61,7 +61,7 @@
 
 .build-error-item-icon {
     background-size: 20px 20px;
-    background-image: url("project://database/Packages/com.unity.timeline/Editor/StyleSheets/Images/Icons/Timeline-Marker-Warning-Overlay.png?fileID=2800000&guid=945f4ecec6df62244b9ebcc363833642&type=3#Timeline-Marker-Warning-Overlay");
+    background-image: url("project://database/Packages/com.unity.collab-proxy/Editor/Assets/Images/d_iconconflicted@2x.png?fileID=2800000&guid=65f0e363b74cf5845ab8c3fbc14f39ac&type=3#d_iconconflicted@2x");
     width: 20px;
     height: 20px;
     margin-top: 5px;
