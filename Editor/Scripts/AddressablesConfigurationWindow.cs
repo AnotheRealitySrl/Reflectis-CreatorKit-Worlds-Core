@@ -215,8 +215,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 dataSourcePath = PropertyPath.FromName(nameof(AreAddressablesConfigured)),
                 bindingMode = BindingMode.ToTarget
             };
-            buildAddressablesButtonDataBinding.sourceToUiConverters.AddConverter((ref bool value) => AreAddressablesConfigured ? "Build Addressables" : "Fix Addressables Configurations");
-            buildTargetValue.SetBinding(nameof(buildTargetValue.text), buildAddressablesButtonDataBinding);
+            buildAddressablesButtonDataBinding.sourceToUiConverters.AddConverter((ref bool value) => AreAddressablesConfigured ? "Build Addressables" : "Fix Addressables configurations");
+            buildAddressablesButton.SetBinding(nameof(buildAddressablesButton.text), buildAddressablesButtonDataBinding);
             buildAddressablesButton.clicked += () =>
             {
                 if (AreAddressablesConfigured)
