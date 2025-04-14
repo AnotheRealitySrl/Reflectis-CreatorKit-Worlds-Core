@@ -1,7 +1,7 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Packages/com.anotherealitysrl.reflectis-creatorkit-worlds-core/Editor/Scripts/New/AddressablesConfigurationWindowNew.uss?fileID=7433441132597879392&amp;guid=515b32a0c8a91b84482ae7efefc66dfe&amp;type=3#AddressablesConfigurationWindowNew" />
+    <Style src="project://database/Packages/com.anotherealitysrl.reflectis-creatorkit-worlds-core/Editor/Scripts/AddressablesConfigurationWindow.uss?fileID=7433441132597879392&amp;guid=515b32a0c8a91b84482ae7efefc66dfe&amp;type=3#AddressablesConfigurationWindow" />
     <engine:ScrollView>
-        <engine:Label text="Creator Kit Configuration Window" name="Header" style="-unity-text-align: upper-center; -unity-font-style: bold; font-size: 24px;" />
+        <engine:Label text="Addressables management window" name="Header" style="-unity-text-align: upper-center; -unity-font-style: bold; font-size: 24px;" />
         <engine:VisualElement name="separator" class="separator" style="flex-grow: 1;" />
         <engine:VisualElement name="build-result-errors" style="flex-grow: 1;">
             <engine:VisualElement name="folder-missing" class="build-error-item">
@@ -68,7 +68,7 @@
                         </engine:VisualElement>
                     </engine:Foldout>
                     <engine:GroupBox name="default-local-group-button-container" class="settings-button-container" style="justify-content: space-between; align-items: auto; margin-top: 0; margin-bottom: 0;">
-                        <engine:Button text="Select" name="default-local-group-button" />
+                        <engine:Button text="Select" name="addressables-groups-button" />
                     </engine:GroupBox>
                 </engine:GroupBox>
             </engine:Foldout>
