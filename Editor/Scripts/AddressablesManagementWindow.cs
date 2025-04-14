@@ -19,7 +19,7 @@ using static Reflectis.CreatorKit.Worlds.Core.Editor.SceneListScriptableObject;
 
 namespace Reflectis.CreatorKit.Worlds.Core.Editor
 {
-    public class AddressablesConfigurationWindow : EditorWindow
+    public class AddressablesManagementWindow : EditorWindow
     {
         private enum EBuildError
         {
@@ -71,12 +71,23 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         [CreateProperty] private bool AreAddressablesConfigured => IsAddressablesSettingsConfigured && IsProfileConfigured && AreAddressablesGroupsConfigured;
 
 
-        [MenuItem("Reflectis/AddressablesConfigurationWindowNew")]
+        [MenuItem("Reflectis Worlds/Creator Kit/Core/Addressables management")]
         public static void ShowExample()
         {
-            AddressablesConfigurationWindow wnd = GetWindow<AddressablesConfigurationWindow>();
-            wnd.titleContent = new GUIContent("AddressablesConfigurationWindow");
+            AddressablesManagementWindow wnd = GetWindow<AddressablesManagementWindow>();
+            wnd.titleContent = new GUIContent("Addressables management");
         }
+
+        private void OnApplicationQuit()
+        {
+            SaveAsset(sceneConfigurations);
+        }
+
+        private void OnDestroy()
+        {
+            SaveAsset(sceneConfigurations);
+        }
+
 
         public void CreateGUI()
         {
@@ -206,8 +217,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             Button profileSettingsButton = root.Q<Button>("profile-settings-button");
             profileSettingsButton.clicked += () => EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Profiles");
 
-            Button groupsSettingsButton = root.Q<Button>("default-local-group-button");
+            Button groupsSettingsButton = root.Q<Button>("addressables-groups-button");
             groupsSettingsButton.clicked += () => EditorApplication.ExecuteMenuItem("Window/Asset Management/Addressables/Groups");
+
+            Button defaultLocalGroupButton = root.Q<Button>("default-local-group-button");
+            defaultLocalGroupButton.clicked += () => Selection.activeObject = settings.DefaultGroup;
+
 
             Button buildAddressablesButton = root.Q<Button>("build-addressables-button");
             DataBinding buildAddressablesButtonDataBinding = new()
@@ -241,7 +256,11 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 dataSourcePath = PropertyPath.FromName(nameof(buildResult)),
                 bindingMode = BindingMode.ToTarget
             };
-            folderMissingDataBinding.sourceToUiConverters.AddConverter((ref EBuildError value) => buildResult == EBuildError.FolderMissing);
+            folderMissingDataBinding.sourceToUiConverters.AddConverter((ref EBuildError value) =>
+            {
+                folderMissing.style.display = buildResult == EBuildError.FolderMissing ? DisplayStyle.Flex : DisplayStyle.None;
+                return true;
+            });
             folderMissing.SetBinding(nameof(folderMissing.visible), folderMissingDataBinding);
 
             VisualElement binaryCatalog = buildErrors.Q<VisualElement>("binary-catalog");
@@ -250,8 +269,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 dataSourcePath = PropertyPath.FromName(nameof(buildResult)),
                 bindingMode = BindingMode.ToTarget
             };
-            binaryCatalogDataBinding.sourceToUiConverters.AddConverter((ref EBuildError value) => buildResult == EBuildError.BinaryCatalog);
-            binaryCatalog.SetBinding(nameof(binaryCatalog.visible), binaryCatalogDataBinding);
+            binaryCatalogDataBinding.sourceToUiConverters.AddConverter((ref EBuildError value) =>
+            {
+                binaryCatalog.style.display = buildResult == EBuildError.BinaryCatalog ? DisplayStyle.Flex : DisplayStyle.None;
+                return true;
+            });
+            binaryCatalog.SetBinding(nameof(folderMissing.visible), binaryCatalogDataBinding);
         }
 
         #region Top-Level settings configuration
@@ -295,7 +318,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             settings.DisableVisibleSubAssetRepresentations = false;
             settings.BuildRemoteCatalog = true;
 
-            SaveSettings();
+            SaveAsset(settings);
         }
 
         private void ConfigureAddressablesSettingsForBuild()
@@ -339,7 +362,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 settings.profileSettings.SetValue(settings.activeProfileId, player_version_override_variable_name, player_version_override_variable_value);
             }
 
-            SaveSettings();
+            SaveAsset(settings);
         }
 
         #endregion
@@ -421,10 +444,11 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                     bundledAssetGroupSchema.AssetBundledCacheClearBehavior = BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded;
                     bundledAssetGroupSchema.BundleMode = BundledAssetGroupSchema.BundlePackingMode.PackSeparately;
                     bundledAssetGroupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash;
+
+                    SaveAsset(bundledAssetGroupSchema);
                 });
             });
 
-            SaveSettings();
         }
 
         #endregion
@@ -437,6 +461,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             EditorApplication.ExecuteMenuItem("File/Save Project");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        private void SaveAsset(UnityEngine.Object asset)
+        {
+            EditorUtility.SetDirty(asset);
+            AssetDatabase.SaveAssetIfDirty(asset);
         }
 
         private void EnsureFolderExists(string folderPath)
@@ -455,7 +485,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         }
 
 
-        #region Test
+        #region Build
 
         private void BuildSelectedAddressablesForAllPlatforms()
         {
