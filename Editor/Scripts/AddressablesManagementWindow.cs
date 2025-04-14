@@ -456,14 +456,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private string BuildtimeVariable(string variable) => "[" + variable + "]";
         private string RuntimeVariable(string variable) => "{" + variable + "}";
 
-        private void SaveSettings()
-        {
-            EditorApplication.ExecuteMenuItem("File/Save Project");
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-        }
-
-        private void SaveAsset(UnityEngine.Object asset)
+        private void SaveAsset(Object asset)
         {
             EditorUtility.SetDirty(asset);
             AssetDatabase.SaveAssetIfDirty(asset);
