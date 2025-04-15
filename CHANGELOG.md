@@ -1,5 +1,19 @@
 # Release notes
 
+## v5.0.0
+
+### Changed 
+
+- Redesigned the addressables management window, now the configuration and the management of the scenes is more user-friendly: 
+  the user references the scenes directly without dealing with notion of catalogs and builds them all at once.
+- Removed null definitions from `CMEvent`.
+
+## v4.2.0
+
+### Added
+
+- Add missing splines namespaces in `CreatorKitUpgradeWindow`
+
 ## v4.1.0
 
 ### Added
