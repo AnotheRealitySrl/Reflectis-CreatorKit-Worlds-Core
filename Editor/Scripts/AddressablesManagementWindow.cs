@@ -225,6 +225,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
 
             Button buildAddressablesButton = root.Q<Button>("build-addressables-button");
+            buildAddressablesButton.dataSource = this;
             DataBinding buildAddressablesButtonDataBinding = new()
             {
                 dataSourcePath = PropertyPath.FromName(nameof(AreAddressablesConfigured)),

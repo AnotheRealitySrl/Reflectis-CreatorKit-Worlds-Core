@@ -15,7 +15,7 @@
         </engine:VisualElement>
         <engine:GroupBox name="scene-configuration">
             <engine:VisualElement name="scene-configuration-scriptable" style="flex-grow: 1; margin-top: 8px; margin-right: 4px; margin-bottom: 8px; margin-left: 4px;" />
-            <engine:Button text="Build Addressables" name="build-addressables-button" tooltip="Click here to start a build with the scenes included in the above and with the check &quot;IncludeInBuild&quot; enabled. Each scene will produce a .zip folder that can be uploaded to the platform." />
+            <engine:Button text="Text" name="build-addressables-button" tooltip="Click here to start a build with the scenes included in the above and with the check &quot;IncludeInBuild&quot; enabled. Each scene will produce a .zip folder that can be uploaded to the platform." />
         </engine:GroupBox>
         <engine:VisualElement name="separator" class="separator" style="flex-grow: 1;" />
         <engine:GroupBox name="addressables-settings">
