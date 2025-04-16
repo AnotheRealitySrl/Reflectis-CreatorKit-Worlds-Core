@@ -82,7 +82,7 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
         */
 
         [SerializeField]
-        private List<EnvironmentAssetDefinition> environmentAssets = new List<EnvironmentAssetDefinition>();
+        public List<EnvironmentAssetDefinition> environmentAssets = new List<EnvironmentAssetDefinition>();
 
         #endregion
 

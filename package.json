@@ -1,7 +1,7 @@
 {
   "name": "com.anotherealitysrl.reflectis-creatorkit-worlds-core",
   "displayName": "Reflectis-CreatorKit-Worlds-Core",
-  "version": "4.2.0",
+  "version": "5.0.0",
   "unity": "2020.1",
   "description": "Reflectis Creator Kit Worlds Core module",
   "keywords": [
@@ -20,6 +20,6 @@
     }
   ],
   "dependencies": {
-    "com.unity.addressables": "1.21.20"
+    "com.unity.addressables": "2.2.2"
   }
 }

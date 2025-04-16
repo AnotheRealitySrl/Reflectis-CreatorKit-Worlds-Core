@@ -13,6 +13,7 @@ using Reflectis.CreatorKit.Worlds.Core.Placeholders;
 namespace Reflectis.CreatorKit.Worlds.Core.Placeholders
 {
     [ExecuteInEditMode]
+    [DisallowMultipleComponent]
     public class SceneObjectId : MonoBehaviour
     {
 

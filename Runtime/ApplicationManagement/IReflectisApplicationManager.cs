@@ -1,4 +1,3 @@
-using Reflectis.CreatorKit.Worlds.Core.ClientModels;
 using Reflectis.SDK.Core.ApplicationManagement;
 
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ApplicationManagement
 
         Task LoadDefaultEvent();
         Task InitializeObject(GameObject gameObject, bool initializeChildren = false);
-        Task LoadEvent(CMEvent ev, CMShard shard = null, bool updateHistory = true, bool recoverFromDisconnection = false);
+        Task<bool> JoinEvent(int eventId, int? shard = null, bool updateHistory = true, bool recoverFromDisconnection = false);
 
         void EnableOtherAvatars(bool enable, List<GameObject> except = null);
         void EnableSpawnedObjects(bool enable, List<GameObject> except = null);

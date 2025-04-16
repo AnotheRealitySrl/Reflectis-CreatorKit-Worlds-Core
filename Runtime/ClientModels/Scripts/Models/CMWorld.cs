@@ -14,8 +14,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private string thumbnailUri;
         [SerializeField] private bool enabled;
         [SerializeField] private bool multiplayer;
-        [SerializeField] private int? maxCCU;
+        [SerializeField] private int multiplayerUsersCount;
+        [SerializeField] private int? maxOnlineUsers;
         [SerializeField] private CMWorldConfig config;
+        [SerializeField] private int defaultEventId;
 
         public int Id { get => id; set => id = value; }
         public string Label { get => label; set => label = value; }
@@ -28,6 +30,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <summary>
         /// If maxCCU is null, the world has no limit on the number of users that can be in it at the same time.
         /// </summary>
-        public int? MaxCCU { get => maxCCU; set => maxCCU = value; }
+        public int? MaxOnlineUsers { get => maxOnlineUsers; set => maxOnlineUsers = value; }
+        public int MultiplayerUsersCount { get => multiplayerUsersCount; set => multiplayerUsersCount = value; }
+        public int DefaultEventId { get => defaultEventId; set => defaultEventId = value; }
     }
 }

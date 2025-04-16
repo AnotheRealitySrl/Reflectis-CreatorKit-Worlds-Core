@@ -36,38 +36,47 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Shards
         public CMShard CurrentShard { get; }
+        public List<CMShard> CurrentEventShards { get; }
+        public Action onShardsChange { get; set; }
         #endregion
 
         #region Worlds
-
         List<CMWorld> Worlds { get; }
         CMWorld CurrentWorld { get; }
 
         #endregion
 
         #region Session
-        public int SessionId { get; }
+        public string SessionId { get; }
         #endregion
-
-        //#region Facets
-        //public List<CMFacet> Facets { get; }
-        //#endregion
 
         #region Users
         CMUser UserData { get; }
         #endregion
+
         #endregion
 
-        float PlayerPingRateSeconds { get; }
+        #region Session
+        Task StartSession();
+
+        void EndSession();
+
+        Task<int> JoinWorld(int worldId, int eventId);
+        #endregion
 
         #region Worlds
-
-        public Action<List<CMWorldCCU>> onWorldListUpdate { get; set; }
+        /// <summary>
+        /// Action called on changes on online users.
+        /// The first int represent the worldId the second one the Users count
+        /// </summary>
+        public Action<int /*worldID*/, int /*usersCount*/> onOnlineUsersPerWorld { get; set; }
 
         /// <summary>
         /// Returns all the available worlds
         /// </summary>
         Task<List<CMWorld>> GetAllWorlds();
+
+        void ConnectToOnlineUsersPerWorld();
 
         Task<CMWorld> GetWorld(int worldId);
 
@@ -75,12 +84,32 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         Task<List<CMCatalog>> GetWorldCatalogs(int worldId);
 
-        Task ConnectToWorldCCU();
+        public Task KickPlayer(string kickedUserSession);
 
-        Task DisconnectFromWorldCCU();
+        public Task LoadMyWorldData();
         #endregion
 
         #region Events
+        /// <summary>
+        /// Try to join event with given id at shard shardId
+        /// Id shardId is null the system will try to join the event in any shard
+        /// Response is the shard id where the player has been joined
+        /// if the response is null the join has failed
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="shardId"></param>
+        /// <returns></returns>
+        Task<int?> JoinEvent(int id, int? shardId);
+
+        /// <summary>
+        /// Setup current event entering data and starts downloading data for the given event
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <param name="shard"></param>
+        /// <returns></returns>
+        public Task LoadEventShardData(int eventId, int shard);
+
+        void LeaveEvent();
 
         void InvalidateEventCache();
         /// <summary>
@@ -101,7 +130,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <summary>
         /// Returns the default event of a world
         /// </summary>
-        Task<CMEvent> GetDefaultWorldEvent();
+        Task<CMEvent> GetDefaultWorldEvent(int worldId);
 
         /// <summary>
         /// Returns the static events
@@ -231,8 +260,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Users
 
-        void InvalidateUsersCache();
-
         /// <summary>
         /// Return all users that match search criteria
         /// </summary>
@@ -244,36 +271,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <param name="id"></param>
         /// <returns></returns>
         Task<CMUser> GetUserData(int id);
-
-        /// <summary>
-        ///  Return the local player data contextualized to the world we are in (with users tags) if are in a world,
-        ///  otherwise returns the user data decontextualized
-        /// </summary>
-        /// <returns></returns>
-        Task<CMUser> GetMyUserData();
-
-
-        /// <summary>
-        /// Return data of the player with given id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<int> GetUserCode(int userId);
-
-        /// <summary>
-        /// Return my user preferences
-        /// </summary>
-        /// <returns></returns>
-        Task<CMUserPreference> GetMyUserPreferences();
-
-        /// <summary>
-        /// Get user preferences of given user id
-        /// </summary>
-        /// <param name="worldId"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<CMUserPreference> GetUserPreference(int userId);
-
 
         /// <summary>
         /// Update my user preferences outside of world context
@@ -315,13 +312,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <returns></returns>
         Task<List<CMPermission>> GetAllPermissionsByTag(int tagId);
 
-        /// <summary>
-        /// Get all permission for the current world
-        /// </summary>
-        /// <returns></returns>
-        Task<List<EFacetIdentifier>> GetMyWorldPermissions();
-
-
         #endregion
 
         #region Keys
@@ -357,12 +347,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         Task<List<CMTag>> GetAllUsersTags();
 
         /// <summary>
-        /// Get all tags avaible to the single user given the user id
-        /// </summary>
-        /// <returns></returns>
-        Task<List<CMTag>> GetUserTags(int id);
-
-        /// <summary>
         /// Search user tag
         /// </summary>
         /// <param name="labelSubstring"></param>
@@ -373,37 +357,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Online presence
         UnityEvent OnlineUsersUpdated { get; }
-        Task<List<CMOnlinePresence>> ForceOnlineUsersRefresh();
-        List<CMOnlinePresence> GetOnlineUsers();
-        CMOnlinePresence GetOnlineUser(int userId);
+        List<CMOnlineUser> GetOnlineUsers();
+        CMOnlineUser GetOnlineUser(int userId);
         bool IsOnlineUser(int userId);
-        Task<EPingStatus> PingMyOnlinePresence(int? worldId, int? eventId, int? shardId, bool? isShardClosed, bool isMultiplayer);
+        List<CMOnlineUser> GetUsersInEvent(int eventId);
 
-        Task<List<CMOnlinePresence>> GetUsersInEvent(int eventId, bool forceRefresh = true);
-
-        /// <summary>
-        /// If value the cache variables that have to be auto refreshed will start their refresh
-        /// otherwise they will stop refreshing
-        /// </summary>
-        /// <param name="value"></param>
-        Task EnableCacheAutoRefresh(bool value);
-
-        Task<bool> CheckMaxCCU(int worldId);
         #endregion
 
-        #region Shards
-
-        /// <summary>
-        /// Retrieves the current shards of an event.
-        /// </summary>
-        Task<List<CMShard>> GetEventShards(int eventId);
-
-        /// <summary>
-        /// Retrieves the current shards of an event.
-        /// </summary>
-        List<CMShard> GetCachedEventShards(int eventId);
-
-
+        #region Shard
+        Task EnableShard(bool enable);
         #endregion
     }
 }
