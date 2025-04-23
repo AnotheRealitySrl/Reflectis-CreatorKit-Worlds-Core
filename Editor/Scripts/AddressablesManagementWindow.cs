@@ -7,6 +7,7 @@ using System.Linq;
 using Unity.Properties;
 
 using UnityEditor;
+using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
@@ -124,6 +125,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
             settings = AddressablesBuildScript.GetSettingsObject(AddressablesBuildScript.settings_asset);
 
+            if (!settings)
+            {
+                AddressableAssetSettingsDefaultObject.Settings = AddressableAssetSettings.Create(AddressableAssetSettingsDefaultObject.kDefaultConfigFolder,
+                               AddressableAssetSettingsDefaultObject.kDefaultConfigAssetName, true, true);
+                settings = AddressablesBuildScript.GetSettingsObject(AddressablesBuildScript.settings_asset);
+            }
+
             remoteBuildPath = string.Join('/',
                 addressables_output_folder,
                 BuildtimeVariable(player_version_override_variable_name),
@@ -164,6 +172,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 { ("remote-loadpath-check", nameof(IsRemoteLoadPathConfigured)) },
                 { ("build-target-check", nameof(IsBuildTargetConfigured)) },
                 { ("player-version-override-check", nameof(IsPlayerVersionOverrideConfigured)) },
+                { ("default-local-group-check", nameof(AreAddressablesConfigured)) },
             };
             foreach (var entry in settingIcons)
             {
@@ -376,80 +385,97 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             get
             {
                 bool configured = true;
-                settings.groups.ForEach(group => configured &= IsAddressableGroupConfigured(group));
+
+                var defaultGroup = settings.DefaultGroup;
+
+                configured &= !settings.groups.Where(group => group != defaultGroup).Any();
+                configured &= !defaultGroup.entries.Any();
+
+                defaultGroup.Schemas.Where(schema => schema is BundledAssetGroupSchema).ToList().ForEach(schema =>
+                {
+                    BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
+
+                    configured &=
+                        bundledAssetGroupSchema.LoadPath.GetName(settings) == remote_load_path_variable_name &&
+                        bundledAssetGroupSchema.BuildPath.GetName(settings) == remote_build_path_variable_name &&
+                        bundledAssetGroupSchema.Compression == BundledAssetGroupSchema.BundleCompressionMode.LZ4 &&
+                        bundledAssetGroupSchema.IncludeInBuild == true &&
+                        bundledAssetGroupSchema.ForceUniqueProvider == false &&
+                        bundledAssetGroupSchema.UseAssetBundleCache == true &&
+                        bundledAssetGroupSchema.UseAssetBundleCrc == false &&
+                        bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles == false &&
+                        bundledAssetGroupSchema.UseUnityWebRequestForLocalBundles == false &&
+                        bundledAssetGroupSchema.Timeout == 0 &&
+                        bundledAssetGroupSchema.ChunkedTransfer == false &&
+                        bundledAssetGroupSchema.RedirectLimit == -1 &&
+                        bundledAssetGroupSchema.RetryCount == 0 &&
+                        bundledAssetGroupSchema.IncludeAddressInCatalog == true &&
+                        bundledAssetGroupSchema.IncludeGUIDInCatalog == true &&
+                        bundledAssetGroupSchema.IncludeLabelsInCatalog == true &&
+                        bundledAssetGroupSchema.InternalIdNamingMode == BundledAssetGroupSchema.AssetNamingMode.FullPath &&
+                        bundledAssetGroupSchema.InternalBundleIdMode == BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash &&
+                        bundledAssetGroupSchema.AssetBundledCacheClearBehavior == BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded &&
+                        bundledAssetGroupSchema.BundleMode == BundledAssetGroupSchema.BundlePackingMode.PackSeparately &&
+                        bundledAssetGroupSchema.BundleNaming == BundledAssetGroupSchema.BundleNamingStyle.NoHash;
+                });
+
                 return configured;
             }
         }
 
-        private bool IsAddressableGroupConfigured(AddressableAssetGroup group)
+        private void ConfigureAddressablesGroups()
         {
-            bool configured = true;
+            var defaultGroup = settings.DefaultGroup;
 
-            group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ToList().ForEach(schema =>
+            // Collect all groups except the default group
+            var groupsToDelete = settings.groups.Where(group => group != defaultGroup).ToList();
+
+            // Delete each group
+            foreach (var group in groupsToDelete)
+            {
+                settings.RemoveGroup(group);
+            }
+
+            defaultGroup.Schemas.Where(schema => schema is BundledAssetGroupSchema).ToList().ForEach(schema =>
             {
                 BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
 
-                configured &=
-                    bundledAssetGroupSchema.LoadPath.GetName(settings) == remote_load_path_variable_name &&
-                    bundledAssetGroupSchema.BuildPath.GetName(settings) == remote_build_path_variable_name &&
-                    bundledAssetGroupSchema.Compression == BundledAssetGroupSchema.BundleCompressionMode.LZ4 &&
-                    bundledAssetGroupSchema.IncludeInBuild == true &&
-                    bundledAssetGroupSchema.ForceUniqueProvider == false &&
-                    bundledAssetGroupSchema.UseAssetBundleCache == true &&
-                    bundledAssetGroupSchema.UseAssetBundleCrc == false &&
-                    bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles == false &&
-                    bundledAssetGroupSchema.UseUnityWebRequestForLocalBundles == false &&
-                    bundledAssetGroupSchema.Timeout == 0 &&
-                    bundledAssetGroupSchema.ChunkedTransfer == false &&
-                    bundledAssetGroupSchema.RedirectLimit == -1 &&
-                    bundledAssetGroupSchema.RetryCount == 0 &&
-                    bundledAssetGroupSchema.IncludeAddressInCatalog == true &&
-                    bundledAssetGroupSchema.IncludeGUIDInCatalog == true &&
-                    bundledAssetGroupSchema.IncludeLabelsInCatalog == true &&
-                    bundledAssetGroupSchema.InternalIdNamingMode == BundledAssetGroupSchema.AssetNamingMode.FullPath &&
-                    bundledAssetGroupSchema.InternalBundleIdMode == BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash &&
-                    bundledAssetGroupSchema.AssetBundledCacheClearBehavior == BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded &&
-                    bundledAssetGroupSchema.BundleMode == BundledAssetGroupSchema.BundlePackingMode.PackSeparately &&
-                    bundledAssetGroupSchema.BundleNaming == BundledAssetGroupSchema.BundleNamingStyle.NoHash;
+                bundledAssetGroupSchema.LoadPath.SetVariableByName(settings, remote_load_path_variable_name);
+                bundledAssetGroupSchema.BuildPath.SetVariableByName(settings, remote_build_path_variable_name);
+                bundledAssetGroupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
+                bundledAssetGroupSchema.IncludeInBuild = true;
+                bundledAssetGroupSchema.ForceUniqueProvider = false;
+                bundledAssetGroupSchema.UseAssetBundleCache = true;
+                bundledAssetGroupSchema.UseAssetBundleCrc = false;
+                bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles = false;
+                bundledAssetGroupSchema.UseUnityWebRequestForLocalBundles = false;
+                bundledAssetGroupSchema.Timeout = 0;
+                bundledAssetGroupSchema.ChunkedTransfer = false;
+                bundledAssetGroupSchema.RedirectLimit = -1;
+                bundledAssetGroupSchema.RetryCount = 0;
+                bundledAssetGroupSchema.IncludeAddressInCatalog = true;
+                bundledAssetGroupSchema.IncludeGUIDInCatalog = true;
+                bundledAssetGroupSchema.IncludeLabelsInCatalog = true;
+                bundledAssetGroupSchema.InternalIdNamingMode = BundledAssetGroupSchema.AssetNamingMode.FullPath;
+                bundledAssetGroupSchema.InternalBundleIdMode = BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash;
+                bundledAssetGroupSchema.AssetBundledCacheClearBehavior = BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded;
+                bundledAssetGroupSchema.BundleMode = BundledAssetGroupSchema.BundlePackingMode.PackSeparately;
+                bundledAssetGroupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash;
+
+                SaveAsset(bundledAssetGroupSchema);
             });
 
-            return configured;
-        }
-
-        private void ConfigureAddressablesGroups()
-        {
-            settings.groups.ForEach(group =>
+            var entriesToRemove = defaultGroup.entries.ToList();
+            foreach (var entry in entriesToRemove)
             {
-                group.Schemas.Where(schema => schema is BundledAssetGroupSchema).ToList().ForEach(schema =>
-                {
-                    BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
+                settings.RemoveAssetEntry(entry.guid);
+            }
 
-                    bundledAssetGroupSchema.LoadPath.SetVariableByName(settings, remote_load_path_variable_name);
-                    bundledAssetGroupSchema.BuildPath.SetVariableByName(settings, remote_build_path_variable_name);
-                    bundledAssetGroupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
-                    bundledAssetGroupSchema.IncludeInBuild = true;
-                    bundledAssetGroupSchema.ForceUniqueProvider = false;
-                    bundledAssetGroupSchema.UseAssetBundleCache = true;
-                    bundledAssetGroupSchema.UseAssetBundleCrc = false;
-                    bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles = false;
-                    bundledAssetGroupSchema.UseUnityWebRequestForLocalBundles = false;
-                    bundledAssetGroupSchema.Timeout = 0;
-                    bundledAssetGroupSchema.ChunkedTransfer = false;
-                    bundledAssetGroupSchema.RedirectLimit = -1;
-                    bundledAssetGroupSchema.RetryCount = 0;
-                    bundledAssetGroupSchema.IncludeAddressInCatalog = true;
-                    bundledAssetGroupSchema.IncludeGUIDInCatalog = true;
-                    bundledAssetGroupSchema.IncludeLabelsInCatalog = true;
-                    bundledAssetGroupSchema.InternalIdNamingMode = BundledAssetGroupSchema.AssetNamingMode.FullPath;
-                    bundledAssetGroupSchema.InternalBundleIdMode = BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash;
-                    bundledAssetGroupSchema.AssetBundledCacheClearBehavior = BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded;
-                    bundledAssetGroupSchema.BundleMode = BundledAssetGroupSchema.BundlePackingMode.PackSeparately;
-                    bundledAssetGroupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash;
+            SaveAsset(settings);
 
-                    SaveAsset(bundledAssetGroupSchema);
-                });
-            });
-
+            // Save changes
+            SaveAsset(defaultGroup);
+            SaveAsset(settings);
         }
 
         #endregion

@@ -1,10 +1,17 @@
 # Release notes
 
+## v5.0.1
+
+### Fixed
+
+- Fixed issue of `AddressablesConfigurationWindow` not creating addressables settings if missing.
+- Fixed issue of unused addressables entries not being cleaned up by `AddressablesConfigurationWindow`.
+
 ## v5.0.0
 
-### Changed 
+### Changed
 
-- Redesigned the addressables management window, now the configuration and the management of the scenes is more user-friendly: 
+- Redesigned the addressables management window, now the configuration and the management of the scenes is more user-friendly:
   the user references the scenes directly without dealing with notion of catalogs and builds them all at once.
 - Removed null definitions from `CMEvent`.
 
@@ -20,7 +27,7 @@
 
 - Added CreatorKitUpgradeWindow to allow migrate scenes to Reflectis Worlds 2025.1.x versions.
 
-### Fixed 
+### Fixed
 
 - Add `SelectedInteractable` reference in `IVisualScriptingInteractionSystem` interface.
 - Added extra checks to prevent a null reference in case a visual scripting interactable has already been removed from scene.
