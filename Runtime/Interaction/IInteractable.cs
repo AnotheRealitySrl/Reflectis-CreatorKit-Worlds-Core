@@ -26,7 +26,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         [System.Flags]
         public enum EBlockedState
         {
-            BlockedByOthers = 1, //blocked by player manipolation (like when manipulating with ownership)
+            BlockedByOthersManipulation = 1, //blocked by player manipolation (like when manipulating with ownership)
             BlockedBySelection = 2, //used in the block by selection node --> Never set by ownership
             BlockedByGenericLogic = 4, //the interactions are blocked --> Set by general scripts. When in this state interaction are stopped and the interactable script is usually set to false
             BlockedByPermissions = 8, //interactions blocked by a missing permission
