@@ -21,6 +21,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private string localizationUri;
         [SerializeField] private string localizationCSV;
         [SerializeField] private List<ESupportedPlatform> platforms;
+        [SerializeField] private List<CMTag> tags;
 
         public int ID { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
@@ -50,5 +51,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
                 return platforms;
             }
         }
+
+        public List<CMTag> Tags { get => tags; set => tags = value; }
     }
 }
