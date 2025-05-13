@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Unity.Properties;
+
 using UnityEngine;
 
 namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
@@ -26,6 +28,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public string Email { get => email; set => email = value; }
         public List<CMTag> Tags { get => tags; set => tags = value; }
         public CMUserPreference Preferences { get => preferences; set => preferences = value; }
+        [CreateProperty]
         public string DisplayName
         {
             get
