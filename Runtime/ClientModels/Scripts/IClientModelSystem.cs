@@ -315,10 +315,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #endregion
 
         #region Tags
+        /// <summary>
+        /// Get all tags
+        /// </summary>
+        Task<List<CMTag>> GetAllContentTags();
 
         /// <summary>
         /// Get all tags
-        Task<List<CMTag>> GetAllTags();
+        /// </summary>
+        Task<List<CMTag>> GetAllUsersTags();
 
         /// <summary>
         /// Search user tag
@@ -329,7 +334,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         /// <summary>
         /// Get event tags
-        Task<List<CMTag>> GetAllSessionsTags();
+        Task<List<CMTag>> GetAllExperiencesTags();
 
         #endregion
 

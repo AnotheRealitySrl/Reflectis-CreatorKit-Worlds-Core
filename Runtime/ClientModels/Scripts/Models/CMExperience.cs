@@ -10,7 +10,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private int id;
         [SerializeField] private string title;
         [SerializeField] private string description;
-        [SerializeField] private int worldId;
         [SerializeField] private List<CMTag> tags;
         [SerializeField] private CMEnvironment environment;
         [SerializeField] private bool isFeatured;

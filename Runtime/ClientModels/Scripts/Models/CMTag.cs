@@ -30,6 +30,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
     public enum ETagType
     {
-        Environment, User, Tag
+        Content, User
     }
 }

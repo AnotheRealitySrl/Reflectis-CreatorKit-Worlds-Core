@@ -13,11 +13,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private string title;
         [SerializeField] private string description;
         [SerializeField] private DateTime startDateTime;
-        [SerializeField] private DateTime endDateTime;
+        [SerializeField] private DateTime? endDateTime;
         [SerializeField] private List<CMUser> participants;
         [SerializeField] private List<CMTag> tags;
         [SerializeField] private int maxParticipants;
-        [SerializeField] private bool isFeatured;
         [SerializeField] private bool isPublic;
         [SerializeField] private bool isVisible;
         [SerializeField] private List<CMPermission> permissions;
@@ -40,10 +39,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <summary>
         /// This DateTime is in local time
         /// </summary>
-        public DateTime EndDateTime { get => endDateTime; set => endDateTime = value; }
+        public DateTime? EndDateTime { get => endDateTime; set => endDateTime = value; }
         public List<CMUser> Participants { get => participants; set => participants = value; }
         public int MaxParticipants { get => maxParticipants; set => maxParticipants = value; }
-        public bool IsFeatured { get => isFeatured; set => isFeatured = value; }
         public bool IsPublic { get => isPublic; set => isPublic = value; }
         public bool IsVisible { get => isVisible; set => isVisible = value; }
         public bool IsOwner { get => isOwner; set => isOwner = value; }
