@@ -332,10 +332,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <returns></returns>
         Task<List<CMTag>> SearchUserTags(string labelSubstring);
 
-        /// <summary>
-        /// Get event tags
         Task<List<CMTag>> GetAllExperiencesTags();
 
+        Task<List<CMTag>> GetAllSessionsTags();
         #endregion
 
         #region Online presence

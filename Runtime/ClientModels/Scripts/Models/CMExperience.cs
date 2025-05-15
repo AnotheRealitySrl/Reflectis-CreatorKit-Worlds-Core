@@ -8,6 +8,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
     public class CMExperience
     {
         [SerializeField] private int id;
+        [SerializeField] private int worldId;
         [SerializeField] private string title;
         [SerializeField] private string description;
         [SerializeField] private List<CMTag> tags;
@@ -21,6 +22,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private bool multiplayer;
         [SerializeField] private object template;
         [SerializeField] private bool canWrite;
+        [SerializeField] private EExperienceType type;
 
         public int Id { get => id; set => id = value; }
         public string Title { get => title; set => title = value; }
@@ -37,6 +39,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public object Template { get => template; set => template = value; }
         public bool CanWrite { get => canWrite; set => canWrite = value; }
         public List<CMTag> Tags { get => tags; set => tags = value; }
+        public EExperienceType Type { get => type; set => type = value; }
+
+        public enum EExperienceType
+        {
+            Core,
+            Authored,
+        }
     }
 
 }

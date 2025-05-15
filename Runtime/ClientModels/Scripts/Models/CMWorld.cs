@@ -32,6 +32,5 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// </summary>
         public int? MaxOnlineUsers { get => maxOnlineUsers; set => maxOnlineUsers = value; }
         public int MultiplayerUsersCount { get => multiplayerUsersCount; set => multiplayerUsersCount = value; }
-        public int DefaultEventId { get => defaultEventId; set => defaultEventId = value; }
     }
 }
