@@ -29,7 +29,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private bool canVisualize;
         [SerializeField] private bool canWrite;
         [SerializeField] private bool isLimited;
-
+        [SerializeField] private bool isStatic;
 
         /// <summary>
         /// This DateTime is in local time
@@ -60,6 +60,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public List<CMTag> Tags { get => tags; set => tags = value; }
         public string Title { get => title; set => title = value; }
         public string Description { get => description; set => description = value; }
+        public bool IsStatic { get => isStatic; set => isStatic = value; }
     }
 
 }

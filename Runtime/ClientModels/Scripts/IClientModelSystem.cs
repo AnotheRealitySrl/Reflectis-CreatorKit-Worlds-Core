@@ -91,6 +91,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Experiences
         public Task<List<CMExperience>> GetExperiences();
+
         #endregion
 
         #region Events
@@ -130,16 +131,19 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <returns></returns>
         Task RefreshEventsData();
 
+        /// <summary>
+        /// Returns the static event for the given experienceId
+        /// Such an event should always be present in the list of events
+        /// otherwise null is returned
+        /// </summary>
+        Task<CMSession> GetStaticEvent(int experienceId);
 
         /// <summary>
-        /// Returns the default event of a world
+        /// Returns the static event for the given experienceId
+        /// Such an event should always be present in the list of events
+        /// otherwise null is returned
         /// </summary>
-        Task<CMSession> GetDefaultWorldEvent(int worldId);
-
-        /// <summary>
-        /// Returns the static events
-        /// </summary>
-        Task<List<CMSession>> GetStaticEvents();
+        Task<CMSession> GetStaticEventByAddressableName(string addressableName);
 
         /// <summary>
         /// Returns an event given its id
