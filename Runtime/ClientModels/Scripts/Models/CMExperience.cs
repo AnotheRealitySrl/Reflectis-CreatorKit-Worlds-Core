@@ -15,6 +15,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private CMEnvironment environment;
         [SerializeField] private bool isFeatured;
         [SerializeField] private string featuredThumb;
+        [SerializeField] private Texture thumbnailTexture;
         [SerializeField] private bool isPublic;
         [SerializeField] private bool isVisible;
         [SerializeField] private bool isOwner;
@@ -40,6 +41,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public bool CanWrite { get => canWrite; set => canWrite = value; }
         public List<CMTag> Tags { get => tags; set => tags = value; }
         public EExperienceType Type { get => type; set => type = value; }
+
+        public Texture ThumbnailTexture
+        {
+            get => thumbnailTexture;
+            set => thumbnailTexture = value;
+        }
 
         public enum EExperienceType
         {

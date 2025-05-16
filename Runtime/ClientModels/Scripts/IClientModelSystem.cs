@@ -89,6 +89,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public Task LoadMyWorldData();
         #endregion
 
+        #region Experiences
+        public Task<List<CMExperience>> GetExperiences();
+        #endregion
+
         #region Events
         /// <summary>
         /// Try to join event with given id at shard shardId
