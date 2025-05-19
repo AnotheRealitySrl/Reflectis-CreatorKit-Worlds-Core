@@ -21,7 +21,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private CMWorldConfig config;
         [SerializeField] private int defaultEventId;
 
-        public int Id { get => id; set => id = value; }
+        [CreateProperty] public int Id { get => id; set => id = value; }
         [CreateProperty] public string Label { get => label; set => label = value; }
         public string Description { get => description; set => description = value; }
         public string ThumbnailUri { get => thumbnailUri; set => thumbnailUri = value; }
