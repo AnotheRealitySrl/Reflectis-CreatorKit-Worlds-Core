@@ -332,6 +332,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         Task<CMSearch<CMResource>> GetWorldAssets(int pageSize, bool buildSasThumbnailUrl, string path, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
 
+        Task<CMSearch<CMResource>> SearchWorldAssets(string label, int pageSize, bool buildSasThumbnailUrl, string path, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
+
         Task<CMResource> GetEventAssetById(int assetId);
 
         Task<CMSearch<CMFolder>> GetEventAssetsFolders(int eventId, int pageSize, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
