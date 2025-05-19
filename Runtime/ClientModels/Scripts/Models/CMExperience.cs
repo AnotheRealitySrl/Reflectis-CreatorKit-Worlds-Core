@@ -21,7 +21,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private bool isOwner;
         [SerializeField] private bool isDraft;
         [SerializeField] private bool multiplayer;
-        [SerializeField] private object template;
+        [SerializeField] private object config;
         [SerializeField] private bool canWrite;
         [SerializeField] private EExperienceType type;
 
@@ -37,7 +37,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public bool IsOwner { get => isOwner; set => isOwner = value; }
         public bool IsDraft { get => isDraft; set => isDraft = value; }
         public bool Multiplayer { get => multiplayer; set => multiplayer = value; }
-        public object Template { get => template; set => template = value; }
+        public object Config { get => config; set => config = value; }
         public bool CanWrite { get => canWrite; set => canWrite = value; }
         public List<CMTag> Tags { get => tags; set => tags = value; }
         public EExperienceType Type { get => type; set => type = value; }

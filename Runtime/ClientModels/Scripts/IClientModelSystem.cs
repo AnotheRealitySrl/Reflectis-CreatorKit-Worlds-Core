@@ -233,7 +233,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <param name="eventId"></param>
         /// <param name="assets"></param>
         /// <returns></returns>
-        Task<bool> UpdateSavedAssets(int eventId, object assets);
+        Task<bool> UpdateCurrentEventExperienceSaveData(object assets);
+
+        /// <summary>
+        /// Create new authored experience
+        /// </summary>
+        /// <param name="template"></param>
+        /// <returns></returns>
+        Task<CMExperience> CreateNewAuthoredExperience(object template);
         #endregion
 
         #region Environments
