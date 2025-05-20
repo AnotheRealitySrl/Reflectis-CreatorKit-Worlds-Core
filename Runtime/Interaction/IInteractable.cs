@@ -35,7 +35,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 
         GameObject GameObjectRef { get; }
 
-        bool IsHovered { get; set; }
+        bool IsHovered { get; }
 
         /// <summary>
         /// Gameobject that rapresents the bounding box of the interactable entity.
