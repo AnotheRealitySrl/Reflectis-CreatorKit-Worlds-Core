@@ -1,5 +1,7 @@
 using System;
 
+using Unity.Properties;
+
 using UnityEngine;
 
 namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
@@ -17,10 +19,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private int multiplayerUsersCount;
         [SerializeField] private int? maxOnlineUsers;
         [SerializeField] private CMWorldConfig config;
+        [SerializeField] private int defaultEventId;
 
-
-        public int Id { get => id; set => id = value; }
-        public string Label { get => label; set => label = value; }
+        [CreateProperty] public int Id { get => id; set => id = value; }
+        [CreateProperty] public string Label { get => label; set => label = value; }
         public string Description { get => description; set => description = value; }
         public string ThumbnailUri { get => thumbnailUri; set => thumbnailUri = value; }
         public bool Enabled { get => enabled; set => enabled = value; }
@@ -32,5 +34,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// </summary>
         public int? MaxOnlineUsers { get => maxOnlineUsers; set => maxOnlineUsers = value; }
         public int MultiplayerUsersCount { get => multiplayerUsersCount; set => multiplayerUsersCount = value; }
+        public int DefaultEventId { get => defaultEventId; set => defaultEventId = value; }
     }
 }

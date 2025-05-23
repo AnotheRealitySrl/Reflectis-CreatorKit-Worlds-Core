@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Unity.Properties;
+
 using UnityEngine;
 
 namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
@@ -10,29 +12,35 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
     public class CMUser
     {
         [SerializeField] private int id;
-        [SerializeField] private string nickname;
         [SerializeField] private int code;
         [SerializeField] private string email;
         [SerializeField] private List<CMTag> tags;
         [SerializeField] private CMUserPreference preferences;
 
-        public int ID { get => id; set => id = value; }
+        private string displayName;
+
+        public int Id { get => id; set => id = value; }
         public string Nickname
         {
-            get => nickname; set
-            {
-                nickname = value;
-                if (string.IsNullOrEmpty(DisplayName))
-                {
-                    DisplayName = value;
-                }
-            }
+            get => preferences.Nickname;
         }
         public int Code { get => code; set => code = value; }
         public string Email { get => email; set => email = value; }
         public List<CMTag> Tags { get => tags; set => tags = value; }
         public CMUserPreference Preferences { get => preferences; set => preferences = value; }
-        public string DisplayName { get; set; } // Use this property for user interfaces!
+        [CreateProperty]
+        public string DisplayName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(displayName))
+                {
+                    displayName = Nickname;
+                }
+                return displayName;
+            }
+            set => displayName = value;
+        } // Use this property for user interfaces!
         public Color UserColor
         {
             get

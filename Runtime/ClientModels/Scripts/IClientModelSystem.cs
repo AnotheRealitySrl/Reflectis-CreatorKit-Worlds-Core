@@ -41,7 +41,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #endregion
 
         #region Worlds
-
         List<CMWorld> Worlds { get; }
         CMWorld CurrentWorld { get; }
 
@@ -51,13 +50,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public string SessionId { get; }
         #endregion
 
-        //#region Facets
-        //public List<CMFacet> Facets { get; }
-        //#endregion
-
         #region Users
         CMUser UserData { get; }
         #endregion
+
         #endregion
 
         #region Session
@@ -90,7 +86,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         public Task KickPlayer(string kickedUserSession);
 
-        //public void LeaveWorld();
+        public Task LoadMyWorldData();
         #endregion
 
         #region Events
@@ -264,8 +260,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Users
 
-        void InvalidateUsersCache();
-
         /// <summary>
         /// Return all users that match search criteria
         /// </summary>
@@ -277,36 +271,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <param name="id"></param>
         /// <returns></returns>
         Task<CMUser> GetUserData(int id);
-
-        /// <summary>
-        ///  Return the local player data contextualized to the world we are in (with users tags) if are in a world,
-        ///  otherwise returns the user data decontextualized
-        /// </summary>
-        /// <returns></returns>
-        Task<CMUser> GetMyUserData();
-
-
-        /// <summary>
-        /// Return data of the player with given id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<int> GetUserCode(int userId);
-
-        /// <summary>
-        /// Return my user preferences
-        /// </summary>
-        /// <returns></returns>
-        Task<CMUserPreference> GetMyUserPreferences();
-
-        /// <summary>
-        /// Get user preferences of given user id
-        /// </summary>
-        /// <param name="worldId"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<CMUserPreference> GetUserPreference(int userId);
-
 
         /// <summary>
         /// Update my user preferences outside of world context
@@ -348,13 +312,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <returns></returns>
         Task<List<CMPermission>> GetAllPermissionsByTag(int tagId);
 
-        /// <summary>
-        /// Get all permission for the current world
-        /// </summary>
-        /// <returns></returns>
-        Task<List<EFacetIdentifier>> GetMyWorldPermissions();
-
-
         #endregion
 
         #region Keys
@@ -370,6 +327,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #endregion
 
         #region Assets
+
+        Task<CMSearch<CMFolder>> GetWorldFolders(int startItem, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
+
+        Task<CMSearch<CMResource>> GetWorldAssets(int startItem, bool buildSasThumbnailUrl, string path, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
+
+        Task<CMSearch<CMResource>> SearchWorldAssets(string label, int startItem, bool buildSasThumbnailUrl, string path, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
 
         Task<CMResource> GetEventAssetById(int assetId);
 
@@ -390,12 +353,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         Task<List<CMTag>> GetAllUsersTags();
 
         /// <summary>
-        /// Get all tags avaible to the single user given the user id
-        /// </summary>
-        /// <returns></returns>
-        Task<List<CMTag>> GetUserTags(int id);
-
-        /// <summary>
         /// Search user tag
         /// </summary>
         /// <param name="labelSubstring"></param>
@@ -406,13 +363,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Online presence
         UnityEvent OnlineUsersUpdated { get; }
-        List<CMOnlinePresence> GetOnlineUsers();
-        CMOnlinePresence GetOnlineUser(int userId);
+        List<CMOnlineUser> GetOnlineUsers();
+        CMOnlineUser GetOnlineUser(int userId);
         bool IsOnlineUser(int userId);
-        List<CMOnlinePresence> GetUsersInEvent(int eventId);
-        Task<bool> CheckMaxCCU(int worldId);
-        Task EnableShard(bool enable);
+        List<CMOnlineUser> GetUsersInEvent(int eventId);
+
         #endregion
 
+        #region Shard
+        Task EnableShard(bool enable);
+        #endregion
     }
 }
