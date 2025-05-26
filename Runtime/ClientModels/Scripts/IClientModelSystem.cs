@@ -187,7 +187,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        Task<int> CreateEvent(CMSession e);
+        Task<int> CreateSession(CMSession e);
 
         /// <summary>
         /// Delete an event with given id.
