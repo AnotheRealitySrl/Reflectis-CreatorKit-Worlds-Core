@@ -7,6 +7,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
 {
     public interface IVisualScriptingInteractable : IInteractableBehaviour
     {
+        //TO DO: remove this events from the generic interface
+        //implement VisualScriptingInteractableHoverDetector as a placeholder
         UnityEvent OnHoverGrabEnter { get; }
         UnityEvent OnHoverGrabExit { get; }
         UnityEvent OnHoverRayEnter { get; }
@@ -16,7 +18,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         EVisualScriptingInteractableState CurrentInteractionState { get; }
         bool SkipSelectState { get; }
 
-        Task Interact();
+        public Task EnterInteractionState();
+        public Task ExitInteractionState();
+        public Task Interact();
 
         [Flags]
         public enum EVisualScriptingInteractableState
