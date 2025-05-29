@@ -33,6 +33,5 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         EContextualMenuType ContextualMenuType { get; }
         EContextualMenuOption ContextualMenuOptions { get; }
 
-        void OnContextualMenuButtonClicked(EContextualMenuOption option);
     }
 }
