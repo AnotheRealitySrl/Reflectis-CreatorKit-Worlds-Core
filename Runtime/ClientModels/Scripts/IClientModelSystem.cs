@@ -92,6 +92,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #region Experiences
         public Task<List<CMExperience>> GetExperiences();
 
+        public Task<List<CMExperience>> GetHighlightedExperiences();
+
         #endregion
 
         #region Events
@@ -153,7 +155,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <summary>
         /// Returns the list of all events visible by user
         /// </summary>
-        Task<List<CMSession>> GetActiveEvents();
+        Task<List<CMSession>> GetActiveSessions();
 
         /// <summary>
         /// Return the list events in which the player is also the owner

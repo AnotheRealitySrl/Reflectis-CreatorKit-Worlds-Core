@@ -21,6 +21,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private string localizationUri;
         [SerializeField] private string localizationCSV;
         [SerializeField] private List<ESupportedPlatform> platforms;
+        [SerializeField] private bool multiplayer;
         [SerializeField] private List<CMTag> tags;
 
         public int ID { get => id; set => id = value; }
@@ -53,5 +54,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         }
 
         public List<CMTag> Tags { get => tags; set => tags = value; }
+        public bool Multiplayer { get => multiplayer; set => multiplayer = value; }
     }
 }
