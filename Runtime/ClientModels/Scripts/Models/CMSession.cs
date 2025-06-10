@@ -11,7 +11,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private int id;
         [SerializeField] private CMExperience experience;
         [SerializeField] private string title;
-        [SerializeField] private string description;
         [SerializeField] private DateTime startDateTime;
         [SerializeField] private DateTime? endDateTime;
         [SerializeField] private List<CMUser> participants;
@@ -30,6 +29,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private bool canWrite;
         [SerializeField] private bool isLimited;
         [SerializeField] private bool isStatic;
+        [SerializeField] private bool isScheduled;
 
         /// <summary>
         /// This DateTime is in local time
@@ -59,8 +59,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public bool CanJoin { get => canJoin; set => canJoin = value; }
         public List<CMTag> Tags { get => tags; set => tags = value; }
         public string Title { get => title; set => title = value; }
-        public string Description { get => description; set => description = value; }
         public bool IsStatic { get => isStatic; set => isStatic = value; }
+        public bool IsScheduled { get => isScheduled; set => isScheduled = value; }
     }
 
 }
