@@ -3,6 +3,7 @@ using Reflectis.SDK.Core.SystemFramework;
 using System.Threading.Tasks;
 
 using UnityEngine;
+
 using static Reflectis.CreatorKit.Worlds.Core.Interaction.IContextualMenuManageable;
 
 namespace Reflectis.CreatorKit.Worlds.Core.Interaction
@@ -12,6 +13,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         IContextualMenuController ContextualMenuInstance { get; }
         IContextualMenuManageable SelectedContextualMenuInteractable { get; }
         IContextualMenuManageable AddContextualMenu(GameObject contextualMenuGameObject, EContextualMenuOption contextualMenuOptions);
+
+        public bool IsInteractionLocked { get; set; }
+
         void CreateMenu(Transform parent = null);
         Task DestroyContextualMenu();
 
