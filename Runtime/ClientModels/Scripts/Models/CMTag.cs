@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
@@ -31,5 +32,18 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
     public enum ETagType
     {
         Content, User
+    }
+
+    public class CMTagIdComparer : IEqualityComparer<CMTag>
+    {
+        public bool Equals(CMTag x, CMTag y)
+        {
+            return x.Id == y.Id;
+        }
+
+        public int GetHashCode(CMTag obj)
+        {
+            return obj.Id;
+        }
     }
 }

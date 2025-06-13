@@ -20,11 +20,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private bool isVisible;
         [SerializeField] private List<CMPermission> permissions;
         [SerializeField] private bool isOwner;
-        [SerializeField] private bool isDraft;
         [SerializeField] private string shortLink;
         [SerializeField] private bool multiplayer;
         [SerializeField] private object template;
-        [SerializeField] private bool canJoin;
         [SerializeField] private bool canVisualize;
         [SerializeField] private bool canWrite;
         [SerializeField] private bool isLimited;
@@ -45,18 +43,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public bool IsPublic { get => isPublic; set => isPublic = value; }
         public bool IsVisible { get => isVisible; set => isVisible = value; }
         public bool IsOwner { get => isOwner; set => isOwner = value; }
-        public bool IsDraft { get => isDraft; set => isDraft = value; }
         public string ShortLink { get => shortLink; set => shortLink = value; }
         public bool Multiplayer { get => multiplayer; set => multiplayer = value; }
         public object Template { get => template; set => template = value; }
-
-        public bool CanVisualize { get => canVisualize; set => canVisualize = value; }
-        public bool CanWrite { get => canWrite; set => canWrite = value; }
+        public bool CanWrite { get => IsOwner; }
         public List<CMPermission> Permissions { get => permissions; set => permissions = value; }
         public bool IsLimited { get => isLimited; set => isLimited = value; }
         public CMExperience Experience { get => experience; set => experience = value; }
         public int Id { get => id; set => id = value; }
-        public bool CanJoin { get => canJoin; set => canJoin = value; }
         public List<CMTag> Tags { get => tags; set => tags = value; }
         public string Title { get => title; set => title = value; }
         public bool IsStatic { get => isStatic; set => isStatic = value; }

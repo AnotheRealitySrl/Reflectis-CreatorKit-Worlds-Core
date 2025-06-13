@@ -93,7 +93,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public Task<List<CMExperience>> GetExperiences();
 
         public Task<List<CMExperience>> GetHighlightedExperiences();
-
+        public Task DeleteExperience(int id);
+        public Task DuplicateExperience(CMExperience currentData);
+        public Task UpdateExperienceData(CMExperience cMExperience);
+        public Task ToggleExperienceStatus(int id);
         #endregion
 
         #region Events
@@ -197,7 +200,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        Task<long> DeleteEvent(int eventId);
+        Task<long> DeleteSessionById(int eventId);
 
         /// <summary>
         /// Update an event with given e data.
@@ -205,7 +208,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        Task<bool> UpdateEvent(CMSession e);
+        Task<bool> UpdateSession(CMSession e);
 
         /// <summary>
         /// Ask to API to replace all the users in the specified event with the users listed in <see cref="CMSession.Participants">
@@ -252,6 +255,11 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #endregion
 
         #region Users
+        /// <summary>
+        /// Get all registered users in this world
+        /// </summary>
+        /// <returns></returns>
+        Task<List<CMUser>> GetAllUsers();
 
         /// <summary>
         /// Return all users that match search criteria
