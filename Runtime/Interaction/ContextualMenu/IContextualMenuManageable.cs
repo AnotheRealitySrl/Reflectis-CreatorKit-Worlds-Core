@@ -13,8 +13,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         public enum EContextualMenuType
         {
             Default,
-            VideoPlayerConttroller,
-            PresentationPlayerController
+            VideoPlayer,
+            PresentationPlayer,
+            TextBox,
         }
 
         [Flags]
@@ -28,6 +29,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
             ColorPicker = 16,
             Explodable = 32,
             NonProportionalScale = 64,
+            Edit = 128,
         }
 
         EContextualMenuType ContextualMenuType { get; }
