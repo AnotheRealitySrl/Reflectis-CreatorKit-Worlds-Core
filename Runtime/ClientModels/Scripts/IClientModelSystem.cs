@@ -31,12 +31,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Current Client Data
         #region Events
-        public CMSession CurrentEvent { get; }
+        public CMSession CurrentSession { get; }
         #endregion
 
         #region Shards
         public CMShard CurrentShard { get; }
-        public List<CMShard> CurrentEventShards { get; }
+        public List<CMShard> CurrentSessionShards { get; }
         public Action onShardsChange { get; set; }
         #endregion
 
@@ -57,9 +57,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #endregion
 
         #region Session
-        Task StartSession();
+        Task StartConnection();
 
-        void EndSession();
+        Task EndConnection();
 
         Task<int> JoinWorld(int worldId, int eventId);
         #endregion
@@ -109,7 +109,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <param name="id"></param>
         /// <param name="shardId"></param>
         /// <returns></returns>
-        Task<int?> JoinEvent(int id, int? shardId);
+        Task<int?> JoinSession(int id, int? shardId);
 
         /// <summary>
         /// Setup current event entering data and starts downloading data for the given event
@@ -117,7 +117,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <param name="eventId"></param>
         /// <param name="shard"></param>
         /// <returns></returns>
-        public Task LoadEventShardData(int eventId, int shard);
+        public Task LoadSessionShardData(int eventId, int shard);
 
         void LeaveEvent();
 
@@ -141,19 +141,19 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// Such an event should always be present in the list of events
         /// otherwise null is returned
         /// </summary>
-        Task<CMSession> GetStaticEvent(int experienceId);
+        Task<CMSession> GetStaticSession(int experienceId);
 
         /// <summary>
         /// Returns the static event for the given experienceId
         /// Such an event should always be present in the list of events
         /// otherwise null is returned
         /// </summary>
-        Task<CMSession> GetStaticEventByAddressableName(string addressableName);
+        Task<CMSession> GetStaticSessionByAddressableName(string addressableName);
 
         /// <summary>
         /// Returns an event given its id
         /// </summary>
-        Task<CMSession> GetEventById(int id, bool useCache = true);
+        Task<CMSession> GetSessionById(int id, bool useCache = true);
 
         /// <summary>
         /// Returns the list of all events visible by user
@@ -169,7 +169,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <summary>
         /// Returns the list of all events visible by user filtered by category
         /// </summary>
-        Task<List<CMSession>> GetActiveEventsByTagID(int categoryId);
+        Task<List<CMSession>> GetActiveSessionsByTagID(int categoryId);
 
         /// <summary>
         /// Returns the list of all events visible by user filtered by environment
@@ -180,11 +180,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// Returns the list of all events visible by user filtered by environment
         /// </summary>
         Task<List<CMSession>> GetActiveEventsByEnvironmentName(string environmentName);
-
         /// <summary>
-        /// Returns the list of users registered for this event.
+        /// Get sessions by date, month and year.
         /// </summary>
-        Task<List<CMUser>> GetEventParticipants(int eventId);
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        Task<List<CMSession>> GetSessionByDate(int month, int year);
 
         /// <summary>
         /// Create an event with given e data.
@@ -222,7 +224,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// </summary>
         /// <param name="_event"></param>
         /// <returns></returns>
-        Task<bool> CreateEventPermissions(CMSession _event);
+        Task<bool> CreateSessionPermissions(CMSession _event);
 
         /// <summary>
         /// replace the asset list in the given event
@@ -230,7 +232,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <param name="eventId"></param>
         /// <param name="assets"></param>
         /// <returns></returns>
-        Task<bool> UpdateAssetsInEvent(int eventId, List<CMResource> assets);
+        Task<bool> UpdateAssetsInSession(int eventId, List<CMResource> assets);
 
         /// <summary>
         /// load the asset list saved previously.
@@ -335,7 +337,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         Task<CMSearch<CMResource>> SearchWorldAssets(string label, int startItem, bool buildSasThumbnailUrl, string path, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
 
-        Task<CMResource> GetEventAssetById(int assetId);
+        Task<CMResource> GetSessionAssetById(int assetId);
 
         Task<CMSearch<CMFolder>> GetEventAssetsFolders(int eventId, int pageSize, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
 

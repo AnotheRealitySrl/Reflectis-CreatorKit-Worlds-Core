@@ -11,7 +11,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private int id;
         [SerializeField] private CMExperience experience;
         [SerializeField] private string title;
-        [SerializeField] private DateTime startDateTime;
+        [SerializeField] private DateTime? startDateTime;
         [SerializeField] private DateTime? endDateTime;
         [SerializeField] private List<CMUser> participants;
         [SerializeField] private List<CMTag> tags;
@@ -32,7 +32,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <summary>
         /// This DateTime is in local time
         /// </summary>
-        public DateTime StartDateTime { get => startDateTime; set => startDateTime = value; }
+        public DateTime? StartDateTime { get => startDateTime; set => startDateTime = value; }
 
         /// <summary>
         /// This DateTime is in local time
