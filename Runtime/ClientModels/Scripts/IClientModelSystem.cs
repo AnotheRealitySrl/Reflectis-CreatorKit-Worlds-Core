@@ -247,7 +247,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// </summary>
         /// <param name="template"></param>
         /// <returns></returns>
-        Task<CMExperience> CreateNewAuthoredExperience(object template);
+        Task<bool> CreateNewAuthoredExperience(string title, object template);
         #endregion
 
         #region Environments
