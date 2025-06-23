@@ -14,8 +14,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         IContextualMenuManageable SelectedContextualMenuInteractable { get; }
         IContextualMenuManageable AddContextualMenu(GameObject contextualMenuGameObject, EContextualMenuOption contextualMenuOptions);
 
-        //public bool IsInteractionLocked { get; set; }
-
         void CreateMenu(Transform parent = null);
         Task DestroyContextualMenu();
 
