@@ -24,6 +24,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private object config;
         [SerializeField] private bool canWrite;
         [SerializeField] private EExperienceType type;
+        [SerializeField] private int lobbyId;
 
         public int Id { get => id; set => id = value; }
         public string Title { get => title; set => title = value; }
@@ -46,6 +47,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
             set => thumbnailTexture = value;
         }
         public DateTime LastUpdate { get => lastUpdate; set => lastUpdate = value; }
+        public int LobbyId { get => lobbyId; set => lobbyId = value; }
 
         public enum EExperienceType
         {

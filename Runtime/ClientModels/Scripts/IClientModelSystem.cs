@@ -91,7 +91,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Experiences
         public Task<List<CMExperience>> GetExperiences();
-
+        public Task<CMExperience> GetExperienceByAddressableName(string title);
         public Task<List<CMExperience>> GetHighlightedExperiences();
         public Task DeleteExperience(int id);
         public Task DuplicateExperience(CMExperience currentData);
@@ -137,49 +137,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         Task RefreshEventsData();
 
         /// <summary>
-        /// Returns the static event for the given experienceId
-        /// Such an event should always be present in the list of events
-        /// otherwise null is returned
-        /// </summary>
-        Task<CMSession> GetStaticSession(int experienceId);
-
-        /// <summary>
-        /// Returns the static event for the given experienceId
-        /// Such an event should always be present in the list of events
-        /// otherwise null is returned
-        /// </summary>
-        Task<CMSession> GetStaticSessionByAddressableName(string addressableName);
-
-        /// <summary>
         /// Returns an event given its id
         /// </summary>
-        Task<CMSession> GetSessionById(int id, bool useCache = true);
+        Task<CMSession> GetSessionById(int id);
 
         /// <summary>
         /// Returns the list of all events visible by user
         /// </summary>
-        Task<List<CMSession>> GetActiveSessions();
+        Task<List<CMSession>> GetLiveSessions();
 
-        /// <summary>
-        /// Return the list events in which the player is also the owner
-        /// </summary>
-        /// <returns></returns>
-        Task<List<CMSession>> GetMyActiveEvents();
-
-        /// <summary>
-        /// Returns the list of all events visible by user filtered by category
-        /// </summary>
-        Task<List<CMSession>> GetActiveSessionsByTagID(int categoryId);
-
-        /// <summary>
-        /// Returns the list of all events visible by user filtered by environment
-        /// </summary>
-        Task<List<CMSession>> GetActiveEventsByEnvironmentID(int environmentId);
-
-        /// <summary>
-        /// Returns the list of all events visible by user filtered by environment
-        /// </summary>
-        Task<List<CMSession>> GetActiveEventsByEnvironmentName(string environmentName);
         /// <summary>
         /// Get sessions by date, month and year.
         /// </summary>
@@ -240,7 +206,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <param name="eventId"></param>
         /// <param name="assets"></param>
         /// <returns></returns>
-        Task<bool> UpdateCurrentEventExperienceSaveData(object assets);
+        Task<bool> UpdateCurrentSessionExperienceSaveData(object assets);
 
         /// <summary>
         /// Create new authored experience
@@ -365,9 +331,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <returns></returns>
         Task<List<CMTag>> SearchUserTags(string labelSubstring);
 
-        Task<List<CMTag>> GetAllExperiencesTags();
-
-        Task<List<CMTag>> GetAllSessionsTags();
         #endregion
 
         #region Online presence
