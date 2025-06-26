@@ -17,7 +17,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
             BigScreen,
             DrawableBoard,
             Drawing,
-            VideoChat
+            VideoChat,
+            TextBox,
         }
 
         GameObject InstantiateLocalObject(GameObject gameObject, object[] data = null, SpawnPosition spawnableData = null);
