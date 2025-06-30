@@ -272,7 +272,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// Get the permission available to the player for the given event
         /// </summary>
         /// <returns></returns>
-        Task<List<EFacetIdentifier>> GetMyEventPermissions(int eventId);
+        Task<List<EFacetIdentifier>> GetMySessionPermissions(int eventId);
 
         /// <summary>
         /// Get the permission available in the current event for a given tag
