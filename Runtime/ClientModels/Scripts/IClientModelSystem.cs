@@ -93,7 +93,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public Task<List<CMExperience>> GetExperiences();
         public Task<CMExperience> GetExperienceByAddressableName(string title);
         public Task<List<CMExperience>> GetHighlightedExperiences();
-        public Task DeleteExperience(int id);
+        /// <summary>
+        /// If successfull return 0, otherwise return status code
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task<long> DeleteExperience(int id);
         public Task DuplicateExperience(CMExperience currentData);
         public Task UpdateExperienceData(CMExperience cMExperience);
         public Task ToggleExperienceStatus(int id);
@@ -164,7 +169,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         /// <summary>
         /// Delete an event with given id.
-        /// If successfull return empty string, response reason phrase otherwise
+        /// If successfull return 0, otherwise return status code
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
