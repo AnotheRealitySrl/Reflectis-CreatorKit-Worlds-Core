@@ -55,6 +55,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public string Title { get => title; set => title = value; }
         public bool IsStatic { get => isStatic; set => isStatic = value; }
         public bool IsScheduled { get => isScheduled; set => isScheduled = value; }
+        public bool IsLive => !IsScheduled || (StartDateTime.HasValue && StartDateTime.Value <= DateTime.Now && (!EndDateTime.HasValue || EndDateTime.Value >= DateTime.Now));
     }
 
 }
