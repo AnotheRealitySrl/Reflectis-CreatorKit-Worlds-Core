@@ -266,25 +266,27 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         List<EFacetIdentifier> CurrentEventPermissions { get; }
         List<EFacetIdentifier> WorldPermissions { get; }
 
+        Action OnPermissionChange { get; set; }
+
         bool IsPermissionGranted(EFacetIdentifier identifier);
 
         /// <summary>
         /// Get the permission available to the player for the given event
         /// </summary>
         /// <returns></returns>
-        Task<List<EFacetIdentifier>> GetMySessionPermissions(int eventId);
+        Task GetMySessionPermissions(int eventId);
 
-        /// <summary>
-        /// Get the permission available in the current event for a given tag
-        /// </summary>
-        /// <returns></returns>
-        Task<List<CMPermission>> GetEventPermissionsByTag(int eventId, int tagId);
+        ///// <summary>
+        ///// Get the permission available in the current event for a given tag
+        ///// </summary>
+        ///// <returns></returns>
+        //Task<List<CMPermission>> GetEventPermissionsByTag(int eventId, int tagId);
 
-        /// <summary>
-        /// Get the permission available for a given tag
-        /// </summary>
-        /// <returns></returns>
-        Task<List<CMPermission>> GetAllPermissionsByTag(int tagId);
+        ///// <summary>
+        ///// Get the permission available for a given tag
+        ///// </summary>
+        ///// <returns></returns>
+        //Task<List<CMPermission>> GetAllPermissionsByTag(int tagId);
 
         #endregion
 
