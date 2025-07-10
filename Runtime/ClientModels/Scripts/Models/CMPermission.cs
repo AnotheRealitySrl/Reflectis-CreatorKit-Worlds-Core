@@ -22,6 +22,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
             InteractWithAllObjects = 18,
             UseVoiceChat = 19,
             ManageMyEvents = 20,
+            ManageMySessions = 21,
+            //ManageMyAuthoredExperiences = 22
         }
 
 
