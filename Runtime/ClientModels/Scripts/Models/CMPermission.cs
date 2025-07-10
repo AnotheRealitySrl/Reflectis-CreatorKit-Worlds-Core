@@ -23,7 +23,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
             UseVoiceChat = 19,
             ManageMyEvents = 20,
             ManageMySessions = 21,
-            //ManageMyAuthoredExperiences = 22
+            ManageMyAuthoredExperiences = 22
         }
 
 
