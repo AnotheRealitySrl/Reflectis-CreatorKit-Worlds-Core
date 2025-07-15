@@ -18,7 +18,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
     {
         [Serializable]
         [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.Fields)]
-        public class AvatarConfigCTO
+        public class AvatarConfigDTO
         {
             [JsonProperty("avatarId")]
             [SerializeField] private string avatarId;
@@ -36,7 +36,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private string social1;
         [SerializeField] private string social2;
         [SerializeField] private string social3;
-        [SerializeField] private AvatarConfigCTO avatarConfig;
+        [SerializeField] private AvatarConfigDTO avatarConfig;
         [SerializeField][CanBeNull] private string dateOfBirth;
         [SerializeField][CanBeNull] private string city;
         [SerializeField] private string hand;
@@ -64,7 +64,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public string Social3 { get => social3; set => social3 = value; }
 
         [JsonProperty("avatarConfig")]
-        public AvatarConfigCTO AvatarConfig { get => avatarConfig; set => avatarConfig = value; }
+        public AvatarConfigDTO AvatarConfig { get => avatarConfig; set => avatarConfig = value; }
 
         [JsonProperty("dateOfBirth")]
         public string DateOfBirth { get => dateOfBirth; set => dateOfBirth = value; }

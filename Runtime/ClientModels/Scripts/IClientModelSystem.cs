@@ -31,12 +31,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Current Client Data
         #region Events
-        public CMEvent CurrentEvent { get; }
+        public CMSession CurrentSession { get; }
         #endregion
 
         #region Shards
         public CMShard CurrentShard { get; }
-        public List<CMShard> CurrentEventShards { get; }
+        public List<CMShard> CurrentSessionShards { get; }
         public Action onShardsChange { get; set; }
         #endregion
 
@@ -57,9 +57,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #endregion
 
         #region Session
-        Task StartSession();
+        Task StartConnection();
 
-        void EndSession();
+        Task EndConnection();
 
         Task<int> JoinWorld(int worldId, int eventId);
         #endregion
@@ -89,6 +89,21 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public Task LoadMyWorldData();
         #endregion
 
+        #region Experiences
+        public Task<List<CMExperience>> GetExperiences();
+        public Task<CMExperience> GetExperienceByAddressableName(string title);
+        public Task<List<CMExperience>> GetHighlightedExperiences();
+        /// <summary>
+        /// If successfull return 0, otherwise return status code
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task<long> DeleteExperience(int id);
+        public Task DuplicateExperience(CMExperience currentData);
+        public Task UpdateExperienceData(CMExperience cMExperience);
+        public Task ToggleExperienceStatus(int id);
+        #endregion
+
         #region Events
         /// <summary>
         /// Try to join event with given id at shard shardId
@@ -99,7 +114,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <param name="id"></param>
         /// <param name="shardId"></param>
         /// <returns></returns>
-        Task<int?> JoinEvent(int id, int? shardId);
+        Task<int?> JoinSession(int id, int? shardId);
 
         /// <summary>
         /// Setup current event entering data and starts downloading data for the given event
@@ -107,7 +122,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <param name="eventId"></param>
         /// <param name="shard"></param>
         /// <returns></returns>
-        public Task LoadEventShardData(int eventId, int shard);
+        public Task LoadSessionShardData(int eventId, int shard);
 
         void LeaveEvent();
 
@@ -126,52 +141,23 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <returns></returns>
         Task RefreshEventsData();
 
-
-        /// <summary>
-        /// Returns the default event of a world
-        /// </summary>
-        Task<CMEvent> GetDefaultWorldEvent(int worldId);
-
-        /// <summary>
-        /// Returns the static events
-        /// </summary>
-        Task<List<CMEvent>> GetStaticEvents();
-
         /// <summary>
         /// Returns an event given its id
         /// </summary>
-        Task<CMEvent> GetEventById(int id, bool useCache = true);
+        Task<CMSession> GetSessionById(int id);
 
         /// <summary>
         /// Returns the list of all events visible by user
         /// </summary>
-        Task<List<CMEvent>> GetActiveEvents();
+        Task<List<CMSession>> GetLiveSessions();
 
         /// <summary>
-        /// Return the list events in which the player is also the owner
+        /// Get sessions by date, month and year.
         /// </summary>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
         /// <returns></returns>
-        Task<List<CMEvent>> GetMyActiveEvents();
-
-        /// <summary>
-        /// Returns the list of all events visible by user filtered by category
-        /// </summary>
-        Task<List<CMEvent>> GetActiveEventsByCategoryID(int categoryId);
-
-        /// <summary>
-        /// Returns the list of all events visible by user filtered by environment
-        /// </summary>
-        Task<List<CMEvent>> GetActiveEventsByEnvironmentID(int environmentId);
-
-        /// <summary>
-        /// Returns the list of all events visible by user filtered by environment
-        /// </summary>
-        Task<List<CMEvent>> GetActiveEventsByEnvironmentName(string environmentName);
-
-        /// <summary>
-        /// Returns the list of users registered for this event.
-        /// </summary>
-        Task<List<CMUser>> GetEventParticipants(int eventId);
+        Task<List<CMSession>> GetSessionByDate(int month, int year);
 
         /// <summary>
         /// Create an event with given e data.
@@ -179,15 +165,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        Task<int> CreateEvent(CMEvent e);
+        Task<int> CreateSession(CMSession e);
 
         /// <summary>
         /// Delete an event with given id.
-        /// If successfull return empty string, response reason phrase otherwise
+        /// If successfull return 0, otherwise return status code
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        Task<long> DeleteEvent(int eventId);
+        Task<long> DeleteSessionById(int eventId);
 
         /// <summary>
         /// Update an event with given e data.
@@ -195,21 +181,21 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        Task<bool> UpdateEvent(CMEvent e);
+        Task<bool> UpdateSession(CMSession e);
 
         /// <summary>
-        /// Ask to API to replace all the users in the specified event with the users listed in <see cref="CMEvent.Participants">
+        /// Ask to API to replace all the users in the specified event with the users listed in <see cref="CMSession.Participants">
         /// </summary>
         /// <param name="cMEvent"></param>
         /// <returns></returns>
-        Task<bool> InviteUsersToEvent(CMEvent cMEvent, string eventInvitationMessage);
+        Task<bool> InviteUsersToEvent(CMSession cMEvent, string eventInvitationMessage);
 
         /// <summary>
         /// Create all event permission for the given event
         /// </summary>
         /// <param name="_event"></param>
         /// <returns></returns>
-        Task<bool> CreateEventPermissions(CMEvent _event);
+        Task<bool> CreateSessionPermissions(CMSession _event);
 
         /// <summary>
         /// replace the asset list in the given event
@@ -217,7 +203,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <param name="eventId"></param>
         /// <param name="assets"></param>
         /// <returns></returns>
-        Task<bool> UpdateAssetsInEvent(int eventId, List<CMResource> assets);
+        Task<bool> UpdateAssetsInSession(int eventId, List<CMResource> assets);
 
         /// <summary>
         /// load the asset list saved previously.
@@ -225,31 +211,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <param name="eventId"></param>
         /// <param name="assets"></param>
         /// <returns></returns>
-        Task<bool> UpdateSavedAssets(int eventId, object assets);
-        #endregion
-
-        #region Categories
-
-        Task<List<CMCategoryInfo>> GetCategoriesInfo();
+        Task<bool> UpdateCurrentSessionExperienceSaveData(object assets);
 
         /// <summary>
-        /// Return list of all categories
+        /// Create new authored experience
         /// </summary>
+        /// <param name="template"></param>
         /// <returns></returns>
-        Task<List<CMCategory>> GetCategories();
-
-        /// <summary>
-        /// Return list of all subcategories
-        /// </summary>
-        /// <returns></returns>
-        Task<List<CMCategory>> GetSubCategories();
-
-        /// <summary>
-        /// return list of all subcategories of a category
-        /// </summary>
-        /// <returns></returns>
-        Task<List<CMCategory>> GetSubCategories(CMCategory parentCategory);
-
+        Task<bool> CreateNewAuthoredExperience(string title, object template);
         #endregion
 
         #region Environments
@@ -259,6 +228,11 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #endregion
 
         #region Users
+        /// <summary>
+        /// Get all registered users in this world
+        /// </summary>
+        /// <returns></returns>
+        Task<List<CMUser>> GetAllUsers();
 
         /// <summary>
         /// Return all users that match search criteria
@@ -292,25 +266,27 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         List<EFacetIdentifier> CurrentEventPermissions { get; }
         List<EFacetIdentifier> WorldPermissions { get; }
 
+        Action OnPermissionChange { get; set; }
+
         bool IsPermissionGranted(EFacetIdentifier identifier);
 
         /// <summary>
         /// Get the permission available to the player for the given event
         /// </summary>
         /// <returns></returns>
-        Task<List<EFacetIdentifier>> GetMyEventPermissions(int eventId);
+        Task GetMySessionPermissions(int eventId);
 
-        /// <summary>
-        /// Get the permission available in the current event for a given tag
-        /// </summary>
-        /// <returns></returns>
-        Task<List<CMPermission>> GetEventPermissionsByTag(int eventId, int tagId);
+        ///// <summary>
+        ///// Get the permission available in the current event for a given tag
+        ///// </summary>
+        ///// <returns></returns>
+        //Task<List<CMPermission>> GetEventPermissionsByTag(int eventId, int tagId);
 
-        /// <summary>
-        /// Get the permission available for a given tag
-        /// </summary>
-        /// <returns></returns>
-        Task<List<CMPermission>> GetAllPermissionsByTag(int tagId);
+        ///// <summary>
+        ///// Get the permission available for a given tag
+        ///// </summary>
+        ///// <returns></returns>
+        //Task<List<CMPermission>> GetAllPermissionsByTag(int tagId);
 
         #endregion
 
@@ -328,7 +304,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Assets
 
-        Task<CMResource> GetEventAssetById(int assetId);
+        Task<CMSearch<CMFolder>> GetWorldFolders(int startItem, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
+
+        Task<CMSearch<CMResource>> GetWorldAssets(int startItem, bool buildSasThumbnailUrl, string path, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
+
+        Task<CMSearch<CMResource>> SearchWorldAssets(string label, int startItem, bool buildSasThumbnailUrl, string path, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
+
+        Task<CMResource> GetSessionAssetById(int assetId);
 
         Task<CMSearch<CMFolder>> GetEventAssetsFolders(int eventId, int pageSize, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
 
@@ -339,11 +321,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #endregion
 
         #region Tags
+        /// <summary>
+        /// Get all tags
+        /// </summary>
+        Task<List<CMTag>> GetAllContentTags();
 
         /// <summary>
-        /// Get all tags avaible to users
+        /// Get all tags
         /// </summary>
-        /// <returns></returns>
         Task<List<CMTag>> GetAllUsersTags();
 
         /// <summary>

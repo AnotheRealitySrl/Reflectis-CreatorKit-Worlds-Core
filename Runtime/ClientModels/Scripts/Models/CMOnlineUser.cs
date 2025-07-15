@@ -13,17 +13,17 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
             VR
         }
 
-        [SerializeField] private string sessionId;
+        [SerializeField] private string connectionId;
         [SerializeField] private Platform currentPlatform;
         [SerializeField] private int shard;
-        [SerializeField] private int eventId;
+        [SerializeField] private int sessionId;
         [SerializeField] private int worldId;
         [SerializeField] private CMUser user;
 
-        public string SessionId { get => sessionId; set => sessionId = value; }
+        public string ConnectionId { get => connectionId; set => connectionId = value; }
         public Platform CurrentPlatform { get => currentPlatform; set => currentPlatform = value; }
         public int Shard { get => shard; set => shard = value; }
-        public int EventId { get => eventId; set => eventId = value; }
+        public int SessionId { get => sessionId; set => sessionId = value; }
         public int WorldId { get => worldId; set => worldId = value; }
         public CMUser User { get => user; set => user = value; }
     }

@@ -16,11 +16,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
             SpawnFiles = 7,
             SendGlobalAndShardMessages = 12,
             SendAnnouncementMessages = 14,
-            ManageMyEvents = 15,
+            ManageMyExperiencesAndSessions = 15,
             EnableSpeaker = 16,
             UseAuthoringTool = 17,
             InteractWithAllObjects = 18,
             UseVoiceChat = 19,
+            ManageMyEvents = 20,
+            ManageMySessions = 21,
+            ManageMyAuthoredExperiences = 22
         }
 
 
