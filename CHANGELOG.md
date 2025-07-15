@@ -1,5 +1,18 @@
 # Release notes
 
+## v6.0.0
+
+### Changed
+
+- Revised all `CMWorld`, `CMEvent`, `CMEnvironment` entities to support new structure based on Experiences and Sessions.
+- Change legacy signatures of `GetWorldFolders`, `GetWorldAssets` and `SearchWorldAssets` signatures in `IClientModelSystem`.
+
+### Added
+
+- Added `TextBox` option to `EPrefabIdentifier` in `IObjectSpawnerSystem`.
+- Added `ManageMySessions `entry in `EFacetIdentifier` of `CMPermission`.
+- Add some `[CreateProperty]` decorators in `CMUser` and `CMWorld`.
+
 ## v5.0.1
 
 ### Fixed
