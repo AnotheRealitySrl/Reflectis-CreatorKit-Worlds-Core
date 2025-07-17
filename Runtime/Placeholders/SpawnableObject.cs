@@ -13,12 +13,9 @@ namespace Reflectis.CreatorKit.Worlds.Core
 
         private const string SpawnableObjectListDataPath = "Assets/SpawnableObject/SpawnableObjectList.asset";
 
-        [SerializeField] private bool _isSceneObject;
-        public bool IsSceneObject
-        {
-            get => _isSceneObject;
-            set => _isSceneObject = value;
-        }
+        private bool _isSceneObject;
+        public bool IsSceneObject => _isSceneObject;
+
 
 #if UNITY_EDITOR
         private void OnValidate()
