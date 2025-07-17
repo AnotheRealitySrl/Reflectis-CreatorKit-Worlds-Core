@@ -29,5 +29,10 @@ namespace Reflectis.CreatorKit.Worlds.Core
                 return -1;
             }
         }
+
+        public GameObject GetObjectInPosition(int index)
+        {
+            return spawnableObjectList[index];
+        }
     }
 }
