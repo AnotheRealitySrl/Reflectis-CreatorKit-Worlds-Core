@@ -32,7 +32,7 @@ namespace Reflectis.CreatorKit.Worlds.Core
                     return;
                 }
 
-                if (!spawnList.GetList().Any(obj => obj != null && AssetDatabase.GetAssetPath(obj) == AssetDatabase.GetAssetPath(this)))
+                if (spawnList.GetList().Count ==0 || !spawnList.GetList().Any(obj => obj != null && AssetDatabase.GetAssetPath(obj) == AssetDatabase.GetAssetPath(this)))
                 {
                     spawnList.AddToList(this.gameObject);// spawnableObjectList.Add(this.gameObject);
 
