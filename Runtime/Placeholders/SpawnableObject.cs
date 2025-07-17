@@ -71,8 +71,6 @@ namespace Reflectis.CreatorKit.Worlds.Core
                 Debug.Log($"Removed {name} from spawnable list (component removed or destroyed)");
             }
         }*/
-#endif
-
 
         private static SpawnableObjectListData LoadOrCreateData()
         {
@@ -92,5 +90,8 @@ namespace Reflectis.CreatorKit.Worlds.Core
 
             return spawnableList;
         }
+#endif
+
+
     }
 }
