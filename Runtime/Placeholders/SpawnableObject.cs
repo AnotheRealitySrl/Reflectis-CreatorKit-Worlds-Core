@@ -20,6 +20,10 @@ namespace Reflectis.CreatorKit.Worlds.Core
 #if UNITY_EDITOR
         private void OnValidate()
         {
+            if (Application.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                return;
+            }
 
             //Check whether or not I am a prefab and I am in prefab mode (?)
             if ((EditorUtility.IsPersistent(this) || PrefabUtility.GetPrefabAssetType(gameObject) != PrefabAssetType.NotAPrefab) && PrefabUtility.IsPartOfPrefabAsset(gameObject))
@@ -85,7 +89,6 @@ namespace Reflectis.CreatorKit.Worlds.Core
                 // Create instance and save
                 spawnableList = ScriptableObject.CreateInstance<SpawnableObjectListData>();
                 AssetDatabase.CreateAsset(spawnableList, SpawnableObjectListDataPath);
-                Debug.Log("Created new Gimmi.asset at " + SpawnableObjectListDataPath);
             }
 
             return spawnableList;
