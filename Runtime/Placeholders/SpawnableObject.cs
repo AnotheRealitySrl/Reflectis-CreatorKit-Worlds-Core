@@ -12,9 +12,14 @@ namespace Reflectis.CreatorKit.Worlds.Core
     {
 
         private const string SpawnableObjectListDataPath = "Assets/SpawnableObject/SpawnableObjectList.asset";
+        private const string HandReferencePrefabPath = "Packages/com.anotherealitysrl.reflectis-creatorkit-worlds-core/Prefab/HandReference.prefab";
 
         private bool _isSceneObject;
         public bool IsSceneObject => _isSceneObject;
+
+        //in the future add spawnOnHand bool and if false spawnPoint transform.
+
+        private GameObject HandReference;
 
 
 #if UNITY_EDITOR
@@ -25,7 +30,16 @@ namespace Reflectis.CreatorKit.Worlds.Core
                 return;
             }
 
-            //Check whether or not I am a prefab and I am in prefab mode (?)
+            //Add the hand reference
+            if(HandReference == null)
+            {
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(HandReferencePrefabPath);
+                HandReference = (GameObject)PrefabUtility.InstantiatePrefab(prefab, this.transform);
+                HandReference.transform.localPosition = Vector3.zero;
+                EditorUtility.SetDirty(this);
+            }
+
+            //Check whether or not I am a prefab and I am in prefab mode 
             if ((EditorUtility.IsPersistent(this) || PrefabUtility.GetPrefabAssetType(gameObject) != PrefabAssetType.NotAPrefab) && PrefabUtility.IsPartOfPrefabAsset(gameObject))
             {
                 //Add object to scriptable object containing the list of all the items
@@ -38,7 +52,7 @@ namespace Reflectis.CreatorKit.Worlds.Core
 
                 if (spawnList.GetList().Count ==0 || !spawnList.GetList().Any(obj => obj != null && AssetDatabase.GetAssetPath(obj) == AssetDatabase.GetAssetPath(this)))
                 {
-                    spawnList.AddToList(this.gameObject);// spawnableObjectList.Add(this.gameObject);
+                    spawnList.AddToList(this.gameObject);
 
                     // Clean duplicates and nulls
                     spawnList.spawnableObjectList = spawnList.spawnableObjectList
