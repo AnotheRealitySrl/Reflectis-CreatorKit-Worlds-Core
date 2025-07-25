@@ -22,8 +22,8 @@ namespace Reflectis.CreatorKit.Worlds.Core
 
         //------------ These 3 parameters will be hidden if spawnInHand is false.
         public bool symmetricHandPositioning = true;
-        public Vector3 leftSpawnPositionOffset = Vector3.zero;
-        [HideInInspector] public Vector3 rightSpawnPositionOffset = Vector3.zero;
+        [HideInInspector] public Transform leftHandPivot;
+        [HideInInspector] public Transform rightHandPivot;
         //------------------
 
         //If spawnInHand is false then show the parameter spawnPoint which is a Transform
@@ -38,6 +38,22 @@ namespace Reflectis.CreatorKit.Worlds.Core
             if (Application.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode)
             {
                 return;
+            }
+
+            if(rightHandPivot == null)
+            {
+                GameObject rightPivotGO = new GameObject("RightHandPivot");
+                rightPivotGO.transform.parent = transform;
+                rightPivotGO.transform.localPosition = Vector3.zero;
+                rightHandPivot = rightPivotGO.transform;
+            }
+
+            if(leftHandPivot == null)
+            {
+                GameObject leftPivotGO = new GameObject("LeftHandPivot");
+                leftPivotGO.transform.parent = transform;
+                leftPivotGO.transform.localPosition = Vector3.zero;
+                leftHandPivot = leftPivotGO.transform;
             }
 
             //Check whether or not I am a prefab and I am in prefab mode 
@@ -93,26 +109,34 @@ namespace Reflectis.CreatorKit.Worlds.Core
         {
             GameObject hand = null;
             string path = "";
+            Transform parentTransform;
             if (handType == 0){
                 path = LeftHandReferencePrefabPath;
                 hand = LeftHandReference;
+                parentTransform = leftHandPivot;
             }
             else
             {
                 path = RightHandReferencePrefabPath;
                 hand = RightHandReference;
+                parentTransform = rightHandPivot;
             }
 
             //Add the hand reference
             if (hand == null)
             {
                 var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-                hand = (GameObject)PrefabUtility.InstantiatePrefab(prefab, this.transform);
+                hand = (GameObject)PrefabUtility.InstantiatePrefab(prefab, parentTransform);
                 hand.transform.localPosition = Vector3.zero;
                 if (handType == 0)
+                {
                     LeftHandReference = hand;
+                }
                 else
+                {
                     RightHandReference = hand;
+                }
+                   
                 EditorUtility.SetDirty(this);
             }
             else
@@ -124,27 +148,26 @@ namespace Reflectis.CreatorKit.Worlds.Core
 
         public void SetPositionLeftHand()
         {
-            if (LeftHandReference != null)
+            if (leftHandPivot != null)
             {
-                LeftHandReference.transform.position = leftSpawnPositionOffset;
+                //leftSpawnPositionOffset = LeftHandReference.transform;
+                if (symmetricHandPositioning)
+                {
+                    leftHandPivot.transform.localPosition = new Vector3(-rightHandPivot.transform.localPosition.x, rightHandPivot.transform.localPosition.y, rightHandPivot.transform.localPosition.z);
+                    Vector3 rightRotation = rightHandPivot.transform.localEulerAngles;
+                    leftHandPivot.transform.localEulerAngles = new Vector3(rightRotation.x, -rightRotation.y, -rightRotation.z);
+                }
             }
 
         }
 
-        public void SetPositionRightHand()
+        /*public void SetPositionRightHand()
         {
             if (RightHandReference != null)
             {
-                if (symmetricHandPositioning)
-                {
-                    RightHandReference.transform.localPosition = new Vector3(-leftSpawnPositionOffset.x, leftSpawnPositionOffset.y, leftSpawnPositionOffset.z);
-                }
-                else
-                {
-                    RightHandReference.transform.localPosition = rightSpawnPositionOffset;
-                }
+                rightHandPivot = RightHandReference.transform;
             }
-        }
+        }*/
 
         /*private void OnDestroy()
         {
@@ -180,19 +203,8 @@ namespace Reflectis.CreatorKit.Worlds.Core
             string leftButtonLabel = myScript.LeftHandReference == null ? "Show Left Reference" : "Hide Left Reference";
             string rigthButtonLabel = myScript.RightHandReference == null ? "Show Right Reference" : "Hide Right Reference";
 
-            if (myScript.symmetricHandPositioning)
-            {
-                //Hide right positioning
-            }
-            else
-            {
-                //Show right positioning
-                SerializedProperty usesProp = serializedObject.FindProperty("rightSpawnPositionOffset");
-                EditorGUILayout.PropertyField(usesProp);
-            }
-
             myScript.SetPositionLeftHand();
-            myScript.SetPositionRightHand();
+            //myScript.SetPositionRightHand();
 
             if (GUILayout.Button(leftButtonLabel))
             {
