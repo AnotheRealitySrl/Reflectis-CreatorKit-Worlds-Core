@@ -19,15 +19,17 @@ namespace Reflectis.CreatorKit.Worlds.Core
         public bool IsSceneObject => _isSceneObject;
 
         private bool spawnInHand = true; //in the future add spawnOnHand bool and if false spawnPoint transform.
-        //------------ These 2 parameters will be hidden if spawnInHand is false.
-        public Vector3 leftSpawnPositionOffset = Vector3.zero; 
-        public Vector3 rightSpawnPositionOffset = Vector3.zero;
+
+        //------------ These 3 parameters will be hidden if spawnInHand is false.
+        public bool symmetricHandPositioning = true;
+        public Vector3 leftSpawnPositionOffset = Vector3.zero;
+        [HideInInspector] public Vector3 rightSpawnPositionOffset = Vector3.zero;
         //------------------
 
         //If spawnInHand is false then show the parameter spawnPoint which is a Transform
 
-        /*[HideInInspector]*/ public GameObject LeftHandReference;
-        /*[HideInInspector]*/ public GameObject RightHandReference;
+        [HideInInspector] public GameObject LeftHandReference;
+        [HideInInspector] public GameObject RightHandReference;
 
 
 #if UNITY_EDITOR
@@ -120,6 +122,30 @@ namespace Reflectis.CreatorKit.Worlds.Core
             }
         }
 
+        public void SetPositionLeftHand()
+        {
+            if (LeftHandReference != null)
+            {
+                LeftHandReference.transform.position = leftSpawnPositionOffset;
+            }
+
+        }
+
+        public void SetPositionRightHand()
+        {
+            if (RightHandReference != null)
+            {
+                if (symmetricHandPositioning)
+                {
+                    RightHandReference.transform.localPosition = new Vector3(-leftSpawnPositionOffset.x, leftSpawnPositionOffset.y, leftSpawnPositionOffset.z);
+                }
+                else
+                {
+                    RightHandReference.transform.localPosition = rightSpawnPositionOffset;
+                }
+            }
+        }
+
         /*private void OnDestroy()
         {
             // Only handle editor-time logic (not during play mode)
@@ -154,16 +180,19 @@ namespace Reflectis.CreatorKit.Worlds.Core
             string leftButtonLabel = myScript.LeftHandReference == null ? "Show Left Reference" : "Hide Left Reference";
             string rigthButtonLabel = myScript.RightHandReference == null ? "Show Right Reference" : "Hide Right Reference";
 
-            if (myScript.LeftHandReference != null)
+            if (myScript.symmetricHandPositioning)
             {
-                //place the hand based on the position set by the user
-                myScript.LeftHandReference.transform.position = myScript.leftSpawnPositionOffset;
+                //Hide right positioning
             }
-            if (myScript.RightHandReference != null)
+            else
             {
-                //place the hand based on the position set by the user
-                myScript.RightHandReference.transform.position = myScript.rightSpawnPositionOffset;
+                //Show right positioning
+                SerializedProperty usesProp = serializedObject.FindProperty("rightSpawnPositionOffset");
+                EditorGUILayout.PropertyField(usesProp);
             }
+
+            myScript.SetPositionLeftHand();
+            myScript.SetPositionRightHand();
 
             if (GUILayout.Button(leftButtonLabel))
             {
