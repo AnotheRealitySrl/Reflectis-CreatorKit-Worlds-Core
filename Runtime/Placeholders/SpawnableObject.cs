@@ -45,6 +45,11 @@ namespace Reflectis.CreatorKit.Worlds.Core
             }
         }
 
+        public void Awake()
+        {
+            DestroyHands();
+        }
+
 
 #if UNITY_EDITOR
         private void OnValidate()
