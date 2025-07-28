@@ -18,15 +18,13 @@ namespace Reflectis.CreatorKit.Worlds.Core
         private bool _isSceneObject;
         public bool IsSceneObject => _isSceneObject;
 
-        private bool spawnInHand = true; //in the future add spawnOnHand bool and if false spawnPoint transform.
+        [HideInInspector] public bool spawnInHand = true; //in the future add spawnOnHand bool and if false make the spawner know where to spawn this certain item (whether in front of user or in a certain transform in env).
 
         //------------ These 3 parameters will be hidden if spawnInHand is false.
         public bool symmetricHandPositioning = true;
         [HideInInspector] public Transform leftHandPivot;
         [HideInInspector] public Transform rightHandPivot;
         //------------------
-
-        //If spawnInHand is false then show the parameter spawnPoint which is a Transform
 
         [HideInInspector] public GameObject LeftHandReference;
         [HideInInspector] public GameObject RightHandReference;
