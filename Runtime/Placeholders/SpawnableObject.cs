@@ -31,6 +31,20 @@ namespace Reflectis.CreatorKit.Worlds.Core
         [HideInInspector] public GameObject LeftHandReference;
         [HideInInspector] public GameObject RightHandReference;
 
+        //Function called when the object gets instantiated, destroy the hand references
+        public void DestroyHands()
+        {
+            if (LeftHandReference != null)
+            {
+                Destroy(LeftHandReference);
+            }
+
+            if (RightHandReference != null)
+            {
+                Destroy(RightHandReference);
+            }
+        }
+
 
 #if UNITY_EDITOR
         private void OnValidate()
