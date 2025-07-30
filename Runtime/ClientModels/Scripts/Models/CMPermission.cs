@@ -24,12 +24,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
             ManageMyEvents = 20,
             ManageMySessions = 21,
             ManageMyAuthoredExperiences = 22,
-            SeeCatalogueTab = 23,
-            Leaderboard = 24,
+            ShowCatalogueTab = 23,
+            ShowLeaderboard = 24,
             UseEmotes = 25,
             ShowLogo = 26,
-            SeeTutorialButton = 27,
-            DoubleUserConnection = 28,
+            ShowTutorialButton = 27,
+            EnableDoubleUserConnection = 28,
             ShowCompleteName = 29,
         }
 

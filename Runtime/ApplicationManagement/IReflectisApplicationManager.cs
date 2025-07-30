@@ -27,5 +27,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ApplicationManagement
         void AddAvatar(GameObject avatar);
         void AddLocalSpawnedObject(GameObject localObject);
         void AddEnvironmentObject(GameObject environmentObject);
+        Task LoadLobby();
     }
 }
