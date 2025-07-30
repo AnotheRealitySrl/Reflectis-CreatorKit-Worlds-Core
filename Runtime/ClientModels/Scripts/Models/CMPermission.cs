@@ -24,7 +24,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
             ManageMyEvents = 20,
             ManageMySessions = 21,
             ManageMyAuthoredExperiences = 22,
-            ShowCatalogueTab = 23,
+            ShowCatalogTab = 23,
             ShowLeaderboard = 24,
             UseEmotes = 25,
             ShowLogo = 26,
