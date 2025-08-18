@@ -278,6 +278,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         Task DeleteAllMySaveData();
         #endregion
 
+        #region Leaderboard
+        public Task CreateLeaderboardRecord(CMLeaderboardRecord record);
+        #endregion
+
         #region Permissions
 
         List<EFacetIdentifier> CurrentEventPermissions { get; }
