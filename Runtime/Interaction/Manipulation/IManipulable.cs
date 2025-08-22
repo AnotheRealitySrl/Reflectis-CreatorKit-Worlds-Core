@@ -39,5 +39,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
         }
 
         public Task Setup();
+
+        public void ForceGrabRelease();
     }
 }
