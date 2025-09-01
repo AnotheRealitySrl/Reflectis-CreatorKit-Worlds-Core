@@ -138,8 +138,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 BuildtimeVariable(build_target_variable_name));
 
             var addressablesVariables = typeof(AddressablesVariables).GetProperties();
-            string baseUrl = addressablesVariables.First(x => x.PropertyType == typeof(string)).Name;
-            string worldId = addressablesVariables.First(x => x.PropertyType == typeof(int)).Name;
+            string baseUrl = addressablesVariables[0].Name;
+            string worldId = addressablesVariables[1].Name;
             remoteLoadPath = string.Join('/',
                 RuntimeVariable($"{typeof(AddressablesVariables)}.{baseUrl}"),
                 RuntimeVariable($"{typeof(AddressablesVariables)}.{worldId}"),
