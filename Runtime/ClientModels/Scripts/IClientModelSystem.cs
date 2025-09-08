@@ -91,7 +91,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Experiences
         public Task<List<CMExperience>> GetExperiences();
-        public Task<CMExperience> GetExperienceByAddressableName(string title);
+        public Task<CMExperience> GetExperienceByAddressableName(string title, bool isTenant = false);
         public Task<List<CMExperience>> GetHighlightedExperiences();
         /// <summary>
         /// If successfull return 0, otherwise return status code
