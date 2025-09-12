@@ -19,6 +19,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
             Drawing,
             VideoChat,
             TextBox,
+            GeneralContainer
         }
 
         GameObject InstantiateLocalObject(GameObject gameObject, object[] data = null, SpawnPosition spawnableData = null);
@@ -35,5 +36,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
         /// <returns></returns>
         Task<GameObject> InstantiateObject(EPrefabIdentifier prefabId, bool onNetwork = true, object[] data = null, SpawnPosition spawnableData = null);
         Task<GameObject> InstantiateObject(EPrefabIdentifier prefabId, Vector3 position, Quaternion rotation, bool onNetwork = true, object[] data = null);
+
+        int GetIndexToInstantiate(GameObject gameObject);
+        GameObject GetSpawnableObject(int index);
     }
 }

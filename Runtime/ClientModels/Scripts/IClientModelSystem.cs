@@ -91,7 +91,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Experiences
         public Task<List<CMExperience>> GetExperiences();
-        public Task<CMExperience> GetExperienceByAddressableName(string title);
+        public Task<CMExperience> GetExperienceByAddressableName(string title, bool isTenant = false);
         public Task<List<CMExperience>> GetHighlightedExperiences();
         /// <summary>
         /// If successfull return 0, otherwise return status code
@@ -259,6 +259,27 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <param name="id"></param>
         /// <returns></returns>
         Task<List<CMUser>> GetUsersWithTag(int id);
+        #endregion
+
+        #region SaveData
+        //Get the save data for the current user in the current event
+        //This method is not async because we prefere to give creators non coroutine units
+        //We can also implement an awaitable version if needed
+        object GetMySaveData(string key);
+
+        //This method is not async because we prefere to give creators non coroutine units
+        //We can also implement an awaitable version if needed
+        void SetMySaveData(string key, object data);
+
+        //This method is not async because we prefere to give creators non coroutine units
+        //We can also implement an awaitable version if needed
+        void DeleteMySaveData(string key);
+
+        Task DeleteAllMySaveData();
+        #endregion
+
+        #region Leaderboard
+        public Task CreateLeaderboardRecord(CMLeaderboardRecord record);
         #endregion
 
         #region Permissions

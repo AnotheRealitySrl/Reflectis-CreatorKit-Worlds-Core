@@ -14,7 +14,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ApplicationManagement
 
         EApplicationState State { get; }
         Task InitializeObject(GameObject gameObject, bool initializeChildren = false);
-        Task<bool> JoinSession(int eventId, int? shard = null, bool updateHistory = true, bool recoverFromDisconnection = false);
+        Task<bool> JoinAndLoadSession(int eventId, int? shard = null, bool updateHistory = true, bool recoverFromDisconnection = false);
 
         Task<bool> JoinExperience(CMExperience experience, bool multiplayer, int? shard = null, bool updateHistory = true, bool recoverFromDisconnection = false);
 
@@ -27,5 +27,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ApplicationManagement
         void AddAvatar(GameObject avatar);
         void AddLocalSpawnedObject(GameObject localObject);
         void AddEnvironmentObject(GameObject environmentObject);
+        Task LoadLobby();
     }
 }

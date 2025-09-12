@@ -23,7 +23,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
             UseVoiceChat = 19,
             ManageMyEvents = 20,
             ManageMySessions = 21,
-            ManageMyAuthoredExperiences = 22
+            ManageMyAuthoredExperiences = 22,
+            ShowCatalogTab = 23,
+            ShowLeaderboard = 24,
+            UseEmotes = 25,
+            ShowLogo = 26,
+            ShowTutorialButton = 27,
+            EnableDoubleUserConnection = 28,
+            ShowCompleteName = 29,
         }
 
 

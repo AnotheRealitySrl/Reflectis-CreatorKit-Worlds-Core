@@ -11,6 +11,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
     [Serializable]
     public class CMUser
     {
+        public static bool showFullNickname = false;
+
         [SerializeField] private int id;
         [SerializeField] private int code;
         [SerializeField] private string email;
