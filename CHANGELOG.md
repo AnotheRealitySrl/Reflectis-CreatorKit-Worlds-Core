@@ -1,5 +1,16 @@
 # Release notes
 
+## v7.0.0
+
+### Changed
+
+- Changed `JoinSession` method signature in `JoinAndLoadSession` of `IReflectisApplicationManager`.
+
+### Added
+
+- Added catalog info and isTenant in `CMEnvironment`.
+- Added optional isTenant name in GetExperienceByAddressableName method of `IClientModelSystem`.
+
 ## v6.0.0
 
 ### Changed
