@@ -1,5 +1,8 @@
 #if REFLECTIS_CREATOR_KIT_WORLDS_PLACEHOLDERS
 using Reflectis.CreatorKit.Worlds.Placeholders;
+using Reflectis.SDK.Core.Utilities;
+using UnityEditor;
+using UnityEngine;
 #endif
 #if REFLECTIS_CREATOR_KIT_WORLDS_TASKS
 using Reflectis.CreatorKit.Worlds.Tasks;
@@ -7,10 +10,6 @@ using Reflectis.CreatorKit.Worlds.Tasks;
 #if REFLECTIS_CREATOR_KIT_WORLDS_VISUAL_SCRIPTING
 using Reflectis.CreatorKit.Worlds.VisualScripting;
 #endif
-using Reflectis.SDK.Core.Utilities;
-using UnityEditor;
-
-using UnityEngine;
 
 namespace Reflectis.CreatorKit.Worlds.Installer.Editor
 {
@@ -23,6 +22,7 @@ namespace Reflectis.CreatorKit.Worlds.Installer.Editor
             ReplaceInteractablePlaceholder();
 #endif
         }
+#if REFLECTIS_CREATOR_KIT_WORLDS_PLACEHOLDERS
         private static void ReplaceInteractablePlaceholder()
         {
             string activeScenePath = "" + UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().path;
@@ -365,6 +365,7 @@ namespace Reflectis.CreatorKit.Worlds.Installer.Editor
 
         }
 
+#endif
     }
 
 }

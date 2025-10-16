@@ -1,5 +1,11 @@
 # Release notes
 
+## v7.0.1
+
+### Added
+
+- Fixed compile issue in `BreakingChangeSolver`.
+
 ## v7.0.0
 
 ### Changed
