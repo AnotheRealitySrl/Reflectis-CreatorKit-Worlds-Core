@@ -31,6 +31,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
             ShowTutorialButton = 27,
             EnableDoubleUserConnection = 28,
             ShowCompleteName = 29,
+            UploadAssetsFolders = 30,
+            ReadSharedAssetsFolders = 31,
+            ManageSharedAssetsFolders = 32,
+            GenerateAI3DAssets = 33
         }
 
 
