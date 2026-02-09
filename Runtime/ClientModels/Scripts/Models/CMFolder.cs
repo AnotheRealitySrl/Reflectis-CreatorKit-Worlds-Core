@@ -1,5 +1,5 @@
 using System;
-
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
@@ -7,42 +7,20 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
     [Serializable]
     public class CMFolder
     {
+        [SerializeField] private int id;
+        [SerializeField] private int parentId;
         [SerializeField] private string name;
-        [SerializeField] private int fileCount;
-        [SerializeField] private int totalKBytes;
+        [SerializeField] private string path;
+        [SerializeField] private int assetCount;
+        [SerializeField] private List<CMFolder> subFolders;
+        [SerializeField] private List<CMResource> assets;
 
-        public string TotalKBytesString
-        {
-            get
-            {
-                const int gigabyte = 1024 * 1024 * 1024;
-                const int megabyte = 1024 * 1024;
-                const int kilobyte = 1024;
-
-                if (totalKBytes >= gigabyte)
-                {
-                    int value = totalKBytes / gigabyte;
-                    return $"{value:F2} GB";
-                }
-
-                if (totalKBytes >= megabyte)
-                {
-                    double value = totalKBytes / megabyte;
-                    return $"{value:F2} MB";
-                }
-
-                if (totalKBytes >= kilobyte)
-                {
-                    double value = totalKBytes / kilobyte;
-                    return $"{value:F2} KB";
-                }
-
-                return $"{totalKBytes} bytes";
-            }
-        }
-
+        public int Id { get => id; set => id = value; }
+        public int ParentId { get => parentId; set => parentId = value; }
         public string Name { get => name; set => name = value; }
-        public int FileCount { get => fileCount; set => fileCount = value; }
-        public int TotalKBytes { get => totalKBytes; set => totalKBytes = value; }
+        public string Path { get => path; set => path = value; }
+        public int AssetCount { get => assetCount; set => assetCount = value; }
+        public List<CMFolder> SubFolders { get => subFolders; set => subFolders = value; }
+        public List<CMResource> Assets { get => assets; set => assets = value; }
     }
 }

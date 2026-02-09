@@ -310,6 +310,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #endregion
 
+        #region Assets folders
+        Task<CMFolder> GetAssetsAndFoldersInFolderAsync(int folderId, List<FileTypeExt> fileTypeExts);
+
+        Task<List<CMResource>> GetAssetsInFolderAsync(int folderId, List<FileTypeExt> fileTypeExts, int startingIndex);
+        #endregion
+
         #region Tags
         /// <summary>
         /// Get all tags
