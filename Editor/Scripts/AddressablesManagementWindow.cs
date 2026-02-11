@@ -1,9 +1,14 @@
+﻿using Newtonsoft.Json;
 using Reflectis.CreatorKit.Worlds.CoreEditor;
-
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
-
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using Unity.Properties;
 
 using UnityEditor;
@@ -71,6 +76,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         [CreateProperty] private bool AreAddressablesConfigured => IsAddressablesSettingsConfigured && IsProfileConfigured && AreAddressablesGroupsConfigured;
 
+
+        private static HttpClient httpClient = new HttpClient();
+
+        public static string token = "";
 
         [MenuItem("Reflectis Worlds/Creator Kit/Core/Addressables management")]
         public static void ShowExample()
@@ -483,7 +492,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private string BuildtimeVariable(string variable) => "[" + variable + "]";
         private string RuntimeVariable(string variable) => "{" + variable + "}";
 
-        private void SaveAsset(Object asset)
+        private void SaveAsset(UnityEngine.Object asset)
         {
             EditorUtility.SetDirty(asset);
             AssetDatabase.SaveAssetIfDirty(asset);
@@ -507,7 +516,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         #region Build
 
-        private void BuildSelectedAddressablesForAllPlatforms()
+        private async void BuildSelectedAddressablesForAllPlatforms()
         {
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
             BuildAddressablesForSelectedPlatform();
@@ -519,6 +528,19 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             BuildAddressablesForSelectedPlatform();
 
             buildResult = CheckBuildResult();
+
+            if (buildResult == EBuildError.None)
+            {
+                Debug.Log("Addressables built successfully for all selected platforms.");
+
+                ZipBuildedScenes();
+
+                await UploadBuildedScenes();
+            }
+            else
+            {
+                Debug.LogError("There were errors during the Addressables build process. Please check the details above.");
+            }
         }
 
         private void BuildAddressablesForSelectedPlatform()
@@ -590,6 +612,163 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
             return EBuildError.None;
         }
+
+        private void ZipBuildedScenes()
+        {
+            List<string> builtScenes = sceneConfigurations.SceneConfigurations
+                .Where(x => x.IncludeInBuild)
+                .Select(x => x.SceneNameFiltered)
+                .ToList();
+
+            foreach (string scene in builtScenes)
+            {
+                string fullBuildPath = Path.Combine(addressables_output_folder, scene);
+                string fullZipPath = fullBuildPath + ".zip";
+
+                if (!Directory.Exists(fullBuildPath))
+                    throw new DirectoryNotFoundException($"Cartella build non trovata: {fullBuildPath}");
+
+                if (File.Exists(fullZipPath))
+                    File.Delete(fullZipPath);
+
+                ZipFile.CreateFromDirectory(fullBuildPath, fullZipPath, System.IO.Compression.CompressionLevel.Optimal, true);
+            }
+
+        }
+
+
+        // Dimensione massima di un blocco (in byte) per upload segmentato — 4 MB qui è una scelta sicura
+        private const int ChunkSize = 4 * 1024 * 1024;
+
+        private async Task UploadBuildedScenes()
+        {
+            List<string> builtScenes = sceneConfigurations.SceneConfigurations
+                .Where(x => x.IncludeInBuild)
+                .Select(x => x.SceneNameFiltered)
+                .ToList();
+
+            if (string.IsNullOrEmpty(token))
+            {
+                Debug.LogError("Token non disponibile per l’upload su Azure. Interrompo l’operazione.");
+                return;
+            }
+
+            string sasUrl = await GetSasUrl(token);
+
+            foreach (string scene in builtScenes)
+            {
+                Debug.Log($"Inizio upload scena {scene}...");
+                string sceneZipPath = scene + ".zip";
+                await UploadZip(Path.Combine(addressables_output_folder, sceneZipPath), sasUrl);
+                Debug.Log($"Upload scena {scene} completato.");
+                Debug.Log($"Start import scene {scene} in Reflectis platform...");
+                await ImportScene(token, scene);
+                Debug.Log($"Scene {scene} imported.");
+            }
+        }
+
+
+        public static async Task<string> GetSasUrl(string accessToken)
+        {
+            Debug.Log("==> Chiamata API protetta per ottenere SAS URL...");
+            // URL della tua API protetta
+            string apiUrl = "https://reflectis2023-api-prep.anothereality.io/worlds/25?api-version=2";
+
+            // Imposta l’header di autorizzazione
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var response = await httpClient.GetAsync(apiUrl);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Debug.LogError($"API Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                return null;
+            }
+
+            string json = await response.Content.ReadAsStringAsync();
+
+            World world = Newtonsoft.Json.JsonConvert.DeserializeObject<World>(json);
+            httpClient = new HttpClient();
+            Debug.Log($"SAS URL ricevuto: {world.UploadLink}");
+            return world.UploadLink;
+        }
+
+        public class World
+        {
+            [SerializeField] private string uploadLink;
+
+            public string UploadLink { get => uploadLink; set => uploadLink = value; }
+        }
+
+        public static async Task ImportScene(string accessToken, string zipName)
+        {
+            // URL della tua API protetta
+            string apiUrl = "https://reflectis2023-api-prep.anothereality.io/worlds/25/environments/archives/import?api-version=2";
+
+            // Imposta l’header di autorizzazione
+            httpClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var content = new StringContent($"\"{zipName + ".zip"}\"", Encoding.UTF8, "application/json");
+
+            // Invia la richiesta POST con il body
+            var response = await httpClient.PostAsync(apiUrl, content);
+
+            // Controlla la risposta
+            if (!response.IsSuccessStatusCode)
+            {
+                Debug.LogError($"API Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+            }
+            else
+            {
+                Debug.Log($"Import {zipName} avviato con successo {JsonConvert.SerializeObject(response)}.");
+            }
+            httpClient = new HttpClient();
+        }
+
+        /// <summary>
+        /// Carica un file ZIP su Azure Blob Storage sotto una cartella specifica.
+        /// Elimina eventuali blob esistenti nella cartella progetto.
+        /// </summary>
+        /// <summary>
+        /// Carica un file ZIP su Azure Blob Storage sotto una cartella specifica,
+        /// usando un SAS URL completo senza necessità di list o cancellazione.
+        /// </summary>
+        public async Task UploadZip(string filePath, string sasUrl)
+        {
+            string fileName = Path.GetFileName(filePath);
+
+            // Usa UriBuilder per non rompere il SAS token
+            var uriBuilder = new UriBuilder(sasUrl);
+            uriBuilder.Path = uriBuilder.Path.TrimEnd('/') + "/" + fileName;
+            Uri uploadUri = uriBuilder.Uri;
+
+            byte[] fileBytes = File.ReadAllBytes(filePath);
+            var content = new ByteArrayContent(fileBytes);
+
+            // Header obbligatorio per Blob Storage
+            content.Headers.Add("x-ms-blob-type", "BlockBlob");
+
+            try
+            {
+                HttpResponseMessage response = await httpClient.PutAsync(uploadUri, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    Debug.Log($"Upload completato: {fileName}");
+                }
+                else
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    Debug.LogError($"Upload fallito: {fileName} SAS {uploadUri} - {response.StatusCode}\n{responseBody}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Errore upload {fileName}: {ex.Message}");
+            }
+        }
+
 
         #endregion
 

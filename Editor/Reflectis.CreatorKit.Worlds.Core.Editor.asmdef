@@ -19,7 +19,7 @@
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
-    "precompiledReferences": [],
+    "precompiledReferences": ["Microsoft.Identity.Client.dll"],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],
