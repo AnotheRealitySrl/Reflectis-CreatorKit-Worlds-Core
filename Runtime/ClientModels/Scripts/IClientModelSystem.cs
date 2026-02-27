@@ -211,6 +211,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <returns></returns>
         Task<bool> UpdateCurrentSessionSaveData(object assets, List<int> assetsIds);
 
+
+        Task<bool> ResetCurrentSession();
+
         /// <summary>
         /// Create new authored experience
         /// </summary>
