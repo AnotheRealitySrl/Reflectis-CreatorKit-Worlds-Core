@@ -196,12 +196,20 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         Task<bool> CreateSessionPermissions(CMSession _event);
 
         /// <summary>
-        /// load the asset list saved previously.
+        /// Updates the asset list in the Experience.
         /// </summary>
-        /// <param name="eventId"></param>
         /// <param name="assets"></param>
+        /// <param name="assetsIds"></param>
         /// <returns></returns>
         Task<bool> UpdateCurrentSessionExperienceSaveData(object assets, List<int> assetsIds);
+
+        /// <summary>
+        /// Updates the asset list in the Session.
+        /// </summary>
+        /// <param name="assets"></param>
+        /// <param name="assetsIds"></param>
+        /// <returns></returns>
+        Task<bool> UpdateCurrentSessionSaveData(object assets, List<int> assetsIds);
 
         /// <summary>
         /// Create new authored experience

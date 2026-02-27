@@ -18,6 +18,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private int maxParticipants;
         [SerializeField] private bool isPublic;
         [SerializeField] private bool isVisible;
+        [SerializeField] private object config;
         [SerializeField] private List<CMPermission> permissions;
         [SerializeField] private bool isOwner;
         [SerializeField] private string shortLink;
@@ -42,6 +43,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public int MaxParticipants { get => maxParticipants; set => maxParticipants = value; }
         public bool IsPublic { get => isPublic; set => isPublic = value; }
         public bool IsVisible { get => isVisible; set => isVisible = value; }
+        public object Config { get => config; set => config = value; }
         public bool IsOwner { get => isOwner; set => isOwner = value; }
         public string ShortLink { get => shortLink; set => shortLink = value; }
         public bool Multiplayer { get => multiplayer; set => multiplayer = value; }
