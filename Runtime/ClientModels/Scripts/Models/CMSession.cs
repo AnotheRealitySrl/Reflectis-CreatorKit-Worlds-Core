@@ -18,6 +18,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private int maxParticipants;
         [SerializeField] private bool isPublic;
         [SerializeField] private bool isVisible;
+        [SerializeField] private object config;
         [SerializeField] private List<CMPermission> permissions;
         [SerializeField] private bool isOwner;
         [SerializeField] private string shortLink;
@@ -26,9 +27,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private bool canVisualize;
         [SerializeField] private bool canWrite;
         [SerializeField] private bool isLimited;
-        [SerializeField] private bool isStatic;
-        [SerializeField] private bool isScheduled;
-
+        [SerializeField] private bool isLobby;
+        [SerializeField] private ESessionStatus status;
         /// <summary>
         /// This DateTime is in local time
         /// </summary>
@@ -42,6 +42,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public int MaxParticipants { get => maxParticipants; set => maxParticipants = value; }
         public bool IsPublic { get => isPublic; set => isPublic = value; }
         public bool IsVisible { get => isVisible; set => isVisible = value; }
+        public object Config { get => config; set => config = value; }
         public bool IsOwner { get => isOwner; set => isOwner = value; }
         public string ShortLink { get => shortLink; set => shortLink = value; }
         public bool Multiplayer { get => multiplayer; set => multiplayer = value; }
@@ -53,9 +54,25 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public int Id { get => id; set => id = value; }
         public List<CMTag> Tags { get => tags; set => tags = value; }
         public string Title { get => title; set => title = value; }
-        public bool IsStatic { get => isStatic; set => isStatic = value; }
-        public bool IsScheduled { get => isScheduled; set => isScheduled = value; }
-        public bool IsLive => !IsScheduled || (StartDateTime.HasValue && StartDateTime.Value <= DateTime.Now && (!EndDateTime.HasValue || EndDateTime.Value >= DateTime.Now));
+        public bool IsLobby { get => isLobby; set => isLobby = value; }
+        public bool IsCurrentlyLive =>
+            //is on the fly
+            (status == ESessionStatus.OnTheFly)
+            //does not have a starting date
+            || !StartDateTime.HasValue
+            //has a starting date that is lower than now
+            || (StartDateTime.Value <= DateTime.Now
+            //and either it does not have an end value or the end value is lower than now
+            && (!EndDateTime.HasValue || EndDateTime.Value >= DateTime.Now));
+
+        public ESessionStatus Status { get => status; set => status = value; }
+
+        public enum ESessionStatus
+        {
+            OnTheFly,
+            Scheduled,
+            Persistent
+        }
     }
 
 }

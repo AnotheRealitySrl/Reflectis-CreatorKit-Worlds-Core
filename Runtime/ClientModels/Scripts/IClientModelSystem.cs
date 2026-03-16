@@ -89,7 +89,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Experiences
         public Task<List<CMExperience>> GetExperiences();
-        public Task<CMExperience> GetExperienceByAddressableName(string title, bool isTenant = false);
+        public Task<CMExperience> GetExperienceByAddressableName(string title);
         public Task<List<CMExperience>> GetHighlightedExperiences();
         /// <summary>
         /// If successfull return 0, otherwise return status code
@@ -196,19 +196,30 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         Task<bool> CreateSessionPermissions(CMSession _event);
 
         /// <summary>
-        /// load the asset list saved previously.
+        /// Updates the asset list in the Experience.
         /// </summary>
-        /// <param name="eventId"></param>
         /// <param name="assets"></param>
+        /// <param name="assetsIds"></param>
         /// <returns></returns>
-        Task<bool> UpdateCurrentSessionExperienceSaveData(object assets);
+        Task<bool> UpdateCurrentSessionExperienceSaveData(object assets, List<int> assetsIds);
+
+        /// <summary>
+        /// Updates the asset list in the Session.
+        /// </summary>
+        /// <param name="assets"></param>
+        /// <param name="assetsIds"></param>
+        /// <returns></returns>
+        Task<bool> UpdateCurrentSessionSaveData(object assets, List<int> assetsIds);
+
+
+        Task<bool> ResetCurrentSession();
 
         /// <summary>
         /// Create new authored experience
         /// </summary>
         /// <param name="template"></param>
         /// <returns></returns>
-        Task<bool> CreateNewAuthoredExperience(string title, object template);
+        Task<bool> CreateNewAuthoredExperience(string title, object template, List<int> assetsIds);
         #endregion
 
         #region Users
@@ -306,7 +317,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         Task<CMSearch<CMResource>> GetSessionAssetsInFolder(int eventId, string path, int pageSize, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
 
-        Task CreateEventAssetsAssociation(int eventId, List<CMResource> resources);
+        Task CreateSessionAssetsAssociation(int eventId, List<CMResource> resources);
 
         #endregion
 
