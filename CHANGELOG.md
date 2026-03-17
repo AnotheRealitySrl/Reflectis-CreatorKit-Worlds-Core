@@ -1,5 +1,10 @@
 # Release notes
 
+## v7.1.1
+
+### Added
+- Added function to set the system language
+
 ## v7.0.1
 
 ### Added
