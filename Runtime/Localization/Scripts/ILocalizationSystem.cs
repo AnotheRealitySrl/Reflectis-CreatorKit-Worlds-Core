@@ -14,5 +14,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Localization
         public List<string> GetLanguagesList();
         public void LanguageChangedEvent();
         public void SetPreviousLanguage();
+        public void SetLanguage(string value);
+        public string GetStringFromExternalKey(string value);
     }
 }

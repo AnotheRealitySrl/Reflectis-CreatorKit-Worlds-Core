@@ -82,8 +82,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         Task<CMWorldConfig> GetWorldConfig(int id);
 
-        Task<List<CMCatalog>> GetWorldCatalogs(int worldId);
-
         public Task KickPlayer(string kickedUserSession);
 
         public Task LoadMyWorldData();
@@ -91,7 +89,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         #region Experiences
         public Task<List<CMExperience>> GetExperiences();
-        public Task<CMExperience> GetExperienceByAddressableName(string title, bool isTenant = false);
+        public Task<CMExperience> GetExperienceByAddressableName(string title);
         public Task<List<CMExperience>> GetHighlightedExperiences();
         /// <summary>
         /// If successfull return 0, otherwise return status code
@@ -104,7 +102,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         public Task ToggleExperienceStatus(int id);
         #endregion
 
-        #region Events
+        #region Sessions
         /// <summary>
         /// Try to join event with given id at shard shardId
         /// Id shardId is null the system will try to join the event in any shard
@@ -132,7 +130,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// Refreshes also cached data that usually should not be refreshed (categories and environments)
         /// </summary>
         /// <returns></returns>
-        Task RefreshAllCachedEventsData();
+        Task RefreshAllCachedSessionData();
 
         /// <summary>
         /// Force refresh on cached event data.
@@ -198,33 +196,30 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         Task<bool> CreateSessionPermissions(CMSession _event);
 
         /// <summary>
-        /// replace the asset list in the given event
+        /// Updates the asset list in the Experience.
         /// </summary>
-        /// <param name="eventId"></param>
         /// <param name="assets"></param>
+        /// <param name="assetsIds"></param>
         /// <returns></returns>
-        Task<bool> UpdateAssetsInSession(int eventId, List<CMResource> assets);
+        Task<bool> UpdateCurrentSessionExperienceSaveData(object assets, List<int> assetsIds);
 
         /// <summary>
-        /// load the asset list saved previously.
+        /// Updates the asset list in the Session.
         /// </summary>
-        /// <param name="eventId"></param>
         /// <param name="assets"></param>
+        /// <param name="assetsIds"></param>
         /// <returns></returns>
-        Task<bool> UpdateCurrentSessionExperienceSaveData(object assets);
+        Task<bool> UpdateCurrentSessionSaveData(object assets, List<int> assetsIds);
+
+
+        Task<bool> ResetCurrentSession();
 
         /// <summary>
         /// Create new authored experience
         /// </summary>
         /// <param name="template"></param>
         /// <returns></returns>
-        Task<bool> CreateNewAuthoredExperience(string title, object template);
-        #endregion
-
-        #region Environments
-
-        Task<List<CMEnvironment>> GetEnvironments();
-
+        Task<bool> CreateNewAuthoredExperience(string title, object template, List<int> assetsIds);
         #endregion
 
         #region Users
@@ -274,8 +269,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         //This method is not async because we prefere to give creators non coroutine units
         //We can also implement an awaitable version if needed
         void DeleteMySaveData(string key);
-
-        Task DeleteAllMySaveData();
         #endregion
 
         #region Leaderboard
@@ -297,18 +290,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// <returns></returns>
         Task GetMySessionPermissions(int eventId);
 
-        ///// <summary>
-        ///// Get the permission available in the current event for a given tag
-        ///// </summary>
-        ///// <returns></returns>
-        //Task<List<CMPermission>> GetEventPermissionsByTag(int eventId, int tagId);
-
-        ///// <summary>
-        ///// Get the permission available for a given tag
-        ///// </summary>
-        ///// <returns></returns>
-        //Task<List<CMPermission>> GetAllPermissionsByTag(int tagId);
-
         #endregion
 
         #region Keys
@@ -324,7 +305,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         #endregion
 
         #region Assets
-
         Task<CMSearch<CMFolder>> GetWorldFolders(int startItem, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
 
         Task<CMSearch<CMResource>> GetWorldAssets(int startItem, bool buildSasThumbnailUrl, string path, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
@@ -333,12 +313,18 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
 
         Task<CMResource> GetSessionAssetById(int assetId);
 
-        Task<CMSearch<CMFolder>> GetEventAssetsFolders(int eventId, int pageSize, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
+        Task<CMSearch<CMFolder>> GetSessionAssetsFolders(int eventId, int pageSize, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
 
-        Task<CMSearch<CMResource>> GetEventAssetsInFolder(int eventId, string path, int pageSize, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
+        Task<CMSearch<CMResource>> GetSessionAssetsInFolder(int eventId, string path, int pageSize, int page = 1, IEnumerable<FileTypeExt> fileTypes = null);
 
-        Task CreateEventAssetsAssociation(int eventId, List<CMResource> resources);
+        Task CreateSessionAssetsAssociation(int eventId, List<CMResource> resources);
 
+        #endregion
+
+        #region Assets folders
+        Task<CMFolder> GetAssetsAndFoldersInFolderAsync(int folderId, List<FileTypeExt> fileTypeExts);
+
+        Task<List<CMResource>> GetAssetsInFolderAsync(int folderId, List<FileTypeExt> fileTypeExts, int startingIndex);
         #endregion
 
         #region Tags
@@ -365,7 +351,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         UnityEvent OnlineUsersUpdated { get; }
         List<CMOnlineUser> GetOnlineUsers();
         CMOnlineUser GetOnlineUser(int userId);
-        bool IsOnlineUser(int userId);
         List<CMOnlineUser> GetUsersInEvent(int eventId);
 
         #endregion

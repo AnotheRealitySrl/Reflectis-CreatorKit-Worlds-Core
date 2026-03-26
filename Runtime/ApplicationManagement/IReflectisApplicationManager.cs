@@ -12,6 +12,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ApplicationManagement
     {
         static new IReflectisApplicationManager Instance { get; protected set; }
 
+        string CurrentPlatform { get; }
         EApplicationState State { get; }
         Task InitializeObject(GameObject gameObject, bool initializeChildren = false);
         Task<bool> JoinAndLoadSession(int eventId, int? shard = null, bool updateHistory = true, bool recoverFromDisconnection = false);
