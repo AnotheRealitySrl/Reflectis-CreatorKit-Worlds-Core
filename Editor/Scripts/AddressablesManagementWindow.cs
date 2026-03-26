@@ -334,6 +334,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private void ConfigureAddressablesSettingsForBuild()
         {
             settings.BuiltInBundleCustomNaming = settings.OverridePlayerVersion;
+            settings.MonoScriptBundleCustomNaming = settings.OverridePlayerVersion;
         }
 
         #endregion
@@ -555,7 +556,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             settings.RemoveAssetEntry(guid);
 
             settings.OverridePlayerVersion = string.Empty;
-            settings.MonoScriptBundleCustomNaming = string.Empty;
         }
 
         private EBuildError CheckBuildResult()
