@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Reflectis.CreatorKit.Worlds.CoreEditor;
+using Reflectis.SDK.ReflectisApi;
+using Reflectis.SDK.TenantConfiguration.Editor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -79,7 +81,31 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         private static HttpClient httpClient = new HttpClient();
 
-        public static string token = "";
+        public static string token
+        {
+            get
+            {
+                if (EditorLoginState.IsLoggedIn)
+                    return EditorLoginState.BearerToken;
+                return _legacyToken;
+            }
+            set => _legacyToken = value;
+        }
+        private static string _legacyToken = "";
+
+        // Worlds state
+        private List<WorldDTO> availableWorlds = new();
+        private Dictionary<int, bool> selectedWorlds = new();
+
+        // UI references
+        private Label loginStatusLabel;
+        private VisualElement deploySection;
+        private ScrollView worldsList;
+        private Label worldsLoadingLabel;
+        private Button deployBuildButton;
+        private Button deployButton;
+        private Button buildAndDeployButton;
+        private Button openTenantSelectionButton;
 
         [MenuItem("Reflectis Worlds/Creator Kit/Core/Addressables management")]
         public static void ShowExample()
@@ -96,15 +122,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private void OnDestroy()
         {
             SaveAsset(sceneConfigurations);
+            EditorLoginState.OnLoginStateChanged -= OnLoginStateChanged;
         }
 
 
         public void CreateGUI()
         {
-            // Each editor window contains a root VisualElement object
             root = rootVisualElement;
 
-            // Instantiate UXML
             VisualElement labelFromUXML = m_VisualTreeAsset.Instantiate();
             root.Add(labelFromUXML);
 
@@ -115,7 +140,379 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         {
             LoadSettings();
             AddDataBindings();
+            SetupLoginAwareUI();
+
+            EditorLoginState.OnLoginStateChanged += OnLoginStateChanged;
         }
+
+        #region Login-aware UI
+
+        private void SetupLoginAwareUI()
+        {
+            loginStatusLabel = root.Q<Label>("login-status-label");
+            deploySection = root.Q<VisualElement>("deploy-section");
+            worldsList = root.Q<ScrollView>("worlds-list");
+            worldsLoadingLabel = root.Q<Label>("worlds-loading-label");
+            deployBuildButton = root.Q<Button>("deploy-build-button");
+            deployButton = root.Q<Button>("deploy-button");
+            buildAndDeployButton = root.Q<Button>("build-and-deploy-button");
+
+            openTenantSelectionButton = root.Q<Button>("open-tenant-selection-button");
+            openTenantSelectionButton.clicked += () =>
+            {
+                EditorApplication.ExecuteMenuItem("Reflectis/Show available tenants");
+            };
+
+            deployBuildButton.clicked += () => BuildAndZipScenes();
+            deployButton.clicked += OnDeployClicked;
+            buildAndDeployButton.clicked += OnBuildAndDeployClicked;
+
+            RefreshLoginState();
+        }
+
+        private void OnLoginStateChanged()
+        {
+            RefreshLoginState();
+        }
+
+        private void RefreshLoginState()
+        {
+            bool loggedIn = EditorLoginState.IsLoggedIn;
+
+            // Show/hide "Open Tenant Selection" button
+            if (openTenantSelectionButton != null)
+                openTenantSelectionButton.style.display = loggedIn ? DisplayStyle.None : DisplayStyle.Flex;
+
+            if (loggedIn)
+            {
+                string tenantLabel = EditorLoginState.CurrentTenant?.Label ?? "Unknown";
+                string username = EditorLoginState.Username;
+                string userPart = !string.IsNullOrEmpty(username) ? $" - {username}" : string.Empty;
+                loginStatusLabel.text = $"Logged in: {tenantLabel}{userPart}";
+                loginStatusLabel.style.color = new Color(0.2f, 0.8f, 0.2f);
+
+                deploySection.style.display = DisplayStyle.Flex;
+                LoadWorlds();
+            }
+            else
+            {
+                loginStatusLabel.text = "Not logged in";
+                loginStatusLabel.style.color = new Color(0.8f, 0.4f, 0.2f);
+
+                deploySection.style.display = DisplayStyle.None;
+                availableWorlds.Clear();
+                selectedWorlds.Clear();
+            }
+        }
+
+        private async void LoadWorlds()
+        {
+            worldsList.Clear();
+            worldsLoadingLabel.style.display = DisplayStyle.Flex;
+            worldsLoadingLabel.text = "Loading worlds...";
+            deployButton.SetEnabled(false);
+            buildAndDeployButton.SetEnabled(false);
+
+            try
+            {
+                string applicationApiUrl = EditorLoginState.CurrentTenant?.Config?.ApplicationApiUrl;
+                if (string.IsNullOrEmpty(applicationApiUrl))
+                {
+                    worldsLoadingLabel.text = "Error: no application API URL in tenant config";
+                    return;
+                }
+
+                string apiUrl = $"{applicationApiUrl}/worlds?api-version=2";
+
+                using var request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var response = await httpClient.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    string body = await response.Content.ReadAsStringAsync();
+                    Debug.LogError($"[AddressablesManagement] Failed to get worlds: {response.StatusCode} - {body}");
+                    worldsLoadingLabel.text = $"Error loading worlds: {response.StatusCode}";
+                    return;
+                }
+
+                string json = await response.Content.ReadAsStringAsync();
+                availableWorlds = JsonConvert.DeserializeObject<List<WorldDTO>>(json) ?? new();
+                selectedWorlds.Clear();
+
+                worldsLoadingLabel.style.display = DisplayStyle.None;
+
+                foreach (var world in availableWorlds)
+                {
+                    selectedWorlds[world.Id] = false;
+
+                    Toggle toggle = new Toggle
+                    {
+                        text = $"{world.Label} (ID: {world.Id})",
+                        value = false
+                    };
+                    int worldId = world.Id;
+                    toggle.RegisterValueChangedCallback(evt =>
+                    {
+                        selectedWorlds[worldId] = evt.newValue;
+                    });
+                    worldsList.Add(toggle);
+                }
+
+                deployButton.SetEnabled(true);
+                buildAndDeployButton.SetEnabled(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AddressablesManagement] Error loading worlds: {ex.Message}");
+                worldsLoadingLabel.text = $"Error: {ex.Message}";
+            }
+        }
+
+        private List<int> GetSelectedWorldIds()
+        {
+            return selectedWorlds.Where(kvp => kvp.Value).Select(kvp => kvp.Key).ToList();
+        }
+
+        private List<string> GetBuiltSceneNames()
+        {
+            return sceneConfigurations.SceneConfigurations
+                .Where(x => x.IncludeInBuild)
+                .Select(x => x.SceneNameFiltered)
+                .ToList();
+        }
+
+        #endregion
+
+        #region Deploy
+
+        private async void OnDeployClicked()
+        {
+            List<int> worldIds = GetSelectedWorldIds();
+            if (worldIds.Count == 0)
+            {
+                Debug.LogWarning("[AddressablesManagement] No worlds selected for deploy.");
+                EditorUtility.DisplayDialog("Deploy", "Please select at least one world.", "OK");
+                return;
+            }
+
+            List<string> scenes = GetBuiltSceneNames();
+            if (scenes.Count == 0)
+            {
+                Debug.LogWarning("[AddressablesManagement] No scenes marked for build.");
+                return;
+            }
+
+            // Check that zip files exist
+            List<string> missingZips = new();
+            foreach (string scene in scenes)
+            {
+                string zipPath = Path.Combine(addressables_output_folder, scene + ".zip");
+                if (!File.Exists(zipPath))
+                {
+                    missingZips.Add(scene);
+                }
+            }
+
+            if (missingZips.Count > 0)
+            {
+                string missing = string.Join(", ", missingZips);
+                Debug.LogError($"[AddressablesManagement] Missing zip files for: {missing}. Build first.");
+                EditorUtility.DisplayDialog("Deploy", $"Missing zip files for:\n{missing}\n\nPlease build first.", "OK");
+                return;
+            }
+
+            SetDeployButtonsEnabled(false);
+            await DeployToWorlds(worldIds, scenes);
+            SetDeployButtonsEnabled(true);
+        }
+
+        private async void OnBuildAndDeployClicked()
+        {
+            List<int> worldIds = GetSelectedWorldIds();
+            if (worldIds.Count == 0)
+            {
+                Debug.LogWarning("[AddressablesManagement] No worlds selected for build & deploy.");
+                EditorUtility.DisplayDialog("Build & Deploy", "Please select at least one world.", "OK");
+                return;
+            }
+
+            SetDeployButtonsEnabled(false);
+
+            // 1. Build
+            BuildAndZipScenes();
+
+            if (buildResult != EBuildError.None)
+            {
+                Debug.LogError("[AddressablesManagement] Build failed. Aborting deploy.");
+                SetDeployButtonsEnabled(true);
+                return;
+            }
+
+            // 2. Deploy
+            List<string> scenes = GetBuiltSceneNames();
+            await DeployToWorlds(worldIds, scenes);
+
+            SetDeployButtonsEnabled(true);
+        }
+
+        private async Task DeployToWorlds(List<int> worldIds, List<string> scenes)
+        {
+            string applicationApiUrl = EditorLoginState.CurrentTenant?.Config?.ApplicationApiUrl;
+            if (string.IsNullOrEmpty(applicationApiUrl))
+            {
+                Debug.LogError("[AddressablesManagement] No application API URL available.");
+                return;
+            }
+
+            foreach (int worldId in worldIds)
+            {
+                WorldDTO world = availableWorlds.FirstOrDefault(w => w.Id == worldId);
+                string worldLabel = world?.Label ?? worldId.ToString();
+
+                Debug.Log($"[AddressablesManagement] Starting deploy to world \"{worldLabel}\" (ID: {worldId})...");
+
+                // Get SAS URL for this world
+                string sasUrl = await GetSasUrlForWorld(applicationApiUrl, worldId, token);
+                if (string.IsNullOrEmpty(sasUrl))
+                {
+                    Debug.LogError($"[AddressablesManagement] Failed to get SAS URL for world {worldId}. Skipping.");
+                    continue;
+                }
+
+                foreach (string scene in scenes)
+                {
+                    string zipPath = Path.Combine(addressables_output_folder, scene + ".zip");
+                    if (!File.Exists(zipPath))
+                    {
+                        Debug.LogWarning($"[AddressablesManagement] Zip not found: {zipPath}. Skipping.");
+                        continue;
+                    }
+
+                    Debug.Log($"[AddressablesManagement] Uploading {scene}.zip to world \"{worldLabel}\"...");
+                    await UploadZip(zipPath, sasUrl);
+
+                    Debug.Log($"[AddressablesManagement] Importing {scene} to world \"{worldLabel}\"...");
+                    await ImportSceneToWorld(applicationApiUrl, worldId, token, scene);
+                }
+
+                Debug.Log($"[AddressablesManagement] Deploy to world \"{worldLabel}\" completed.");
+            }
+
+            Debug.Log("[AddressablesManagement] All deploys completed.");
+        }
+
+        private void SetDeployButtonsEnabled(bool enabled)
+        {
+            deployBuildButton?.SetEnabled(enabled);
+            deployButton?.SetEnabled(enabled);
+            buildAndDeployButton?.SetEnabled(enabled);
+        }
+
+        #endregion
+
+        #region API calls
+
+        public static async Task<string> GetSasUrlForWorld(string applicationApiUrl, int worldId, string accessToken)
+        {
+            string apiUrl = $"{applicationApiUrl}/worlds/{worldId}?api-version=2";
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            HttpResponseMessage response;
+            try
+            {
+                response = await httpClient.SendAsync(request);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AddressablesManagement] Error getting SAS URL for world {worldId}: {ex.Message}");
+                return null;
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Debug.LogError($"[AddressablesManagement] GetSasUrl failed for world {worldId}: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                return null;
+            }
+
+            string json = await response.Content.ReadAsStringAsync();
+            WorldResponse worldData = JsonConvert.DeserializeObject<WorldResponse>(json);
+            Debug.Log($"[AddressablesManagement] SAS URL received for world {worldId}");
+            return worldData?.UploadLink;
+        }
+
+        public static async Task ImportSceneToWorld(string applicationApiUrl, int worldId, string accessToken, string zipName)
+        {
+            string apiUrl = $"{applicationApiUrl}/worlds/{worldId}/environments/archives/import?api-version=2";
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            request.Content = new StringContent($"\"{zipName + ".zip"}\"", Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response;
+            try
+            {
+                response = await httpClient.SendAsync(request);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AddressablesManagement] Error importing {zipName} to world {worldId}: {ex.Message}");
+                return;
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Debug.LogError($"[AddressablesManagement] Import failed for {zipName} to world {worldId}: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+            }
+            else
+            {
+                Debug.Log($"[AddressablesManagement] Import {zipName} to world {worldId} started successfully.");
+            }
+        }
+
+        [Serializable]
+        private class WorldResponse
+        {
+            [SerializeField] private string uploadLink;
+            public string UploadLink { get => uploadLink; set => uploadLink = value; }
+        }
+
+        public async Task UploadZip(string filePath, string sasUrl)
+        {
+            string fileName = Path.GetFileName(filePath);
+
+            var uriBuilder = new UriBuilder(sasUrl);
+            uriBuilder.Path = uriBuilder.Path.TrimEnd('/') + "/" + fileName;
+            Uri uploadUri = uriBuilder.Uri;
+
+            byte[] fileBytes = File.ReadAllBytes(filePath);
+            var content = new ByteArrayContent(fileBytes);
+            content.Headers.Add("x-ms-blob-type", "BlockBlob");
+
+            try
+            {
+                HttpResponseMessage response = await httpClient.PutAsync(uploadUri, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    Debug.Log($"[AddressablesManagement] Upload completed: {fileName}");
+                }
+                else
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    Debug.LogError($"[AddressablesManagement] Upload failed: {fileName} - {response.StatusCode}\n{responseBody}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AddressablesManagement] Upload error {fileName}: {ex.Message}");
+            }
+        }
+
+        #endregion
+
+        #region Settings Loading
 
         private void LoadSettings()
         {
@@ -194,7 +591,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                     projectSettingsItemIcon.AddToClassList(value ? "settings-item-green-icon" : "settings-item-red-icon");
                     return true;
                 });
-                // Find the binding that changes directly the class
                 projectSettingsItemIcon.SetBinding(nameof(projectSettingsItemIcon.visible), styleBinding);
             }
 
@@ -241,7 +637,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             Button defaultLocalGroupButton = root.Q<Button>("default-local-group-button");
             defaultLocalGroupButton.clicked += () => Selection.activeObject = settings.DefaultGroup;
 
-
+            // Build button — always visible (logged in or not)
             Button buildAddressablesButton = root.Q<Button>("build-addressables-button");
             buildAddressablesButton.dataSource = this;
             DataBinding buildAddressablesButtonDataBinding = new()
@@ -255,7 +651,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             {
                 if (AreAddressablesConfigured)
                 {
-                    BuildSelectedAddressablesForAllPlatforms();
+                    BuildAndZipScenes();
                 }
                 else
                 {
@@ -264,7 +660,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                     ConfigureAddressablesGroups();
                 }
             };
-
 
             VisualElement buildErrors = root.Q<VisualElement>("build-result-errors");
             buildErrors.dataSource = this;
@@ -296,8 +691,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             binaryCatalog.SetBinding(nameof(folderMissing.visible), binaryCatalogDataBinding);
         }
 
-        #region Top-Level settings configuration
+        #endregion
 
+        #region Top-Level settings configuration
 
         [CreateProperty]
         public bool IsAddressablesSettingsConfigured =>
@@ -317,7 +713,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                  settings.MonoScriptBundleNaming == MonoScriptBundleNaming.Custom &&
                  !settings.DisableVisibleSubAssetRepresentations;
 
-
         private void ConfigureAddressablesSettings()
         {
             settings.RemoteCatalogLoadPath.SetVariableByName(settings, remote_load_path_variable_name);
@@ -336,7 +731,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             settings.MonoScriptBundleNaming = MonoScriptBundleNaming.Custom;
             settings.DisableVisibleSubAssetRepresentations = false;
             settings.BuildRemoteCatalog = true;
-
             SaveAsset(settings);
         }
 
@@ -357,29 +751,20 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 && settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name) == build_target_variable_value
                 && settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name) == player_version_override_variable_value;
 
-
         private void ConfigureProfile()
         {
             settings.profileSettings.SetValue(settings.activeProfileId, remote_build_path_variable_name, remoteBuildPath);
             settings.profileSettings.SetValue(settings.activeProfileId, remote_load_path_variable_name, remoteLoadPath);
 
             if (settings.profileSettings.GetValueByName(settings.activeProfileId, build_target_variable_name) == null)
-            {
                 settings.profileSettings.CreateValue(build_target_variable_name, build_target_variable_value);
-            }
             else
-            {
                 settings.profileSettings.SetValue(settings.activeProfileId, build_target_variable_name, build_target_variable_value);
-            }
 
             if (settings.profileSettings.GetValueByName(settings.activeProfileId, player_version_override_variable_name) == null)
-            {
                 settings.profileSettings.CreateValue(player_version_override_variable_name, player_version_override_variable_value);
-            }
             else
-            {
                 settings.profileSettings.SetValue(settings.activeProfileId, player_version_override_variable_name, player_version_override_variable_value);
-            }
 
             SaveAsset(settings);
         }
@@ -394,7 +779,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             get
             {
                 bool configured = true;
-
                 var defaultGroup = settings.DefaultGroup;
 
                 configured &= !settings.groups.Where(group => group != defaultGroup).Any();
@@ -402,30 +786,29 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
                 defaultGroup.Schemas.Where(schema => schema is BundledAssetGroupSchema).ToList().ForEach(schema =>
                 {
-                    BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
-
+                    BundledAssetGroupSchema b = schema as BundledAssetGroupSchema;
                     configured &=
-                        bundledAssetGroupSchema.LoadPath.GetName(settings) == remote_load_path_variable_name &&
-                        bundledAssetGroupSchema.BuildPath.GetName(settings) == remote_build_path_variable_name &&
-                        bundledAssetGroupSchema.Compression == BundledAssetGroupSchema.BundleCompressionMode.LZ4 &&
-                        bundledAssetGroupSchema.IncludeInBuild == true &&
-                        bundledAssetGroupSchema.ForceUniqueProvider == false &&
-                        bundledAssetGroupSchema.UseAssetBundleCache == true &&
-                        bundledAssetGroupSchema.UseAssetBundleCrc == false &&
-                        bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles == false &&
-                        bundledAssetGroupSchema.UseUnityWebRequestForLocalBundles == false &&
-                        bundledAssetGroupSchema.Timeout == 0 &&
-                        bundledAssetGroupSchema.ChunkedTransfer == false &&
-                        bundledAssetGroupSchema.RedirectLimit == -1 &&
-                        bundledAssetGroupSchema.RetryCount == 0 &&
-                        bundledAssetGroupSchema.IncludeAddressInCatalog == true &&
-                        bundledAssetGroupSchema.IncludeGUIDInCatalog == true &&
-                        bundledAssetGroupSchema.IncludeLabelsInCatalog == true &&
-                        bundledAssetGroupSchema.InternalIdNamingMode == BundledAssetGroupSchema.AssetNamingMode.FullPath &&
-                        bundledAssetGroupSchema.InternalBundleIdMode == BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash &&
-                        bundledAssetGroupSchema.AssetBundledCacheClearBehavior == BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded &&
-                        bundledAssetGroupSchema.BundleMode == BundledAssetGroupSchema.BundlePackingMode.PackSeparately &&
-                        bundledAssetGroupSchema.BundleNaming == BundledAssetGroupSchema.BundleNamingStyle.NoHash;
+                        b.LoadPath.GetName(settings) == remote_load_path_variable_name &&
+                        b.BuildPath.GetName(settings) == remote_build_path_variable_name &&
+                        b.Compression == BundledAssetGroupSchema.BundleCompressionMode.LZ4 &&
+                        b.IncludeInBuild &&
+                        !b.ForceUniqueProvider &&
+                        b.UseAssetBundleCache &&
+                        !b.UseAssetBundleCrc &&
+                        !b.UseAssetBundleCrcForCachedBundles &&
+                        !b.UseUnityWebRequestForLocalBundles &&
+                        b.Timeout == 0 &&
+                        !b.ChunkedTransfer &&
+                        b.RedirectLimit == -1 &&
+                        b.RetryCount == 0 &&
+                        b.IncludeAddressInCatalog &&
+                        b.IncludeGUIDInCatalog &&
+                        b.IncludeLabelsInCatalog &&
+                        b.InternalIdNamingMode == BundledAssetGroupSchema.AssetNamingMode.FullPath &&
+                        b.InternalBundleIdMode == BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash &&
+                        b.AssetBundledCacheClearBehavior == BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded &&
+                        b.BundleMode == BundledAssetGroupSchema.BundlePackingMode.PackSeparately &&
+                        b.BundleNaming == BundledAssetGroupSchema.BundleNamingStyle.NoHash;
                 });
 
                 return configured;
@@ -435,59 +818,49 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private void ConfigureAddressablesGroups()
         {
             var defaultGroup = settings.DefaultGroup;
-
-            // Collect all groups except the default group
             var groupsToDelete = settings.groups.Where(group => group != defaultGroup).ToList();
-
-            // Delete each group
             foreach (var group in groupsToDelete)
-            {
                 settings.RemoveGroup(group);
-            }
 
             defaultGroup.Schemas.Where(schema => schema is BundledAssetGroupSchema).ToList().ForEach(schema =>
             {
-                BundledAssetGroupSchema bundledAssetGroupSchema = schema as BundledAssetGroupSchema;
-
-                bundledAssetGroupSchema.LoadPath.SetVariableByName(settings, remote_load_path_variable_name);
-                bundledAssetGroupSchema.BuildPath.SetVariableByName(settings, remote_build_path_variable_name);
-                bundledAssetGroupSchema.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
-                bundledAssetGroupSchema.IncludeInBuild = true;
-                bundledAssetGroupSchema.ForceUniqueProvider = false;
-                bundledAssetGroupSchema.UseAssetBundleCache = true;
-                bundledAssetGroupSchema.UseAssetBundleCrc = false;
-                bundledAssetGroupSchema.UseAssetBundleCrcForCachedBundles = false;
-                bundledAssetGroupSchema.UseUnityWebRequestForLocalBundles = false;
-                bundledAssetGroupSchema.Timeout = 0;
-                bundledAssetGroupSchema.ChunkedTransfer = false;
-                bundledAssetGroupSchema.RedirectLimit = -1;
-                bundledAssetGroupSchema.RetryCount = 0;
-                bundledAssetGroupSchema.IncludeAddressInCatalog = true;
-                bundledAssetGroupSchema.IncludeGUIDInCatalog = true;
-                bundledAssetGroupSchema.IncludeLabelsInCatalog = true;
-                bundledAssetGroupSchema.InternalIdNamingMode = BundledAssetGroupSchema.AssetNamingMode.FullPath;
-                bundledAssetGroupSchema.InternalBundleIdMode = BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash;
-                bundledAssetGroupSchema.AssetBundledCacheClearBehavior = BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded;
-                bundledAssetGroupSchema.BundleMode = BundledAssetGroupSchema.BundlePackingMode.PackSeparately;
-                bundledAssetGroupSchema.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash;
-
-                SaveAsset(bundledAssetGroupSchema);
+                BundledAssetGroupSchema b = schema as BundledAssetGroupSchema;
+                b.LoadPath.SetVariableByName(settings, remote_load_path_variable_name);
+                b.BuildPath.SetVariableByName(settings, remote_build_path_variable_name);
+                b.Compression = BundledAssetGroupSchema.BundleCompressionMode.LZ4;
+                b.IncludeInBuild = true;
+                b.ForceUniqueProvider = false;
+                b.UseAssetBundleCache = true;
+                b.UseAssetBundleCrc = false;
+                b.UseAssetBundleCrcForCachedBundles = false;
+                b.UseUnityWebRequestForLocalBundles = false;
+                b.Timeout = 0;
+                b.ChunkedTransfer = false;
+                b.RedirectLimit = -1;
+                b.RetryCount = 0;
+                b.IncludeAddressInCatalog = true;
+                b.IncludeGUIDInCatalog = true;
+                b.IncludeLabelsInCatalog = true;
+                b.InternalIdNamingMode = BundledAssetGroupSchema.AssetNamingMode.FullPath;
+                b.InternalBundleIdMode = BundledAssetGroupSchema.BundleInternalIdMode.GroupGuidProjectIdHash;
+                b.AssetBundledCacheClearBehavior = BundledAssetGroupSchema.CacheClearBehavior.ClearWhenWhenNewVersionLoaded;
+                b.BundleMode = BundledAssetGroupSchema.BundlePackingMode.PackSeparately;
+                b.BundleNaming = BundledAssetGroupSchema.BundleNamingStyle.NoHash;
+                SaveAsset(b);
             });
 
             var entriesToRemove = defaultGroup.entries.ToList();
             foreach (var entry in entriesToRemove)
-            {
                 settings.RemoveAssetEntry(entry.guid);
-            }
 
             SaveAsset(settings);
-
-            // Save changes
             SaveAsset(defaultGroup);
             SaveAsset(settings);
         }
 
         #endregion
+
+        #region Utility
 
         private string BuildtimeVariable(string variable) => "[" + variable + "]";
         private string RuntimeVariable(string variable) => "{" + variable + "}";
@@ -502,21 +875,23 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         {
             string[] folders = folderPath.Split('/');
             string currentPath = "";
-
             foreach (string folder in folders)
             {
                 currentPath = Path.Combine(currentPath, folder);
                 if (!AssetDatabase.IsValidFolder(currentPath))
-                {
                     AssetDatabase.CreateFolder(Path.GetDirectoryName(currentPath), Path.GetFileName(currentPath));
-                }
             }
         }
 
+        #endregion
 
         #region Build
 
-        private async void BuildSelectedAddressablesForAllPlatforms()
+        /// <summary>
+        /// Builds addressables for all platforms and creates zip files.
+        /// Does NOT upload — used by both "Build Addressables" button and "Build & Deploy".
+        /// </summary>
+        private void BuildAndZipScenes()
         {
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
             BuildAddressablesForSelectedPlatform();
@@ -531,15 +906,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
             if (buildResult == EBuildError.None)
             {
-                Debug.Log("Addressables built successfully for all selected platforms.");
-
-                ZipBuildedScenes();
-
-                await UploadBuildedScenes();
+                Debug.Log("[AddressablesManagement] Build successful for all platforms.");
+                ZipBuiltScenes();
             }
             else
             {
-                Debug.LogError("There were errors during the Addressables build process. Please check the details above.");
+                Debug.LogError("[AddressablesManagement] Build failed. Check errors above.");
             }
         }
 
@@ -547,16 +919,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         {
             AddressableAssetGroup assetGroup = settings.DefaultGroup;
             foreach (AddressableAssetEntry entry in assetGroup.entries.Where(x => x.IsScene))
-            {
-                bool success = settings.RemoveAssetEntry(entry.guid);
-            }
+                settings.RemoveAssetEntry(entry.guid);
 
             foreach (var scene in sceneConfigurations.SceneConfigurations)
             {
                 if (scene.IncludeInBuild)
-                {
                     BuildAddressablesForTargetGroup(scene);
-                }
             }
         }
 
@@ -576,16 +944,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             AddressablesBuildScript.BuildAddressables();
 
             settings.RemoveAssetEntry(guid);
-
             settings.OverridePlayerVersion = string.Empty;
         }
 
         private EBuildError CheckBuildResult()
         {
-            List<string> builtScenes = sceneConfigurations.SceneConfigurations
-                .Where(x => x.IncludeInBuild)
-                .Select(x => x.SceneNameFiltered)
-                .ToList();
+            List<string> builtScenes = GetBuiltSceneNames();
 
             foreach (string scene in builtScenes)
             {
@@ -613,12 +977,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             return EBuildError.None;
         }
 
-        private void ZipBuildedScenes()
+        private void ZipBuiltScenes()
         {
-            List<string> builtScenes = sceneConfigurations.SceneConfigurations
-                .Where(x => x.IncludeInBuild)
-                .Select(x => x.SceneNameFiltered)
-                .ToList();
+            List<string> builtScenes = GetBuiltSceneNames();
 
             foreach (string scene in builtScenes)
             {
@@ -626,151 +987,20 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 string fullZipPath = fullBuildPath + ".zip";
 
                 if (!Directory.Exists(fullBuildPath))
-                    throw new DirectoryNotFoundException($"Cartella build non trovata: {fullBuildPath}");
+                    throw new DirectoryNotFoundException($"Build folder not found: {fullBuildPath}");
 
+                // Remove existing zip with the same name
                 if (File.Exists(fullZipPath))
+                {
                     File.Delete(fullZipPath);
+                    Debug.Log($"[AddressablesManagement] Removed existing zip: {fullZipPath}");
+                }
 
                 ZipFile.CreateFromDirectory(fullBuildPath, fullZipPath, System.IO.Compression.CompressionLevel.Optimal, true);
-            }
-
-        }
-
-
-        // Dimensione massima di un blocco (in byte) per upload segmentato — 4 MB qui è una scelta sicura
-        private const int ChunkSize = 4 * 1024 * 1024;
-
-        private async Task UploadBuildedScenes()
-        {
-            List<string> builtScenes = sceneConfigurations.SceneConfigurations
-                .Where(x => x.IncludeInBuild)
-                .Select(x => x.SceneNameFiltered)
-                .ToList();
-
-            if (string.IsNullOrEmpty(token))
-            {
-                Debug.LogError("Token non disponibile per l’upload su Azure. Interrompo l’operazione.");
-                return;
-            }
-
-            string sasUrl = await GetSasUrl(token);
-
-            foreach (string scene in builtScenes)
-            {
-                Debug.Log($"Inizio upload scena {scene}...");
-                string sceneZipPath = scene + ".zip";
-                await UploadZip(Path.Combine(addressables_output_folder, sceneZipPath), sasUrl);
-                Debug.Log($"Upload scena {scene} completato.");
-                Debug.Log($"Start import scene {scene} in Reflectis platform...");
-                await ImportScene(token, scene);
-                Debug.Log($"Scene {scene} imported.");
+                Debug.Log($"[AddressablesManagement] Created zip: {fullZipPath}");
             }
         }
-
-
-        public static async Task<string> GetSasUrl(string accessToken)
-        {
-            Debug.Log("==> Chiamata API protetta per ottenere SAS URL...");
-            // URL della tua API protetta
-            string apiUrl = "https://reflectis2023-api-prep.anothereality.io/worlds/25?api-version=2";
-
-            // Imposta l’header di autorizzazione
-            httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
-
-            var response = await httpClient.GetAsync(apiUrl);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                Debug.LogError($"API Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-                return null;
-            }
-
-            string json = await response.Content.ReadAsStringAsync();
-
-            World world = Newtonsoft.Json.JsonConvert.DeserializeObject<World>(json);
-            httpClient = new HttpClient();
-            Debug.Log($"SAS URL ricevuto: {world.UploadLink}");
-            return world.UploadLink;
-        }
-
-        public class World
-        {
-            [SerializeField] private string uploadLink;
-
-            public string UploadLink { get => uploadLink; set => uploadLink = value; }
-        }
-
-        public static async Task ImportScene(string accessToken, string zipName)
-        {
-            // URL della tua API protetta
-            string apiUrl = "https://reflectis2023-api-prep.anothereality.io/worlds/25/environments/archives/import?api-version=2";
-
-            // Imposta l’header di autorizzazione
-            httpClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
-
-            var content = new StringContent($"\"{zipName + ".zip"}\"", Encoding.UTF8, "application/json");
-
-            // Invia la richiesta POST con il body
-            var response = await httpClient.PostAsync(apiUrl, content);
-
-            // Controlla la risposta
-            if (!response.IsSuccessStatusCode)
-            {
-                Debug.LogError($"API Error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
-            }
-            else
-            {
-                Debug.Log($"Import {zipName} avviato con successo {JsonConvert.SerializeObject(response)}.");
-            }
-            httpClient = new HttpClient();
-        }
-
-        /// <summary>
-        /// Carica un file ZIP su Azure Blob Storage sotto una cartella specifica.
-        /// Elimina eventuali blob esistenti nella cartella progetto.
-        /// </summary>
-        /// <summary>
-        /// Carica un file ZIP su Azure Blob Storage sotto una cartella specifica,
-        /// usando un SAS URL completo senza necessità di list o cancellazione.
-        /// </summary>
-        public async Task UploadZip(string filePath, string sasUrl)
-        {
-            string fileName = Path.GetFileName(filePath);
-
-            // Usa UriBuilder per non rompere il SAS token
-            var uriBuilder = new UriBuilder(sasUrl);
-            uriBuilder.Path = uriBuilder.Path.TrimEnd('/') + "/" + fileName;
-            Uri uploadUri = uriBuilder.Uri;
-
-            byte[] fileBytes = File.ReadAllBytes(filePath);
-            var content = new ByteArrayContent(fileBytes);
-
-            // Header obbligatorio per Blob Storage
-            content.Headers.Add("x-ms-blob-type", "BlockBlob");
-
-            try
-            {
-                HttpResponseMessage response = await httpClient.PutAsync(uploadUri, content);
-                if (response.IsSuccessStatusCode)
-                {
-                    Debug.Log($"Upload completato: {fileName}");
-                }
-                else
-                {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    Debug.LogError($"Upload fallito: {fileName} SAS {uploadUri} - {response.StatusCode}\n{responseBody}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Errore upload {fileName}: {ex.Message}");
-            }
-        }
-
 
         #endregion
-
     }
 }

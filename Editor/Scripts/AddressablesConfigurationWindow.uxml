@@ -2,6 +2,13 @@
     <Style src="project://database/Packages/com.anotherealitysrl.reflectis-creatorkit-worlds-core/Editor/Scripts/AddressablesConfigurationWindow.uss?fileID=7433441132597879392&amp;guid=515b32a0c8a91b84482ae7efefc66dfe&amp;type=3#AddressablesConfigurationWindow" />
     <engine:ScrollView>
         <engine:Label text="Addressables management window" name="Header" style="-unity-text-align: upper-center; -unity-font-style: bold; font-size: 24px;" />
+
+        <!-- Login status banner -->
+        <engine:VisualElement name="login-status-banner" style="flex-direction: row; align-items: center; justify-content: center; padding: 6px; margin-top: 4px; margin-bottom: 4px;">
+            <engine:Label text="Not logged in" name="login-status-label" style="font-size: 12px;" />
+            <engine:Button text="Open Tenant Selection" name="open-tenant-selection-button" style="margin-left: 8px;" />
+        </engine:VisualElement>
+
         <engine:VisualElement name="separator" class="separator" style="flex-grow: 1;" />
         <engine:VisualElement name="build-result-errors" style="flex-grow: 1;">
             <engine:VisualElement name="folder-missing" class="build-error-item">
@@ -15,8 +22,23 @@
         </engine:VisualElement>
         <engine:GroupBox name="scene-configuration">
             <engine:VisualElement name="scene-configuration-scriptable" style="flex-grow: 1; margin-top: 8px; margin-right: 4px; margin-bottom: 8px; margin-left: 4px;" />
-            <engine:Button text="Text" name="build-addressables-button" tooltip="Click here to start a build with the scenes included in the above and with the check &quot;IncludeInBuild&quot; enabled. Each scene will produce a .zip folder that can be uploaded to the platform." />
+            <engine:Button text="Build Addressables" name="build-addressables-button" tooltip="Build addressable scenes and create zip files." />
         </engine:GroupBox>
+
+        <engine:VisualElement name="separator" class="separator" style="flex-grow: 1;" />
+
+        <!-- Logged-in section: worlds list + deploy buttons (hidden when not logged in) -->
+        <engine:VisualElement name="deploy-section" style="display: none;">
+            <engine:Label text="Deploy to worlds" style="-unity-font-style: bold; font-size: 14px; margin-top: 4px; margin-bottom: 4px; -unity-text-align: upper-center;" />
+            <engine:Label text="Loading worlds..." name="worlds-loading-label" style="-unity-text-align: upper-center; margin-bottom: 4px;" />
+            <engine:ScrollView name="worlds-list" style="max-height: 200px; margin-bottom: 4px;" />
+            <engine:VisualElement name="deploy-buttons" style="flex-direction: row; align-items: center; justify-content: center;">
+                <engine:Button text="Build" name="deploy-build-button" tooltip="Build addressable scenes and create zip files (no upload)." />
+                <engine:Button text="Deploy" name="deploy-button" tooltip="Upload existing zip files for selected scenes to the selected worlds." />
+                <engine:Button text="Build &amp; Deploy" name="build-and-deploy-button" tooltip="Build addressable scenes, then upload to selected worlds one by one." />
+            </engine:VisualElement>
+        </engine:VisualElement>
+
         <engine:VisualElement name="separator" class="separator" style="flex-grow: 1;" />
         <engine:GroupBox name="addressables-settings">
             <engine:Foldout text="Show advanced addressables configurations" name="addressables-settings-foldout" value="false" tooltip="If one or more misconfigurations of the project occurs, you can fix them by clicking the button &quot;Configure Addressables settings&quot;" style="-unity-font-style: bold;">
