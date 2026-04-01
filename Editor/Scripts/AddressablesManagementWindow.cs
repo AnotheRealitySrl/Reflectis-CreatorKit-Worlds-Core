@@ -104,14 +104,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private VisualElement deploySection;
         private ScrollView worldsList;
         private Label worldsLoadingLabel;
-        private Button deployBuildButton;
         private Button deployButton;
         private Button buildAndDeployButton;
         private Button openTenantSelectionButton;
 
         // Tenant deploy UI references
         private VisualElement tenantDeploySection;
-        private Button tenantDeployBuildButton;
         private Button tenantDeployButton;
         private Button tenantBuildAndDeployButton;
 
@@ -161,7 +159,6 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             deploySection = root.Q<VisualElement>("deploy-section");
             worldsList = root.Q<ScrollView>("worlds-list");
             worldsLoadingLabel = root.Q<Label>("worlds-loading-label");
-            deployBuildButton = root.Q<Button>("deploy-build-button");
             deployButton = root.Q<Button>("deploy-button");
             buildAndDeployButton = root.Q<Button>("build-and-deploy-button");
 
@@ -171,17 +168,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 EditorApplication.ExecuteMenuItem("Reflectis/Login");
             };
 
-            deployBuildButton.clicked += () => BuildAndZipScenes();
             deployButton.clicked += OnDeployClicked;
             buildAndDeployButton.clicked += OnBuildAndDeployClicked;
 
             // Tenant deploy
             tenantDeploySection = root.Q<VisualElement>("tenant-deploy-section");
-            tenantDeployBuildButton = root.Q<Button>("tenant-deploy-build-button");
             tenantDeployButton = root.Q<Button>("tenant-deploy-button");
             tenantBuildAndDeployButton = root.Q<Button>("tenant-build-and-deploy-button");
 
-            tenantDeployBuildButton.clicked += () => BuildAndZipScenes();
             tenantDeployButton.clicked += OnTenantDeployClicked;
             tenantBuildAndDeployButton.clicked += OnTenantBuildAndDeployClicked;
 
@@ -487,10 +481,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         private void SetDeployButtonsEnabled(bool enabled)
         {
-            deployBuildButton?.SetEnabled(enabled);
             deployButton?.SetEnabled(enabled);
             buildAndDeployButton?.SetEnabled(enabled);
-            tenantDeployBuildButton?.SetEnabled(enabled);
             tenantDeployButton?.SetEnabled(enabled);
             tenantBuildAndDeployButton?.SetEnabled(enabled);
         }
