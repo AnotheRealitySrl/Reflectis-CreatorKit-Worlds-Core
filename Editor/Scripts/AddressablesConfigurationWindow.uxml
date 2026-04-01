@@ -6,7 +6,7 @@
         <!-- Login status banner -->
         <engine:VisualElement name="login-status-banner" style="flex-direction: row; align-items: center; justify-content: center; padding: 6px; margin-top: 4px; margin-bottom: 4px;">
             <engine:Label text="Not logged in" name="login-status-label" style="font-size: 12px;" />
-            <engine:Button text="Open Tenant Selection" name="open-tenant-selection-button" style="margin-left: 8px;" />
+            <engine:Button text="Login" name="open-tenant-selection-button" style="margin-left: 8px;" />
         </engine:VisualElement>
 
         <engine:VisualElement name="separator" class="separator" style="flex-grow: 1;" />
@@ -36,6 +36,17 @@
                 <engine:Button text="Build" name="deploy-build-button" tooltip="Build addressable scenes and create zip files (no upload)." />
                 <engine:Button text="Deploy" name="deploy-button" tooltip="Upload existing zip files for selected scenes to the selected worlds." />
                 <engine:Button text="Build &amp; Deploy" name="build-and-deploy-button" tooltip="Build addressable scenes, then upload to selected worlds one by one." />
+            </engine:VisualElement>
+        </engine:VisualElement>
+
+        <!-- Tenant deploy section (visible only for TenantManagers) -->
+        <engine:VisualElement name="tenant-deploy-section" style="display: none;">
+            <engine:VisualElement name="separator" class="separator" style="flex-grow: 1;" />
+            <engine:Label text="Deploy to tenant" style="-unity-font-style: bold; font-size: 14px; margin-top: 4px; margin-bottom: 4px; -unity-text-align: upper-center;" />
+            <engine:VisualElement name="tenant-deploy-buttons" style="flex-direction: row; align-items: center; justify-content: center;">
+                <engine:Button text="Build" name="tenant-deploy-build-button" tooltip="Build addressable scenes and create zip files (no upload)." />
+                <engine:Button text="Deploy to Tenant" name="tenant-deploy-button" tooltip="Upload existing zip files for selected scenes to the tenant." />
+                <engine:Button text="Build &amp; Deploy to Tenant" name="tenant-build-and-deploy-button" tooltip="Build addressable scenes, then upload to tenant." />
             </engine:VisualElement>
         </engine:VisualElement>
 

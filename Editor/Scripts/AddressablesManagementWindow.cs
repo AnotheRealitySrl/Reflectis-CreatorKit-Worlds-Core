@@ -1,12 +1,14 @@
 using Newtonsoft.Json;
 using Reflectis.CreatorKit.Worlds.CoreEditor;
 using Reflectis.SDK.ReflectisApi;
+using Reflectis.SDK.TenantConfiguration;
 using Reflectis.SDK.TenantConfiguration.Editor;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -107,6 +109,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private Button buildAndDeployButton;
         private Button openTenantSelectionButton;
 
+        // Tenant deploy UI references
+        private VisualElement tenantDeploySection;
+        private Button tenantDeployBuildButton;
+        private Button tenantDeployButton;
+        private Button tenantBuildAndDeployButton;
+
         [MenuItem("Reflectis Worlds/Creator Kit/Core/Addressables management")]
         public static void ShowExample()
         {
@@ -160,12 +168,22 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             openTenantSelectionButton = root.Q<Button>("open-tenant-selection-button");
             openTenantSelectionButton.clicked += () =>
             {
-                EditorApplication.ExecuteMenuItem("Reflectis/Show available tenants");
+                EditorApplication.ExecuteMenuItem("Reflectis/Login");
             };
 
             deployBuildButton.clicked += () => BuildAndZipScenes();
             deployButton.clicked += OnDeployClicked;
             buildAndDeployButton.clicked += OnBuildAndDeployClicked;
+
+            // Tenant deploy
+            tenantDeploySection = root.Q<VisualElement>("tenant-deploy-section");
+            tenantDeployBuildButton = root.Q<Button>("tenant-deploy-build-button");
+            tenantDeployButton = root.Q<Button>("tenant-deploy-button");
+            tenantBuildAndDeployButton = root.Q<Button>("tenant-build-and-deploy-button");
+
+            tenantDeployBuildButton.clicked += () => BuildAndZipScenes();
+            tenantDeployButton.clicked += OnTenantDeployClicked;
+            tenantBuildAndDeployButton.clicked += OnTenantBuildAndDeployClicked;
 
             RefreshLoginState();
         }
@@ -188,10 +206,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 string tenantLabel = EditorLoginState.CurrentTenant?.Label ?? "Unknown";
                 string username = EditorLoginState.Username;
                 string userPart = !string.IsNullOrEmpty(username) ? $" - {username}" : string.Empty;
-                loginStatusLabel.text = $"Logged in: {tenantLabel}{userPart}";
+                string rolePart = EditorLoginState.IsTenantManager ? " [TenantManager]" : "";
+                loginStatusLabel.text = $"Logged in: {tenantLabel}{userPart}{rolePart}";
                 loginStatusLabel.style.color = new Color(0.2f, 0.8f, 0.2f);
 
                 deploySection.style.display = DisplayStyle.Flex;
+                tenantDeploySection.style.display = EditorLoginState.IsTenantManager ? DisplayStyle.Flex : DisplayStyle.None;
                 LoadWorlds();
             }
             else
@@ -200,6 +220,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 loginStatusLabel.style.color = new Color(0.8f, 0.4f, 0.2f);
 
                 deploySection.style.display = DisplayStyle.None;
+                tenantDeploySection.style.display = DisplayStyle.None;
                 availableWorlds.Clear();
                 selectedWorlds.Clear();
             }
@@ -240,6 +261,37 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 availableWorlds = JsonConvert.DeserializeObject<List<WorldDTO>>(json) ?? new();
                 selectedWorlds.Clear();
 
+                // Filter worlds by user roles
+                worldsLoadingLabel.text = "Checking permissions...";
+                List<WorldDTO> deployableWorlds = new();
+                string[] deployRoles = { "TenantManager", "EnvironmentManager", "Owner" };
+
+                foreach (var world in availableWorlds)
+                {
+                    try
+                    {
+                        using var rolesRequest = new HttpRequestMessage(HttpMethod.Get, $"{applicationApiUrl}/worlds/{world.Id}/users/my/roles?api-version=2");
+                        rolesRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        var rolesResponse = await httpClient.SendAsync(rolesRequest);
+
+                        if (rolesResponse.IsSuccessStatusCode)
+                        {
+                            string rolesJson = await rolesResponse.Content.ReadAsStringAsync();
+                            List<string> roles = JsonConvert.DeserializeObject<List<string>>(rolesJson) ?? new();
+
+                            if (roles.Any(r => deployRoles.Contains(r)))
+                            {
+                                deployableWorlds.Add(world);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning($"[AddressablesManagement] Could not check roles for world {world.Id}: {ex.Message}");
+                    }
+                }
+
+                availableWorlds = deployableWorlds;
                 worldsLoadingLabel.style.display = DisplayStyle.None;
 
                 foreach (var world in availableWorlds)
@@ -372,12 +424,35 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
                 Debug.Log($"[AddressablesManagement] Starting deploy to world \"{worldLabel}\" (ID: {worldId})...");
 
-                // Get SAS URL for this world
-                string sasUrl = await GetSasUrlForWorld(applicationApiUrl, worldId, token);
-                if (string.IsNullOrEmpty(sasUrl))
+                // Get upload link for this world
+                string uploadLink = await GetUploadLinkForWorld(applicationApiUrl, worldId, token);
+                if (string.IsNullOrEmpty(uploadLink))
                 {
-                    Debug.LogError($"[AddressablesManagement] Failed to get SAS URL for world {worldId}. Skipping.");
+                    Debug.LogError($"[AddressablesManagement] Failed to get upload link for world {worldId}. Skipping.");
                     continue;
+                }
+
+                // Determine upload method based on tenant environment
+                bool useFtp = EditorLoginState.CurrentTenant?.Env == Env.Sandbox;
+                FtpUploadConfig ftpConfig = null;
+
+                if (useFtp)
+                {
+                    try
+                    {
+                        ftpConfig = JsonConvert.DeserializeObject<FtpUploadConfig>(uploadLink);
+                        if (ftpConfig == null || string.IsNullOrEmpty(ftpConfig.host))
+                        {
+                            Debug.LogError($"[AddressablesManagement] Invalid FTP config for world {worldId}. Skipping.");
+                            continue;
+                        }
+                        Debug.Log($"[AddressablesManagement] Using FTP upload to {ftpConfig.host}:{ftpConfig.port}{ftpConfig.remotePath}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"[AddressablesManagement] Failed to parse FTP config for world {worldId}: {ex.Message}. Skipping.");
+                        continue;
+                    }
                 }
 
                 foreach (string scene in scenes)
@@ -390,7 +465,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                     }
 
                     Debug.Log($"[AddressablesManagement] Uploading {scene}.zip to world \"{worldLabel}\"...");
-                    await UploadZip(zipPath, sasUrl);
+
+                    if (useFtp)
+                    {
+                        await UploadZipViaFtp(zipPath, ftpConfig);
+                    }
+                    else
+                    {
+                        await UploadZip(zipPath, uploadLink);
+                    }
 
                     Debug.Log($"[AddressablesManagement] Importing {scene} to world \"{worldLabel}\"...");
                     await ImportSceneToWorld(applicationApiUrl, worldId, token, scene);
@@ -407,15 +490,132 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             deployBuildButton?.SetEnabled(enabled);
             deployButton?.SetEnabled(enabled);
             buildAndDeployButton?.SetEnabled(enabled);
+            tenantDeployBuildButton?.SetEnabled(enabled);
+            tenantDeployButton?.SetEnabled(enabled);
+            tenantBuildAndDeployButton?.SetEnabled(enabled);
+        }
+
+        #endregion
+
+        #region Tenant Deploy
+
+        private async void OnTenantDeployClicked()
+        {
+            List<string> scenes = GetBuiltSceneNames();
+            if (scenes.Count == 0)
+            {
+                Debug.LogWarning("[AddressablesManagement] No scenes marked for build.");
+                return;
+            }
+
+            List<string> missingZips = new();
+            foreach (string scene in scenes)
+            {
+                string zipPath = Path.Combine(addressables_output_folder, scene + ".zip");
+                if (!File.Exists(zipPath))
+                    missingZips.Add(scene);
+            }
+
+            if (missingZips.Count > 0)
+            {
+                string missing = string.Join(", ", missingZips);
+                EditorUtility.DisplayDialog("Deploy to Tenant", $"Missing zip files for:\n{missing}\n\nPlease build first.", "OK");
+                return;
+            }
+
+            SetDeployButtonsEnabled(false);
+            await DeployToTenant(scenes);
+            SetDeployButtonsEnabled(true);
+        }
+
+        private async void OnTenantBuildAndDeployClicked()
+        {
+            SetDeployButtonsEnabled(false);
+
+            BuildAndZipScenes();
+
+            if (buildResult != EBuildError.None)
+            {
+                Debug.LogError("[AddressablesManagement] Build failed. Aborting tenant deploy.");
+                SetDeployButtonsEnabled(true);
+                return;
+            }
+
+            List<string> scenes = GetBuiltSceneNames();
+            await DeployToTenant(scenes);
+            SetDeployButtonsEnabled(true);
+        }
+
+        private async Task DeployToTenant(List<string> scenes)
+        {
+            string applicationApiUrl = EditorLoginState.CurrentTenant?.Config?.ApplicationApiUrl;
+            if (string.IsNullOrEmpty(applicationApiUrl))
+            {
+                Debug.LogError("[AddressablesManagement] No application API URL available.");
+                return;
+            }
+
+            Debug.Log("[AddressablesManagement] Starting deploy to tenant...");
+
+            string uploadLink = await GetTenantUploadLink(applicationApiUrl, token);
+            if (string.IsNullOrEmpty(uploadLink))
+            {
+                Debug.LogError("[AddressablesManagement] Failed to get tenant upload link.");
+                return;
+            }
+
+            bool useFtp = EditorLoginState.CurrentTenant?.Env == Env.Sandbox;
+            FtpUploadConfig ftpConfig = null;
+
+            if (useFtp)
+            {
+                try
+                {
+                    ftpConfig = JsonConvert.DeserializeObject<FtpUploadConfig>(uploadLink);
+                    if (ftpConfig == null || string.IsNullOrEmpty(ftpConfig.host))
+                    {
+                        Debug.LogError("[AddressablesManagement] Invalid FTP config for tenant. Aborting.");
+                        return;
+                    }
+                    Debug.Log($"[AddressablesManagement] Using FTP upload to {ftpConfig.host}:{ftpConfig.port}{ftpConfig.remotePath}");
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[AddressablesManagement] Failed to parse FTP config for tenant: {ex.Message}");
+                    return;
+                }
+            }
+
+            foreach (string scene in scenes)
+            {
+                string zipPath = Path.Combine(addressables_output_folder, scene + ".zip");
+                if (!File.Exists(zipPath))
+                {
+                    Debug.LogWarning($"[AddressablesManagement] Zip not found: {zipPath}. Skipping.");
+                    continue;
+                }
+
+                Debug.Log($"[AddressablesManagement] Uploading {scene}.zip to tenant...");
+
+                if (useFtp)
+                    await UploadZipViaFtp(zipPath, ftpConfig);
+                else
+                    await UploadZip(zipPath, uploadLink);
+
+                Debug.Log($"[AddressablesManagement] Importing {scene} to tenant...");
+                await ImportSceneToTenant(applicationApiUrl, token, scene);
+            }
+
+            Debug.Log("[AddressablesManagement] Tenant deploy completed.");
         }
 
         #endregion
 
         #region API calls
 
-        public static async Task<string> GetSasUrlForWorld(string applicationApiUrl, int worldId, string accessToken)
+        public static async Task<string> GetUploadLinkForWorld(string applicationApiUrl, int worldId, string accessToken)
         {
-            string apiUrl = $"{applicationApiUrl}/worlds/{worldId}?api-version=2";
+            string apiUrl = $"{applicationApiUrl}/worlds/{worldId}/upload-link?api-version=2";
 
             using var request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -427,20 +627,21 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[AddressablesManagement] Error getting SAS URL for world {worldId}: {ex.Message}");
+                Debug.LogError($"[AddressablesManagement] Error getting upload link for world {worldId}: {ex.Message}");
                 return null;
             }
 
             if (!response.IsSuccessStatusCode)
             {
-                Debug.LogError($"[AddressablesManagement] GetSasUrl failed for world {worldId}: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                Debug.LogError($"[AddressablesManagement] GetUploadLink failed for world {worldId}: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
                 return null;
             }
 
-            string json = await response.Content.ReadAsStringAsync();
-            WorldResponse worldData = JsonConvert.DeserializeObject<WorldResponse>(json);
-            Debug.Log($"[AddressablesManagement] SAS URL received for world {worldId}");
-            return worldData?.UploadLink;
+            string uploadLink = await response.Content.ReadAsStringAsync();
+            // Remove surrounding quotes if the API returns a JSON string
+            uploadLink = uploadLink.Trim('"');
+            Debug.Log($"[AddressablesManagement] Upload link received for world {worldId}");
+            return uploadLink;
         }
 
         public static async Task ImportSceneToWorld(string applicationApiUrl, int worldId, string accessToken, string zipName)
@@ -473,10 +674,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         }
 
         [Serializable]
-        private class WorldResponse
+        public class FtpUploadConfig
         {
-            [SerializeField] private string uploadLink;
-            public string UploadLink { get => uploadLink; set => uploadLink = value; }
+            public string type;
+            public string host;
+            public int port = 21;
+            public string username;
+            public string password;
+            public string remotePath;
         }
 
         public async Task UploadZip(string filePath, string sasUrl)
@@ -507,6 +712,93 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             catch (Exception ex)
             {
                 Debug.LogError($"[AddressablesManagement] Upload error {fileName}: {ex.Message}");
+            }
+        }
+
+        public async Task UploadZipViaFtp(string filePath, FtpUploadConfig ftpConfig)
+        {
+            string fileName = Path.GetFileName(filePath);
+            string ftpUri = $"ftp://{ftpConfig.host}:{ftpConfig.port}{ftpConfig.remotePath.TrimEnd('/')}/{fileName}";
+
+            try
+            {
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpUri);
+                request.Method = WebRequestMethods.Ftp.UploadFile;
+                request.Credentials = new NetworkCredential(ftpConfig.username, ftpConfig.password);
+                request.UseBinary = true;
+                request.UsePassive = true;
+
+                byte[] fileBytes = await Task.Run(() => File.ReadAllBytes(filePath));
+
+                request.ContentLength = fileBytes.Length;
+
+                using (Stream requestStream = await Task.Run(() => request.GetRequestStream()))
+                {
+                    await requestStream.WriteAsync(fileBytes, 0, fileBytes.Length);
+                }
+
+                using (FtpWebResponse response = (FtpWebResponse)await Task.Run(() => request.GetResponse()))
+                {
+                    Debug.Log($"[AddressablesManagement] FTP upload completed: {fileName} - {response.StatusDescription}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AddressablesManagement] FTP upload error {fileName}: {ex.Message}");
+            }
+        }
+
+        public static async Task<string> GetTenantUploadLink(string applicationApiUrl, string accessToken)
+        {
+            string apiUrl = $"{applicationApiUrl}/tenants/environments/upload-link?api-version=2";
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            try
+            {
+                var response = await httpClient.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    Debug.LogError($"[AddressablesManagement] GetTenantUploadLink failed: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                    return null;
+                }
+
+                string uploadLink = await response.Content.ReadAsStringAsync();
+                uploadLink = uploadLink.Trim('"');
+                Debug.Log("[AddressablesManagement] Tenant upload link received.");
+                return uploadLink;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AddressablesManagement] Error getting tenant upload link: {ex.Message}");
+                return null;
+            }
+        }
+
+        public static async Task ImportSceneToTenant(string applicationApiUrl, string accessToken, string zipName)
+        {
+            string apiUrl = $"{applicationApiUrl}/tenants/environments/archives/import?api-version=2";
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            request.Content = new StringContent($"\"{zipName + ".zip"}\"", Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await httpClient.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    Debug.LogError($"[AddressablesManagement] Tenant import failed for {zipName}: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                }
+                else
+                {
+                    Debug.Log($"[AddressablesManagement] Tenant import {zipName} started successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AddressablesManagement] Error importing {zipName} to tenant: {ex.Message}");
             }
         }
 
