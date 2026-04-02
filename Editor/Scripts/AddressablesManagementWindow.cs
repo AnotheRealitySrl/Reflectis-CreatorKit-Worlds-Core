@@ -3,28 +3,25 @@ using Reflectis.CreatorKit.Worlds.CoreEditor;
 using Reflectis.SDK.ReflectisApi;
 using Reflectis.SDK.TenantConfiguration;
 using Reflectis.SDK.TenantConfiguration.Editor;
+using Renci.SshNet;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.Properties;
-
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEditor.UIElements;
-
 using UnityEngine;
 using UnityEngine.UIElements;
-
 using static Reflectis.CreatorKit.Worlds.Core.Editor.SceneListScriptableObject;
 
 namespace Reflectis.CreatorKit.Worlds.Core.Editor
@@ -107,6 +104,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private Button deployButton;
         private Button buildAndDeployButton;
         private Button openTenantSelectionButton;
+        private Button logoutButton;
 
         // Tenant deploy UI references
         private VisualElement tenantDeploySection;
@@ -168,6 +166,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 EditorApplication.ExecuteMenuItem("Reflectis/Login");
             };
 
+            logoutButton = new Button(() => EditorLoginState.Clear())
+            {
+                text = "Logout"
+            };
+            logoutButton.style.display = DisplayStyle.None;
+            loginStatusLabel.parent.Add(logoutButton);
+
             deployButton.clicked += OnDeployClicked;
             buildAndDeployButton.clicked += OnBuildAndDeployClicked;
 
@@ -191,17 +196,19 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         {
             bool loggedIn = EditorLoginState.IsLoggedIn;
 
-            // Show/hide "Open Tenant Selection" button
             if (openTenantSelectionButton != null)
                 openTenantSelectionButton.style.display = loggedIn ? DisplayStyle.None : DisplayStyle.Flex;
+            if (logoutButton != null)
+                logoutButton.style.display = loggedIn ? DisplayStyle.Flex : DisplayStyle.None;
 
             if (loggedIn)
             {
                 string tenantLabel = EditorLoginState.CurrentTenant?.Label ?? "Unknown";
+                string envLabel = EditorLoginState.LoggedInEnv;
                 string username = EditorLoginState.Username;
                 string userPart = !string.IsNullOrEmpty(username) ? $" - {username}" : string.Empty;
                 string rolePart = EditorLoginState.IsTenantManager ? " [TenantManager]" : "";
-                loginStatusLabel.text = $"Logged in: {tenantLabel}{userPart}{rolePart}";
+                loginStatusLabel.text = $"Logged in: {tenantLabel} {envLabel}{userPart}{rolePart}";
                 loginStatusLabel.style.color = new Color(0.2f, 0.8f, 0.2f);
 
                 deploySection.style.display = DisplayStyle.Flex;
@@ -288,19 +295,23 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 availableWorlds = deployableWorlds;
                 worldsLoadingLabel.style.display = DisplayStyle.None;
 
+                HashSet<int> savedSelection = LoadSelectedWorldIds();
+
                 foreach (var world in availableWorlds)
                 {
-                    selectedWorlds[world.Id] = false;
+                    bool wasSelected = savedSelection.Contains(world.Id);
+                    selectedWorlds[world.Id] = wasSelected;
 
                     Toggle toggle = new Toggle
                     {
                         text = $"{world.Label} (ID: {world.Id})",
-                        value = false
+                        value = wasSelected
                     };
                     int worldId = world.Id;
                     toggle.RegisterValueChangedCallback(evt =>
                     {
                         selectedWorlds[worldId] = evt.newValue;
+                        SaveSelectedWorldIds();
                     });
                     worldsList.Add(toggle);
                 }
@@ -315,9 +326,31 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             }
         }
 
+        private const string SELECTED_WORLDS_KEY = "Reflectis_AddressablesManagement_SelectedWorlds";
+
         private List<int> GetSelectedWorldIds()
         {
             return selectedWorlds.Where(kvp => kvp.Value).Select(kvp => kvp.Key).ToList();
+        }
+
+        private void SaveSelectedWorldIds()
+        {
+            var ids = GetSelectedWorldIds();
+            EditorPrefs.SetString(SELECTED_WORLDS_KEY, string.Join(",", ids));
+        }
+
+        private HashSet<int> LoadSelectedWorldIds()
+        {
+            string saved = EditorPrefs.GetString(SELECTED_WORLDS_KEY, "");
+            var result = new HashSet<int>();
+            if (string.IsNullOrEmpty(saved)) return result;
+
+            foreach (string part in saved.Split(','))
+            {
+                if (int.TryParse(part.Trim(), out int id))
+                    result.Add(id);
+            }
+            return result;
         }
 
         private List<string> GetBuiltSceneNames()
@@ -411,72 +444,79 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 return;
             }
 
-            foreach (int worldId in worldIds)
+            int totalWorlds = worldIds.Count;
+
+            try
             {
-                WorldDTO world = availableWorlds.FirstOrDefault(w => w.Id == worldId);
-                string worldLabel = world?.Label ?? worldId.ToString();
-
-                Debug.Log($"[AddressablesManagement] Starting deploy to world \"{worldLabel}\" (ID: {worldId})...");
-
-                // Get upload link for this world
-                string uploadLink = await GetUploadLinkForWorld(applicationApiUrl, worldId, token);
-                if (string.IsNullOrEmpty(uploadLink))
+                for (int w = 0; w < totalWorlds; w++)
                 {
-                    Debug.LogError($"[AddressablesManagement] Failed to get upload link for world {worldId}. Skipping.");
-                    continue;
-                }
+                    int worldId = worldIds[w];
+                    WorldDTO world = availableWorlds.FirstOrDefault(wd => wd.Id == worldId);
+                    string worldLabel = world?.Label ?? worldId.ToString();
 
-                // Determine upload method based on tenant environment
-                bool useFtp = EditorLoginState.CurrentTenant?.Env == Env.Sandbox;
-                FtpUploadConfig ftpConfig = null;
+                    string progressPrefix = $"Deploy ({w + 1}/{totalWorlds}) - World \"{worldLabel}\"";
 
-                if (useFtp)
-                {
-                    try
-                    {
-                        ftpConfig = JsonConvert.DeserializeObject<FtpUploadConfig>(uploadLink);
-                        if (ftpConfig == null || string.IsNullOrEmpty(ftpConfig.host))
-                        {
-                            Debug.LogError($"[AddressablesManagement] Invalid FTP config for world {worldId}. Skipping.");
-                            continue;
-                        }
-                        Debug.Log($"[AddressablesManagement] Using FTP upload to {ftpConfig.host}:{ftpConfig.port}{ftpConfig.remotePath}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.LogError($"[AddressablesManagement] Failed to parse FTP config for world {worldId}: {ex.Message}. Skipping.");
-                        continue;
-                    }
-                }
+                    EditorUtility.DisplayProgressBar(progressPrefix, "Getting upload link...", (float)w / totalWorlds);
 
-                foreach (string scene in scenes)
-                {
-                    string zipPath = Path.Combine(addressables_output_folder, scene + ".zip");
-                    if (!File.Exists(zipPath))
+                    string uploadLink = await GetUploadLinkForWorld(applicationApiUrl, worldId, token);
+                    if (string.IsNullOrEmpty(uploadLink))
                     {
-                        Debug.LogWarning($"[AddressablesManagement] Zip not found: {zipPath}. Skipping.");
+                        Debug.LogError($"[AddressablesManagement] Failed to get upload link for world {worldId}. Skipping.");
                         continue;
                     }
 
-                    Debug.Log($"[AddressablesManagement] Uploading {scene}.zip to world \"{worldLabel}\"...");
+                    bool useFtp = EditorLoginState.CurrentTenant?.Env == Env.Sandbox;
+                    FtpUploadConfig ftpConfig = null;
 
                     if (useFtp)
                     {
-                        await UploadZipViaFtp(zipPath, ftpConfig);
+                        try
+                        {
+                            ftpConfig = JsonConvert.DeserializeObject<FtpUploadConfig>(uploadLink);
+                            if (ftpConfig == null || string.IsNullOrEmpty(ftpConfig.host))
+                            {
+                                Debug.LogError($"[AddressablesManagement] Invalid SFTP config for world {worldId}. Skipping.");
+                                continue;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogError($"[AddressablesManagement] Failed to parse SFTP config for world {worldId}: {ex.Message}. Skipping.");
+                            continue;
+                        }
                     }
-                    else
+
+                    for (int s = 0; s < scenes.Count; s++)
                     {
-                        await UploadZip(zipPath, uploadLink);
+                        string scene = scenes[s];
+                        string zipPath = Path.Combine(addressables_output_folder, scene + ".zip");
+                        if (!File.Exists(zipPath))
+                        {
+                            Debug.LogWarning($"[AddressablesManagement] Zip not found: {zipPath}. Skipping.");
+                            continue;
+                        }
+
+                        float progress = ((float)w + (float)s / scenes.Count) / totalWorlds;
+
+                        EditorUtility.DisplayProgressBar(progressPrefix, $"Uploading {scene}.zip ({s + 1}/{scenes.Count})...", progress);
+
+                        if (useFtp)
+                            await UploadZipViaFtp(zipPath, ftpConfig);
+                        else
+                            await UploadZip(zipPath, uploadLink);
+
+                        EditorUtility.DisplayProgressBar(progressPrefix, $"Importing {scene} ({s + 1}/{scenes.Count})...", progress);
+
+                        await ImportSceneToWorld(applicationApiUrl, worldId, token, scene);
                     }
-
-                    Debug.Log($"[AddressablesManagement] Importing {scene} to world \"{worldLabel}\"...");
-                    await ImportSceneToWorld(applicationApiUrl, worldId, token, scene);
                 }
-
-                Debug.Log($"[AddressablesManagement] Deploy to world \"{worldLabel}\" completed.");
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
             }
 
-            Debug.Log("[AddressablesManagement] All deploys completed.");
+            Debug.Log("[AddressablesManagement] All world deploys completed.");
         }
 
         private void SetDeployButtonsEnabled(bool enabled)
@@ -547,55 +587,65 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 return;
             }
 
-            Debug.Log("[AddressablesManagement] Starting deploy to tenant...");
-
-            string uploadLink = await GetTenantUploadLink(applicationApiUrl, token);
-            if (string.IsNullOrEmpty(uploadLink))
+            try
             {
-                Debug.LogError("[AddressablesManagement] Failed to get tenant upload link.");
-                return;
-            }
+                EditorUtility.DisplayProgressBar("Deploy to Tenant", "Getting upload link...", 0f);
 
-            bool useFtp = EditorLoginState.CurrentTenant?.Env == Env.Sandbox;
-            FtpUploadConfig ftpConfig = null;
-
-            if (useFtp)
-            {
-                try
+                string uploadLink = await GetTenantUploadLink(applicationApiUrl, token);
+                if (string.IsNullOrEmpty(uploadLink))
                 {
-                    ftpConfig = JsonConvert.DeserializeObject<FtpUploadConfig>(uploadLink);
-                    if (ftpConfig == null || string.IsNullOrEmpty(ftpConfig.host))
-                    {
-                        Debug.LogError("[AddressablesManagement] Invalid FTP config for tenant. Aborting.");
-                        return;
-                    }
-                    Debug.Log($"[AddressablesManagement] Using FTP upload to {ftpConfig.host}:{ftpConfig.port}{ftpConfig.remotePath}");
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"[AddressablesManagement] Failed to parse FTP config for tenant: {ex.Message}");
+                    Debug.LogError("[AddressablesManagement] Failed to get tenant upload link.");
                     return;
                 }
-            }
 
-            foreach (string scene in scenes)
-            {
-                string zipPath = Path.Combine(addressables_output_folder, scene + ".zip");
-                if (!File.Exists(zipPath))
-                {
-                    Debug.LogWarning($"[AddressablesManagement] Zip not found: {zipPath}. Skipping.");
-                    continue;
-                }
-
-                Debug.Log($"[AddressablesManagement] Uploading {scene}.zip to tenant...");
+                bool useFtp = EditorLoginState.CurrentTenant?.Env == Env.Sandbox;
+                FtpUploadConfig ftpConfig = null;
 
                 if (useFtp)
-                    await UploadZipViaFtp(zipPath, ftpConfig);
-                else
-                    await UploadZip(zipPath, uploadLink);
+                {
+                    try
+                    {
+                        ftpConfig = JsonConvert.DeserializeObject<FtpUploadConfig>(uploadLink);
+                        if (ftpConfig == null || string.IsNullOrEmpty(ftpConfig.host))
+                        {
+                            Debug.LogError("[AddressablesManagement] Invalid SFTP config for tenant. Aborting.");
+                            return;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"[AddressablesManagement] Failed to parse SFTP config for tenant: {ex.Message}");
+                        return;
+                    }
+                }
 
-                Debug.Log($"[AddressablesManagement] Importing {scene} to tenant...");
-                await ImportSceneToTenant(applicationApiUrl, token, scene);
+                for (int s = 0; s < scenes.Count; s++)
+                {
+                    string scene = scenes[s];
+                    string zipPath = Path.Combine(addressables_output_folder, scene + ".zip");
+                    if (!File.Exists(zipPath))
+                    {
+                        Debug.LogWarning($"[AddressablesManagement] Zip not found: {zipPath}. Skipping.");
+                        continue;
+                    }
+
+                    float progress = (float)s / scenes.Count;
+
+                    EditorUtility.DisplayProgressBar("Deploy to Tenant", $"Uploading {scene}.zip ({s + 1}/{scenes.Count})...", progress);
+
+                    if (useFtp)
+                        await UploadZipViaFtp(zipPath, ftpConfig);
+                    else
+                        await UploadZip(zipPath, uploadLink);
+
+                    EditorUtility.DisplayProgressBar("Deploy to Tenant", $"Importing {scene} ({s + 1}/{scenes.Count})...", progress);
+
+                    await ImportSceneToTenant(applicationApiUrl, token, scene);
+                }
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
             }
 
             Debug.Log("[AddressablesManagement] Tenant deploy completed.");
@@ -670,10 +720,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         {
             public string type;
             public string host;
-            public int port = 21;
+            [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+            [System.ComponentModel.DefaultValue(22)]
+            public int port = 22;
             public string username;
             public string password;
             public string remotePath;
+            public string privateKey;
+            public string passphrase;
         }
 
         public async Task UploadZip(string filePath, string sasUrl)
@@ -710,33 +764,72 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         public async Task UploadZipViaFtp(string filePath, FtpUploadConfig ftpConfig)
         {
             string fileName = Path.GetFileName(filePath);
-            string ftpUri = $"ftp://{ftpConfig.host}:{ftpConfig.port}{ftpConfig.remotePath.TrimEnd('/')}/{fileName}";
+
+            if (ftpConfig.port <= 0 || ftpConfig.port > 65535)
+            {
+                Debug.LogWarning($"[AddressablesManagement] Invalid SFTP port ({ftpConfig.port}), defaulting to 22.");
+                ftpConfig.port = 22;
+            }
+
+            string remotePath = ftpConfig.remotePath ?? "/";
+            remotePath = remotePath.Replace('\\', '/');
+            if (!remotePath.StartsWith("/"))
+                remotePath = "/" + remotePath;
+
+            string remoteFilePath = remotePath.TrimEnd('/') + "/" + fileName;
 
             try
             {
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpUri);
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                request.Credentials = new NetworkCredential(ftpConfig.username, ftpConfig.password);
-                request.UseBinary = true;
-                request.UsePassive = true;
-
-                byte[] fileBytes = await Task.Run(() => File.ReadAllBytes(filePath));
-
-                request.ContentLength = fileBytes.Length;
-
-                using (Stream requestStream = await Task.Run(() => request.GetRequestStream()))
+                await Task.Run(() =>
                 {
-                    await requestStream.WriteAsync(fileBytes, 0, fileBytes.Length);
-                }
+                    ConnectionInfo connectionInfo;
 
-                using (FtpWebResponse response = (FtpWebResponse)await Task.Run(() => request.GetResponse()))
-                {
-                    Debug.Log($"[AddressablesManagement] FTP upload completed: {fileName} - {response.StatusDescription}");
-                }
+                    if (!string.IsNullOrEmpty(ftpConfig.privateKey))
+                    {
+                        PrivateKeyFile keyFile;
+                        using (var keyStream = new MemoryStream(Encoding.UTF8.GetBytes(ftpConfig.privateKey)))
+                        {
+                            keyFile = string.IsNullOrEmpty(ftpConfig.passphrase)
+                                ? new PrivateKeyFile(keyStream)
+                                : new PrivateKeyFile(keyStream, ftpConfig.passphrase);
+                        }
+
+                        var keyAuth = new PrivateKeyAuthenticationMethod(ftpConfig.username, keyFile);
+                        connectionInfo = new ConnectionInfo(ftpConfig.host, ftpConfig.port, ftpConfig.username, keyAuth);
+                    }
+                    else
+                    {
+                        string decodedPassword = Encoding.UTF8.GetString(Convert.FromBase64String(ftpConfig.password));
+                        var passAuth = new PasswordAuthenticationMethod(ftpConfig.username, decodedPassword);
+                        var kbdAuth = new KeyboardInteractiveAuthenticationMethod(ftpConfig.username);
+                        kbdAuth.AuthenticationPrompt += (sender, e) =>
+                        {
+                            foreach (var prompt in e.Prompts)
+                            {
+                                prompt.Response = decodedPassword;
+                            }
+                        };
+                        connectionInfo = new ConnectionInfo(ftpConfig.host, ftpConfig.port, ftpConfig.username, passAuth, kbdAuth);
+                    }
+
+                    using (var sftp = new SftpClient(connectionInfo))
+                    {
+                        sftp.Connect();
+
+                        using (var fileStream = File.OpenRead(filePath))
+                        {
+                            sftp.UploadFile(fileStream, remoteFilePath, true);
+                        }
+
+                        sftp.Disconnect();
+                    }
+                });
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[AddressablesManagement] FTP upload error {fileName}: {ex.Message}");
+                Debug.LogError($"[AddressablesManagement] SFTP upload error {fileName}: {ex.Message}");
+                if (ex.InnerException != null)
+                    Debug.LogError($"[AddressablesManagement] Inner exception: {ex.InnerException.Message}");
             }
         }
 
