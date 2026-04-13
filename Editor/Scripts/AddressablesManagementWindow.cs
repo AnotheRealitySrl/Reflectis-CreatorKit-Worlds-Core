@@ -163,7 +163,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             openTenantSelectionButton = root.Q<Button>("open-tenant-selection-button");
             openTenantSelectionButton.clicked += () =>
             {
-                EditorApplication.ExecuteMenuItem("Reflectis/Login");
+                EditorApplication.ExecuteMenuItem("Reflectis/Show available tenants");
             };
 
             logoutButton = new Button(() => EditorLoginState.Clear())
@@ -297,23 +297,39 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
                 HashSet<int> savedSelection = LoadSelectedWorldIds();
 
-                foreach (var world in availableWorlds)
+                if (availableWorlds.Count == 1)
                 {
-                    bool wasSelected = savedSelection.Contains(world.Id);
-                    selectedWorlds[world.Id] = wasSelected;
+                    // Single world: show as label, auto-select
+                    var world = availableWorlds[0];
+                    selectedWorlds[world.Id] = true;
+                    SaveSelectedWorldIds();
 
-                    Toggle toggle = new Toggle
+                    Label worldLabel = new Label($"{world.Label} (ID: {world.Id})");
+                    worldLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
+                    worldLabel.style.marginTop = 4;
+                    worldLabel.style.marginBottom = 4;
+                    worldsList.Add(worldLabel);
+                }
+                else
+                {
+                    foreach (var world in availableWorlds)
                     {
-                        text = $"{world.Label} (ID: {world.Id})",
-                        value = wasSelected
-                    };
-                    int worldId = world.Id;
-                    toggle.RegisterValueChangedCallback(evt =>
-                    {
-                        selectedWorlds[worldId] = evt.newValue;
-                        SaveSelectedWorldIds();
-                    });
-                    worldsList.Add(toggle);
+                        bool wasSelected = savedSelection.Contains(world.Id);
+                        selectedWorlds[world.Id] = wasSelected;
+
+                        Toggle toggle = new Toggle
+                        {
+                            text = $"{world.Label} (ID: {world.Id})",
+                            value = wasSelected
+                        };
+                        int worldId = world.Id;
+                        toggle.RegisterValueChangedCallback(evt =>
+                        {
+                            selectedWorlds[worldId] = evt.newValue;
+                            SaveSelectedWorldIds();
+                        });
+                        worldsList.Add(toggle);
+                    }
                 }
 
                 deployButton.SetEnabled(true);
