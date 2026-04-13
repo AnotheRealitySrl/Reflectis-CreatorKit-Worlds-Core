@@ -1286,14 +1286,24 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         /// </summary>
         private void BuildAndZipScenes()
         {
-            EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
-            BuildAddressablesForSelectedPlatform();
+            // Collect all required BuildTargets from selected scenes
+            var allTargets = new HashSet<BuildTarget>();
+            foreach (var scene in sceneConfigurations.SceneConfigurations)
+            {
+                if (scene.IncludeInBuild)
+                {
+                    foreach (var target in scene.GetRequiredBuildTargets())
+                        allTargets.Add(target);
+                }
+            }
 
-            EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.WebGL, BuildTarget.WebGL);
-            BuildAddressablesForSelectedPlatform();
-
-            EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
-            BuildAddressablesForSelectedPlatform();
+            // Build for each required platform
+            foreach (BuildTarget target in allTargets)
+            {
+                BuildTargetGroup group = BuildPipeline.GetBuildTargetGroup(target);
+                EditorUserBuildSettings.SwitchActiveBuildTarget(group, target);
+                BuildAddressablesForSelectedPlatform();
+            }
 
             buildResult = CheckBuildResult();
 
@@ -1342,15 +1352,16 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         private EBuildError CheckBuildResult()
         {
-            List<string> builtScenes = GetBuiltSceneNames();
-
-            foreach (string scene in builtScenes)
+            foreach (var scene in sceneConfigurations.SceneConfigurations)
             {
-                string sceneFolderPath = Path.Combine(addressables_output_folder, scene);
-                string[] requiredSubfolders = { "WebGL", "StandaloneWindows64", "Android" };
+                if (!scene.IncludeInBuild) continue;
 
-                foreach (string subfolder in requiredSubfolders)
+                string sceneFolderPath = Path.Combine(addressables_output_folder, scene.SceneNameFiltered);
+                var requiredTargets = scene.GetRequiredBuildTargets();
+
+                foreach (BuildTarget target in requiredTargets)
                 {
+                    string subfolder = target.ToString();
                     string subfolderPath = Path.Combine(sceneFolderPath, subfolder);
                     if (!Directory.Exists(subfolderPath))
                     {
