@@ -43,6 +43,23 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
                 return targets;
             }
+
+            /// <summary>
+            /// Returns the subset of required BuildTargets whose Unity build module is NOT installed.
+            /// Uses BuildPipeline.IsBuildTargetSupported — always empty for StandaloneWindows64
+            /// because that module is bundled with the editor.
+            /// </summary>
+            public List<BuildTarget> GetMissingBuildTargets()
+            {
+                var missing = new List<BuildTarget>();
+                foreach (BuildTarget target in GetRequiredBuildTargets())
+                {
+                    BuildTargetGroup group = BuildPipeline.GetBuildTargetGroup(target);
+                    if (!BuildPipeline.IsBuildTargetSupported(group, target))
+                        missing.Add(target);
+                }
+                return missing;
+            }
         }
 
         [SerializeField] private List<SceneConfiguration> sceneConfigurations;

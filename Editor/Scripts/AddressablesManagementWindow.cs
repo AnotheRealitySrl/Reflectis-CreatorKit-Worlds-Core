@@ -33,6 +33,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             None,
             FolderMissing,
             BinaryCatalog,
+            MissingModule,
         }
 
         [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
@@ -111,6 +112,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private Button tenantDeployButton;
         private Button tenantBuildAndDeployButton;
 
+        // Platform module warnings
+        private VisualElement platformWarningsContainer;
+
+        // Deploy error log
+        private VisualElement deployErrorsContainer;
+        private ScrollView deployErrorsScrollView;
+
         [MenuItem("Reflectis Worlds/Creator Kit/Core/Addressables management")]
         public static void ShowExample()
         {
@@ -127,6 +135,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         {
             SaveAsset(sceneConfigurations);
             EditorLoginState.OnLoginStateChanged -= OnLoginStateChanged;
+        }
+
+        private void OnFocus()
+        {
+            // Refresh warnings whenever the window regains focus (e.g. after the user
+            // installs a module via Unity Hub and returns to the editor).
+            RefreshPlatformWarnings();
         }
 
 
@@ -184,7 +199,42 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             tenantDeployButton.clicked += OnTenantDeployClicked;
             tenantBuildAndDeployButton.clicked += OnTenantBuildAndDeployClicked;
 
+            InitDeployErrorsContainer();
+
             RefreshLoginState();
+        }
+
+        private void InitDeployErrorsContainer()
+        {
+            deployErrorsContainer = new VisualElement();
+            deployErrorsContainer.style.marginTop = 8;
+            deployErrorsContainer.style.marginLeft = 4;
+            deployErrorsContainer.style.marginRight = 4;
+            deployErrorsContainer.style.display = DisplayStyle.None;
+
+            var header = new VisualElement();
+            header.style.flexDirection = FlexDirection.Row;
+            header.style.justifyContent = Justify.SpaceBetween;
+            header.style.alignItems = Align.Center;
+            header.style.marginBottom = 4;
+
+            var title = new Label("Deploy errors");
+            title.style.unityFontStyleAndWeight = FontStyle.Bold;
+            title.style.color = new Color(0.9f, 0.35f, 0.35f);
+            header.Add(title);
+
+            var clearButton = new Button(ClearDeployErrors) { text = "Clear" };
+            clearButton.style.paddingLeft = 8;
+            clearButton.style.paddingRight = 8;
+            header.Add(clearButton);
+
+            deployErrorsContainer.Add(header);
+
+            deployErrorsScrollView = new ScrollView(ScrollViewMode.Vertical);
+            deployErrorsScrollView.style.maxHeight = 220;
+            deployErrorsContainer.Add(deployErrorsScrollView);
+
+            root.Add(deployErrorsContainer);
         }
 
         private void OnLoginStateChanged()
@@ -383,6 +433,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         private async void OnDeployClicked()
         {
+            ClearDeployErrors();
+
             List<int> worldIds = GetSelectedWorldIds();
             if (worldIds.Count == 0)
             {
@@ -404,15 +456,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             {
                 string zipPath = Path.Combine(addressables_output_folder, scene + ".zip");
                 if (!File.Exists(zipPath))
-                {
                     missingZips.Add(scene);
-                }
             }
 
             if (missingZips.Count > 0)
             {
                 string missing = string.Join(", ", missingZips);
-                Debug.LogError($"[AddressablesManagement] Missing zip files for: {missing}. Build first.");
+                LogDeployError($"Missing zip files for: {missing}. Build first.");
                 EditorUtility.DisplayDialog("Deploy", $"Missing zip files for:\n{missing}\n\nPlease build first.", "OK");
                 return;
             }
@@ -424,6 +474,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         private async void OnBuildAndDeployClicked()
         {
+            ClearDeployErrors();
+
             List<int> worldIds = GetSelectedWorldIds();
             if (worldIds.Count == 0)
             {
@@ -439,7 +491,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
             if (buildResult != EBuildError.None)
             {
-                Debug.LogError("[AddressablesManagement] Build failed. Aborting deploy.");
+                LogDeployError($"Build failed ({buildResult}). Aborting deploy.");
                 SetDeployButtonsEnabled(true);
                 return;
             }
@@ -456,7 +508,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             string applicationApiUrl = EditorLoginState.CurrentTenant?.Config?.ApplicationApiUrl;
             if (string.IsNullOrEmpty(applicationApiUrl))
             {
-                Debug.LogError("[AddressablesManagement] No application API URL available.");
+                LogDeployError("No application API URL available.");
                 return;
             }
 
@@ -477,7 +529,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                     string uploadLink = await GetUploadLinkForWorld(applicationApiUrl, worldId, token);
                     if (string.IsNullOrEmpty(uploadLink))
                     {
-                        Debug.LogError($"[AddressablesManagement] Failed to get upload link for world {worldId}. Skipping.");
+                        LogDeployError($"World \"{worldLabel}\": failed to get upload link. Skipping.");
                         continue;
                     }
 
@@ -491,13 +543,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                             ftpConfig = JsonConvert.DeserializeObject<FtpUploadConfig>(uploadLink);
                             if (ftpConfig == null || string.IsNullOrEmpty(ftpConfig.host))
                             {
-                                Debug.LogError($"[AddressablesManagement] Invalid SFTP config for world {worldId}. Skipping.");
+                                LogDeployError($"World \"{worldLabel}\": invalid SFTP config. Skipping.");
                                 continue;
                             }
                         }
                         catch (Exception ex)
                         {
-                            Debug.LogError($"[AddressablesManagement] Failed to parse SFTP config for world {worldId}: {ex.Message}. Skipping.");
+                            LogDeployError($"World \"{worldLabel}\": failed to parse SFTP config — {ex.Message}. Skipping.");
                             continue;
                         }
                     }
@@ -508,7 +560,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                         string zipPath = Path.Combine(addressables_output_folder, scene + ".zip");
                         if (!File.Exists(zipPath))
                         {
-                            Debug.LogWarning($"[AddressablesManagement] Zip not found: {zipPath}. Skipping.");
+                            LogDeployError($"World \"{worldLabel}\": zip not found for \"{scene}\". Skipping scene.");
                             continue;
                         }
 
@@ -516,14 +568,21 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
                         EditorUtility.DisplayProgressBar(progressPrefix, $"Uploading {scene}.zip ({s + 1}/{scenes.Count})...", progress);
 
-                        if (useFtp)
-                            await UploadZipViaFtp(zipPath, ftpConfig);
-                        else
-                            await UploadZip(zipPath, uploadLink);
+                        bool uploaded = useFtp
+                            ? await UploadZipViaFtp(zipPath, ftpConfig)
+                            : await UploadZip(zipPath, uploadLink);
+
+                        if (!uploaded)
+                        {
+                            LogDeployError($"World \"{worldLabel}\": upload failed for \"{scene}.zip\". Skipping import.");
+                            continue;
+                        }
 
                         EditorUtility.DisplayProgressBar(progressPrefix, $"Importing {scene} ({s + 1}/{scenes.Count})...", progress);
 
-                        await ImportSceneToWorld(applicationApiUrl, worldId, token, scene);
+                        bool imported = await ImportSceneToWorld(applicationApiUrl, worldId, token, scene);
+                        if (!imported)
+                            LogDeployError($"World \"{worldLabel}\": import failed for \"{scene}\". Check the console for details.");
                     }
                 }
             }
@@ -549,6 +608,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         private async void OnTenantDeployClicked()
         {
+            ClearDeployErrors();
+
             List<string> scenes = GetBuiltSceneNames();
             if (scenes.Count == 0)
             {
@@ -567,6 +628,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             if (missingZips.Count > 0)
             {
                 string missing = string.Join(", ", missingZips);
+                LogDeployError($"Missing zip files for: {missing}. Build first.");
                 EditorUtility.DisplayDialog("Deploy to Tenant", $"Missing zip files for:\n{missing}\n\nPlease build first.", "OK");
                 return;
             }
@@ -578,13 +640,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         private async void OnTenantBuildAndDeployClicked()
         {
+            ClearDeployErrors();
+
             SetDeployButtonsEnabled(false);
 
             BuildAndZipScenes();
 
             if (buildResult != EBuildError.None)
             {
-                Debug.LogError("[AddressablesManagement] Build failed. Aborting tenant deploy.");
+                LogDeployError($"Build failed ({buildResult}). Aborting tenant deploy.");
                 SetDeployButtonsEnabled(true);
                 return;
             }
@@ -599,7 +663,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             string applicationApiUrl = EditorLoginState.CurrentTenant?.Config?.ApplicationApiUrl;
             if (string.IsNullOrEmpty(applicationApiUrl))
             {
-                Debug.LogError("[AddressablesManagement] No application API URL available.");
+                LogDeployError("Tenant: no application API URL available.");
                 return;
             }
 
@@ -610,7 +674,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 string uploadLink = await GetTenantUploadLink(applicationApiUrl, token);
                 if (string.IsNullOrEmpty(uploadLink))
                 {
-                    Debug.LogError("[AddressablesManagement] Failed to get tenant upload link.");
+                    LogDeployError("Tenant: failed to get upload link.");
                     return;
                 }
 
@@ -624,13 +688,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                         ftpConfig = JsonConvert.DeserializeObject<FtpUploadConfig>(uploadLink);
                         if (ftpConfig == null || string.IsNullOrEmpty(ftpConfig.host))
                         {
-                            Debug.LogError("[AddressablesManagement] Invalid SFTP config for tenant. Aborting.");
+                            LogDeployError("Tenant: invalid SFTP config. Aborting.");
                             return;
                         }
                     }
                     catch (Exception ex)
                     {
-                        Debug.LogError($"[AddressablesManagement] Failed to parse SFTP config for tenant: {ex.Message}");
+                        LogDeployError($"Tenant: failed to parse SFTP config — {ex.Message}. Aborting.");
                         return;
                     }
                 }
@@ -641,7 +705,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                     string zipPath = Path.Combine(addressables_output_folder, scene + ".zip");
                     if (!File.Exists(zipPath))
                     {
-                        Debug.LogWarning($"[AddressablesManagement] Zip not found: {zipPath}. Skipping.");
+                        LogDeployError($"Tenant: zip not found for \"{scene}\". Skipping scene.");
                         continue;
                     }
 
@@ -649,14 +713,21 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
                     EditorUtility.DisplayProgressBar("Deploy to Tenant", $"Uploading {scene}.zip ({s + 1}/{scenes.Count})...", progress);
 
-                    if (useFtp)
-                        await UploadZipViaFtp(zipPath, ftpConfig);
-                    else
-                        await UploadZip(zipPath, uploadLink);
+                    bool uploaded = useFtp
+                        ? await UploadZipViaFtp(zipPath, ftpConfig)
+                        : await UploadZip(zipPath, uploadLink);
+
+                    if (!uploaded)
+                    {
+                        LogDeployError($"Tenant: upload failed for \"{scene}.zip\". Skipping import.");
+                        continue;
+                    }
 
                     EditorUtility.DisplayProgressBar("Deploy to Tenant", $"Importing {scene} ({s + 1}/{scenes.Count})...", progress);
 
-                    await ImportSceneToTenant(applicationApiUrl, token, scene);
+                    bool imported = await ImportSceneToTenant(applicationApiUrl, token, scene);
+                    if (!imported)
+                        LogDeployError($"Tenant: import failed for \"{scene}\". Check the console for details.");
                 }
             }
             finally
@@ -702,7 +773,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             return uploadLink;
         }
 
-        public static async Task ImportSceneToWorld(string applicationApiUrl, int worldId, string accessToken, string zipName)
+        public static async Task<bool> ImportSceneToWorld(string applicationApiUrl, int worldId, string accessToken, string zipName)
         {
             string apiUrl = $"{applicationApiUrl}/worlds/{worldId}/environments/archives/import?api-version=2";
 
@@ -718,17 +789,17 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             catch (Exception ex)
             {
                 Debug.LogError($"[AddressablesManagement] Error importing {zipName} to world {worldId}: {ex.Message}");
-                return;
+                return false;
             }
 
             if (!response.IsSuccessStatusCode)
             {
                 Debug.LogError($"[AddressablesManagement] Import failed for {zipName} to world {worldId}: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                return false;
             }
-            else
-            {
-                Debug.Log($"[AddressablesManagement] Import {zipName} to world {worldId} started successfully.");
-            }
+
+            Debug.Log($"[AddressablesManagement] Import {zipName} to world {worldId} started successfully.");
+            return true;
         }
 
         [Serializable]
@@ -746,7 +817,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             public string passphrase;
         }
 
-        public async Task UploadZip(string filePath, string sasUrl)
+        public async Task<bool> UploadZip(string filePath, string sasUrl)
         {
             string fileName = Path.GetFileName(filePath);
 
@@ -764,22 +835,28 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 if (response.IsSuccessStatusCode)
                 {
                     Debug.Log($"[AddressablesManagement] Upload completed: {fileName}");
+                    return true;
                 }
                 else
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
                     Debug.LogError($"[AddressablesManagement] Upload failed: {fileName} - {response.StatusCode}\n{responseBody}");
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 Debug.LogError($"[AddressablesManagement] Upload error {fileName}: {ex.Message}");
+                return false;
             }
         }
 
-        public async Task UploadZipViaFtp(string filePath, FtpUploadConfig ftpConfig)
+        public async Task<bool> UploadZipViaFtp(string filePath, FtpUploadConfig ftpConfig)
         {
             string fileName = Path.GetFileName(filePath);
+            // Resolve to absolute path before entering Task.Run — the thread-pool thread
+            // may have a different working directory than the Unity project root.
+            string absoluteFilePath = Path.GetFullPath(filePath);
 
             if (ftpConfig.port <= 0 || ftpConfig.port > 65535)
             {
@@ -832,7 +909,19 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                     {
                         sftp.Connect();
 
-                        using (var fileStream = File.OpenRead(filePath))
+                        // Ensure every segment of the remote directory exists before uploading.
+                        // SSH.NET throws "Can't open file" when the destination folder is missing.
+                        string[] segments = remotePath.TrimStart('/').Split('/');
+                        string currentDir = "";
+                        foreach (string segment in segments)
+                        {
+                            if (string.IsNullOrEmpty(segment)) continue;
+                            currentDir += "/" + segment;
+                            if (!sftp.Exists(currentDir))
+                                sftp.CreateDirectory(currentDir);
+                        }
+
+                        using (var fileStream = File.OpenRead(absoluteFilePath))
                         {
                             sftp.UploadFile(fileStream, remoteFilePath, true);
                         }
@@ -840,12 +929,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                         sftp.Disconnect();
                     }
                 });
+
+                return true;
             }
             catch (Exception ex)
             {
                 Debug.LogError($"[AddressablesManagement] SFTP upload error {fileName}: {ex.Message}");
                 if (ex.InnerException != null)
                     Debug.LogError($"[AddressablesManagement] Inner exception: {ex.InnerException.Message}");
+                return false;
             }
         }
 
@@ -877,7 +969,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             }
         }
 
-        public static async Task ImportSceneToTenant(string applicationApiUrl, string accessToken, string zipName)
+        public static async Task<bool> ImportSceneToTenant(string applicationApiUrl, string accessToken, string zipName)
         {
             string apiUrl = $"{applicationApiUrl}/tenants/environments/archives/import?api-version=2";
 
@@ -891,15 +983,16 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 if (!response.IsSuccessStatusCode)
                 {
                     Debug.LogError($"[AddressablesManagement] Tenant import failed for {zipName}: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                    return false;
                 }
-                else
-                {
-                    Debug.Log($"[AddressablesManagement] Tenant import {zipName} started successfully.");
-                }
+
+                Debug.Log($"[AddressablesManagement] Tenant import {zipName} started successfully.");
+                return true;
             }
             catch (Exception ex)
             {
                 Debug.LogError($"[AddressablesManagement] Error importing {zipName} to tenant: {ex.Message}");
+                return false;
             }
         }
 
@@ -952,14 +1045,23 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             SerializedProperty property = serializedObject.GetIterator();
             property.NextVisible(true);
 
+            VisualElement sceneConfigContainer = root.Q<VisualElement>("scene-configuration-scriptable");
             while (property.NextVisible(false))
             {
                 PropertyField propertyField = new(property);
                 propertyField.Bind(serializedObject);
-                root.Q<VisualElement>("scene-configuration-scriptable").Add(propertyField);
+                // Refresh platform warnings whenever a property changes (e.g. toggling a platform flag)
+                propertyField.RegisterCallback<SerializedPropertyChangeEvent>(_ => RefreshPlatformWarnings());
+                sceneConfigContainer.Add(propertyField);
             }
 
             serializedObject.ApplyModifiedProperties();
+
+            // Platform module warnings — injected just below the scene configuration block
+            platformWarningsContainer = new VisualElement();
+            platformWarningsContainer.style.marginTop = 6;
+            sceneConfigContainer.parent.Insert(sceneConfigContainer.parent.IndexOf(sceneConfigContainer) + 1, platformWarningsContainer);
+            RefreshPlatformWarnings();
 
             VisualElement addressablesSettings = root.Q<VisualElement>("addressables-settings");
             addressablesSettings.dataSource = this;
@@ -1255,6 +1357,71 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         #region Utility
 
+        /// <summary>
+        /// Rebuilds the platform-module warnings panel.
+        /// Shows a HelpBox for every scene whose required build modules are not installed.
+        /// Safe to call at any time; silently does nothing if the container isn't ready yet.
+        /// </summary>
+        private void RefreshPlatformWarnings()
+        {
+            if (platformWarningsContainer == null || sceneConfigurations == null) return;
+
+            platformWarningsContainer.Clear();
+
+            bool anyWarning = false;
+            foreach (var scene in sceneConfigurations.SceneConfigurations)
+            {
+                if (!scene.IncludeInBuild) continue;
+
+                List<BuildTarget> missingTargets = scene.GetMissingBuildTargets();
+                if (missingTargets.Count == 0) continue;
+
+                anyWarning = true;
+
+                // Build a human-readable description of which platform each missing module covers
+                var descriptions = missingTargets.Select(t => t switch
+                {
+                    BuildTarget.Android => "Android (VR / Mobile)",
+                    BuildTarget.iOS => "iOS (Mobile)",
+                    BuildTarget.WebGL => "WebGL",
+                    _ => t.ToString()
+                });
+
+                string modulesText = string.Join(", ", descriptions);
+                var helpBox = new HelpBox(
+                    $"⚠  \"{scene.SceneNameFiltered}\": missing build module(s) — {modulesText}.\n" +
+                    "Install them via Unity Hub → Installs → Add modules, then return here.",
+                    HelpBoxMessageType.Warning
+                );
+                helpBox.style.marginBottom = 4;
+                platformWarningsContainer.Add(helpBox);
+            }
+
+            platformWarningsContainer.style.display = anyWarning ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        /// <summary>
+        /// Logs an error both to the Unity console and to the in-window deploy error panel.
+        /// </summary>
+        private void LogDeployError(string message)
+        {
+            Debug.LogError(message);
+
+            if (deployErrorsScrollView == null) return;
+
+            var entry = new HelpBox(message, HelpBoxMessageType.Error);
+            entry.style.marginBottom = 2;
+            deployErrorsScrollView.Add(entry);
+            deployErrorsContainer.style.display = DisplayStyle.Flex;
+        }
+
+        private void ClearDeployErrors()
+        {
+            deployErrorsScrollView?.Clear();
+            if (deployErrorsContainer != null)
+                deployErrorsContainer.style.display = DisplayStyle.None;
+        }
+
         private string BuildtimeVariable(string variable) => "[" + variable + "]";
         private string RuntimeVariable(string variable) => "{" + variable + "}";
 
@@ -1286,6 +1453,64 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         /// </summary>
         private void BuildAndZipScenes()
         {
+            // ── Pre-flight: check that all required build modules are installed ──────
+            var scenesWithMissingModules = sceneConfigurations.SceneConfigurations
+                .Where(s => s.IncludeInBuild && s.GetMissingBuildTargets().Count > 0)
+                .ToList();
+
+            if (scenesWithMissingModules.Count > 0)
+            {
+                var lines = scenesWithMissingModules.Select(s =>
+                {
+                    var missing = s.GetMissingBuildTargets().Select(t => t switch
+                    {
+                        BuildTarget.Android => "Android (VR / Mobile)",
+                        BuildTarget.iOS => "iOS (Mobile)",
+                        BuildTarget.WebGL => "WebGL",
+                        _ => t.ToString()
+                    });
+                    return $"• {s.SceneNameFiltered}: {string.Join(", ", missing)}";
+                });
+
+                string message =
+                    "The following scenes require build modules that are not installed:\n\n" +
+                    string.Join("\n", lines) +
+                    "\n\nInstall the missing modules via Unity Hub → Installs → Add modules, " +
+                    "then retry.";
+
+                EditorUtility.DisplayDialog("Missing Build Modules", message, "OK");
+                buildResult = EBuildError.MissingModule;
+                return;
+            }
+            // ─────────────────────────────────────────────────────────────────────────
+
+            // ── Clean up stale platform folders ──────────────────────────────────────
+            // Delete any platform subfolder that is no longer required for a scene so
+            // it does not end up in the zip and get imported on the server.
+            foreach (var scene in sceneConfigurations.SceneConfigurations)
+            {
+                if (!scene.IncludeInBuild) continue;
+
+                string sceneFolderPath = Path.Combine(addressables_output_folder, scene.SceneNameFiltered);
+                if (!Directory.Exists(sceneFolderPath)) continue;
+
+                var requiredFolderNames = new HashSet<string>(
+                    scene.GetRequiredBuildTargets().Select(t => t.ToString()),
+                    StringComparer.OrdinalIgnoreCase
+                );
+
+                foreach (string subfolder in Directory.GetDirectories(sceneFolderPath))
+                {
+                    string folderName = Path.GetFileName(subfolder);
+                    if (!requiredFolderNames.Contains(folderName))
+                    {
+                        Directory.Delete(subfolder, true);
+                        Debug.Log($"[AddressablesManagement] Removed stale platform folder: {subfolder}");
+                    }
+                }
+            }
+            // ─────────────────────────────────────────────────────────────────────────
+
             // Collect all required BuildTargets from selected scenes
             var allTargets = new HashSet<BuildTarget>();
             foreach (var scene in sceneConfigurations.SceneConfigurations)
