@@ -1375,9 +1375,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             platformWarningsContainer.Clear();
 
             bool anyWarning = false;
-            foreach (var scene in sceneConfigurations.SceneConfigurations)
+            var configs = sceneConfigurations.SceneConfigurations;
+            if (configs == null)
             {
-                if (!scene.IncludeInBuild) continue;
+                platformWarningsContainer.style.display = DisplayStyle.None;
+                return;
+            }
+            foreach (var scene in configs)
+            {
+                if (scene == null || !scene.IncludeInBuild || scene.Scene == null) continue;
 
                 List<BuildTarget> missingTargets = scene.GetMissingBuildTargets();
                 if (missingTargets.Count == 0) continue;
