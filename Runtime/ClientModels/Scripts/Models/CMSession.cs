@@ -13,7 +13,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         [SerializeField] private string title;
         [SerializeField] private DateTime? startDateTime;
         [SerializeField] private DateTime? endDateTime;
-        [SerializeField] private List<CMUser> participants;
+        [SerializeField] private List<int> participants;
         [SerializeField] private List<CMTag> tags;
         [SerializeField] private int maxParticipants;
         [SerializeField] private bool isPublic;
@@ -38,7 +38,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
         /// This DateTime is in local time
         /// </summary>
         public DateTime? EndDateTime { get => endDateTime; set => endDateTime = value; }
-        public List<CMUser> Participants { get => participants; set => participants = value; }
+        public List<int> Participants { get => participants; set => participants = value; }
         public int MaxParticipants { get => maxParticipants; set => maxParticipants = value; }
         public bool IsPublic { get => isPublic; set => isPublic = value; }
         public bool IsVisible { get => isVisible; set => isVisible = value; }
