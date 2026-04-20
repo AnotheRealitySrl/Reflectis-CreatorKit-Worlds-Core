@@ -106,6 +106,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private Button buildAndDeployButton;
         private Button openTenantSelectionButton;
         private Button logoutButton;
+        private Button buildAddressablesButton;
 
         // Tenant deploy UI references
         private VisualElement tenantDeploySection;
@@ -600,6 +601,11 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             buildAndDeployButton?.SetEnabled(enabled);
             tenantDeployButton?.SetEnabled(enabled);
             tenantBuildAndDeployButton?.SetEnabled(enabled);
+
+            // Re-assert missing-module gating on build buttons — RefreshPlatformWarnings
+            // will disable them again if any selected scene targets an uninstalled module.
+            if (enabled)
+                RefreshPlatformWarnings();
         }
 
         #endregion
@@ -1133,7 +1139,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             defaultLocalGroupButton.clicked += () => Selection.activeObject = settings.DefaultGroup;
 
             // Build button — always visible (logged in or not)
-            Button buildAddressablesButton = root.Q<Button>("build-addressables-button");
+            buildAddressablesButton = root.Q<Button>("build-addressables-button");
             buildAddressablesButton.dataSource = this;
             DataBinding buildAddressablesButtonDataBinding = new()
             {
@@ -1398,6 +1404,28 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             }
 
             platformWarningsContainer.style.display = anyWarning ? DisplayStyle.Flex : DisplayStyle.None;
+
+            // Disable build buttons while any selected scene targets a non-installed module.
+            // Plain deploy buttons (which only re-upload already-built zips) stay enabled.
+            const string missingModulesTooltip =
+                "Disabled: one or more selected scenes require build modules that are not installed. " +
+                "See the warnings above.";
+
+            if (buildAddressablesButton != null)
+            {
+                buildAddressablesButton.SetEnabled(!anyWarning);
+                buildAddressablesButton.tooltip = anyWarning ? missingModulesTooltip : string.Empty;
+            }
+            if (buildAndDeployButton != null)
+            {
+                buildAndDeployButton.SetEnabled(!anyWarning);
+                buildAndDeployButton.tooltip = anyWarning ? missingModulesTooltip : string.Empty;
+            }
+            if (tenantBuildAndDeployButton != null)
+            {
+                tenantBuildAndDeployButton.SetEnabled(!anyWarning);
+                tenantBuildAndDeployButton.tooltip = anyWarning ? missingModulesTooltip : string.Empty;
+            }
         }
 
         /// <summary>
