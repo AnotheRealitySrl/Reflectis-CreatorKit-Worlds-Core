@@ -10,7 +10,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Placeholders
 
         [SerializeField] private bool automaticSetup = true;
 
-        public bool AutomaticSetup => automaticSetup;
+        public bool AutomaticSetup { get => automaticSetup; set => automaticSetup = value; }
 
         public int UniqueID
         {

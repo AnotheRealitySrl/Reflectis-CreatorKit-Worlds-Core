@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Reflectis.CreatorKit.Worlds.Core
 {
-    public class SpawnableObject : SceneComponentPlaceholderBase
+    public class SpawnableObjectPlaceholder : SceneComponentPlaceholderBase
     {
 
         private const string SpawnableObjectListDataPath = "Assets/SpawnableObject/SpawnableObjectList.asset";
@@ -29,6 +29,10 @@ namespace Reflectis.CreatorKit.Worlds.Core
         [HideInInspector] public GameObject LeftHandReference;
         [HideInInspector] public GameObject RightHandReference;
 
+        /*[HideInInspector]*/ public bool isCopy = false; //Is it the copy? 
+        [HideInInspector] public int indexSpawnReference = 0; //Index inside the list
+        [HideInInspector] public int listToUse = 1; //Whether or not it is ther scene list or prefab list
+
         //Function called when the object gets instantiated, destroy the hand references
         public void DestroyHands()
         {
@@ -45,6 +49,18 @@ namespace Reflectis.CreatorKit.Worlds.Core
 
         public void Awake()
         {
+            //Se sono prefab non mettere a false;
+
+            SceneComponentPlaceholderBase[] placeholders = GetComponentsInChildren<SceneComponentPlaceholderBase>();
+            foreach(var p in placeholders)
+            {
+                p.AutomaticSetup = false;
+            }
+            if (!isCopy)
+            {
+                Debug.LogError("I AM NOT THE COPY!", gameObject);
+                AutomaticSetup = true;
+            }
             DestroyHands();
         }
 
@@ -209,14 +225,14 @@ namespace Reflectis.CreatorKit.Worlds.Core
     }
 
 #if UNITY_EDITOR
-    [CustomEditor(typeof(SpawnableObject))]
+    [CustomEditor(typeof(SpawnableObjectPlaceholder))]
     public class SpawnableObjectEditor : Editor
     {
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
 
-            SpawnableObject myScript = (SpawnableObject)target;
+            SpawnableObjectPlaceholder myScript = (SpawnableObjectPlaceholder)target;
             string leftButtonLabel = myScript.LeftHandReference == null ? "Show Left Reference" : "Hide Left Reference";
             string rigthButtonLabel = myScript.RightHandReference == null ? "Show Right Reference" : "Hide Right Reference";
 

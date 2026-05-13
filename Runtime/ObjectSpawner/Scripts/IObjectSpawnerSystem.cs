@@ -39,7 +39,11 @@ namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
         Task<GameObject> InstantiateObject(EPrefabIdentifier prefabId, bool onNetwork = true, object[] data = null, SpawnPosition spawnableData = null);
         Task<GameObject> InstantiateObject(EPrefabIdentifier prefabId, Vector3 position, Quaternion rotation, bool onNetwork = true, object[] data = null);
 
-        int GetIndexToInstantiate(GameObject gameObject);
-        GameObject GetSpawnableObject(int index);
+        int GetIndexToInstantiate(GameObject goToCheck);
+
+        int GetIndexToInstantiateFromAll(GameObject goToCheck);
+
+        int GetListToCheck(GameObject goToCheck);
+        Task<GameObject> GetSpawnableObject(int index, int listChoice);
     }
 }
