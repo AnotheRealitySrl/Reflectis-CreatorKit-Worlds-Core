@@ -30,7 +30,7 @@ namespace Reflectis.CreatorKit.Worlds.Core
         [HideInInspector] public GameObject RightHandReference;
 
         /*[HideInInspector]*/ public bool isCopy = false; //Is it the copy? 
-        [HideInInspector] public int indexSpawnReference = 0; //Index inside the list
+        public int indexSpawnReference = 0; //Index inside the list
         [HideInInspector] public int listToUse = 1; //Whether or not it is ther scene list or prefab list
 
         //Function called when the object gets instantiated, destroy the hand references
@@ -58,7 +58,6 @@ namespace Reflectis.CreatorKit.Worlds.Core
             }
             if (!isCopy)
             {
-                Debug.LogError("I AM NOT THE COPY!", gameObject);
                 AutomaticSetup = true;
             }
             DestroyHands();
@@ -102,21 +101,52 @@ namespace Reflectis.CreatorKit.Worlds.Core
 
                 if (spawnList.GetList().Count ==0 || !spawnList.GetList().Any(obj => obj != null && AssetDatabase.GetAssetPath(obj) == AssetDatabase.GetAssetPath(this)))
                 {
-                    spawnList.AddToList(this.gameObject);
-
+                    int index = spawnList.AddToList(this.gameObject);
+                    indexSpawnReference = index;
                     // Clean duplicates and nulls
                     spawnList.spawnableObjectList = spawnList.spawnableObjectList
                         .Where(obj => obj != null)
                         .Distinct()
                         .ToList();
 
+                    EditorUtility.SetDirty(this);
                     EditorUtility.SetDirty(spawnList);
                     EditorApplication.delayCall += () =>
                     {
                         EditorUtility.SetDirty(spawnList);
                         AssetDatabase.SaveAssets();
                     };
+
+                    
                 }
+
+                listToUse = 0;
+            }
+            else
+            {
+                //Not in prefab mode, search for the object "SpawnableObjectsHolder" and add the item to the go.
+                GameObject spawnableObjectsHolder = GameObject.Find("SpawnableObjectsHolder");
+                if(spawnableObjectsHolder == null)
+                {
+                    spawnableObjectsHolder = new GameObject("SpawnableObjectsHolder");
+                    spawnableObjectsHolder.AddComponent<SpawnableObjectListReference>();
+                }
+
+                SpawnableObjectListReference spawnListReference = spawnableObjectsHolder.GetComponent<SpawnableObjectListReference>();
+                int index = spawnListReference.AddSceneObjectToList(this);
+                Debug.LogError("Setting index to " + index, gameObject);
+                indexSpawnReference = index;
+                listToUse = 1;
+
+                EditorUtility.SetDirty(this);
+                EditorUtility.SetDirty(spawnListReference);
+                EditorApplication.delayCall += () =>
+                {
+                    EditorUtility.SetDirty(spawnListReference);
+                    AssetDatabase.SaveAssets();
+                };
+
+                
             }
         }
 

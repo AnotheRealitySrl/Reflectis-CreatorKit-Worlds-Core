@@ -9,7 +9,7 @@ namespace Reflectis.CreatorKit.Worlds.Core
         public static SpawnableObjectListReference Instance { get; private set; }
 
         public SpawnableObjectListData spawnObjectList;
-        public List<SpawnableObjectPlaceholder> sceneSpawnableObjectList;
+        public List<SpawnableObjectPlaceholder> sceneSpawnableObjectList = new List<SpawnableObjectPlaceholder>();
 
         private void Awake()
         {
@@ -40,6 +40,20 @@ namespace Reflectis.CreatorKit.Worlds.Core
         public void SetReference(SpawnableObjectListData data)
         {
             spawnObjectList = data;
+        }
+
+        public int AddSceneObjectToList(SpawnableObjectPlaceholder obj)
+        {
+            Debug.LogError("ADD SCENE OBJECT OT LIST");
+            if (sceneSpawnableObjectList.Contains(obj))
+            {
+                return sceneSpawnableObjectList.IndexOf(obj);
+            }
+            else
+            {
+                sceneSpawnableObjectList.Add(obj);
+                return sceneSpawnableObjectList.IndexOf(obj);
+            }
         }
 
     }

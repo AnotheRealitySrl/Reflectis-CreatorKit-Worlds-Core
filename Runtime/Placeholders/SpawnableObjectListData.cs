@@ -8,9 +8,10 @@ namespace Reflectis.CreatorKit.Worlds.Core
     {
         public List<GameObject> spawnableObjectList;
 
-        public void AddToList(GameObject spawnObject)
+        public int AddToList(GameObject spawnObject)
         {
             spawnableObjectList.Add(spawnObject);
+            return spawnableObjectList.IndexOf(spawnObject);
         }
 
         public List<GameObject> GetList()
