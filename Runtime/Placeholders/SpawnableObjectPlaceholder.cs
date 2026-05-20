@@ -142,7 +142,8 @@ namespace Reflectis.CreatorKit.Worlds.Core
                 EditorUtility.SetDirty(spawnListReference);
                 EditorApplication.delayCall += () =>
                 {
-                    EditorUtility.SetDirty(spawnListReference);
+                    if(spawnListReference!=null)
+                        EditorUtility.SetDirty(spawnListReference);
                     AssetDatabase.SaveAssets();
                 };
 
