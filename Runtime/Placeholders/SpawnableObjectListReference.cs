@@ -13,6 +13,7 @@ namespace Reflectis.CreatorKit.Worlds.Core
 
         private void Awake()
         {
+            //Debug.LogError("SpawnObnject list is " + spawnObjectList, gameObject);
             // 1. Check if an instance already exists
             if (Instance != null && Instance != this)
             {
@@ -27,7 +28,7 @@ namespace Reflectis.CreatorKit.Worlds.Core
 
         public int SubstituteSceneGO(int index, GameObject copy)
         {
-            Debug.LogError("Index is " + index);
+            //Debug.LogError("Index is " + index);
             sceneSpawnableObjectList[index] = copy.GetComponent<SpawnableObjectPlaceholder>();
             return index;
         }
@@ -44,7 +45,7 @@ namespace Reflectis.CreatorKit.Worlds.Core
 
         public int AddSceneObjectToList(SpawnableObjectPlaceholder obj)
         {
-            Debug.LogError("ADD SCENE OBJECT OT LIST");
+            //Debug.LogError("ADD SCENE OBJECT OT LIST");
             if (sceneSpawnableObjectList.Contains(obj))
             {
                 return sceneSpawnableObjectList.IndexOf(obj);

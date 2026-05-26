@@ -95,7 +95,7 @@ namespace Reflectis.CreatorKit.Worlds.Core
                 SpawnableObjectListData spawnList = LoadOrCreateData();
                 if (spawnList == null)
                 {
-                    Debug.LogError("Spawn List data not found.");
+                    //Debug.LogError("Spawn List data not found.");
                     return;
                 }
 
@@ -128,13 +128,14 @@ namespace Reflectis.CreatorKit.Worlds.Core
                 GameObject spawnableObjectsHolder = GameObject.Find("SpawnableObjectsHolder");
                 if(spawnableObjectsHolder == null)
                 {
+                    //Debug.LogError("Spawnable holder is null!!!!!!!!!");
                     spawnableObjectsHolder = new GameObject("SpawnableObjectsHolder");
                     spawnableObjectsHolder.AddComponent<SpawnableObjectListReference>();
                 }
 
                 SpawnableObjectListReference spawnListReference = spawnableObjectsHolder.GetComponent<SpawnableObjectListReference>();
                 int index = spawnListReference.AddSceneObjectToList(this);
-                Debug.LogError("Setting index to " + index, gameObject);
+                //Debug.LogError("Setting index to " + index, gameObject);
                 indexSpawnReference = index;
                 listToUse = 1;
 
