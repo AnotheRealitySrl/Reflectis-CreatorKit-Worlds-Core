@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.SceneManagement;
+
 #endif
 using UnityEngine;
 
@@ -68,11 +70,17 @@ namespace Reflectis.CreatorKit.Worlds.Core
         private void OnValidate()
         {
             if (Application.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode)
-            {
                 return;
-            }
 
-            if(rightHandPivot == null)
+            EditorApplication.delayCall -= OnValidateDelayed; // prevent stacking
+            EditorApplication.delayCall += OnValidateDelayed;
+        }
+
+        private void OnValidateDelayed()
+        {
+            if (this == null || gameObject == null) return;
+
+            if (rightHandPivot == null)
             {
                 GameObject rightPivotGO = new GameObject("RightHandPivot");
                 rightPivotGO.transform.parent = transform;
@@ -80,7 +88,7 @@ namespace Reflectis.CreatorKit.Worlds.Core
                 rightHandPivot = rightPivotGO.transform;
             }
 
-            if(leftHandPivot == null)
+            if (leftHandPivot == null)
             {
                 GameObject leftPivotGO = new GameObject("LeftHandPivot");
                 leftPivotGO.transform.parent = transform;
@@ -88,45 +96,60 @@ namespace Reflectis.CreatorKit.Worlds.Core
                 leftHandPivot = leftPivotGO.transform;
             }
 
+            // Check if we're in Prefab Mode (isolated editing view)
+
+            PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+
+            bool isInPrefabMode = prefabStage != null && prefabStage.IsPartOfPrefabContents(gameObject);
+            bool isActualPrefabAsset = EditorUtility.IsPersistent(gameObject)
+                                       && PrefabUtility.IsPartOfPrefabAsset(gameObject);
+
+            bool isSceneInstance = !EditorUtility.IsPersistent(gameObject)
+                                   && !PrefabUtility.IsPartOfPrefabAsset(gameObject)
+                                    && !isInPrefabMode; // <-- critical exclusion
+
+            Debug.LogError($"OnValidate called — IsPartOfPrefabAsset: {PrefabUtility.IsPartOfPrefabAsset(gameObject)}, " +
+              $"IsPersistent: {EditorUtility.IsPersistent(gameObject)}, " +
+              $"name: {gameObject.name}", gameObject);
+
             //Check whether or not I am a prefab and I am in prefab mode 
-            if ((EditorUtility.IsPersistent(this) || PrefabUtility.GetPrefabAssetType(gameObject) != PrefabAssetType.NotAPrefab) && PrefabUtility.IsPartOfPrefabAsset(gameObject))
+            if (isActualPrefabAsset || isInPrefabMode)
             {
-                //Add object to scriptable object containing the list of all the items
                 SpawnableObjectListData spawnList = LoadOrCreateData();
-                if (spawnList == null)
-                {
-                    Debug.LogError("Spawn List data not found.");
-                    return;
-                }
+                if (spawnList == null) return;
 
-                if (spawnList.GetList().Count ==0 || !spawnList.GetList().Any(obj => obj != null && AssetDatabase.GetAssetPath(obj) == AssetDatabase.GetAssetPath(this)))
-                {
-                    int index = spawnList.AddToList(this.gameObject);
-                    indexSpawnReference = index;
-                    // Clean duplicates and nulls
-                    spawnList.spawnableObjectList = spawnList.spawnableObjectList
-                        .Where(obj => obj != null)
-                        .Distinct()
-                        .ToList();
+                // Resolve the actual prefab asset, not the staging copy
+                GameObject prefabAsset = isInPrefabMode
+                    ? AssetDatabase.LoadAssetAtPath<GameObject>(
+                        PrefabStageUtility.GetCurrentPrefabStage().assetPath)
+                    : gameObject;
 
-                    EditorUtility.SetDirty(this);
-                    EditorUtility.SetDirty(spawnList);
-                    EditorApplication.delayCall += () =>
-                    {
-                        EditorUtility.SetDirty(spawnList);
-                        AssetDatabase.SaveAssets();
-                    };
+                // Dedup first
+                spawnList.spawnableObjectList = spawnList.spawnableObjectList
+                    .Where(obj => obj != null)
+                    .GroupBy(obj => AssetDatabase.GetAssetPath(obj))
+                    .Select(g => g.First())
+                    .ToList();
 
-                    
-                }
-
+                // Add the real asset reference
+                int index = spawnList.AddToList(prefabAsset);
+                indexSpawnReference = index;
                 listToUse = 0;
+
+                EditorUtility.SetDirty(this);
+                EditorUtility.SetDirty(spawnList);
+                EditorApplication.delayCall += () =>
+                {
+                    EditorUtility.SetDirty(spawnList);
+                    AssetDatabase.SaveAssets();
+                };
             }
-            else
+            else if (isSceneInstance)
             {
+                Debug.LogError("Not in prefab mode");
                 //Not in prefab mode, search for the object "SpawnableObjectsHolder" and add the item to the go.
                 GameObject spawnableObjectsHolder = GameObject.Find("SpawnableObjectsHolder");
-                if(spawnableObjectsHolder == null)
+                if (spawnableObjectsHolder == null)
                 {
                     spawnableObjectsHolder = new GameObject("SpawnableObjectsHolder");
                     spawnableObjectsHolder.AddComponent<SpawnableObjectListReference>();
@@ -142,12 +165,12 @@ namespace Reflectis.CreatorKit.Worlds.Core
                 EditorUtility.SetDirty(spawnListReference);
                 EditorApplication.delayCall += () =>
                 {
-                    if(spawnListReference!=null)
+                    if (spawnListReference != null)
                         EditorUtility.SetDirty(spawnListReference);
                     AssetDatabase.SaveAssets();
                 };
 
-                
+
             }
         }
 
