@@ -31,7 +31,7 @@ namespace Reflectis.CreatorKit.Worlds.Core
         [HideInInspector] public GameObject LeftHandReference;
         [HideInInspector] public GameObject RightHandReference;
 
-        /*[HideInInspector]*/ public bool isCopy = false; //Is it the copy? 
+        [HideInInspector] public bool isCopy = false; //Is it the copy? 
         public int indexSpawnReference = 0; //Index inside the list
         [HideInInspector] public int listToUse = 1; //Whether or not it is ther scene list or prefab list
 
@@ -52,7 +52,6 @@ namespace Reflectis.CreatorKit.Worlds.Core
         public void Awake()
         {
             //Se sono prefab non mettere a false;
-
             SceneComponentPlaceholderBase[] placeholders = GetComponentsInChildren<SceneComponentPlaceholderBase>();
             foreach(var p in placeholders)
             {
@@ -79,6 +78,16 @@ namespace Reflectis.CreatorKit.Worlds.Core
         private void OnValidateDelayed()
         {
             if (this == null || gameObject == null) return;
+
+            SceneComponentPlaceholderBase[] placeholders = GetComponentsInChildren<SceneComponentPlaceholderBase>();
+            foreach (var p in placeholders)
+            {
+                p.AutomaticSetup = false;
+            }
+            if (!isCopy)
+            {
+                AutomaticSetup = true;
+            }
 
             if (rightHandPivot == null)
             {
