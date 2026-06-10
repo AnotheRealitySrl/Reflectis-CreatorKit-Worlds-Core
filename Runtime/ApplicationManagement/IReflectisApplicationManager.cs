@@ -19,6 +19,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ApplicationManagement
 
         Task<bool> JoinExperience(CMExperience experience, bool multiplayer, int? shard = null, bool updateHistory = true, bool recoverFromDisconnection = false);
 
+        Task<GameObject> SpawnProjectAssetAsync(string objectKey, Transform parent = null);
+
         void EnableOtherAvatars(bool enable, List<GameObject> except = null);
         void EnableSpawnedObjects(bool enable, List<GameObject> except = null);
         void EnableSpawnedNetworkObjects(bool enable, List<GameObject> except = null);

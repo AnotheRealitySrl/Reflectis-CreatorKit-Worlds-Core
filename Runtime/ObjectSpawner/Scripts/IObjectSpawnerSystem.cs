@@ -20,8 +20,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
             VideoChat,
             TextBox,
             GeneralContainer,
-            AvatarDesktop,
-            AvatarVR
+            AvatarStandard,
+            AvatarXR
         }
 
         GameObject InstantiateLocalObject(GameObject gameObject, object[] data = null, SpawnPosition spawnableData = null);
