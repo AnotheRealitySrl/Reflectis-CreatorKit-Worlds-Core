@@ -1,5 +1,22 @@
 # Release notes
 
+## v8.0.0
+
+### Added
+- Added `SpawnProjectAssetAsync` signature to `IReflectisApplicationManager`.
+- Automatic setup and automatic list management for spawnable objects.
+- SFTP support, tenant environments and platform selection in the addressables/env upload windows.
+- Moved input actions into core.
+- Added dependencies on Reflectis SDK ReflectisApi and TenantConfiguration.
+
+### Changed
+- Improved addressables management with a dependency on tenant selection.
+- Renamed keys for avatar prefabs.
+
+### Fixed
+- Fixed spawnable object editor flow and addressables window first setup.
+- Fixed session participants and single-world access handling.
+
 ## v7.1.1
 
 ### Added
