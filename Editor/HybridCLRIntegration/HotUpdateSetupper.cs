@@ -17,7 +17,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         // ============================================================
         //  SETUP — da lanciare UNA VOLTA per predisporre il progetto
         // ============================================================
-        [MenuItem("Tools/HotUpdate/1. Setup (una tantum)")]
+        [MenuItem("Reflectis Worlds/Creator Kit/Core/Setup Interpreted Scripting")]
         public static void Setup()
         {
             // 1) Crea la cartella HotUpdate se non esiste
@@ -106,7 +106,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         // ============================================================
         //  COMPILA DLL — operazione ricorrente
         // ============================================================
-        [MenuItem("Tools/HotUpdate/2. Compila DLL")]
+        [MenuItem("Reflectis Worlds/Creator Kit/Core/Compile Interpreted Scripting")]
         public static void CompilaDll()
         {
             var target = EditorUserBuildSettings.activeBuildTarget;
@@ -122,6 +122,38 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 Debug.Log($"[Compila] DLL generata: {Path.GetFullPath(dllPath)}");
             else
                 Debug.LogWarning($"[Compila] Compilazione fatta, ma non trovo la DLL nel path atteso: {dllPath}. Controlla la cartella HybridCLRData/HotUpdateDlls/.");
+        }
+
+        public static async void CompilaEPubblica()
+        {
+            CompilaDll();  // prima compila
+
+            var target = EditorUserBuildSettings.activeBuildTarget;
+            string dllPath = Path.Combine($"HybridCLRData/HotUpdateDlls/{target}", $"{ASMDEF_NAME}.dll");
+
+            if (!File.Exists(dllPath))
+            {
+                Debug.LogError("[Pubblica] DLL non trovata, annullo l'upload.");
+                return;
+            }
+
+            byte[] dllBytes = File.ReadAllBytes(dllPath);
+
+            // === DA COMPLETARE COL TEAM WEB ===
+            // Qui andra la POST verso il vostro endpoint di validazione.
+            // Esempio concettuale (NON attivo):
+            //
+            // using var client = new System.Net.Http.HttpClient();
+            // var content = new System.Net.Http.ByteArrayContent(dllBytes);
+            // content.Headers.Add("Authorization", "Bearer <token>");
+            // var resp = await client.PostAsync("https://vostro-backend/upload-dll", content);
+            // if (resp.IsSuccessStatusCode) Debug.Log("[Pubblica] DLL caricata e validata.");
+            // else Debug.LogError($"[Pubblica] Rifiutata dal backend: {resp.StatusCode}");
+            // ===================================
+
+            Debug.LogWarning($"[Pubblica] Upload non ancora attivo. DLL pronta ({dllBytes.Length} bytes). " +
+                             "Collega l'endpoint del backend per attivare la pubblicazione.");
+            await System.Threading.Tasks.Task.CompletedTask;
         }
     }
 }
