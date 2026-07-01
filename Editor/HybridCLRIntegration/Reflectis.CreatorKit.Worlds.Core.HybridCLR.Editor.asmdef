@@ -14,7 +14,9 @@
         "Microsoft.Identity.Client.dll"
     ],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "HYBRIDCLR_INSTALLED"
+    ],
     "versionDefines": [
         {
             "name": "com.code-philosophy.hybridclr",
