@@ -1,0 +1,26 @@
+{
+    "name": "Reflectis.CreatorKit.Worlds.CoreHybridCLREditor",
+    "rootNamespace": "Reflectis.CreatorKit.Worlds.CoreHybridCLREditor",
+    "references": [
+        "GUID:2373f786d14518f44b0f475db77ba4de"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [
+        "Microsoft.Identity.Client.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.code-philosophy.hybridclr",
+            "expression": "",
+            "define": "HYBRIDCLR_INSTALLED"
+        }
+    ],
+    "noEngineReferences": false
+}
