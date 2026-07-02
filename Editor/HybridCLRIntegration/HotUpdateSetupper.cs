@@ -172,6 +172,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 return;
             }
 
+            if (!ScriptsCambiati())
+            {
+                Debug.Log("[Pubblica] Nessuna modifica agli script HotUpdate dall'ultima compilazione. Salto.");
+                return;   // oppure prosegui solo con l'upload della DLL esistente, vedi sotto
+            }
+
             string productGuid = PlayerSettings.productGUID.ToString();
             string asmdefGuid = AssetDatabase.AssetPathToGUID(ASMDEF_PATH);
             string GUIDCode = productGuid + asmdefGuid;
@@ -179,6 +185,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
             Debug.LogError("Codice identificativo = " + GUIDCode);
 
             CompilaDll();  // prima compila
+            SalvaHashScripts();
 
             var target = EditorUserBuildSettings.activeBuildTarget;
             string dllPath = Path.Combine($"HybridCLRData/HotUpdateDlls/{target}", $"{ASMDEF_NAME}.dll");
@@ -226,6 +233,46 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                     return true;
 
             return false;
+        }
+
+        // Calcola un hash del contenuto di tutti gli script dell'assembly HotUpdate
+        static string CalcolaHashScripts()
+        {
+            // Trova tutti i .cs nella cartella HotUpdate
+            string[] files = Directory.GetFiles(HOTUPDATE_FOLDER, "*.cs", SearchOption.AllDirectories);
+            System.Array.Sort(files); // ordine stabile, altrimenti l'hash varia a caso
+
+            using var md5 = System.Security.Cryptography.MD5.Create();
+            var sb = new System.Text.StringBuilder();
+
+            foreach (string file in files)
+            {
+                // includi il nome (cosi aggiungere/rimuovere file cambia l'hash)
+                sb.Append(file);
+                sb.Append(File.ReadAllText(file));
+            }
+
+            byte[] hashBytes = md5.ComputeHash(System.Text.Encoding.UTF8.GetBytes(sb.ToString()));
+            return System.Convert.ToBase64String(hashBytes);
+        }
+
+        const string HASH_PREF_KEY = "HotUpdate_LastScriptsHash";
+
+        // Ritorna true se qualcosa e' cambiato dall'ultima compilazione
+        static bool ScriptsCambiati()
+        {
+            string hashAttuale = CalcolaHashScripts();
+            string hashPrecedente = EditorPrefs.GetString(HASH_PREF_KEY, "");
+
+            if (hashAttuale == hashPrecedente)
+                return false;   // nulla cambiato
+
+            return true;
+        }
+
+        static void SalvaHashScripts()
+        {
+            EditorPrefs.SetString(HASH_PREF_KEY, CalcolaHashScripts());
         }
     }
 }
