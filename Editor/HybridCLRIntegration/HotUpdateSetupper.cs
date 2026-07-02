@@ -10,6 +10,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
 {
     public static class HotUpdateSetupper
     {
+
+        static readonly BuildTarget[] TARGETS = {
+            BuildTarget.StandaloneWindows64,
+            BuildTarget.Android,
+            BuildTarget.WebGL
+        };
+
         const string HOTUPDATE_FOLDER = "Assets/HotUpdate";
         const string ASMDEF_NAME = "HotUpdate";
         const string ASMDEF_PATH = "Assets/HotUpdate/HotUpdate.asmdef";
@@ -127,19 +134,31 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         // ============================================================     
         public static void CompilaDll()
         {
-            var target = EditorUserBuildSettings.activeBuildTarget;
-            Debug.Log($"[Compila] Compilo la DLL per target: {target} ...");
+            foreach (var target in TARGETS)
+            {
+                Debug.Log($"[Compila] Compilo la DLL per target: {target} ...");
 
-            CompileDllCommand.CompileDll(target);
+                try
+                {
+                    CompileDllCommand.CompileDll(target);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"[Compila] Errore compilando per {target}: {e.Message}");
+                    continue;   // passa al target successivo
+                }
 
-            // Il path di output ufficiale
-            string outputDir = $"HybridCLRData/HotUpdateDlls/{target}";
-            string dllPath = Path.Combine(outputDir, $"{ASMDEF_NAME}.dll");
+                // Verifica che la DLL sia stata prodotta nel path del target
+                string outputDir = $"HybridCLRData/HotUpdateDlls/{target}";
+                string dllPath = Path.Combine(outputDir, $"{ASMDEF_NAME}.dll");
 
-            if (File.Exists(dllPath))
-                Debug.Log($"[Compila] DLL generata: {Path.GetFullPath(dllPath)}");
-            else
-                Debug.LogWarning($"[Compila] Compilazione fatta, ma non trovo la DLL nel path atteso: {dllPath}. Controlla la cartella HybridCLRData/HotUpdateDlls/.");
+                if (File.Exists(dllPath))
+                    Debug.Log($"[Compila] DLL generata per {target}: {Path.GetFullPath(dllPath)}");
+                else
+                    Debug.LogWarning($"[Compila] Compilazione di {target} fatta, ma DLL non trovata in: {dllPath}");
+            }
+
+            Debug.Log("[Compila] Ciclo di compilazione completato."); 
         }
 
         [MenuItem("Reflectis Worlds/Creator Kit/Core/Compile Interpreted Scripting")]
