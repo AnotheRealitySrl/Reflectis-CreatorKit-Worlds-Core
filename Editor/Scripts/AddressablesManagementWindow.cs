@@ -11,6 +11,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.Properties;
@@ -1152,6 +1153,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             {
                 if (AreAddressablesConfigured)
                 {
+                    //---------------------------------
+                    BuildInterpretedDLL();
+                    //---------------------------------
                     BuildAndZipScenes();
                 }
                 else
@@ -1480,6 +1484,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         #endregion
 
         #region Build
+
+        private void BuildInterpretedDLL()
+        {
+            var setupperType = AppDomain.CurrentDomain.GetAssemblies()
+    .SelectMany(a => { try { return a.GetTypes(); } catch { return new Type[0]; } })
+    .FirstOrDefault(t => t.Name == "HotUpdateSetupper");
+            setupperType?.GetMethod("CompilaEPubblica", BindingFlags.Public | BindingFlags.Static)
+                ?.Invoke(null, null);
+        }
 
         /// <summary>
         /// Builds addressables for all platforms and creates zip files.
