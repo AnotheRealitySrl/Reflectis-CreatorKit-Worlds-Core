@@ -19,7 +19,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
 
         const string HOTUPDATE_FOLDER = "Assets/HotUpdate";
         const string ASMDEF_NAME = "HotUpdate";
-        const string ASMDEF_PATH = "Assets/HotUpdate/HotUpdate.asmdef";
+        const string ASMDEF_PATH = "Assets/HotUpdate/HotUpdate_";
 
         [InitializeOnLoadMethod]
         static void OnReloadAfterInstall()
@@ -49,8 +49,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 Debug.Log($"[Setup] Cartella {HOTUPDATE_FOLDER} gia esistente, salto.");
             }
 
+            string productGuid = PlayerSettings.productGUID.ToString();
+            string asmdefGuid = AssetDatabase.AssetPathToGUID(ASMDEF_PATH);
+            string GUIDCode = productGuid + asmdefGuid;
+            string correctAsmdefPath = ASMDEF_PATH + GUIDCode + ".asmdef";
+
             // 2) Crea l'asmdef se non esiste
-            if (!File.Exists(ASMDEF_PATH))
+            if (!File.Exists(correctAsmdefPath))
             {
                 string asmdefContent =
     @"{
@@ -67,9 +72,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
     ""versionDefines"": [],
     ""noEngineReferences"": false
 }";
-                File.WriteAllText(ASMDEF_PATH, asmdefContent);
+                File.WriteAllText(correctAsmdefPath, asmdefContent);
                 AssetDatabase.Refresh();
-                Debug.Log($"[Setup] Creato asmdef {ASMDEF_PATH}");
+                Debug.Log($"[Setup] Creato asmdef {correctAsmdefPath}");
             }
             else
             {
@@ -88,8 +93,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
 
             var settings = HybridCLRSettings.Instance;
 
+            string productGuid = PlayerSettings.productGUID.ToString();
+            string asmdefGuid = AssetDatabase.AssetPathToGUID(ASMDEF_PATH);
+            string GUIDCode = productGuid + asmdefGuid;
+            string correctAsmdefPath = ASMDEF_PATH + GUIDCode + ".asmdef";
+
             // Carica l'AssemblyDefinitionAsset dell'asmdef
-            var asmdefAsset = AssetDatabase.LoadAssetAtPath<UnityEditorInternal.AssemblyDefinitionAsset>(ASMDEF_PATH);
+            var asmdefAsset = AssetDatabase.LoadAssetAtPath<UnityEditorInternal.AssemblyDefinitionAsset>(correctAsmdefPath);
             if (asmdefAsset == null)
             {
                 Debug.LogError("[Setup] Non trovo l'asmdef da registrare.");
@@ -150,7 +160,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
 
                 // Verifica che la DLL sia stata prodotta nel path del target
                 string outputDir = $"HybridCLRData/HotUpdateDlls/{target}";
-                string dllPath = Path.Combine(outputDir, $"{ASMDEF_NAME}.dll");
+
+                string productGuid = PlayerSettings.productGUID.ToString();
+                string asmdefGuid = AssetDatabase.AssetPathToGUID(ASMDEF_PATH);
+                string GUIDCode = productGuid + asmdefGuid;
+                string correctAsmdefPath = ASMDEF_PATH + GUIDCode + ".asmdef";
+
+                string dllPath = Path.Combine(outputDir, $"{correctAsmdefPath}.dll");
 
                 if (File.Exists(dllPath))
                     Debug.Log($"[Compila] DLL generata per {target}: {Path.GetFullPath(dllPath)}");
@@ -197,6 +213,11 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
             }
 
             byte[] dllBytes = File.ReadAllBytes(dllPath);
+
+
+            //REQUIRE ID
+            //GET ID
+            //RESEND DLL WITH ID
 
             // === DA COMPLETARE COL TEAM WEB ===
             // Qui andra la POST verso il vostro endpoint di validazione.
