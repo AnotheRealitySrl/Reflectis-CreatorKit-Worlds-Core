@@ -239,16 +239,24 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         // Check di configurazione: asmdef esiste E registrato in HybridCLR
         static bool IsHotUpdateReady()
         {
+            string productGuid = PlayerSettings.productGUID.ToString();
+            string asmdefGuid = AssetDatabase.AssetPathToGUID(ASMDEF_PATH);
+            string GUIDCode = productGuid + asmdefGuid;
+            string correctAsmdefPath = ASMDEF_PATH + GUIDCode + ".asmdef";
+
             // a) l'asmdef esiste su disco?
-            if (!File.Exists(ASMDEF_PATH))
+            if (!File.Exists(correctAsmdefPath))
+            {
                 return false;
+            }
+
 
             // b) e' registrato nelle Settings di HybridCLR?
             var settings = HybridCLRSettings.Instance;
             var current = settings.hotUpdateAssemblyDefinitions;
             if (current == null) return false;
 
-            var asmdefAsset = AssetDatabase.LoadAssetAtPath<UnityEditorInternal.AssemblyDefinitionAsset>(ASMDEF_PATH);
+            var asmdefAsset = AssetDatabase.LoadAssetAtPath<UnityEditorInternal.AssemblyDefinitionAsset>(correctAsmdefPath);
             foreach (var a in current)
                 if (a == asmdefAsset)
                     return true;
