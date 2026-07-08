@@ -15,7 +15,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
     {
         private const string MenuRoot = "Reflectis Worlds/Creator Kit/Security/";
 
-        [MenuItem(MenuRoot + "Verify HotUpdate Script DLL (auto → Console)")]
+        //[MenuItem(MenuRoot + "Verify HotUpdate Script DLL (auto → Console)")]
         public static async void VerifyAuto()
         {
             string path = HotUpdateDllLocator.ResolveDefaultDllPath(out _);
@@ -31,7 +31,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 RunAndReport(path, policy);
         }
 
-        [MenuItem(MenuRoot + "Verify Hot-Update DLL…")]
+        //[MenuItem(MenuRoot + "Verify Hot-Update DLL…")]
         public static async void VerifyPickedDll()
         {
             string path = EditorUtility.OpenFilePanel(
@@ -44,7 +44,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 RunAndReport(path, policy);
         }
 
-        [MenuItem(MenuRoot + "Verify Built Hot-Update DLLs (all platforms)")]
+        //[MenuItem(MenuRoot + "Verify Built Hot-Update DLLs (all platforms)")]
         public static async void VerifyBuiltDlls()
         {
             string root = Path.Combine(

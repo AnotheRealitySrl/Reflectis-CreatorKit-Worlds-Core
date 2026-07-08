@@ -36,7 +36,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         // ============================================================
         //  SETUP � da lanciare UNA VOLTA per predisporre il progetto
         // ============================================================
-        [MenuItem("Reflectis Worlds/Creator Kit/Core/Setup Interpreted Scripting")]
+        //[MenuItem("Reflectis Worlds/Creator Kit/Core/Setup Interpreted Scripting")]
         public static void Setup()
         {
             // 1) Crea la cartella HotUpdate se non esiste
@@ -242,7 +242,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 Debug.LogError($"[HotUpdateSecurity][server] [{v.Kind}] {v.Detail}  ({v.Location})");
         }
 
-        [MenuItem("Reflectis Worlds/Creator Kit/Core/Compile Interpreted Scripting")]
+        //[MenuItem("Reflectis Worlds/Creator Kit/Core/Compile Interpreted Scripting")]
         public static async void CompilaEPubblica()
         {
             // 1) Verifica che il setup sia stato fatto (cartella + asmdef + registrazione)
