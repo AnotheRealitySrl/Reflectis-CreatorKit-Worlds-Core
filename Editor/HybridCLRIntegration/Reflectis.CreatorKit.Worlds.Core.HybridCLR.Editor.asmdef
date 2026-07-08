@@ -2,16 +2,20 @@
     "name": "Reflectis.CreatorKit.Worlds.CoreHybridCLREditor",
     "rootNamespace": "Reflectis.CreatorKit.Worlds.CoreHybridCLREditor",
     "references": [
-        "GUID:2373f786d14518f44b0f475db77ba4de"
+        "GUID:2373f786d14518f44b0f475db77ba4de",
+        "GUID:2cf13d4ec281ded458a2543b244c1a5a",
+        "GUID:fbebb77141d815e478836eb96f260865"
     ],
     "includePlatforms": [
         "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
+    "overrideReferences": true,
     "precompiledReferences": [
-        "Microsoft.Identity.Client.dll"
+        "Microsoft.Identity.Client.dll",
+        "Mono.Cecil.dll",
+        "Newtonsoft.Json.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [
