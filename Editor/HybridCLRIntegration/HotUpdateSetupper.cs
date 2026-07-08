@@ -1,5 +1,6 @@
 // File: Assets/Editor/HotUpdateAutomation.cs
 using System.IO;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
@@ -33,7 +34,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         }
 
         // ============================================================
-        //  SETUP � da lanciare UNA VOLTA per predisporre il progetto
+        //  SETUP � da lanciare UNA VOLTA per predisporre il progetto
         // ============================================================
         [MenuItem("Reflectis Worlds/Creator Kit/Core/Setup Interpreted Scripting")]
         public static void Setup()
@@ -140,7 +141,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         }
 
         // ============================================================
-        //  COMPILA DLL � operazione ricorrente
+        //  COMPILA DLL � operazione ricorrente
         // ============================================================     
         public static void CompilaDll()
         {
@@ -174,7 +175,71 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                     Debug.LogWarning($"[Compila] Compilazione di {target} fatta, ma DLL non trovata in: {dllPath}");
             }
 
-            Debug.Log("[Compila] Ciclo di compilazione completato."); 
+            Debug.Log("[Compila] Ciclo di compilazione completato.");
+        }
+
+        // ============================================================
+        //  BUILD + VERIFY — used by the Addressables build gate
+        // ============================================================
+        /// <summary>
+        /// Builds the hot-update DLL, then runs the LOCAL whitelist check and the AUTHORITATIVE
+        /// SERVER check. Returns true only if BOTH pass; otherwise logs the reason and returns
+        /// false so the caller can block the addressables build (fail-closed).
+        /// </summary>
+        public static async Task<bool> CompileVerifyAsync()
+        {
+            // 1) Build the DLL(s).
+            CompilaDll();
+
+            // 2) Resolve the freshly compiled assembly (ScriptAssemblies → has a PDB for line info).
+            string dllPath = HotUpdateDllLocator.ResolveDefaultDllPath(out _);
+            if (string.IsNullOrEmpty(dllPath) || !File.Exists(dllPath))
+            {
+                Debug.LogError("[HotUpdateSecurity] Compiled HotUpdate assembly not found after build. Build blocked.");
+                return false;
+            }
+
+            // 3) LOCAL check (download the shared policy, then verify). Block on fail.
+            HotUpdatePolicyFetcher.FetchResult fetch = await HotUpdatePolicyFetcher.FetchAsync();
+            if (!fetch.Ok)
+            {
+                Debug.LogError("[HotUpdateSecurity] Policy unavailable — build blocked (fail-closed). " + fetch.Error);
+                return false;
+            }
+
+            VerificationResult local = HotUpdateDllLocator.VerifyAndLog(dllPath, fetch.Policy);
+            if (!local.Passed)
+            {
+                Debug.LogError("[HotUpdateSecurity] LOCAL check FAILED — build blocked. See the violations above.");
+                return false;
+            }
+
+            // 4) SERVER check (authoritative). Block on rejection OR if it can't complete.
+            byte[] bytes = File.ReadAllBytes(dllPath);
+            HotUpdateServerVerifier.Result server = await HotUpdateServerVerifier.VerifyAsync(bytes, Path.GetFileName(dllPath));
+
+            if (!server.Reachable)
+            {
+                Debug.LogError("[HotUpdateSecurity] SERVER check could not complete — build blocked. " + server.Error);
+                return false;
+            }
+            if (!server.Passed)
+            {
+                LogServerViolations(server.Response);
+                Debug.LogError("[HotUpdateSecurity] SERVER check REJECTED the DLL — build blocked.");
+                return false;
+            }
+
+            Debug.Log("[HotUpdateSecurity] Local + server checks PASSED. Proceeding with the addressables build.");
+            return true;
+        }
+
+        private static void LogServerViolations(HotUpdateServerVerifier.ServerResponse resp)
+        {
+            if (resp?.Violations == null)
+                return;
+            foreach (HotUpdateServerVerifier.ServerViolation v in resp.Violations)
+                Debug.LogError($"[HotUpdateSecurity][server] [{v.Kind}] {v.Detail}  ({v.Location})");
         }
 
         [MenuItem("Reflectis Worlds/Creator Kit/Core/Compile Interpreted Scripting")]

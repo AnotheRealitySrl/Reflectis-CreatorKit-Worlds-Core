@@ -488,6 +488,18 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
             SetDeployButtonsEnabled(false);
 
+            // 0. Build + verify the interpreted DLL (local whitelist + authoritative server
+            //    check). Block the whole build & deploy if it fails.
+            if (!await BuildAndVerifyInterpretedDLLAsync())
+            {
+                LogDeployError("Interpreted script DLL failed the security checks. Build & deploy aborted (see Console).");
+                EditorUtility.DisplayDialog("Build & Deploy blocked",
+                    "The interpreted script DLL did not pass the security checks. See the Console. " +
+                    "Nothing was built or deployed.", "OK");
+                SetDeployButtonsEnabled(true);
+                return;
+            }
+
             // 1. Build
             BuildAndZipScenes();
 
@@ -650,6 +662,17 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             ClearDeployErrors();
 
             SetDeployButtonsEnabled(false);
+
+            // 0. Build + verify the interpreted DLL. Block the whole build & deploy if it fails.
+            if (!await BuildAndVerifyInterpretedDLLAsync())
+            {
+                LogDeployError("Interpreted script DLL failed the security checks. Tenant build & deploy aborted (see Console).");
+                EditorUtility.DisplayDialog("Build & Deploy blocked",
+                    "The interpreted script DLL did not pass the security checks. See the Console. " +
+                    "Nothing was built or deployed.", "OK");
+                SetDeployButtonsEnabled(true);
+                return;
+            }
 
             BuildAndZipScenes();
 
@@ -1149,13 +1172,23 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             };
             buildAddressablesButtonDataBinding.sourceToUiConverters.AddConverter((ref bool value) => AreAddressablesConfigured ? "Build Addressables" : "Fix Addressables configurations");
             buildAddressablesButton.SetBinding(nameof(buildAddressablesButton.text), buildAddressablesButtonDataBinding);
-            buildAddressablesButton.clicked += () =>
+            buildAddressablesButton.clicked += async () =>
             {
                 if (AreAddressablesConfigured)
                 {
-                    //---------------------------------
-                    BuildInterpretedDLL();
-                    //---------------------------------
+                    // Build the interpreted DLL AND verify it (local whitelist + authoritative
+                    // server check). If any check fails, the addressables build is blocked so we
+                    // never ship a DLL that would be rejected downstream.
+                    bool verified = await BuildAndVerifyInterpretedDLLAsync();
+                    if (!verified)
+                    {
+                        EditorUtility.DisplayDialog("Build blocked",
+                            "The interpreted script DLL did not pass the security checks. " +
+                            "See the Console for the offending lines. Addressables were NOT built.",
+                            "OK");
+                        return;
+                    }
+
                     BuildAndZipScenes();
                 }
                 else
@@ -1485,13 +1518,38 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         #region Build
 
-        private void BuildInterpretedDLL()
+        /// <summary>
+        /// Builds the interpreted hot-update DLL and verifies it (local whitelist + authoritative
+        /// server check). Returns true if the build may proceed. Called via reflection so this
+        /// window stays decoupled from the HYBRIDCLR_INSTALLED-gated assembly; when HybridCLR is
+        /// not installed the setupper is absent and we simply proceed (nothing to gate).
+        /// </summary>
+        private async Task<bool> BuildAndVerifyInterpretedDLLAsync()
         {
             var setupperType = AppDomain.CurrentDomain.GetAssemblies()
-    .SelectMany(a => { try { return a.GetTypes(); } catch { return new Type[0]; } })
-    .FirstOrDefault(t => t.Name == "HotUpdateSetupper");
-            setupperType?.GetMethod("CompilaEPubblica", BindingFlags.Public | BindingFlags.Static)
-                ?.Invoke(null, null);
+                .SelectMany(a => { try { return a.GetTypes(); } catch { return new Type[0]; } })
+                .FirstOrDefault(t => t.Name == "HotUpdateSetupper");
+
+            var method = setupperType?.GetMethod("CompileVerifyAsync", BindingFlags.Public | BindingFlags.Static);
+            if (method == null)
+            {
+                // HybridCLR not installed → no interpreted-scripts pipeline to gate.
+                Debug.LogWarning("[AddressablesManagement] HotUpdate verifier not found (HybridCLR not installed?). " +
+                                 "Skipping interpreted DLL build/verify.");
+                return true;
+            }
+
+            try
+            {
+                // CompileVerifyAsync returns Task<bool>, a BCL type this assembly can await directly.
+                var task = (Task<bool>)method.Invoke(null, null);
+                return await task;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AddressablesManagement] Interpreted DLL verify failed to run: {ex.Message}");
+                return false;
+            }
         }
 
         /// <summary>
