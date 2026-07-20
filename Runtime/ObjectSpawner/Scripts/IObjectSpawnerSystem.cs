@@ -22,6 +22,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
             GeneralContainer,
             AvatarStandard,
             AvatarXR,
+            ChatBot,
             Quiz
         }
 
