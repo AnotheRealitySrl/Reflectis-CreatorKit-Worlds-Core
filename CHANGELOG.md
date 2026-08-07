@@ -1,5 +1,10 @@
 # Release notes
 
+## v8.1.0
+
+### Added
+- Added `BlockedByOtherUser` (64) to `IInteractable.EBlockedState`, for collaborative tools that need to signal "another user is currently in here" without borrowing a flag that already belongs to another feature. The quiz used to reuse `BlockedByLockObject` for this, which meant its own recompute erased the lock an operator had set from the contextual menu. Purely additive: every `allowedBlockedStates` mask in the project is a negative "allow all except", so the new bit is permitted by default everywhere and only the options that must react to it need updating.
+
 ## v8.0.0
 
 ### Added
