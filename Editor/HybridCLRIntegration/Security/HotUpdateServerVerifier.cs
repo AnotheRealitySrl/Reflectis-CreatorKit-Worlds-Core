@@ -66,7 +66,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
             {
                 using HttpClient client = new() { Timeout = TimeSpan.FromSeconds(30) };
 
-                using MultipartFormDataContent form = new();
+                // The form is owned by the request: HttpRequestMessage.Dispose disposes its
+                // Content. Wrapping it in its own 'using' as well disposes MultipartContent twice,
+                // which throws a NullReferenceException on Mono.
+                MultipartFormDataContent form = new();
                 ByteArrayContent file = new(dll);
                 file.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                 form.Add(file, "dll", string.IsNullOrEmpty(fileName) ? "HotUpdate.dll" : fileName);
