@@ -21,7 +21,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
             TextBox,
             GeneralContainer,
             AvatarStandard,
-            AvatarXR
+            AvatarXR,
+            ChatBot,
+            Quiz,
+            Skybox
         }
 
         GameObject InstantiateLocalObject(GameObject gameObject, object[] data = null, SpawnPosition spawnableData = null);

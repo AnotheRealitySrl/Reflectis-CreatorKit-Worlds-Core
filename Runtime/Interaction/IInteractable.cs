@@ -32,6 +32,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Interaction
             BlockedByPermissions = 8, //interactions blocked by a missing permission
             BlockedByLockObject = 16, //interactions blocked because someone has locked the object
             BlockedByEdit = 32, //interactions blocked because the object is in edit mode
+            BlockedByOtherUser = 64, //another user is currently using the object --> collaborative tools only
         }
 
         GameObject GameObjectRef { get; }
