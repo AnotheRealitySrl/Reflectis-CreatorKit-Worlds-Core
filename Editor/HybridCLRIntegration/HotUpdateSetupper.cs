@@ -605,6 +605,14 @@ $@"{{
         /// </summary>
         public static bool BundleIsCurrent { get; private set; }
 
+        /// <summary>
+        /// True when the last <see cref="CompileVerifyAsync"/> stopped because it renamed the
+        /// hot-update assembly and Unity is recompiling it — not because anything was rejected.
+        /// The caller has to tell the two apart: one asks the creator to press build again, the
+        /// other says their code was refused.
+        /// </summary>
+        public static bool AwaitingRecompile { get; private set; }
+
         /// <summary>Fingerprint of what was just compiled, persisted once the publish succeeds.</summary>
         static string pendingFingerprint;
 
@@ -692,6 +700,7 @@ $@"{{
             }
 
             BundleIsCurrent = false;
+            AwaitingRecompile = false;
 
             // 3) The assembly name carries the fingerprint of the source, so an edit since the last
             //    publish means the asmdef is now named after code that no longer exists. Renaming it
@@ -721,6 +730,8 @@ $@"{{
                 // for the one that is (replayed by ReplayPendingNotice after the reload), and shown
                 // as a dialog when someone is actually watching — the build just stopped and the
                 // reason must not depend on which Console toggles this project happens to have.
+                AwaitingRecompile = true;
+
                 Debug.LogWarning(notice);
                 SessionState.SetString(PENDING_NOTICE_KEY, notice);
 

@@ -75,12 +75,22 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
             //    so including it would make the input depend on the output. Everything else in
             //    there does change the compilation: references, defineConstraints,
             //    versionDefines, allowUnsafeCode, the platform lists.
+            //
+            //    The one at the folder root is held to the same rule twice over: its FILE NAME is
+            //    HotUpdate_<productGUID>_<this digest>.asmdef, so feeding the path in would make
+            //    the fingerprint a function of itself — rename, recompute, rename again, and the
+            //    build gate asks for another build forever. Its identity is therefore fixed to a
+            //    constant and only its content counts. Nested asmdefs are not renamed by the
+            //    setup, so their path stays part of the input.
             foreach (string asmdef in Directory.GetFiles(hotUpdateFolder, "*.asmdef", SearchOption.AllDirectories)
                                                .Select(Normalize)
                                                .OrderBy(x => x, StringComparer.Ordinal))
             {
                 string relative = asmdef.Substring(hotUpdateFolder.Length).TrimStart('/', '\\').Replace('\\', '/');
-                canonical.Append(relative).Append(Separator).Append(AsmdefDigest(asmdef)).Append('\n');
+                bool isRootAsmdef = relative.IndexOf('/') < 0;
+
+                canonical.Append(isRootAsmdef ? "<root>" : relative)
+                         .Append(Separator).Append(AsmdefDigest(asmdef)).Append('\n');
             }
 
             // 3) The compiler and what it is told. A Unity upgrade changes the Roslyn behind the

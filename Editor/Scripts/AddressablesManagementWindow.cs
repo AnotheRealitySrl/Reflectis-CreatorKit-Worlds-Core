@@ -528,6 +528,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             //    check). Block the whole build & deploy if it fails.
             if (!await BuildAndVerifyInterpretedDLLAsync())
             {
+                if (InterpretedDllAwaitingRecompile())
+                {
+                    SetDeployButtonsEnabled(true);
+                    return;
+                }
+
                 LogDeployError("Interpreted script DLL failed the security checks. Build & deploy aborted (see Console).");
                 EditorUtility.DisplayDialog("Build & Deploy blocked",
                     "The interpreted script DLL did not pass the security checks. See the Console. " +
@@ -716,6 +722,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             // 0. Build + verify the interpreted DLL. Block the whole build & deploy if it fails.
             if (!await BuildAndVerifyInterpretedDLLAsync())
             {
+                if (InterpretedDllAwaitingRecompile())
+                {
+                    SetDeployButtonsEnabled(true);
+                    return;
+                }
+
                 LogDeployError("Interpreted script DLL failed the security checks. Tenant build & deploy aborted (see Console).");
                 EditorUtility.DisplayDialog("Build & Deploy blocked",
                     "The interpreted script DLL did not pass the security checks. See the Console. " +
@@ -1761,6 +1773,19 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         /// window stays decoupled from the HYBRIDCLR_INSTALLED-gated assembly; when HybridCLR is
         /// not installed the setupper is absent and we simply proceed (nothing to gate).
         /// </summary>
+        /// <summary>
+        /// Whether the verify step stopped to let Unity recompile a renamed assembly, rather than
+        /// because anything was refused. It already told the creator what to do — through a dialog
+        /// that survives the reload the rename triggers — so the caller must not follow it with a
+        /// second, wrong explanation.
+        /// </summary>
+        private bool InterpretedDllAwaitingRecompile()
+        {
+            return FindHotUpdateSetupperType()?
+                .GetProperty("AwaitingRecompile", BindingFlags.Public | BindingFlags.Static)?
+                .GetValue(null) as bool? ?? false;
+        }
+
         private async Task<bool> BuildAndVerifyInterpretedDLLAsync()
         {
             Type setupperType = FindHotUpdateSetupperType();
