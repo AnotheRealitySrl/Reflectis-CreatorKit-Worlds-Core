@@ -29,6 +29,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         public struct FetchResult
         {
             public HotUpdatePolicy Policy;
+
+            /// <summary>
+            /// The policy exactly as it arrived. Callers that need to notice the whitelist
+            /// changing hash this, not the deserialized object: two runs of the deserializer
+            /// give equal objects with no cheap way to compare them.
+            /// </summary>
+            public string Json;
+
             public SourceKind Source;
             public string Error;
 
@@ -63,7 +71,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                         if (policy != null)
                         {
                             EditorPrefs.SetString(CacheKey, json);
-                            return new FetchResult { Policy = policy, Source = SourceKind.Fresh };
+                            return new FetchResult { Policy = policy, Json = json, Source = SourceKind.Fresh };
                         }
                     }
                     else
@@ -85,7 +93,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 {
                     HotUpdatePolicy policy = JsonConvert.DeserializeObject<HotUpdatePolicy>(cached);
                     if (policy != null)
-                        return new FetchResult { Policy = policy, Source = SourceKind.Cached };
+                        return new FetchResult { Policy = policy, Json = cached, Source = SourceKind.Cached };
                 }
                 catch { /* corrupt cache */ }
             }

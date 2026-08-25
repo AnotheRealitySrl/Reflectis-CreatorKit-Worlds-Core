@@ -834,6 +834,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         /// HYBRIDCLR_INSTALLED-gated assembly. No HybridCLR installed means no interpreted
         /// scripts to publish, which is not an error.
         /// </summary>
+        /// <summary>The setupper lives in the HYBRIDCLR_INSTALLED-gated assembly this window does
+        /// not reference, so it is reached by reflection like the verifier is.</summary>
+        private static Type FindHotUpdateSetupperType()
+            => AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => { try { return a.GetTypes(); } catch { return new Type[0]; } })
+                .FirstOrDefault(t => t.Name == "HotUpdateSetupper");
+
         private async Task PublishEnvironmentDllAsync(string applicationApiUrl, int worldId,
                                                       List<string> scenes, string uploadLink,
                                                       bool useFtp, FtpUploadConfig ftpConfig, string progressPrefix)
@@ -845,37 +852,62 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             if (bundleType == null)
                 return;
 
+            Type setupperType = FindHotUpdateSetupperType();
+
             string assemblyName = bundleType.GetProperty("AssemblyName", BindingFlags.Public | BindingFlags.Static)?
                 .GetValue(null) as string;
-            string zipPath = bundleType.GetMethod("Build", BindingFlags.Public | BindingFlags.Static)?
-                .Invoke(null, null) as string;
 
-            if (string.IsNullOrEmpty(assemblyName) || string.IsNullOrEmpty(zipPath))
+            if (string.IsNullOrEmpty(assemblyName))
             {
-                LogDeployError("Interpreted assembly bundle could not be built. Scenes are published without their scripts.");
+                LogDeployError("Interpreted assembly name unavailable. Scenes are published without their scripts.");
                 return;
             }
 
-            EditorUtility.DisplayProgressBar(progressPrefix, "Uploading interpreted assembly...", 1f);
+            // The verify step decided whether anything changed. When it did not, the bundle on the
+            // platform already matches this project, so building, uploading and importing it again
+            // would produce the same row from different bytes — the compiler restamps the
+            // assemblies on every run, so "identical" is never identical byte for byte.
+            bool alreadyCurrent = setupperType?
+                .GetProperty("BundleIsCurrent", BindingFlags.Public | BindingFlags.Static)?
+                .GetValue(null) as bool? ?? false;
 
-            bool uploaded = useFtp
-                ? await UploadZipViaFtp(zipPath, ftpConfig)
-                : await UploadZip(zipPath, uploadLink);
-
-            if (!uploaded)
+            if (!alreadyCurrent)
             {
-                LogDeployError($"Upload failed for \"{Path.GetFileName(zipPath)}\". Scenes are published without their scripts.");
-                return;
+                string zipPath = bundleType.GetMethod("Build", BindingFlags.Public | BindingFlags.Static)?
+                    .Invoke(null, null) as string;
+
+                if (string.IsNullOrEmpty(zipPath))
+                {
+                    LogDeployError("Interpreted assembly bundle could not be built. Scenes are published without their scripts.");
+                    return;
+                }
+
+                EditorUtility.DisplayProgressBar(progressPrefix, "Uploading interpreted assembly...", 1f);
+
+                bool uploaded = useFtp
+                    ? await UploadZipViaFtp(zipPath, ftpConfig)
+                    : await UploadZip(zipPath, uploadLink);
+
+                if (!uploaded)
+                {
+                    LogDeployError($"Upload failed for \"{Path.GetFileName(zipPath)}\". Scenes are published without their scripts.");
+                    return;
+                }
+
+                if (!await ImportEnvironmentDll(applicationApiUrl, worldId, Path.GetFileName(zipPath)))
+                {
+                    LogDeployError("The platform rejected the interpreted assembly. Scenes are published without their scripts.");
+                    return;
+                }
+
+                // Only now: a marker written before the import would remember a failed publish as
+                // done, and the next build would skip it.
+                setupperType?.GetMethod("MarkBundlePublished", BindingFlags.Public | BindingFlags.Static)?
+                    .Invoke(null, null);
             }
 
-            if (!await ImportEnvironmentDll(applicationApiUrl, worldId, Path.GetFileName(zipPath)))
-            {
-                LogDeployError("The platform rejected the interpreted assembly. Scenes are published without their scripts.");
-                return;
-            }
-
-            // Link only after the import succeeded: pointing a catalog at an assembly the
-            // backend does not have would publish a world that cannot resolve its scripts.
+            // Always, published or skipped: a scene added against unchanged scripts still needs to
+            // be pointed at the assembly.
             foreach (string scene in scenes)
             {
                 if (!await LinkEnvironmentDll(applicationApiUrl, worldId, scene, assemblyName))
@@ -1731,9 +1763,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         /// </summary>
         private async Task<bool> BuildAndVerifyInterpretedDLLAsync()
         {
-            var setupperType = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => { try { return a.GetTypes(); } catch { return new Type[0]; } })
-                .FirstOrDefault(t => t.Name == "HotUpdateSetupper");
+            Type setupperType = FindHotUpdateSetupperType();
 
             var method = setupperType?.GetMethod("CompileVerifyAsync", BindingFlags.Public | BindingFlags.Static);
             if (method == null)

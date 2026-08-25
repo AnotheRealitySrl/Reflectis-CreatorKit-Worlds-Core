@@ -563,6 +563,61 @@ $@"{{
             Debug.Log("[Compile] Compilation cycle completed.");
         }
 
+
+        // ============================================================
+        //  PUBLISH FINGERPRINT — skip work that would change nothing
+        // ============================================================
+        // Keyed by project GUID because EditorPrefs is global to the machine: a bare key would
+        // have two Creator Kit projects reading each other's marker.
+        const string FINGERPRINT_KEY_PREFIX = "Reflectis_HotUpdate_PublishFingerprint_";
+
+        static string FingerprintKey => FINGERPRINT_KEY_PREFIX + PlayerSettings.productGUID;
+
+        /// <summary>
+        /// True when the last <see cref="CompileVerifyAsync"/> found the published bundle already
+        /// current, so the caller can skip building, uploading and importing it. Meaningful only
+        /// within the run that set it — this is the verdict of that check, not stored state.
+        /// </summary>
+        public static bool BundleIsCurrent { get; private set; }
+
+        /// <summary>Fingerprint of what was just compiled, persisted once the publish succeeds.</summary>
+        static string pendingFingerprint;
+
+        /// <summary>
+        /// Records that the bundle now on the platform matches what is in this project. Called by
+        /// the publisher after the import succeeds — never before, or a failed publish would be
+        /// remembered as done and the next build would skip it.
+        /// </summary>
+        public static void MarkBundlePublished()
+        {
+            if (string.IsNullOrEmpty(pendingFingerprint))
+                return;
+
+            EditorPrefs.SetString(FingerprintKey, pendingFingerprint);
+            pendingFingerprint = null;
+        }
+
+        /// <summary>
+        /// What a publish would produce, plus the rules it must satisfy. Two inputs only:
+        ///
+        ///   * the assembly name, which already digests the source — the scripts, the assembly
+        ///     definition minus its own name field, the Unity version, the per-target defines and
+        ///     the resolved package set (see <see cref="HotUpdateFingerprint"/>). Re-scanning the
+        ///     project here would be a second implementation of the same thing, free to drift from
+        ///     the one the name is built from;
+        ///   * the whitelist, so a policy that tightens forces a re-verify instead of leaving
+        ///     already-published code accepted under the old rules until someone edits a script.
+        ///
+        /// The policy stays OUT of the assembly name for the same reason it belongs here: it
+        /// decides whether the code is acceptable, not what the code compiles to. Folding it into
+        /// the name would mint a new identity for bytes that did not change, and the backend would
+        /// store a second copy of an assembly it already has.
+        /// </summary>
+        static string ComputePublishFingerprint(string assemblyName, string policyJson)
+        {
+            return HotUpdateDllLocator.Sha256Hex(System.Text.Encoding.UTF8.GetBytes(
+                (assemblyName ?? string.Empty) + "\n" + (policyJson ?? string.Empty)));
+        }
         // ============================================================
         //  BUILD + VERIFY — used by the Addressables build gate
         // ============================================================
@@ -583,13 +638,45 @@ $@"{{
                 return false;
             }
 
-            // 0b) The assembly name carries the fingerprint of the source, so an edit since the
-            //     last publish means the asmdef is now named after code that no longer exists.
-            //     Renaming it is a script recompilation and a domain reload, which would tear
-            //     down this task mid-await: so rename, stop, and let the creator press build
-            //     again once the editor has settled. One extra click, and only when the code
-            //     actually changed.
+            // 1) The whitelist comes first: it is needed to verify, and it takes part in the
+            //    publish marker below, so a policy that changed has to be in hand before deciding
+            //    whether there is anything to do.
+            HotUpdatePolicyFetcher.FetchResult fetch = await HotUpdatePolicyFetcher.FetchAsync();
+            if (!fetch.Ok)
+            {
+                Debug.LogError("[HotUpdateSecurity] Policy unavailable — build blocked (fail-closed). " + fetch.Error);
+                return false;
+            }
+
+            // 2) Nothing to rebuild? Then nothing to verify or republish either. The scenes still
+            //    get linked to the assembly afterwards — a new scene against unchanged scripts is
+            //    exactly the case that must not be skipped.
+            //
+            //    Read once and carried through the steps below: the property rescans the source on
+            //    every access, and this run must not straddle two identities.
             string expected = HotUpdateAssemblyName;
+            string fingerprint = ComputePublishFingerprint(expected, fetch.Json);
+
+            if (fingerprint == EditorPrefs.GetString(FingerprintKey, string.Empty))
+            {
+                BundleIsCurrent = true;
+                Debug.Log($"[HotUpdate] '{expected}' is unchanged since the last publish " +
+                          "(scripts, assembly definition, build inputs and whitelist all match). Skipping " +
+                          "compile, verification and upload; the scenes are still linked to it.");
+                return true;
+            }
+
+            BundleIsCurrent = false;
+
+            // 3) The assembly name carries the fingerprint of the source, so an edit since the last
+            //    publish means the asmdef is now named after code that no longer exists. Renaming it
+            //    is a script recompilation and a domain reload, which would tear down this task
+            //    mid-await: so rename, stop, and let the creator press build again once the editor
+            //    has settled. One extra click, and only when the code actually changed.
+            //
+            //    Below the marker check on purpose: a marker that matches was written by a publish
+            //    on this machine, which left the asmdef named after that same source — there is
+            //    nothing to rename on that path.
             string declared = ReadDeclaredAssemblyName(ExistingAsmdefPath);
 
             if (declared != expected)
@@ -607,7 +694,7 @@ $@"{{
                 return false;
             }
 
-            // 1) Build the DLL(s) — a no-op when they already exist under this name, which is
+            // 4) Build the DLL(s) — a no-op when they already exist under this name, which is
             //    exactly the case where the source has not moved.
             CompileDll(expected);
 
@@ -622,7 +709,7 @@ $@"{{
                 return false;
             }
 
-            // 2) Resolve the freshly compiled assembly (ScriptAssemblies → has a PDB for line info).
+            // 5) Resolve the freshly compiled assembly (ScriptAssemblies → has a PDB for line info).
             string dllPath = HotUpdateDllLocator.ResolveDefaultDllPath(out _);
             if (string.IsNullOrEmpty(dllPath) || !File.Exists(dllPath))
             {
@@ -630,14 +717,7 @@ $@"{{
                 return false;
             }
 
-            // 3) LOCAL check (download the shared policy, then verify). Block on fail.
-            HotUpdatePolicyFetcher.FetchResult fetch = await HotUpdatePolicyFetcher.FetchAsync();
-            if (!fetch.Ok)
-            {
-                Debug.LogError("[HotUpdateSecurity] Policy unavailable — build blocked (fail-closed). " + fetch.Error);
-                return false;
-            }
-
+            // 6) LOCAL check against the policy fetched above. Block on fail.
             VerificationResult local = HotUpdateDllLocator.VerifyAndLog(dllPath, fetch.Policy);
             if (!local.Passed)
             {
@@ -645,7 +725,7 @@ $@"{{
                 return false;
             }
 
-            // 4) SERVER check (authoritative). Block on rejection OR if it can't complete.
+            // 7) SERVER check (authoritative). Block on rejection OR if it can't complete.
             byte[] bytes = File.ReadAllBytes(dllPath);
             HotUpdateServerVerifier.Result server = await HotUpdateServerVerifier.VerifyAsync(bytes, Path.GetFileName(dllPath));
 
@@ -660,6 +740,9 @@ $@"{{
                 Debug.LogError("[HotUpdateSecurity] SERVER check REJECTED the DLL — build blocked.");
                 return false;
             }
+
+            // Held, not stored: the marker is written only once the publish itself succeeds.
+            pendingFingerprint = fingerprint;
 
             Debug.Log("[HotUpdateSecurity] Local + server checks PASSED. Proceeding with the addressables build.");
             return true;
@@ -707,72 +790,5 @@ $@"{{
             foreach (HotUpdateServerVerifier.ServerViolation v in resp.Violations)
                 Debug.LogError($"[HotUpdateSecurity][server] [{v.Kind}] {v.Detail}  ({v.Location})");
         }
-
-        // ============================================================
-        //  LEGACY publish stub — superseded by the Addressables build gate above.
-        //  Kept until the team confirms it can go; the upload was never wired.
-        // ============================================================
-        //[MenuItem("Reflectis Worlds/Creator Kit/Core/Compile Interpreted Scripting")]
-        public static async void CompileAndPublish()
-        {
-            string setupIssue = GetSetupIssue();
-            if (setupIssue != null)
-            {
-                Debug.LogWarning($"[Publish] Interpreted scripting is not set up: {setupIssue} Aborted.");
-                return;
-            }
-
-            if (!ScriptsChanged())
-            {
-                Debug.Log("[Publish] No change to the HotUpdate scripts since the last compilation. Skipping.");
-                return;
-            }
-
-            string assemblyName = HotUpdateAssemblyName;
-
-            CompileDll(assemblyName);
-            SaveScriptsHash();
-
-            BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
-            string dllPath = TargetDllPath(target, assemblyName);
-
-            if (!File.Exists(dllPath))
-            {
-                Debug.LogError("[Publish] DLL not found, aborting the upload.");
-                return;
-            }
-
-            byte[] dllBytes = File.ReadAllBytes(dllPath);
-
-            Debug.LogWarning($"[Publish] Upload not wired yet. DLL ready ({dllBytes.Length} bytes). " +
-                             "Connect the backend endpoint to enable publishing.");
-            await Task.CompletedTask;
-        }
-
-        const string HASH_PREF_KEY = "HotUpdate_LastScriptsHash";
-
-        /// <summary>Hash of every script in the hot-update folder, name included so that adding or
-        /// removing a file changes the result.</summary>
-        static string ComputeScriptsHash()
-        {
-            string[] files = Directory.GetFiles(HOTUPDATE_FOLDER, "*.cs", SearchOption.AllDirectories);
-            System.Array.Sort(files); // stable order, otherwise the hash varies at random
-
-            using System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
-            System.Text.StringBuilder sb = new();
-
-            foreach (string file in files)
-            {
-                sb.Append(file);
-                sb.Append(File.ReadAllText(file));
-            }
-
-            byte[] hashBytes = md5.ComputeHash(System.Text.Encoding.UTF8.GetBytes(sb.ToString()));
-            return System.Convert.ToBase64String(hashBytes);
-        }
-
-        static bool ScriptsChanged() => ComputeScriptsHash() != EditorPrefs.GetString(HASH_PREF_KEY, "");
-
-        static void SaveScriptsHash() => EditorPrefs.SetString(HASH_PREF_KEY, ComputeScriptsHash());
     }
 }
