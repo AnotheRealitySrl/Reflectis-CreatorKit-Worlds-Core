@@ -19,10 +19,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
 {
     public static class HotUpdateSetupper
     {
-        // Every target the platform supports. The set is not optional: the backend
-        // rejects an environment DLL bundle that misses one, because a world that
-        // silently loses its scripted behaviour on a single platform is worse than a
-        // publish that fails loudly.
+        /// <summary>
+        /// Every target a bundle must carry. The backend rejects an import that misses one, so
+        /// this list and its RequiredPlatforms are one contract in two places: iOS is here
+        /// because a world that loses its scripted behaviour on iPad only is worse than a
+        /// publish that fails while the creator is watching.
+        /// </summary>
         static readonly BuildTarget[] TARGETS = {
             BuildTarget.StandaloneWindows64,
             BuildTarget.Android,
@@ -50,14 +52,61 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         public const string PENDING_SETUP_KEY = "PENDING_HYBRIDCLR_SETUP";
 
         /// <summary>
-        /// Assembly name of this project's hot-update code. It carries the project GUID so that
-        /// two worlds authored in different projects never ship assemblies with the same name:
-        /// the player resolves a scene's MonoScripts by assembly name, so a duplicate would make
-        /// the world loaded second silently bind to the types of the first.
+        /// Prefix every assembly this project publishes shares: the project GUID keeps two
+        /// different projects from ever shipping assemblies with the same name. The player
+        /// resolves a scene's MonoScripts by assembly name, so a duplicate would make the world
+        /// loaded second silently bind to the types of the first.
         /// </summary>
-        public static string HotUpdateAssemblyName => ASMDEF_PREFIX + PlayerSettings.productGUID;
+        public static string ProjectAssemblyPrefix => ASMDEF_PREFIX + PlayerSettings.productGUID + "_";
 
-        /// <summary>Asset path of the asmdef that produces <see cref="HotUpdateAssemblyName"/>.</summary>
+        /// <summary>
+        /// Assembly name of this project's hot-update code AS IT STANDS: prefix plus a digest of
+        /// the source it would compile from. The name therefore changes when the code changes,
+        /// which is the whole mechanism —
+        ///
+        ///   * the backend keys its record on the name, so republishing unchanged code is
+        ///     recognised and stored once instead of overwriting anything;
+        ///   * two worlds can carry two versions of this project and one player can load both,
+        ///     which is impossible when two sets of bytes share a name and none can be unloaded;
+        ///   * and the DLLs already on disk under this name are, by definition, current.
+        ///
+        /// Falls back to the prefix alone when the fingerprint cannot be computed (no hot-update
+        /// folder yet): that shape is refused by <see cref="GetSetupIssue"/> rather than
+        /// published.
+        /// </summary>
+        public static string HotUpdateAssemblyName
+        {
+            get
+            {
+                string fingerprint = HotUpdateFingerprint.Compute(HOTUPDATE_FOLDER, TARGETS);
+
+                return string.IsNullOrEmpty(fingerprint)
+                    ? ProjectAssemblyPrefix
+                    : ProjectAssemblyPrefix + fingerprint;
+            }
+        }
+
+        /// <summary>
+        /// Whether a declared assembly name is one this project produces — prefix plus an 8-digit
+        /// hex fingerprint. Used where the question is "is this ours" rather than "is this
+        /// current": the fingerprint of a name written before the last edit is legitimately
+        /// stale, and staleness is not a setup problem, it is a rebuild.
+        /// </summary>
+        public static bool LooksLikeProjectAssembly(string declared)
+        {
+            if (string.IsNullOrEmpty(declared) || !declared.StartsWith(ProjectAssemblyPrefix, System.StringComparison.Ordinal))
+                return false;
+
+            string suffix = declared.Substring(ProjectAssemblyPrefix.Length);
+
+            return suffix.Length == 8 && suffix.All(c => (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f'));
+        }
+
+        /// <summary>
+        /// Asset path the asmdef SHOULD have: the one that produces
+        /// <see cref="HotUpdateAssemblyName"/>. Since that name tracks the source, this path moves
+        /// with every edit — use it to create or rename towards, never to check what exists.
+        /// </summary>
         public static string HotUpdateAsmdefPath => $"{HOTUPDATE_FOLDER}/{HotUpdateAssemblyName}.asmdef";
 
         /// <summary>
@@ -66,6 +115,26 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         /// the same segment, so both sides speak one vocabulary.
         /// </summary>
         public static string[] TargetNames => TARGETS.Select(t => t.ToString()).ToArray();
+
+        /// <summary>
+        /// Asset path of the asmdef that is actually on disk at the root of the hot-update folder,
+        /// or null when there is none. This is what "is the project set up" has to be asked about:
+        /// after an edit the file is still there, correctly, under the name of the previous
+        /// fingerprint — looking for <see cref="HotUpdateAsmdefPath"/> would report it missing.
+        /// </summary>
+        public static string ExistingAsmdefPath
+        {
+            get
+            {
+                if (!Directory.Exists(HOTUPDATE_FOLDER))
+                    return null;
+
+                return Directory.GetFiles(HOTUPDATE_FOLDER, "*.asmdef", SearchOption.TopDirectoryOnly)
+                    .Select(p => p.Replace('\\', '/'))
+                    .OrderBy(p => p, System.StringComparer.Ordinal)
+                    .FirstOrDefault();
+            }
+        }
 
         [InitializeOnLoadMethod]
         static void OnReloadAfterInstall()
@@ -95,11 +164,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 Debug.Log($"[Setup] Created folder {HOTUPDATE_FOLDER}");
             }
 
-            if (!EnsureAsmdef())
+            // Read once and carried: the name digests the source, so re-reading it between the
+            // steps below would let a file saved mid-setup split them across two identities.
+            string assemblyName = HotUpdateAssemblyName;
+
+            if (!EnsureAsmdef(assemblyName))
                 return;
 
             WarnAboutNestedAsmdefs();
-            RegisterHotUpdateAssembly();
+            RegisterHotUpdateAssembly(assemblyName);
 
             // Report on what the build gate will actually check, not on the steps we just ran.
             string issue = GetSetupIssue();
@@ -110,7 +183,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
             }
 
             Debug.Log($"[Setup] Done. Write your scripts in {HOTUPDATE_FOLDER}; " +
-                      $"they compile into '{HotUpdateAssemblyName}'.");
+                      $"they compile into '{assemblyName}'.");
         }
 
         /// <summary>
@@ -120,7 +193,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         /// in place rather than replaced, so its GUID — and therefore its HybridCLR registration
         /// and any reference the creator added — survives. Returns false when it cannot proceed.
         /// </summary>
-        static bool EnsureAsmdef()
+        /// <param name="assemblyName">
+        /// The name to converge on, read once by the caller. Passed rather than re-read: the
+        /// property rescans the source on every access, and this method uses the name four times
+        /// — as a file name, in the rename, in the comparison and in the "name" field — so a file
+        /// saved halfway through could leave the asmdef called one thing and declaring another.
+        /// </param>
+        static bool EnsureAsmdef(string assemblyName)
         {
             // Only the folder root: an asmdef in a subfolder is a separate assembly the creator
             // owns, not something this setup should rename.
@@ -136,11 +215,11 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 return false;
             }
 
-            string asmdefPath = HotUpdateAsmdefPath;
+            string asmdefPath = $"{HOTUPDATE_FOLDER}/{assemblyName}.asmdef";
 
             if (existing.Length == 0)
             {
-                File.WriteAllText(asmdefPath, BuildAsmdefContent());
+                File.WriteAllText(asmdefPath, BuildAsmdefContent(assemblyName));
                 AssetDatabase.Refresh();
                 Debug.Log($"[Setup] Created asmdef {asmdefPath}");
                 return true;
@@ -149,22 +228,22 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
             // Rename the file first, so the "name" field is aligned on the final path.
             if (existing[0] != asmdefPath)
             {
-                string error = AssetDatabase.RenameAsset(existing[0], HotUpdateAssemblyName);
+                string error = AssetDatabase.RenameAsset(existing[0], assemblyName);
                 if (!string.IsNullOrEmpty(error))
                 {
-                    Debug.LogError($"[Setup] Could not rename {existing[0]} to {HotUpdateAssemblyName}: {error}");
+                    Debug.LogError($"[Setup] Could not rename {existing[0]} to {assemblyName}: {error}");
                     return false;
                 }
                 Debug.Log($"[Setup] Renamed {Path.GetFileName(existing[0])} → {Path.GetFileName(asmdefPath)}");
             }
 
-            AlignDeclaredAssemblyName(asmdefPath);
+            AlignDeclaredAssemblyName(asmdefPath, assemblyName);
             return true;
         }
 
-        static string BuildAsmdefContent() =>
+        static string BuildAsmdefContent(string assemblyName) =>
 $@"{{
-    ""name"": ""{HotUpdateAssemblyName}"",
+    ""name"": ""{assemblyName}"",
     ""rootNamespace"": """",
     ""references"": [],
     ""includePlatforms"": [],
@@ -184,25 +263,25 @@ $@"{{
         /// Unity compiles the assembly as, so a stale "HotUpdate" there keeps shipping an assembly
         /// that collides with the one of every other project.
         /// </summary>
-        static void AlignDeclaredAssemblyName(string asmdefPath)
+        static void AlignDeclaredAssemblyName(string asmdefPath, string assemblyName)
         {
             try
             {
                 JObject asmdef = JObject.Parse(File.ReadAllText(asmdefPath));
                 string declared = (string)asmdef["name"];
 
-                if (declared == HotUpdateAssemblyName)
+                if (declared == assemblyName)
                 {
-                    Debug.Log($"[Setup] asmdef already declares '{HotUpdateAssemblyName}', skipping.");
+                    Debug.Log($"[Setup] asmdef already declares '{assemblyName}', skipping.");
                     return;
                 }
 
-                asmdef["name"] = HotUpdateAssemblyName;
+                asmdef["name"] = assemblyName;
                 File.WriteAllText(asmdefPath, asmdef.ToString(Formatting.Indented));
                 AssetDatabase.ImportAsset(asmdefPath, ImportAssetOptions.ForceUpdate);
 
                 Debug.Log($"[Setup] {Path.GetFileName(asmdefPath)}: assembly name " +
-                          $"'{declared}' → '{HotUpdateAssemblyName}'.");
+                          $"'{declared}' → '{assemblyName}'.");
             }
             catch (System.Exception e)
             {
@@ -220,7 +299,7 @@ $@"{{
             foreach (string nested in Directory.GetFiles(HOTUPDATE_FOLDER, "*.asmdef", SearchOption.AllDirectories))
             {
                 string normalized = nested.Replace('\\', '/');
-                if (normalized == HotUpdateAsmdefPath)
+                if (normalized == ExistingAsmdefPath)
                     continue;
 
                 Debug.LogWarning($"[Setup] Assembly definition nested under {HOTUPDATE_FOLDER}: {normalized} " +
@@ -235,15 +314,17 @@ $@"{{
             catch { return null; }
         }
 
-        static void RegisterHotUpdateAssembly()
+        static void RegisterHotUpdateAssembly(string assemblyName)
         {
             HybridCLRSettings settings = HybridCLRSettings.Instance;
 
+            string asmdefPath = $"{HOTUPDATE_FOLDER}/{assemblyName}.asmdef";
+
             AssemblyDefinitionAsset asmdefAsset =
-                AssetDatabase.LoadAssetAtPath<AssemblyDefinitionAsset>(HotUpdateAsmdefPath);
+                AssetDatabase.LoadAssetAtPath<AssemblyDefinitionAsset>(asmdefPath);
             if (asmdefAsset == null)
             {
-                Debug.LogError($"[Setup] Cannot load the asmdef to register at {HotUpdateAsmdefPath}.");
+                Debug.LogError($"[Setup] Cannot load the asmdef to register at {asmdefPath}.");
                 return;
             }
 
@@ -296,21 +377,25 @@ $@"{{
                        "Re-run the interpreter configuration.";
             }
 
-            string asmdefPath = HotUpdateAsmdefPath;
+            string asmdefPath = ExistingAsmdefPath;
 
-            if (!File.Exists(asmdefPath))
+            if (asmdefPath == null || !File.Exists(asmdefPath))
             {
-                return $"the hot-update assembly definition is missing ({asmdefPath}). " +
+                return $"the hot-update assembly definition is missing ({HOTUPDATE_FOLDER}). " +
                        "Open the Creator Kit setup window and configure the interpreter.";
             }
 
+            // Shape, not currency: the name carries a digest of the source, so the one on disk
+            // is stale the moment the creator edits a script. That is a rebuild (handled by the
+            // build gate, which renames and recompiles), not a broken setup. What would be broken
+            // is a name that is not this project's at all — a generic one collides with the
+            // hot-update assembly of any other project once both are loaded in the player.
             string declared = ReadDeclaredAssemblyName(asmdefPath);
-            if (declared != HotUpdateAssemblyName)
+            if (!LooksLikeProjectAssembly(declared))
             {
-                return $"{asmdefPath} declares assembly name '{declared}' instead of " +
-                       $"'{HotUpdateAssemblyName}'. A generic name collides with the hot-update " +
-                       "assembly of any other project once both are loaded in the player. " +
-                       "Re-run the interpreter configuration to align it.";
+                return $"{asmdefPath} declares assembly name '{declared}', which is not of the " +
+                       $"form '{ProjectAssemblyPrefix}<fingerprint>'. Re-run the interpreter " +
+                       "configuration to align it.";
             }
 
             AssemblyDefinitionAsset asmdefAsset =
@@ -411,8 +496,48 @@ $@"{{
         // ============================================================
         //  COMPILE DLL — recurring operation
         // ============================================================
-        public static void CompileDll()
+        /// <summary>
+        /// Path of the per-target hot-update DLL HybridCLR produces for a given assembly name.
+        /// </summary>
+        static string TargetDllPath(BuildTarget target, string assemblyName)
+            => Path.Combine($"HybridCLRData/HotUpdateDlls/{target}", $"{assemblyName}.dll");
+
+        /// <summary>
+        /// Whether every target already has a DLL compiled for that assembly name. Since the name
+        /// is a digest of the source, their presence means they were compiled from exactly this
+        /// code — so there is nothing to recompile.
+        /// </summary>
+        public static bool CompiledDllsArePresent(string assemblyName)
+            => !string.IsNullOrEmpty(assemblyName)
+               && TARGETS.All(target => File.Exists(TargetDllPath(target, assemblyName)));
+
+        /// <summary>
+        /// Targets whose DLL is missing for that assembly name. Empty means the set is complete —
+        /// which the build gate insists on, because the backend rejects a partial bundle.
+        /// </summary>
+        public static BuildTarget[] MissingTargets(string assemblyName)
+            => TARGETS.Where(target => !File.Exists(TargetDllPath(target, assemblyName))).ToArray();
+
+        /// <summary>
+        /// Compiles the hot-update assembly for every target, or does nothing when the DLLs for
+        /// that name are already there — the name digests the source, so their presence means
+        /// they came from exactly this code.
+        /// </summary>
+        /// <param name="assemblyName">
+        /// Taken as a parameter rather than read from <see cref="HotUpdateAssemblyName"/>, which
+        /// rescans the source on every access: the caller has already decided which name this run
+        /// is about, and a file saved halfway through would otherwise have us compile under one
+        /// name while the caller verifies another.
+        /// </param>
+        public static void CompileDll(string assemblyName)
         {
+            if (CompiledDllsArePresent(assemblyName))
+            {
+                Debug.Log($"[Compile] {assemblyName} is already compiled for every target — " +
+                          "the source has not changed, nothing to do.");
+                return;
+            }
+
             foreach (BuildTarget target in TARGETS)
             {
                 Debug.Log($"[Compile] Compiling the DLL for target: {target} ...");
@@ -427,8 +552,7 @@ $@"{{
                     continue;
                 }
 
-                string dllPath = Path.Combine(
-                    $"HybridCLRData/HotUpdateDlls/{target}", $"{HotUpdateAssemblyName}.dll");
+                string dllPath = TargetDllPath(target, assemblyName);
 
                 if (File.Exists(dllPath))
                     Debug.Log($"[Compile] DLL produced for {target}: {Path.GetFullPath(dllPath)}");
@@ -459,8 +583,44 @@ $@"{{
                 return false;
             }
 
-            // 1) Build the DLL(s).
-            CompileDll();
+            // 0b) The assembly name carries the fingerprint of the source, so an edit since the
+            //     last publish means the asmdef is now named after code that no longer exists.
+            //     Renaming it is a script recompilation and a domain reload, which would tear
+            //     down this task mid-await: so rename, stop, and let the creator press build
+            //     again once the editor has settled. One extra click, and only when the code
+            //     actually changed.
+            string expected = HotUpdateAssemblyName;
+            string declared = ReadDeclaredAssemblyName(ExistingAsmdefPath);
+
+            if (declared != expected)
+            {
+                if (!EnsureAsmdef(expected))
+                {
+                    Debug.LogError("[HotUpdateSecurity] Could not rename the hot-update assembly to " +
+                                   $"'{expected}'. Build blocked.");
+                    return false;
+                }
+
+                Debug.LogWarning($"[HotUpdateSecurity] The scripts changed since the last publish: the " +
+                                 $"assembly is now '{expected}' (was '{declared}'). Unity is recompiling — " +
+                                 "start the build again when it is done.");
+                return false;
+            }
+
+            // 1) Build the DLL(s) — a no-op when they already exist under this name, which is
+            //    exactly the case where the source has not moved.
+            CompileDll(expected);
+
+            BuildTarget[] missing = MissingTargets(expected);
+            if (missing.Length > 0)
+            {
+                // The backend rejects a bundle that misses a target, so failing here — where the
+                // reason is still on screen — beats failing at import time.
+                Debug.LogError($"[HotUpdateSecurity] No DLL was produced for: {string.Join(", ", missing)}. " +
+                               "The build support module for those targets may not be installed in this " +
+                               "Editor. Build blocked.");
+                return false;
+            }
 
             // 2) Resolve the freshly compiled assembly (ScriptAssemblies → has a PDB for line info).
             string dllPath = HotUpdateDllLocator.ResolveDefaultDllPath(out _);
@@ -568,12 +728,13 @@ $@"{{
                 return;
             }
 
-            CompileDll();
+            string assemblyName = HotUpdateAssemblyName;
+
+            CompileDll(assemblyName);
             SaveScriptsHash();
 
             BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
-            string dllPath = Path.Combine(
-                $"HybridCLRData/HotUpdateDlls/{target}", $"{HotUpdateAssemblyName}.dll");
+            string dllPath = TargetDllPath(target, assemblyName);
 
             if (!File.Exists(dllPath))
             {
