@@ -1,14 +1,11 @@
+using Newtonsoft.Json;
+using Reflectis.SDK.TenantConfiguration.Editor;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-
-using Newtonsoft.Json;
-
-using Reflectis.SDK.TenantConfiguration.Editor;
-
 using UnityEngine;
 
 namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
@@ -47,10 +44,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
 
         public static async Task<Result> VerifyAsync(byte[] dll, string fileName)
         {
-            string baseUrl = EditorLoginState.CurrentTenant?.Config?.ApplicationApiUrl;
-            string token = EditorLoginState.IsLoggedIn ? EditorLoginState.BearerToken : null;
+            string baseUrl = EditorApiEndpoint.ApplicationApiUrl;
 
-            if (string.IsNullOrEmpty(baseUrl) || string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(baseUrl) || !EditorLoginState.HasSession)
             {
                 return new Result
                 {
@@ -66,18 +62,34 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
             {
                 using HttpClient client = new() { Timeout = TimeSpan.FromSeconds(30) };
 
+                // Rebuilt per attempt: the session manager may replay the request after renewing
+                // the token, and neither an HttpRequestMessage nor its content can be sent twice.
+                //
                 // The form is owned by the request: HttpRequestMessage.Dispose disposes its
                 // Content. Wrapping it in its own 'using' as well disposes MultipartContent twice,
                 // which throws a NullReferenceException on Mono.
-                MultipartFormDataContent form = new();
-                ByteArrayContent file = new(dll);
-                file.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                form.Add(file, "dll", string.IsNullOrEmpty(fileName) ? "HotUpdate.dll" : fileName);
+                HttpRequestMessage BuildRequest()
+                {
+                    MultipartFormDataContent form = new();
+                    ByteArrayContent file = new(dll);
+                    file.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                    form.Add(file, "dll", string.IsNullOrEmpty(fileName) ? "HotUpdate.dll" : fileName);
 
-                using HttpRequestMessage req = new(HttpMethod.Post, url) { Content = form };
-                req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    return new HttpRequestMessage(HttpMethod.Post, url) { Content = form };
+                }
 
-                using HttpResponseMessage resp = await client.SendAsync(req);
+                using HttpResponseMessage resp = await EditorSessionManager.SendAuthorizedAsync(BuildRequest, client);
+
+                if (resp == null)
+                {
+                    return new Result
+                    {
+                        Reachable = false,
+                        Error = "The editor session expired and could not be renewed. " +
+                                "Log in again via 'Reflectis / Show available tenants'."
+                    };
+                }
+
                 string body = await resp.Content.ReadAsStringAsync();
 
                 if (resp.StatusCode == HttpStatusCode.OK)
@@ -86,11 +98,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 if ((int)resp.StatusCode == 422) // UnprocessableEntity
                     return new Result { Reachable = true, Passed = false, Response = TryParse(body) };
 
+                Debug.LogError($"Server verify returned {resp.StatusCode}: {body}");
                 // 400 / 401 / 403 / 5xx → not a definitive policy verdict.
                 return new Result { Reachable = false, Error = $"Server verify returned {(int)resp.StatusCode}: {body}" };
             }
             catch (Exception e)
             {
+                Debug.LogException(e);
                 return new Result { Reachable = false, Error = "Server verify failed: " + e.Message };
             }
         }

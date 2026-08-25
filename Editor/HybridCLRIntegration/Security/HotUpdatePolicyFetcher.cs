@@ -1,13 +1,10 @@
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-
 using Newtonsoft.Json;
 
 using Reflectis.SDK.TenantConfiguration.Editor;
-
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using UnityEditor;
-
 using UnityEngine;
 
 namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
@@ -42,7 +39,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         /// path, or null when not logged in / no URL in the tenant config.</summary>
         public static string ResolvePolicyUrl()
         {
-            string baseUrl = EditorLoginState.CurrentTenant?.Config?.ApplicationApiUrl;
+            string baseUrl = EditorApiEndpoint.ApplicationApiUrl;
             return string.IsNullOrEmpty(baseUrl) ? null : baseUrl.TrimEnd('/') + PolicyPath;
         }
 

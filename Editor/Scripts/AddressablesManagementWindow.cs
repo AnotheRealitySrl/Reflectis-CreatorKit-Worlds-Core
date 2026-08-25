@@ -82,6 +82,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         private static HttpClient httpClient = new HttpClient();
 
+        [Obsolete("Reading the bearer token directly skips expiry checks and renewal. Route API calls " +
+                  "through EditorSessionManager.SendAuthorizedAsync instead.")]
         public static string token
         {
             get
@@ -144,6 +146,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             // Refresh warnings whenever the window regains focus (e.g. after the user
             // installs a module via Unity Hub and returns to the editor).
             RefreshPlatformWarnings();
+
+            // The session label ages on its own (the token expires while the window sits idle),
+            // so re-render it here. Without reloading the worlds: that is a network round trip
+            // per focus change, and nothing about the world list changed.
+            if (loginStatusLabel != null)
+                RefreshLoginState(reloadWorlds: false);
         }
 
 
@@ -183,7 +191,9 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 EditorApplication.ExecuteMenuItem("Reflectis/Show available tenants");
             };
 
-            logoutButton = new Button(() => EditorLoginState.Clear())
+            // Through the session manager, so the Azure refresh token goes away too: clearing
+            // only EditorLoginState would leave a cache that logs the user straight back in.
+            logoutButton = new Button(async () => await EditorSessionManager.LogoutAsync())
             {
                 text = "Logout"
             };
@@ -244,7 +254,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             RefreshLoginState();
         }
 
-        private void RefreshLoginState()
+        private void RefreshLoginState(bool reloadWorlds = true)
         {
             bool loggedIn = EditorLoginState.IsLoggedIn;
 
@@ -260,12 +270,24 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 string username = EditorLoginState.Username;
                 string userPart = !string.IsNullOrEmpty(username) ? $" - {username}" : string.Empty;
                 string rolePart = EditorLoginState.IsTenantManager ? " [TenantManager]" : "";
-                loginStatusLabel.text = $"Logged in: {tenantLabel} {envLabel}{userPart}{rolePart}";
-                loginStatusLabel.style.color = new Color(0.2f, 0.8f, 0.2f);
+
+                // An expired token is not a broken state — the next operation renews it — but the
+                // user should know a login prompt may appear before their deploy starts.
+                bool tokenValid = EditorLoginState.IsTokenValid;
+                string sessionPart = tokenValid
+                    ? $" (session until {EditorSessionManager.DescribeExpiry()})"
+                    : " - session expired, will be renewed on the next operation";
+
+                loginStatusLabel.text = $"Logged in: {tenantLabel} {envLabel}{userPart}{rolePart}{sessionPart}";
+                loginStatusLabel.style.color = tokenValid
+                    ? new Color(0.2f, 0.8f, 0.2f)
+                    : new Color(0.9f, 0.7f, 0.2f);
 
                 deploySection.style.display = DisplayStyle.Flex;
                 tenantDeploySection.style.display = EditorLoginState.IsTenantManager ? DisplayStyle.Flex : DisplayStyle.None;
-                LoadWorlds();
+
+                if (reloadWorlds)
+                    LoadWorlds();
             }
             else
             {
@@ -289,7 +311,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
             try
             {
-                string applicationApiUrl = EditorLoginState.CurrentTenant?.Config?.ApplicationApiUrl;
+                string applicationApiUrl = EditorApiEndpoint.ApplicationApiUrl;
                 if (string.IsNullOrEmpty(applicationApiUrl))
                 {
                     worldsLoadingLabel.text = "Error: no application API URL in tenant config";
@@ -298,10 +320,18 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
                 string apiUrl = $"{applicationApiUrl}/worlds?api-version=2";
 
-                using var request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                // Silent renewal only: this runs just from opening the window, and popping a
+                // browser login at someone who only clicked a menu item would be startling.
+                // Deploy actions, which the user explicitly asked for, do allow it.
+                var response = await EditorSessionManager.SendAuthorizedAsync(
+                    () => new HttpRequestMessage(HttpMethod.Get, apiUrl), httpClient, allowInteractive: false);
 
-                var response = await httpClient.SendAsync(request);
+                if (response == null)
+                {
+                    worldsLoadingLabel.text = "Session expired. Log in again to load the worlds.";
+                    return;
+                }
+
                 if (!response.IsSuccessStatusCode)
                 {
                     string body = await response.Content.ReadAsStringAsync();
@@ -323,9 +353,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 {
                     try
                     {
-                        using var rolesRequest = new HttpRequestMessage(HttpMethod.Get, $"{applicationApiUrl}/worlds/{world.Id}/users/my/roles?api-version=2");
-                        rolesRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                        var rolesResponse = await httpClient.SendAsync(rolesRequest);
+                        string rolesUrl = $"{applicationApiUrl}/worlds/{world.Id}/users/my/roles?api-version=2";
+                        var rolesResponse = await EditorSessionManager.SendAuthorizedAsync(
+                            () => new HttpRequestMessage(HttpMethod.Get, rolesUrl), httpClient, allowInteractive: false);
+
+                        if (rolesResponse == null)
+                        {
+                            worldsLoadingLabel.text = "Session expired. Log in again to load the worlds.";
+                            return;
+                        }
 
                         if (rolesResponse.IsSuccessStatusCode)
                         {
@@ -519,10 +555,20 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         private async Task DeployToWorlds(List<int> worldIds, List<string> scenes)
         {
-            string applicationApiUrl = EditorLoginState.CurrentTenant?.Config?.ApplicationApiUrl;
+            string applicationApiUrl = EditorApiEndpoint.ApplicationApiUrl;
             if (string.IsNullOrEmpty(applicationApiUrl))
             {
                 LogDeployError("No application API URL available.");
+                return;
+            }
+
+            // Renew the session before the uploads start rather than discovering it is dead on
+            // the first call: the renewal can need an interactive login, and that is far less
+            // disruptive here than halfway through a multi-world deploy. Every call below still
+            // re-checks on its own — this deploy can outlive the token it starts with.
+            if (!await EditorSessionManager.EnsureValidTokenAsync())
+            {
+                LogDeployError("Could not establish a valid session. Nothing was deployed.");
                 return;
             }
 
@@ -540,7 +586,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
                     EditorUtility.DisplayProgressBar(progressPrefix, "Getting upload link...", (float)w / totalWorlds);
 
-                    string uploadLink = await GetUploadLinkForWorld(applicationApiUrl, worldId, token);
+                    string uploadLink = await GetUploadLinkForWorld(applicationApiUrl, worldId);
                     if (string.IsNullOrEmpty(uploadLink))
                     {
                         LogDeployError($"World \"{worldLabel}\": failed to get upload link. Skipping.");
@@ -594,10 +640,14 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
                         EditorUtility.DisplayProgressBar(progressPrefix, $"Importing {scene} ({s + 1}/{scenes.Count})...", progress);
 
-                        bool imported = await ImportSceneToWorld(applicationApiUrl, worldId, token, scene);
+                        bool imported = await ImportSceneToWorld(applicationApiUrl, worldId, scene);
                         if (!imported)
                             LogDeployError($"World \"{worldLabel}\": import failed for \"{scene}\". Check the console for details.");
                     }
+
+                    // Once per world, after the scenes: the assembly is shared by all of them.
+                    await PublishEnvironmentDllAsync(applicationApiUrl, worldId, scenes,
+                                                     uploadLink, useFtp, ftpConfig, progressPrefix);
                 }
             }
             finally
@@ -690,10 +740,17 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
         private async Task DeployToTenant(List<string> scenes)
         {
-            string applicationApiUrl = EditorLoginState.CurrentTenant?.Config?.ApplicationApiUrl;
+            string applicationApiUrl = EditorApiEndpoint.ApplicationApiUrl;
             if (string.IsNullOrEmpty(applicationApiUrl))
             {
                 LogDeployError("Tenant: no application API URL available.");
+                return;
+            }
+
+            // See DeployToWorlds: renew before the uploads, not on the first failure.
+            if (!await EditorSessionManager.EnsureValidTokenAsync())
+            {
+                LogDeployError("Tenant: could not establish a valid session. Nothing was deployed.");
                 return;
             }
 
@@ -701,7 +758,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             {
                 EditorUtility.DisplayProgressBar("Deploy to Tenant", "Getting upload link...", 0f);
 
-                string uploadLink = await GetTenantUploadLink(applicationApiUrl, token);
+                string uploadLink = await GetTenantUploadLink(applicationApiUrl);
                 if (string.IsNullOrEmpty(uploadLink))
                 {
                     LogDeployError("Tenant: failed to get upload link.");
@@ -755,7 +812,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
                     EditorUtility.DisplayProgressBar("Deploy to Tenant", $"Importing {scene} ({s + 1}/{scenes.Count})...", progress);
 
-                    bool imported = await ImportSceneToTenant(applicationApiUrl, token, scene);
+                    bool imported = await ImportSceneToTenant(applicationApiUrl, scene);
                     if (!imported)
                         LogDeployError($"Tenant: import failed for \"{scene}\". Check the console for details.");
                 }
@@ -768,25 +825,87 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             Debug.Log("[AddressablesManagement] Tenant deploy completed.");
         }
 
+        /// <summary>
+        /// Uploads this project's interpreted assembly and links it to the scenes just
+        /// published. Runs ONCE per world, after the scenes: the assembly belongs to the
+        /// Creator Kit project, so every scene of this build shares it.
+        ///
+        /// Reached by reflection like the verifier, so this window stays free of the
+        /// HYBRIDCLR_INSTALLED-gated assembly. No HybridCLR installed means no interpreted
+        /// scripts to publish, which is not an error.
+        /// </summary>
+        private async Task PublishEnvironmentDllAsync(string applicationApiUrl, int worldId,
+                                                      List<string> scenes, string uploadLink,
+                                                      bool useFtp, FtpUploadConfig ftpConfig, string progressPrefix)
+        {
+            var bundleType = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => { try { return a.GetTypes(); } catch { return new Type[0]; } })
+                .FirstOrDefault(t => t.Name == "EnvironmentDllBundle");
+
+            if (bundleType == null)
+                return;
+
+            string assemblyName = bundleType.GetProperty("AssemblyName", BindingFlags.Public | BindingFlags.Static)?
+                .GetValue(null) as string;
+            string zipPath = bundleType.GetMethod("Build", BindingFlags.Public | BindingFlags.Static)?
+                .Invoke(null, null) as string;
+
+            if (string.IsNullOrEmpty(assemblyName) || string.IsNullOrEmpty(zipPath))
+            {
+                LogDeployError("Interpreted assembly bundle could not be built. Scenes are published without their scripts.");
+                return;
+            }
+
+            EditorUtility.DisplayProgressBar(progressPrefix, "Uploading interpreted assembly...", 1f);
+
+            bool uploaded = useFtp
+                ? await UploadZipViaFtp(zipPath, ftpConfig)
+                : await UploadZip(zipPath, uploadLink);
+
+            if (!uploaded)
+            {
+                LogDeployError($"Upload failed for \"{Path.GetFileName(zipPath)}\". Scenes are published without their scripts.");
+                return;
+            }
+
+            if (!await ImportEnvironmentDll(applicationApiUrl, worldId, Path.GetFileName(zipPath)))
+            {
+                LogDeployError("The platform rejected the interpreted assembly. Scenes are published without their scripts.");
+                return;
+            }
+
+            // Link only after the import succeeded: pointing a catalog at an assembly the
+            // backend does not have would publish a world that cannot resolve its scripts.
+            foreach (string scene in scenes)
+            {
+                if (!await LinkEnvironmentDll(applicationApiUrl, worldId, scene, assemblyName))
+                    LogDeployError($"Could not link the interpreted assembly to \"{scene}\".");
+            }
+        }
+
         #endregion
 
         #region API calls
 
-        public static async Task<string> GetUploadLinkForWorld(string applicationApiUrl, int worldId, string accessToken)
+        public static async Task<string> GetUploadLinkForWorld(string applicationApiUrl, int worldId)
         {
             string apiUrl = $"{applicationApiUrl}/worlds/{worldId}/upload-link?api-version=2";
-
-            using var request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             HttpResponseMessage response;
             try
             {
-                response = await httpClient.SendAsync(request);
+                response = await EditorSessionManager.SendAuthorizedAsync(
+                    () => new HttpRequestMessage(HttpMethod.Get, apiUrl), httpClient);
             }
             catch (Exception ex)
             {
                 Debug.LogError($"[AddressablesManagement] Error getting upload link for world {worldId}: {ex.Message}");
+                return null;
+            }
+
+            if (response == null)
+            {
+                Debug.LogError($"[AddressablesManagement] Could not get an upload link for world {worldId}: no valid session.");
                 return null;
             }
 
@@ -803,22 +922,27 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             return uploadLink;
         }
 
-        public static async Task<bool> ImportSceneToWorld(string applicationApiUrl, int worldId, string accessToken, string zipName)
+        public static async Task<bool> ImportSceneToWorld(string applicationApiUrl, int worldId, string zipName)
         {
             string apiUrl = $"{applicationApiUrl}/worlds/{worldId}/environments/archives/import?api-version=2";
-
-            using var request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            request.Content = new StringContent($"\"{zipName + ".zip"}\"", Encoding.UTF8, "application/json");
 
             HttpResponseMessage response;
             try
             {
-                response = await httpClient.SendAsync(request);
+                response = await EditorSessionManager.SendAuthorizedAsync(() => new HttpRequestMessage(HttpMethod.Post, apiUrl)
+                {
+                    Content = new StringContent($"\"{zipName + ".zip"}\"", Encoding.UTF8, "application/json")
+                }, httpClient);
             }
             catch (Exception ex)
             {
                 Debug.LogError($"[AddressablesManagement] Error importing {zipName} to world {worldId}: {ex.Message}");
+                return false;
+            }
+
+            if (response == null)
+            {
+                Debug.LogError($"[AddressablesManagement] Could not import {zipName} to world {worldId}: no valid session.");
                 return false;
             }
 
@@ -971,16 +1095,21 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             }
         }
 
-        public static async Task<string> GetTenantUploadLink(string applicationApiUrl, string accessToken)
+        public static async Task<string> GetTenantUploadLink(string applicationApiUrl)
         {
             string apiUrl = $"{applicationApiUrl}/tenants/environments/upload-link?api-version=2";
 
-            using var request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
             try
             {
-                var response = await httpClient.SendAsync(request);
+                var response = await EditorSessionManager.SendAuthorizedAsync(
+                    () => new HttpRequestMessage(HttpMethod.Get, apiUrl), httpClient);
+
+                if (response == null)
+                {
+                    Debug.LogError("[AddressablesManagement] Could not get the tenant upload link: no valid session.");
+                    return null;
+                }
+
                 if (!response.IsSuccessStatusCode)
                 {
                     Debug.LogError($"[AddressablesManagement] GetTenantUploadLink failed: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
@@ -999,17 +1128,93 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             }
         }
 
-        public static async Task<bool> ImportSceneToTenant(string applicationApiUrl, string accessToken, string zipName)
-        {
-            string apiUrl = $"{applicationApiUrl}/tenants/environments/archives/import?api-version=2";
 
-            using var request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            request.Content = new StringContent($"\"{zipName + ".zip"}\"", Encoding.UTF8, "application/json");
+        public static async Task<bool> ImportEnvironmentDll(string applicationApiUrl, int worldId, string zipName)
+        {
+            string apiUrl = $"{applicationApiUrl}/worlds/{worldId}/environment-dll/import?api-version=2";
 
             try
             {
-                var response = await httpClient.SendAsync(request);
+                var response = await EditorSessionManager.SendAuthorizedAsync(() => new HttpRequestMessage(HttpMethod.Post, apiUrl)
+                {
+                    Content = new StringContent($"\"{zipName}\"", Encoding.UTF8, "application/json")
+                }, httpClient);
+
+                if (response == null)
+                {
+                    Debug.LogError("[AddressablesManagement] Could not import the environment DLL: no valid session.");
+                    return false;
+                }
+
+                string body = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    // 422 carries the whitelist violations, one per offending reference, each
+                    // tagged with the platform DLL it came from — worth surfacing verbatim.
+                    Debug.LogError($"[AddressablesManagement] Environment DLL import failed: {response.StatusCode} - {body}");
+                    return false;
+                }
+
+                Debug.Log($"[AddressablesManagement] Environment DLL registered: {body}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AddressablesManagement] Error importing the environment DLL: {ex.Message}");
+                return false;
+            }
+        }
+
+        public static async Task<bool> LinkEnvironmentDll(string applicationApiUrl, int worldId,
+                                                          string catalogName, string assemblyName)
+        {
+            string apiUrl = $"{applicationApiUrl}/worlds/{worldId}/environments/catalog/{catalogName}/environment-dll?api-version=2";
+
+            try
+            {
+                var response = await EditorSessionManager.SendAuthorizedAsync(() => new HttpRequestMessage(HttpMethod.Put, apiUrl)
+                {
+                    Content = new StringContent($"\"{assemblyName}\"", Encoding.UTF8, "application/json")
+                }, httpClient);
+
+                if (response == null)
+                {
+                    Debug.LogError($"[AddressablesManagement] Could not link {catalogName}: no valid session.");
+                    return false;
+                }
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Debug.LogError($"[AddressablesManagement] Linking {catalogName} to {assemblyName} failed: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AddressablesManagement] Error linking {catalogName}: {ex.Message}");
+                return false;
+            }
+        }
+        public static async Task<bool> ImportSceneToTenant(string applicationApiUrl, string zipName)
+        {
+            string apiUrl = $"{applicationApiUrl}/tenants/environments/archives/import?api-version=2";
+
+            try
+            {
+                var response = await EditorSessionManager.SendAuthorizedAsync(() => new HttpRequestMessage(HttpMethod.Post, apiUrl)
+                {
+                    Content = new StringContent($"\"{zipName + ".zip"}\"", Encoding.UTF8, "application/json")
+                }, httpClient);
+
+                if (response == null)
+                {
+                    Debug.LogError($"[AddressablesManagement] Could not import {zipName} to the tenant: no valid session.");
+                    return false;
+                }
+
                 if (!response.IsSuccessStatusCode)
                 {
                     Debug.LogError($"[AddressablesManagement] Tenant import failed for {zipName}: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");

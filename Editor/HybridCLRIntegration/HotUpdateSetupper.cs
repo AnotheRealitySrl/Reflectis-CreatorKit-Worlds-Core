@@ -19,14 +19,28 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
 {
     public static class HotUpdateSetupper
     {
+        // Every target the platform supports. The set is not optional: the backend
+        // rejects an environment DLL bundle that misses one, because a world that
+        // silently loses its scripted behaviour on a single platform is worse than a
+        // publish that fails loudly.
         static readonly BuildTarget[] TARGETS = {
             BuildTarget.StandaloneWindows64,
             BuildTarget.Android,
+            BuildTarget.iOS,
             BuildTarget.WebGL
         };
 
         const string HOTUPDATE_FOLDER = "Assets/HotUpdate";
         const string ASMDEF_PREFIX = "HotUpdate_";
+
+        // HybridCLR ships with its gitee mirrors as the default, which do not resolve outside
+        // China. Every fresh Creator Kit project would fail its first install on a DNS error
+        // that says nothing about the cause, so the known defaults are swapped for the GitHub
+        // originals. A URL the team deliberately changed (a private mirror, say) is left alone.
+        const string GITEE_HYBRIDCLR = "https://gitee.com/focus-creative-games/hybridclr";
+        const string GITEE_IL2CPP_PLUS = "https://gitee.com/focus-creative-games/il2cpp_plus";
+        const string GITHUB_HYBRIDCLR = "https://github.com/focus-creative-games/hybridclr";
+        const string GITHUB_IL2CPP_PLUS = "https://github.com/focus-creative-games/il2cpp_plus";
 
         /// <summary>
         /// Session flag raised by the Creator Kit setup window before it installs HybridCLR, so
@@ -45,6 +59,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
 
         /// <summary>Asset path of the asmdef that produces <see cref="HotUpdateAssemblyName"/>.</summary>
         public static string HotUpdateAsmdefPath => $"{HOTUPDATE_FOLDER}/{HotUpdateAssemblyName}.asmdef";
+
+        /// <summary>
+        /// <see cref="TARGETS"/> as the folder/platform names shared with the backend: the
+        /// compiler writes each DLL under HotUpdateDlls/&lt;BuildTarget&gt;/ and the bundle keeps
+        /// the same segment, so both sides speak one vocabulary.
+        /// </summary>
+        public static string[] TargetNames => TARGETS.Select(t => t.ToString()).ToArray();
 
         [InitializeOnLoadMethod]
         static void OnReloadAfterInstall()
@@ -240,13 +261,18 @@ $@"{{
             updated[len] = asmdefAsset;
             settings.hotUpdateAssemblyDefinitions = updated;
 
+            SaveHybridCLRSettings(settings);
+            Debug.Log("[Setup] asmdef registered in the Hot Update Assembly Definitions.");
+        }
+
+        static void SaveHybridCLRSettings(HybridCLRSettings settings)
+        {
             InternalEditorUtility.SaveToSerializedFileAndForget(
                 new Object[] { settings },
                 "ProjectSettings/HybridCLRSettings.asset",
                 true);
             EditorUtility.SetDirty(settings);
             AssetDatabase.SaveAssets();
-            Debug.Log("[Setup] asmdef registered in the Hot Update Assembly Definitions.");
         }
 
         // ============================================================
@@ -348,6 +374,8 @@ $@"{{
                 return false;
             }
 
+            RedirectGiteeMirrorsToGitHub();
+
             try
             {
                 EditorUtility.DisplayProgressBar("Interpreted scripting",
@@ -356,7 +384,10 @@ $@"{{
             }
             catch (System.Exception e)
             {
-                Debug.LogError("[Setup] HybridCLR interpreter install failed (is git on PATH?): " + e.Message);
+                // The message carries the repository URL, which is usually the whole story:
+                // git missing from PATH, or the host unreachable from this network.
+                Debug.LogError("[Setup] HybridCLR interpreter install failed. Check that git is on " +
+                               "PATH and that the repository below is reachable from here: " + e.Message);
                 return false;
             }
             finally
@@ -472,6 +503,41 @@ $@"{{
 
             Debug.Log("[HotUpdateSecurity] Local + server checks PASSED. Proceeding with the addressables build.");
             return true;
+        }
+
+        /// <summary>
+        /// Points the installer at the GitHub originals when it is still on HybridCLR's gitee
+        /// defaults, which do not resolve outside China — the clone fails with a bare DNS error
+        /// that gives no hint of the cause. Only the known defaults are rewritten: a URL the team
+        /// pointed somewhere else on purpose stays as it is.
+        /// </summary>
+        static void RedirectGiteeMirrorsToGitHub()
+        {
+            HybridCLRSettings settings = null;
+            try { settings = HybridCLRSettings.Instance; } catch { /* HybridCLR not ready */ }
+
+            if (settings == null)
+                return;
+
+            bool changed = false;
+
+            if (settings.hybridclrRepoURL == GITEE_HYBRIDCLR)
+            {
+                settings.hybridclrRepoURL = GITHUB_HYBRIDCLR;
+                changed = true;
+            }
+
+            if (settings.il2cppPlusRepoURL == GITEE_IL2CPP_PLUS)
+            {
+                settings.il2cppPlusRepoURL = GITHUB_IL2CPP_PLUS;
+                changed = true;
+            }
+
+            if (!changed)
+                return;
+
+            SaveHybridCLRSettings(settings);
+            Debug.Log("[Setup] HybridCLR source repositories switched from the gitee mirrors to GitHub.");
         }
 
         private static void LogServerViolations(HotUpdateServerVerifier.ServerResponse resp)
