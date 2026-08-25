@@ -439,6 +439,74 @@ $@"{{
             Debug.Log("[Compile] Compilation cycle completed.");
         }
 
+
+        // ============================================================
+        //  PUBLISH FINGERPRINT — skip work that would change nothing
+        // ============================================================
+        // Keyed by project GUID because EditorPrefs is global to the machine: a bare key would
+        // have two Creator Kit projects reading each other's marker.
+        const string FINGERPRINT_KEY_PREFIX = "Reflectis_HotUpdate_PublishFingerprint_";
+
+        static string FingerprintKey => FINGERPRINT_KEY_PREFIX + PlayerSettings.productGUID;
+
+        /// <summary>
+        /// True when the last <see cref="CompileVerifyAsync"/> found the published bundle already
+        /// current, so the caller can skip building, uploading and importing it. Meaningful only
+        /// within the run that set it — this is the verdict of that check, not stored state.
+        /// </summary>
+        public static bool BundleIsCurrent { get; private set; }
+
+        /// <summary>Fingerprint of what was just compiled, persisted once the publish succeeds.</summary>
+        static string pendingFingerprint;
+
+        /// <summary>
+        /// Records that the bundle now on the platform matches what is in this project. Called by
+        /// the publisher after the import succeeds — never before, or a failed publish would be
+        /// remembered as done and the next build would skip it.
+        /// </summary>
+        public static void MarkBundlePublished()
+        {
+            if (string.IsNullOrEmpty(pendingFingerprint))
+                return;
+
+            EditorPrefs.SetString(FingerprintKey, pendingFingerprint);
+            pendingFingerprint = null;
+        }
+
+        /// <summary>
+        /// Identity of what a publish would produce. Covers the scripts, the assembly definition —
+        /// a reference added there changes the compiler's output with every .cs byte untouched —
+        /// and the whitelist, so a policy that tightens forces a re-verify instead of leaving
+        /// already-published code accepted under the old rules until someone edits a script.
+        ///
+        /// It cannot be derived from the compiled DLLs: HybridCLR stamps a fresh timestamp, two
+        /// MVID GUIDs and a debug checksum on every compilation, so identical source produces
+        /// different bytes every time (measured: 74 differing bytes on a 5 KB assembly).
+        /// </summary>
+        static string ComputePublishFingerprint(string policyJson)
+        {
+            System.Text.StringBuilder sb = new();
+
+            string[] files = Directory.GetFiles(HOTUPDATE_FOLDER, "*.cs", SearchOption.AllDirectories);
+            System.Array.Sort(files, System.StringComparer.Ordinal); // stable order, or the hash varies at random
+
+            foreach (string file in files)
+            {
+                // The path too: renaming or moving a script changes what compiles.
+                sb.Append(file.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
+                  .Append('\n');
+                sb.Append(File.ReadAllText(file)).Append('\n');
+            }
+
+            if (File.Exists(HotUpdateAsmdefPath))
+            {
+                sb.Append(File.ReadAllText(HotUpdateAsmdefPath)).Append('\n');
+            }
+
+            sb.Append(policyJson ?? string.Empty);
+
+            return HotUpdateDllLocator.Sha256Hex(System.Text.Encoding.UTF8.GetBytes(sb.ToString()));
+        }
         // ============================================================
         //  BUILD + VERIFY — used by the Addressables build gate
         // ============================================================
@@ -459,18 +527,9 @@ $@"{{
                 return false;
             }
 
-            // 1) Build the DLL(s).
-            CompileDll();
-
-            // 2) Resolve the freshly compiled assembly (ScriptAssemblies → has a PDB for line info).
-            string dllPath = HotUpdateDllLocator.ResolveDefaultDllPath(out _);
-            if (string.IsNullOrEmpty(dllPath) || !File.Exists(dllPath))
-            {
-                Debug.LogError("[HotUpdateSecurity] Compiled HotUpdate assembly not found after build. Build blocked.");
-                return false;
-            }
-
-            // 3) LOCAL check (download the shared policy, then verify). Block on fail.
+            // 1) The whitelist comes first: it is needed to verify, and it takes part in the
+            //    fingerprint below, so a policy that changed has to be in hand before deciding
+            //    whether there is anything to do.
             HotUpdatePolicyFetcher.FetchResult fetch = await HotUpdatePolicyFetcher.FetchAsync();
             if (!fetch.Ok)
             {
@@ -478,6 +537,33 @@ $@"{{
                 return false;
             }
 
+            // 2) Nothing to rebuild? Then nothing to verify or republish either. The scenes still
+            //    get linked to the assembly afterwards — a new scene against unchanged scripts is
+            //    exactly the case that must not be skipped.
+            string fingerprint = ComputePublishFingerprint(fetch.Json);
+            if (fingerprint == EditorPrefs.GetString(FingerprintKey, string.Empty))
+            {
+                BundleIsCurrent = true;
+                Debug.Log($"[HotUpdate] '{HotUpdateAssemblyName}' is unchanged since the last publish " +
+                          "(scripts, assembly definition and whitelist all match). Skipping compile, " +
+                          "verification and upload; the scenes are still linked to it.");
+                return true;
+            }
+
+            BundleIsCurrent = false;
+
+            // 3) Build the DLL(s).
+            CompileDll();
+
+            // 4) Resolve the freshly compiled assembly (ScriptAssemblies → has a PDB for line info).
+            string dllPath = HotUpdateDllLocator.ResolveDefaultDllPath(out _);
+            if (string.IsNullOrEmpty(dllPath) || !File.Exists(dllPath))
+            {
+                Debug.LogError("[HotUpdateSecurity] Compiled HotUpdate assembly not found after build. Build blocked.");
+                return false;
+            }
+
+            // 5) LOCAL check against the policy fetched above. Block on fail.
             VerificationResult local = HotUpdateDllLocator.VerifyAndLog(dllPath, fetch.Policy);
             if (!local.Passed)
             {
@@ -485,7 +571,7 @@ $@"{{
                 return false;
             }
 
-            // 4) SERVER check (authoritative). Block on rejection OR if it can't complete.
+            // 6) SERVER check (authoritative). Block on rejection OR if it can't complete.
             byte[] bytes = File.ReadAllBytes(dllPath);
             HotUpdateServerVerifier.Result server = await HotUpdateServerVerifier.VerifyAsync(bytes, Path.GetFileName(dllPath));
 
@@ -500,6 +586,9 @@ $@"{{
                 Debug.LogError("[HotUpdateSecurity] SERVER check REJECTED the DLL — build blocked.");
                 return false;
             }
+
+            // Held, not stored: the marker is written only once the publish itself succeeds.
+            pendingFingerprint = fingerprint;
 
             Debug.Log("[HotUpdateSecurity] Local + server checks PASSED. Proceeding with the addressables build.");
             return true;
@@ -547,71 +636,5 @@ $@"{{
             foreach (HotUpdateServerVerifier.ServerViolation v in resp.Violations)
                 Debug.LogError($"[HotUpdateSecurity][server] [{v.Kind}] {v.Detail}  ({v.Location})");
         }
-
-        // ============================================================
-        //  LEGACY publish stub — superseded by the Addressables build gate above.
-        //  Kept until the team confirms it can go; the upload was never wired.
-        // ============================================================
-        //[MenuItem("Reflectis Worlds/Creator Kit/Core/Compile Interpreted Scripting")]
-        public static async void CompileAndPublish()
-        {
-            string setupIssue = GetSetupIssue();
-            if (setupIssue != null)
-            {
-                Debug.LogWarning($"[Publish] Interpreted scripting is not set up: {setupIssue} Aborted.");
-                return;
-            }
-
-            if (!ScriptsChanged())
-            {
-                Debug.Log("[Publish] No change to the HotUpdate scripts since the last compilation. Skipping.");
-                return;
-            }
-
-            CompileDll();
-            SaveScriptsHash();
-
-            BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
-            string dllPath = Path.Combine(
-                $"HybridCLRData/HotUpdateDlls/{target}", $"{HotUpdateAssemblyName}.dll");
-
-            if (!File.Exists(dllPath))
-            {
-                Debug.LogError("[Publish] DLL not found, aborting the upload.");
-                return;
-            }
-
-            byte[] dllBytes = File.ReadAllBytes(dllPath);
-
-            Debug.LogWarning($"[Publish] Upload not wired yet. DLL ready ({dllBytes.Length} bytes). " +
-                             "Connect the backend endpoint to enable publishing.");
-            await Task.CompletedTask;
-        }
-
-        const string HASH_PREF_KEY = "HotUpdate_LastScriptsHash";
-
-        /// <summary>Hash of every script in the hot-update folder, name included so that adding or
-        /// removing a file changes the result.</summary>
-        static string ComputeScriptsHash()
-        {
-            string[] files = Directory.GetFiles(HOTUPDATE_FOLDER, "*.cs", SearchOption.AllDirectories);
-            System.Array.Sort(files); // stable order, otherwise the hash varies at random
-
-            using System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
-            System.Text.StringBuilder sb = new();
-
-            foreach (string file in files)
-            {
-                sb.Append(file);
-                sb.Append(File.ReadAllText(file));
-            }
-
-            byte[] hashBytes = md5.ComputeHash(System.Text.Encoding.UTF8.GetBytes(sb.ToString()));
-            return System.Convert.ToBase64String(hashBytes);
-        }
-
-        static bool ScriptsChanged() => ComputeScriptsHash() != EditorPrefs.GetString(HASH_PREF_KEY, "");
-
-        static void SaveScriptsHash() => EditorPrefs.SetString(HASH_PREF_KEY, ComputeScriptsHash());
     }
 }
