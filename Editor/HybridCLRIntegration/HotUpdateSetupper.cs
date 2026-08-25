@@ -52,6 +52,15 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         public const string PENDING_SETUP_KEY = "PENDING_HYBRIDCLR_SETUP";
 
         /// <summary>
+        /// A message the creator has to read, held across the domain reload that is about to
+        /// destroy it. The build gate renames the hot-update assembly when the source has moved,
+        /// and a rename is a script recompilation: with the Console's "Clear on Recompile" on —
+        /// its default — the warning explaining what happened is wiped by the very recompilation
+        /// it announces, leaving a build that stopped for no visible reason.
+        /// </summary>
+        const string PENDING_NOTICE_KEY = "PENDING_HOTUPDATE_NOTICE";
+
+        /// <summary>
         /// Prefix every assembly this project publishes shares: the project GUID keeps two
         /// different projects from ever shipping assemblies with the same name. The player
         /// resolves a scene's MonoScripts by assembly name, so a duplicate would make the world
@@ -134,6 +143,22 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                     .OrderBy(p => p, System.StringComparer.Ordinal)
                     .FirstOrDefault();
             }
+        }
+
+        /// <summary>
+        /// Re-logs the message the gate left behind before triggering a reload. Separate from
+        /// <see cref="OnReloadAfterInstall"/> because it has nothing to do with the install: the
+        /// two just happen to need the same moment, the first frame after the domain is back.
+        /// </summary>
+        [InitializeOnLoadMethod]
+        static void ReplayPendingNotice()
+        {
+            string notice = SessionState.GetString(PENDING_NOTICE_KEY, string.Empty);
+            if (string.IsNullOrEmpty(notice))
+                return;
+
+            SessionState.EraseString(PENDING_NOTICE_KEY);
+            Debug.LogWarning(notice);
         }
 
         [InitializeOnLoadMethod]
@@ -688,9 +713,26 @@ $@"{{
                     return false;
                 }
 
-                Debug.LogWarning($"[HotUpdateSecurity] The scripts changed since the last publish: the " +
-                                 $"assembly is now '{expected}' (was '{declared}'). Unity is recompiling — " +
-                                 "start the build again when it is done.");
+                string notice = "[HotUpdateSecurity] The scripts changed since the last publish: the " +
+                                $"assembly is now '{expected}' (was '{declared}'). Unity is recompiling — " +
+                                "start the build again when it is done.";
+
+                // Logged now for the console that is not cleared on recompile, held in SessionState
+                // for the one that is (replayed by ReplayPendingNotice after the reload), and shown
+                // as a dialog when someone is actually watching — the build just stopped and the
+                // reason must not depend on which Console toggles this project happens to have.
+                Debug.LogWarning(notice);
+                SessionState.SetString(PENDING_NOTICE_KEY, notice);
+
+                if (!Application.isBatchMode)
+                {
+                    EditorUtility.DisplayDialog(
+                        "Interpreted scripting",
+                        $"The scripts changed since the last publish, so the hot-update assembly was renamed to\n\n{expected}\n\n" +
+                        "Unity is recompiling it now. Start the build again once the editor has finished.",
+                        "OK");
+                }
+
                 return false;
             }
 
