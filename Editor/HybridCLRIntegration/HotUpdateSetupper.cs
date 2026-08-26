@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using UnityEditor;
+using UnityEditor.Callbacks;
 
 using UnityEditorInternal;
 
@@ -146,7 +147,81 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         }
 
         /// <summary>
-        /// Re-logs the message the gate left behind before triggering a reload. Separate from
+        /// Keeps the asmdef named after the source, on every reload that follows a compilation —
+        /// which is exactly when the source can have changed.
+        ///
+        /// This is where the rename belongs. It used to happen inside the build gate, which meant
+        /// the creator pressed Build & Deploy, was told the assembly had been renamed, and had to
+        /// start over once the editor had recompiled: a modal dialog and a wasted click for
+        /// something that has nothing to do with deploying. Renaming here instead, while they are
+        /// editing, costs one extra background recompilation right after their own — and by the
+        /// time they press Build the name is already current, so the gate has nothing to say.
+        ///
+        /// Silent when there is nothing to do, which is almost always. One line in the console
+        /// when it does rename, replayed after the reload that wipes it.
+        /// </summary>
+        [DidReloadScripts]
+        static void AlignAssemblyNameAfterCompilation()
+        {
+            // Not while the editor is busy with something that a domain reload would disturb, and
+            // not in a project that never set up interpreted scripting.
+            if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling)
+                return;
+
+            AlignAssemblyNameToSource(out _);
+        }
+
+        /// <summary>
+        /// Brings the asmdef's name to the digest of the current source, if it is not there
+        /// already. Returns true when the project is in a state where the question even applies —
+        /// so a caller can tell "nothing to do" from "not set up".
+        /// </summary>
+        /// <param name="renamed">
+        /// True when a rename actually happened, which means Unity is now recompiling and the
+        /// assembly on disk is not the one the name promises until it finishes.
+        /// </param>
+        static bool AlignAssemblyNameToSource(out bool renamed)
+        {
+            renamed = false;
+
+            string asmdefPath = ExistingAsmdefPath;
+            if (asmdefPath == null)
+                return false;
+
+            string expected = HotUpdateAssemblyName;
+
+            // The fallback shape, prefix with no digest, means the fingerprint could not be
+            // computed. Renaming to that would strip the project's identity down to something two
+            // publishes could share, so leave the asmdef alone and let GetSetupIssue explain.
+            if (expected == ProjectAssemblyPrefix)
+                return false;
+
+            string declared = ReadDeclaredAssemblyName(asmdefPath);
+            if (declared == expected)
+                return true;
+
+            if (!EnsureAsmdef(expected))
+            {
+                Debug.LogError($"[HotUpdate] Could not rename the hot-update assembly to '{expected}'.");
+                return false;
+            }
+
+            renamed = true;
+
+            string notice = $"[HotUpdate] The scripts changed: the assembly is now '{expected}' " +
+                            $"(was '{declared}'). Unity is recompiling it.";
+
+            // Logged now, and held for the reload the rename is about to trigger: with the
+            // Console's Clear on Recompile enabled, this line would otherwise be wiped by the
+            // very recompilation it announces.
+            Debug.Log(notice);
+            SessionState.SetString(PENDING_NOTICE_KEY, notice);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Re-logs the message the aligner or the gate left behind before triggering a reload. Separate from
         /// <see cref="OnReloadAfterInstall"/> because it has nothing to do with the install: the
         /// two just happen to need the same moment, the first frame after the domain is back.
         /// </summary>
@@ -158,7 +233,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 return;
 
             SessionState.EraseString(PENDING_NOTICE_KEY);
-            Debug.LogWarning(notice);
+            Debug.Log(notice);
         }
 
         [InitializeOnLoadMethod]
@@ -702,47 +777,26 @@ $@"{{
             BundleIsCurrent = false;
             AwaitingRecompile = false;
 
-            // 3) The assembly name carries the fingerprint of the source, so an edit since the last
-            //    publish means the asmdef is now named after code that no longer exists. Renaming it
-            //    is a script recompilation and a domain reload, which would tear down this task
-            //    mid-await: so rename, stop, and let the creator press build again once the editor
-            //    has settled. One extra click, and only when the code actually changed.
+            // 3) The name should already be current: AlignAssemblyNameAfterCompilation renames the
+            //    asmdef when the creator saves a script, so by the time anyone presses Build there
+            //    is nothing left to do here. This is the corner where that did not happen — the
+            //    aligner is skipped in play mode, and a folder can change without a compilation.
             //
-            //    Below the marker check on purpose: a marker that matches was written by a publish
-            //    on this machine, which left the asmdef named after that same source — there is
-            //    nothing to rename on that path.
-            string declared = ReadDeclaredAssemblyName(ExistingAsmdefPath);
-
-            if (declared != expected)
+            //    A rename is a domain reload, which would tear this task down mid-await, so the
+            //    run has to end here. In the console and nowhere else: the creator asked to
+            //    deploy, not to be interrupted, and the next attempt just works.
+            if (!AlignAssemblyNameToSource(out bool renamed))
             {
-                if (!EnsureAsmdef(expected))
-                {
-                    Debug.LogError("[HotUpdateSecurity] Could not rename the hot-update assembly to " +
-                                   $"'{expected}'. Build blocked.");
-                    return false;
-                }
+                // Already logged by the aligner: it could not rename the asmdef.
+                return false;
+            }
 
-                string notice = "[HotUpdateSecurity] The scripts changed since the last publish: the " +
-                                $"assembly is now '{expected}' (was '{declared}'). Unity is recompiling — " +
-                                "start the build again when it is done.";
-
-                // Logged now for the console that is not cleared on recompile, held in SessionState
-                // for the one that is (replayed by ReplayPendingNotice after the reload), and shown
-                // as a dialog when someone is actually watching — the build just stopped and the
-                // reason must not depend on which Console toggles this project happens to have.
+            if (renamed)
+            {
                 AwaitingRecompile = true;
 
-                Debug.LogWarning(notice);
-                SessionState.SetString(PENDING_NOTICE_KEY, notice);
-
-                if (!Application.isBatchMode)
-                {
-                    EditorUtility.DisplayDialog(
-                        "Interpreted scripting",
-                        $"The scripts changed since the last publish, so the hot-update assembly was renamed to\n\n{expected}\n\n" +
-                        "Unity is recompiling it now. Start the build again once the editor has finished.",
-                        "OK");
-                }
+                Debug.Log("[HotUpdate] The deploy stopped to let that recompilation finish — run it " +
+                          "again in a moment.");
 
                 return false;
             }
