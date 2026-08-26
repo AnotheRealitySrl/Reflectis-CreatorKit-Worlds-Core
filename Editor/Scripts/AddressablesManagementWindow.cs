@@ -1449,20 +1449,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             {
                 if (AreAddressablesConfigured)
                 {
-                    // Build the interpreted DLL AND verify it (local whitelist + authoritative
-                    // server check). If any check fails, the addressables build is blocked so we
-                    // never ship a DLL that would be rejected downstream.
-                    bool verified = await BuildAndVerifyInterpretedDLLAsync();
-                    if (!verified)
-                    {
-                        EditorUtility.DisplayDialog("Build blocked",
-                            "The interpreted script DLL did not pass the security checks. " +
-                            "See the Console for the offending lines. Addressables were NOT built.",
-                            "OK");
-                        return;
-                    }
-
-                    BuildAndZipScenes();
+                    await RunBuildAddressablesAsync();
                 }
                 else
                 {
@@ -1803,6 +1790,37 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private const string ResumeKey = "Reflectis_AddressablesDeploy_ResumeAfterRecompile";
         private const string ResumeWorlds = "worlds:";
         private const string ResumeTenant = "tenant";
+        private const string ResumeBuild = "build";
+
+        /// <summary>
+        /// Builds the interpreted DLL, verifies it, and builds the addressables only if it passed.
+        ///
+        /// Extracted from the button's own handler so it can be resumed: this path used to report
+        /// EVERY refusal as "did not pass the security checks", including the one case that is not
+        /// a refusal at all — the gate renaming the hot-update assembly because the scripts changed.
+        /// A creator got told their code had failed a check it had not yet been put through, and had
+        /// to press the button again to find out. The two Build &amp; Deploy paths already parked and
+        /// resumed; this one now does the same.
+        /// </summary>
+        private async Task RunBuildAddressablesAsync()
+        {
+            if (!await BuildAndVerifyInterpretedDLLAsync())
+            {
+                if (InterpretedDllAwaitingRecompile())
+                {
+                    ParkDeployForResume(ResumeBuild);
+                    return;
+                }
+
+                EditorUtility.DisplayDialog("Build blocked",
+                    "The interpreted script DLL did not pass the security checks. " +
+                    "See the Console for the offending lines. Addressables were NOT built.",
+                    "OK");
+                return;
+            }
+
+            BuildAndZipScenes();
+        }
 
         private static void ParkDeployForResume(string payload)
         {
@@ -1845,6 +1863,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
 
                 // Fire and forget by design, exactly as the button click is: both paths log their
                 // own failures, and there is nobody left to await them.
+                if (parked == ResumeBuild)
+                {
+                    _ = window.RunBuildAddressablesAsync();
+                    return;
+                }
+
                 if (parked == ResumeTenant)
                 {
                     _ = window.RunTenantBuildAndDeployAsync();

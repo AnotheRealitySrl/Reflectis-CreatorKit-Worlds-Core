@@ -60,6 +60,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         /// </summary>
         const string PENDING_NOTICE_KEY = "PENDING_HOTUPDATE_NOTICE";
 
+        // A refusal, held for the next domain reload. The rename this gate performs triggers a
+        // recompilation, and with the Console's "Clear on Recompile" enabled that wipes the very
+        // violations the creator needs in order to fix their script — leaving them with a dialog
+        // that says the checks failed and no way to find out what failed. A verdict that cannot be
+        // read is not a verdict.
+        const string PENDING_REFUSAL_KEY = "PENDING_HOTUPDATE_REFUSAL";
+
         /// <summary>
         /// Prefix every assembly this project publishes shares: the project GUID keeps two
         /// different projects from ever shipping assemblies with the same name. The player
@@ -208,11 +215,29 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         static void ReplayPendingNotice()
         {
             string notice = SessionState.GetString(PENDING_NOTICE_KEY, string.Empty);
-            if (string.IsNullOrEmpty(notice))
-                return;
+            if (!string.IsNullOrEmpty(notice))
+            {
+                SessionState.EraseString(PENDING_NOTICE_KEY);
+                Debug.Log(notice);
+            }
 
-            SessionState.EraseString(PENDING_NOTICE_KEY);
-            Debug.Log(notice);
+            string refusal = SessionState.GetString(PENDING_REFUSAL_KEY, string.Empty);
+            if (!string.IsNullOrEmpty(refusal))
+            {
+                SessionState.EraseString(PENDING_REFUSAL_KEY);
+                Debug.LogError(refusal);
+            }
+        }
+
+        /// <summary>
+        /// Records why the gate refused, so the reason outlives any recompilation that follows.
+        /// Logged now for whoever is watching, and again on the other side of the next reload for
+        /// whoever comes back to a cleared Console.
+        /// </summary>
+        static void Refuse(string reason)
+        {
+            Debug.LogError(reason);
+            SessionState.SetString(PENDING_REFUSAL_KEY, reason);
         }
 
         [InitializeOnLoadMethod]
@@ -783,9 +808,9 @@ $@"{{
             {
                 // The backend rejects a bundle that misses a target, so failing here — where the
                 // reason is still on screen — beats failing at import time.
-                Debug.LogError($"[HotUpdateSecurity] No DLL was produced for: {string.Join(", ", missing)}. " +
-                               "The build support module for those targets may not be installed in this " +
-                               "Editor. Build blocked.");
+                Refuse($"[HotUpdateSecurity] No DLL was produced for: {string.Join(", ", missing)}. " +
+                       "The build support module for those targets may not be installed in this " +
+                       "Editor. Build blocked.");
                 return false;
             }
 
@@ -801,7 +826,9 @@ $@"{{
             VerificationResult local = HotUpdateDllLocator.VerifyAndLog(dllPath, fetch.Policy);
             if (!local.Passed)
             {
-                Debug.LogError("[HotUpdateSecurity] LOCAL check FAILED — build blocked. See the violations above.");
+                // The violations themselves are carried into the message rather than left to
+                // "see above": above is exactly what a recompilation erases.
+                Refuse("[HotUpdateSecurity] LOCAL check FAILED — build blocked.\n" + local.Summarize());
                 return false;
             }
 
@@ -817,7 +844,8 @@ $@"{{
             if (!server.Passed)
             {
                 LogServerViolations(server.Response);
-                Debug.LogError("[HotUpdateSecurity] SERVER check REJECTED the DLL — build blocked.");
+                Refuse("[HotUpdateSecurity] SERVER check REJECTED the DLL — build blocked.\n"
+                       + DescribeServerViolations(server.Response));
                 return false;
             }
 
@@ -861,6 +889,20 @@ $@"{{
 
             SaveHybridCLRSettings(settings);
             Debug.Log("[Setup] HybridCLR source repositories switched from the gitee mirrors to GitHub.");
+        }
+
+        /// <summary>
+        /// The server's violations as one string, for the refusal that has to survive a reload —
+        /// <see cref="LogServerViolations"/> writes one Console entry each, which is better to read
+        /// but does not outlive a recompilation.
+        /// </summary>
+        private static string DescribeServerViolations(HotUpdateServerVerifier.ServerResponse resp)
+        {
+            if (resp?.Violations == null || resp.Violations.Count == 0)
+                return "  (the server reported no detail)";
+
+            return string.Join(System.Environment.NewLine, resp.Violations
+                .Select(v => $"  - [{v.Kind}] {v.Detail}  ({v.Location})"));
         }
 
         private static void LogServerViolations(HotUpdateServerVerifier.ServerResponse resp)
