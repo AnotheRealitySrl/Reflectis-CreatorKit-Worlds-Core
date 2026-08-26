@@ -13,6 +13,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         DisallowedAssemblyReference,
         DisallowedType,
         DisallowedMember,
+        DynamicDispatch,
         PInvoke,
         UnmanagedCalli,
         UnsafePointer,
@@ -140,6 +141,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 if (policy.IsMemberDenied(declaring.FullName, memberRef.Name))
                     result.Violations.Add(new Violation(
                         ViolationKind.DisallowedMember, $"{declaring.FullName}::{memberRef.Name}", "memberref"));
+
+                if (memberRef is MethodReference method
+                    && policy.IsDynamicDispatch(declaring.FullName, method.Name, ParameterTypes(method)))
+                {
+                    result.Violations.Add(new Violation(
+                        ViolationKind.DynamicDispatch, $"{declaring.FullName}::{method.Name} by name", "memberref"));
+                }
             }
 
             foreach (TypeDefinition type in AllTypes(module.Types))
@@ -213,6 +221,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                             if (policy.IsMemberDenied(mr.DeclaringType.FullName, mr.Name))
                                 result.Violations.Add(new Violation(
                                     ViolationKind.DisallowedMember, $"{mr.DeclaringType.FullName}::{mr.Name}", where, file, line));
+
+                            if (policy.IsDynamicDispatch(mr.DeclaringType.FullName, mr.Name, ParameterTypes(mr)))
+                                result.Violations.Add(new Violation(
+                                    ViolationKind.DynamicDispatch, $"{mr.DeclaringType.FullName}::{mr.Name} by name", where, file, line));
                         }
                         break;
                     case FieldReference fr:
@@ -250,6 +262,16 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                     return;
             }
 
+            // A type this module DEFINES is the code under review, not an API it reaches for. The
+            // whitelist constrains what a creator may call, not how they may name their own
+            // classes: without this, a script inside `namespace MyGame` is rejected the moment it
+            // instantiates or takes typeof() of itself. The only reason that has not bitten is
+            // that creator scripts have so far lived in the global namespace, which the namespace
+            // rule lets through for an unrelated reason. Their members and everything they touch
+            // are still checked — this exempts the name, not the contents.
+            if (typeRef is TypeDefinition)
+                return;
+
             if (!policy.IsTypeAllowed(typeRef.Namespace, typeRef.FullName))
                 result.Violations.Add(new Violation(ViolationKind.DisallowedType, typeRef.FullName, where, file, line));
         }
@@ -272,6 +294,17 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
 
             SequencePoint first = di.SequencePoints.FirstOrDefault(s => !s.IsHidden);
             return first != null ? (first.Document?.Url, first.StartLine) : (null, null);
+        }
+
+        /// <summary>
+        /// The parameter types of the overload this reference names — what tells
+        /// GetComponent&lt;T&gt;() apart from GetComponent(string). Cecil has them without
+        /// resolving the assembly the member lives in.
+        /// </summary>
+        private static IEnumerable<string> ParameterTypes(MethodReference method)
+        {
+            foreach (ParameterDefinition parameter in method.Parameters)
+                yield return parameter.ParameterType?.FullName;
         }
 
         private static bool IsPointer(TypeReference t)

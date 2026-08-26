@@ -21,6 +21,21 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         public HashSet<string> DeniedTypeFullNames = new(StringComparer.Ordinal);
         public Dictionary<string, HashSet<string>> DeniedMembers = new(StringComparer.Ordinal);
 
+        /// <summary>
+        /// Members that are only dangerous when they are handed a NAME or a TYPE: the family of
+        /// GetComponent, FindObjectOfType, StartCoroutine and friends, each of which has a generic
+        /// overload a creator writes every day and a string or System.Type overload that turns it
+        /// into a lookup by name.
+        ///
+        /// Name alone cannot separate the two — <c>GetComponent&lt;Rigidbody&gt;()</c> and
+        /// <c>GetComponent("AuthenticationSystem")</c> are the same member — so the decision is
+        /// taken on the call's signature. The generic form carries no parameter and passes; the
+        /// dispatching form carries a string or a Type and does not.
+        ///
+        /// Declaring type full name -&gt; member names.
+        /// </summary>
+        public Dictionary<string, HashSet<string>> DeniedDispatchMembers = new(StringComparer.Ordinal);
+
         public bool IsAssemblyAllowed(string assemblySimpleName)
             => assemblySimpleName != null && AllowedAssemblies != null
                && AllowedAssemblies.Contains(assemblySimpleName);
@@ -40,6 +55,20 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
             if (AllowedExactNamespaces != null && AllowedExactNamespaces.Contains(typeNamespace))
                 return true;
             return AllowedNamespacePrefixes != null && AllowedNamespacePrefixes.Any(p => NamespaceMatches(typeNamespace, p));
+        }
+
+        public bool IsDynamicDispatch(string declaringTypeFullName, string memberName,
+                                     IEnumerable<string> parameterTypeFullNames)
+        {
+            if (declaringTypeFullName == null || memberName == null
+                || !DeniedDispatchMembers.TryGetValue(declaringTypeFullName, out HashSet<string> dispatchers)
+                || !dispatchers.Contains(memberName))
+            {
+                return false;
+            }
+
+            return parameterTypeFullNames != null
+                && parameterTypeFullNames.Any(x => x == "System.String" || x == "System.Type");
         }
 
         public bool IsMemberDenied(string declaringTypeFullName, string memberName)
