@@ -17,6 +17,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         PInvoke,
         UnmanagedCalli,
         UnsafePointer,
+
+        /// <summary>
+        /// The walk gave up before finishing, on metadata nested deeper than
+        /// <see cref="VerificationResult.MaxDepth"/>. No compiler emits that, so seeing it locally
+        /// means something built the DLL other than the compiler.
+        /// </summary>
+        VerifierLimit,
     }
 
     public readonly struct Violation
@@ -47,6 +54,16 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
 
     public sealed class VerificationResult
     {
+        /// <summary>
+        /// How deep the walk follows a type into its generic arguments, element type, by-ref and
+        /// pointer targets, and how deep it follows a type into its nested types. Real code spends
+        /// single digits. Mirrors the backend's bound so a local pass and a server pass mean the
+        /// same thing; the backend also refuses such metadata before Mono.Cecil parses it, which is
+        /// a protection this side does not need — here the input is the creator's own compiler
+        /// output, not an upload from someone else.
+        /// </summary>
+        public const int MaxDepth = 64;
+
         public readonly List<Violation> Violations = new();
         public bool Passed => Violations.Count == 0;
 
@@ -150,7 +167,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                 }
             }
 
-            foreach (TypeDefinition type in AllTypes(module.Types))
+            foreach (TypeDefinition type in AllTypes(module.Types, result))
             {
                 foreach (MethodDefinition method in type.Methods)
                     CheckMethod(method, result, policy);
@@ -236,27 +253,38 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         }
 
         private static void CheckType(TypeReference typeRef, VerificationResult result, string where,
-                                      HotUpdatePolicy policy, string file = null, int? line = null)
+                                      HotUpdatePolicy policy, string file = null, int? line = null,
+                                      int depth = 0)
         {
             if (typeRef == null)
                 return;
 
+            if (depth > VerificationResult.MaxDepth)
+            {
+                // Rejected, not skipped: whatever is under here went unchecked, and a verifier that
+                // stops looking must not report a pass for the part it did not look at.
+                result.Violations.Add(new Violation(
+                    ViolationKind.VerifierLimit,
+                    $"type signature nests deeper than {VerificationResult.MaxDepth}", where, file, line));
+                return;
+            }
+
             switch (typeRef)
             {
                 case GenericInstanceType git:
-                    CheckType(git.ElementType, result, where, policy, file, line);
+                    CheckType(git.ElementType, result, where, policy, file, line, depth + 1);
                     foreach (TypeReference arg in git.GenericArguments)
-                        CheckType(arg, result, where, policy, file, line);
+                        CheckType(arg, result, where, policy, file, line, depth + 1);
                     return;
                 case ArrayType at:
-                    CheckType(at.ElementType, result, where, policy, file, line);
+                    CheckType(at.ElementType, result, where, policy, file, line, depth + 1);
                     return;
                 case ByReferenceType brt:
-                    CheckType(brt.ElementType, result, where, policy, file, line);
+                    CheckType(brt.ElementType, result, where, policy, file, line, depth + 1);
                     return;
                 case PointerType pt:
                     result.Violations.Add(new Violation(ViolationKind.UnsafePointer, pt.FullName, where, file, line));
-                    CheckType(pt.ElementType, result, where, policy, file, line);
+                    CheckType(pt.ElementType, result, where, policy, file, line, depth + 1);
                     return;
                 case GenericParameter:
                     return;
@@ -310,12 +338,25 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         private static bool IsPointer(TypeReference t)
             => t != null && (t.IsPointer || t.IsFunctionPointer);
 
-        private static IEnumerable<TypeDefinition> AllTypes(IEnumerable<TypeDefinition> types)
+        /// <summary>
+        /// Every type in the module, nested ones included. Bounded for the same reason
+        /// <see cref="CheckType"/> is.
+        /// </summary>
+        private static IEnumerable<TypeDefinition> AllTypes(IEnumerable<TypeDefinition> types,
+                                                            VerificationResult result, int depth = 0)
         {
+            if (depth > VerificationResult.MaxDepth)
+            {
+                result.Violations.Add(new Violation(
+                    ViolationKind.VerifierLimit,
+                    $"nested types go deeper than {VerificationResult.MaxDepth}", "typedef"));
+                yield break;
+            }
+
             foreach (TypeDefinition t in types)
             {
                 yield return t;
-                foreach (TypeDefinition nested in AllTypes(t.NestedTypes))
+                foreach (TypeDefinition nested in AllTypes(t.NestedTypes, result, depth + 1))
                     yield return nested;
             }
         }
