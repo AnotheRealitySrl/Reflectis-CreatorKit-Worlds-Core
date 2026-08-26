@@ -300,8 +300,44 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
             if (typeRef is TypeDefinition)
                 return;
 
-            if (!policy.IsTypeAllowed(typeRef.Namespace, typeRef.FullName))
-                result.Violations.Add(new Violation(ViolationKind.DisallowedType, typeRef.FullName, where, file, line));
+            CheckTypeName(typeRef, result, where, policy, file, line);
+        }
+
+        /// <summary>
+        /// Judges a type by its own name and by every name it is nested inside.
+        ///
+        /// Both halves are needed because of how ECMA-335 stores nesting. A nested type's metadata
+        /// row carries an EMPTY namespace — the namespace belongs to the outermost enclosing type —
+        /// so asking the whitelist about the row on its own asks it about a type with no namespace,
+        /// which it used to answer by allowing. That waved through every nested type in every
+        /// permitted assembly: measured across the 23 whitelisted assemblies, 480 of them, 130
+        /// public, and 32 of those nested inside a name the policy denies in as many words —
+        /// the System.Runtime.InteropServices marshalling machinery, System.Environment,
+        /// System.IO.Enumeration.
+        ///
+        /// So the namespace comes from the outermost type, and every level of the chain has to pass
+        /// on its own name too: a type nested inside a denied type is reached through the denied
+        /// type, and its own name says nothing about that.
+        /// </summary>
+        private static void CheckTypeName(TypeReference typeRef, VerificationResult result, string where,
+                                          HotUpdatePolicy policy, string file, int? line)
+        {
+            TypeReference outermost = typeRef;
+            while (outermost.DeclaringType != null)
+                outermost = outermost.DeclaringType;
+
+            for (TypeReference current = typeRef; current != null; current = current.DeclaringType)
+            {
+                if (policy.IsTypeAllowed(outermost.Namespace, current.FullName))
+                    continue;
+
+                string detail = ReferenceEquals(current, typeRef)
+                    ? typeRef.FullName
+                    : $"{typeRef.FullName} (nested in the disallowed {current.FullName})";
+
+                result.Violations.Add(new Violation(ViolationKind.DisallowedType, detail, where, file, line));
+                return;
+            }
         }
 
         private static (string file, int? line) LineOf(MethodDefinition method, Instruction ins)
