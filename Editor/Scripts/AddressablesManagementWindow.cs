@@ -1213,17 +1213,18 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                     return false;
                 }
 
-                string body = await response.Content.ReadAsStringAsync();
-
                 if (!response.IsSuccessStatusCode)
                 {
-                    // 422 carries the whitelist violations, one per offending reference, each
-                    // tagged with the platform DLL it came from — worth surfacing verbatim.
+                    // Read only on the way out: a 422 carries the whitelist violations, one per
+                    // offending reference, each tagged with the platform DLL it came from — worth
+                    // surfacing verbatim. The success body is the stored record, which is the
+                    // platform's business and not something a creator's console should carry.
+                    string body = await response.Content.ReadAsStringAsync();
+
                     Debug.LogError($"[AddressablesManagement] Environment DLL import failed: {response.StatusCode} - {body}");
                     return false;
                 }
 
-                Debug.Log($"[AddressablesManagement] Environment DLL registered: {body}");
                 return true;
             }
             catch (Exception ex)
