@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using UnityEditor;
-using UnityEditor.Callbacks;
 
 using UnityEditorInternal;
 
@@ -147,34 +146,13 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         }
 
         /// <summary>
-        /// Keeps the asmdef named after the source, on every reload that follows a compilation —
-        /// which is exactly when the source can have changed.
-        ///
-        /// This is where the rename belongs. It used to happen inside the build gate, which meant
-        /// the creator pressed Build & Deploy, was told the assembly had been renamed, and had to
-        /// start over once the editor had recompiled: a modal dialog and a wasted click for
-        /// something that has nothing to do with deploying. Renaming here instead, while they are
-        /// editing, costs one extra background recompilation right after their own — and by the
-        /// time they press Build the name is already current, so the gate has nothing to say.
-        ///
-        /// Silent when there is nothing to do, which is almost always. One line in the console
-        /// when it does rename, replayed after the reload that wipes it.
-        /// </summary>
-        [DidReloadScripts]
-        static void AlignAssemblyNameAfterCompilation()
-        {
-            // Not while the editor is busy with something that a domain reload would disturb, and
-            // not in a project that never set up interpreted scripting.
-            if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling)
-                return;
-
-            AlignAssemblyNameToSource(out _);
-        }
-
-        /// <summary>
         /// Brings the asmdef's name to the digest of the current source, if it is not there
         /// already. Returns true when the project is in a state where the question even applies —
         /// so a caller can tell "nothing to do" from "not set up".
+        ///
+        /// Called from the build gate and nowhere else. Doing it on every script reload instead
+        /// would keep the name always current, at the price of a second recompilation after every
+        /// save the creator makes — too much to pay all day for something only a publish needs.
         /// </summary>
         /// <param name="renamed">
         /// True when a rename actually happened, which means Unity is now recompiling and the
@@ -213,7 +191,8 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
 
             // Logged now, and held for the reload the rename is about to trigger: with the
             // Console's Clear on Recompile enabled, this line would otherwise be wiped by the
-            // very recompilation it announces.
+            // very recompilation it announces. The caller that is mid-publish parks its own work
+            // and picks it up on the other side, so this is information, not an instruction.
             Debug.Log(notice);
             SessionState.SetString(PENDING_NOTICE_KEY, notice);
 
@@ -777,27 +756,21 @@ $@"{{
             BundleIsCurrent = false;
             AwaitingRecompile = false;
 
-            // 3) The name should already be current: AlignAssemblyNameAfterCompilation renames the
-            //    asmdef when the creator saves a script, so by the time anyone presses Build there
-            //    is nothing left to do here. This is the corner where that did not happen — the
-            //    aligner is skipped in play mode, and a folder can change without a compilation.
-            //
-            //    A rename is a domain reload, which would tear this task down mid-await, so the
-            //    run has to end here. In the console and nowhere else: the creator asked to
-            //    deploy, not to be interrupted, and the next attempt just works.
+            // 3) The name has to carry the fingerprint of the source before anything is compiled
+            //    against it, and an edit since the last publish means it does not yet. Renaming the
+            //    asmdef is a script recompilation and a domain reload, which would tear this task
+            //    down mid-await, so the run ends here — but it ends quietly: the caller parks what
+            //    it was doing and the reload picks it back up, so the creator sees a pause in the
+            //    deploy and one line in the console, nothing to answer and nothing to click again.
             if (!AlignAssemblyNameToSource(out bool renamed))
             {
-                // Already logged by the aligner: it could not rename the asmdef.
+                // Already logged: the asmdef could not be renamed.
                 return false;
             }
 
             if (renamed)
             {
                 AwaitingRecompile = true;
-
-                Debug.Log("[HotUpdate] The deploy stopped to let that recompilation finish — run it " +
-                          "again in a moment.");
-
                 return false;
             }
 

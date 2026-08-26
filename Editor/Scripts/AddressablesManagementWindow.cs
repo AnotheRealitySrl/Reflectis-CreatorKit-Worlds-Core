@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Unity.Properties;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
+using UnityEditor.Callbacks;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
@@ -522,6 +523,17 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
                 return;
             }
 
+            await RunBuildAndDeployAsync(worldIds);
+        }
+
+        /// <summary>
+        /// The build and deploy itself, with the world ids passed in rather than read off the
+        /// window. That is what makes it re-runnable after a domain reload: the selection lives in
+        /// a dictionary that is not serialized, so it does not survive one, while the ids parked in
+        /// SessionState do.
+        /// </summary>
+        private async Task RunBuildAndDeployAsync(List<int> worldIds)
+        {
             SetDeployButtonsEnabled(false);
 
             // 0. Build + verify the interpreted DLL (local whitelist + authoritative server
@@ -530,6 +542,10 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             {
                 if (InterpretedDllAwaitingRecompile())
                 {
+                    // Nothing failed: the gate renamed the hot-update assembly because the scripts
+                    // changed, and Unity is recompiling it. Park what was asked and let the reload
+                    // press the button again — the creator sees a pause, not a question.
+                    ParkDeployForResume(ResumeWorlds + string.Join(",", worldIds));
                     SetDeployButtonsEnabled(true);
                     return;
                 }
@@ -717,6 +733,12 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         {
             ClearDeployErrors();
 
+            await RunTenantBuildAndDeployAsync();
+        }
+
+        /// <summary>Same as above for the tenant deploy, which needs no inputs to be re-runnable.</summary>
+        private async Task RunTenantBuildAndDeployAsync()
+        {
             SetDeployButtonsEnabled(false);
 
             // 0. Build + verify the interpreted DLL. Block the whole build & deploy if it fails.
@@ -724,6 +746,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             {
                 if (InterpretedDllAwaitingRecompile())
                 {
+                    ParkDeployForResume(ResumeTenant);
                     SetDeployButtonsEnabled(true);
                     return;
                 }
@@ -1773,6 +1796,77 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         /// window stays decoupled from the HYBRIDCLR_INSTALLED-gated assembly; when HybridCLR is
         /// not installed the setupper is absent and we simply proceed (nothing to gate).
         /// </summary>
+        // A deploy interrupted by the hot-update assembly's rename, waiting for the recompilation
+        // that follows it. SessionState and not EditorPrefs: this must survive a domain reload and
+        // nothing else — an editor that restarts should not silently start deploying.
+        private const string ResumeKey = "Reflectis_AddressablesDeploy_ResumeAfterRecompile";
+        private const string ResumeWorlds = "worlds:";
+        private const string ResumeTenant = "tenant";
+
+        private static void ParkDeployForResume(string payload)
+        {
+            SessionState.SetString(ResumeKey, payload);
+
+            Debug.Log("[HotUpdate] The deploy is waiting for that recompilation and will carry on by " +
+                      "itself when it finishes.");
+        }
+
+        /// <summary>
+        /// Picks a parked deploy back up on the first reload after the recompilation that
+        /// interrupted it. The marker is cleared before anything is re-run, so a deploy that fails
+        /// again cannot turn into a loop, and it is only ever written by the path that renamed the
+        /// assembly — a build that stopped for any other reason stays stopped.
+        /// </summary>
+        [DidReloadScripts]
+        private static void ResumeParkedDeploy()
+        {
+            string parked = SessionState.GetString(ResumeKey, string.Empty);
+            if (string.IsNullOrEmpty(parked))
+                return;
+
+            SessionState.EraseString(ResumeKey);
+
+            AddressablesManagementWindow window =
+                Resources.FindObjectsOfTypeAll<AddressablesManagementWindow>().FirstOrDefault();
+
+            if (window == null)
+            {
+                Debug.LogWarning("[HotUpdate] The deploy was waiting for a recompilation, but its window " +
+                                 "has been closed. Nothing was resumed.");
+                return;
+            }
+
+            // Next editor tick, not this callback: the domain has just come back and the window's
+            // UI is still being rebuilt around us.
+            EditorApplication.delayCall += () =>
+            {
+                Debug.Log("[HotUpdate] Recompilation finished — resuming the deploy.");
+
+                // Fire and forget by design, exactly as the button click is: both paths log their
+                // own failures, and there is nobody left to await them.
+                if (parked == ResumeTenant)
+                {
+                    _ = window.RunTenantBuildAndDeployAsync();
+                    return;
+                }
+
+                List<int> worldIds = parked.Substring(ResumeWorlds.Length)
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => int.TryParse(x, out int id) ? id : -1)
+                    .Where(x => x > 0)
+                    .ToList();
+
+                if (worldIds.Count == 0)
+                {
+                    Debug.LogWarning("[HotUpdate] The parked deploy named no world it could still reach. " +
+                                     "Nothing was resumed.");
+                    return;
+                }
+
+                _ = window.RunBuildAndDeployAsync(worldIds);
+            };
+        }
+
         /// <summary>
         /// Whether the verify step stopped to let Unity recompile a renamed assembly, rather than
         /// because anything was refused. It already told the creator what to do — through a dialog
