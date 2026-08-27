@@ -127,6 +127,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
 
         /// <summary>Runs the verifier against the given policy and writes the outcome to the
         /// Unity Console.</summary>
+        [HideInCallstack]
         public static VerificationResult VerifyAndLog(string dllPath, HotUpdatePolicy policy)
         {
             VerificationResult result = HotUpdateAssemblyVerifier.VerifyFile(dllPath, policy);
@@ -135,10 +136,23 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         }
 
         /// <summary>
-        /// Writes the result to the Console as ONE entry per violation. Each entry embeds a
-        /// console hyperlink to the offending <c>file:line</c> (when a PDB is present), so
-        /// clicking it opens the script at that line.
+        /// Writes the result to the Console as ONE entry per violation, each aimed at the line that
+        /// caused it (when a PDB is present) three separate ways, because the Console offers three
+        /// separate ways to follow a message and they do not use the same information:
+        ///
+        /// <list type="bullet">
+        /// <item>a hyperlink, for a single click on the <c>file:line</c> text;</item>
+        /// <item>the asset as the entry's context object, which is what a double-click opens;</item>
+        /// <item>a synthesised stack frame, so the file and the LINE can be parsed out of the entry.</item>
+        /// </list>
+        ///
+        /// The last two exist because a double-click resolves through the entry's stack trace, and
+        /// the creator's script is never in ours: a violation is found by reading the assembly's
+        /// metadata, not by running their code, so no real frame points at it. Left alone, a
+        /// double-click lands on this method — the code that reported the problem instead of the
+        /// code that has it.
         /// </summary>
+        [HideInCallstack]
         public static void LogResult(VerificationResult result, string dllPath, string sha256 = null)
         {
             string name = Path.GetFileName(dllPath);
@@ -154,18 +168,33 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
                            $"policy violation(s) (see entries below).\n  path: {dllPath}{shaLine}");
 
             foreach (Violation v in result.Violations)
-                Debug.LogError(FormatViolation(v));
+            {
+                string rel = v.SourceFile != null ? ToProjectRelative(v.SourceFile) : null;
+
+                // Null when the path is outside the project or the PDB gave nothing: the entry then
+                // behaves exactly as it did before, hyperlink included where one is possible.
+                UnityEngine.Object context = string.IsNullOrEmpty(rel)
+                    ? null
+                    : AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(rel);
+
+                Debug.LogError(FormatViolation(v, rel), context);
+            }
         }
 
-        private static string FormatViolation(Violation v)
+        private static string FormatViolation(Violation v, string rel)
         {
-            string rel = v.SourceFile != null ? ToProjectRelative(v.SourceFile) : null;
-
             string where = (rel != null && v.SourceLine.HasValue)
                 ? $"<a href=\"{rel}\" line=\"{v.SourceLine.Value}\">{rel}:{v.SourceLine.Value}</a>"
                 : v.Where;
 
-            return $"[HotUpdateSecurity] [{v.Kind}] {v.Detail}\n  → {where}";
+            string text = $"[HotUpdateSecurity] [{v.Kind}] {v.Detail}\n  → {where}";
+
+            if (rel == null || !v.SourceLine.HasValue)
+                return text;
+
+            // Shaped like a real frame — "Method () (at path:line)" — which is the form the Console
+            // parses when it looks for somewhere to jump to. It is a fabrication, and says so.
+            return text + $"\nHotUpdateSecurity.Violation () (at {rel}:{v.SourceLine.Value})";
         }
 
         private static string ToProjectRelative(string absolute)
