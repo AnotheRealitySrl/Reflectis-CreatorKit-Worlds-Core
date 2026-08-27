@@ -51,7 +51,7 @@ namespace Reflectis.CreatorKit.Worlds.CoreEditor
 
     #endregion
 
-    [CreateAssetMenu(fileName = "AddressablesBundle", menuName = "Reflectis/SDK-CreatorKit/Editor-AddressablesBundle", order = 1)]
+    [CreateAssetMenu(fileName = "AddressablesBundle", menuName = "Virtuademy/SDK-CreatorKit/Editor-AddressablesBundle", order = 1)]
     public class AddressablesBundleScriptableObject : ScriptableObject
     {
         #region Consts

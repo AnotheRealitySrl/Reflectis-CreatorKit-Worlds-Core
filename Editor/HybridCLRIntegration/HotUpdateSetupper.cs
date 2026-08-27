@@ -254,7 +254,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
         // ============================================================
         //  SETUP — run once to prepare the project
         // ============================================================
-        //[MenuItem("Reflectis Worlds/Creator Kit/Core/Setup Interpreted Scripting")]
+        //[MenuItem("Virtuademy Worlds/Creator Kit/Core/Setup Interpreted Scripting")]
         public static void Setup()
         {
             // Step 1: the interpreter itself, inside this Editor's IL2CPP. Nothing below matters

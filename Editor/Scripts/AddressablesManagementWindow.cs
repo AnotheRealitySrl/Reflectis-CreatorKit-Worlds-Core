@@ -124,7 +124,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private VisualElement deployErrorsContainer;
         private ScrollView deployErrorsScrollView;
 
-        [MenuItem("Reflectis Worlds/Creator Kit/Core/Addressables management")]
+        [MenuItem("Virtuademy Worlds/Creator Kit/Core/Addressables management")]
         public static void ShowExample()
         {
             AddressablesManagementWindow wnd = GetWindow<AddressablesManagementWindow>();
@@ -189,7 +189,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
             openTenantSelectionButton = root.Q<Button>("open-tenant-selection-button");
             openTenantSelectionButton.clicked += () =>
             {
-                EditorApplication.ExecuteMenuItem("Reflectis/Show available tenants");
+                EditorApplication.ExecuteMenuItem("Virtuademy/Show available tenants");
             };
 
             // Through the session manager, so the Azure refresh token goes away too: clearing

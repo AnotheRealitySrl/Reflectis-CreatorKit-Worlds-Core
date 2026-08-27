@@ -13,7 +13,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
     /// </summary>
     public static class HotUpdateVerifierMenu
     {
-        private const string MenuRoot = "Reflectis Worlds/Creator Kit/Security/";
+        private const string MenuRoot = "Virtuademy Worlds/Creator Kit/Security/";
 
         //[MenuItem(MenuRoot + "Verify HotUpdate Script DLL (auto → Console)")]
         public static async void VerifyAuto()

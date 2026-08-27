@@ -15,7 +15,7 @@ namespace Reflectis.CreatorKit.Worlds.Installer.Editor
 {
     public static class BreakingChangesSolver2025_4
     {
-        [MenuItem("Reflectis Worlds/Creator Kit update routines/v2025.3 -> v2025.4")]
+        [MenuItem("Virtuademy Worlds/Creator Kit update routines/v2025.3 -> v2025.4")]
         public static void SolveBreakingChanges()
         {
 #if REFLECTIS_CREATOR_KIT_WORLDS_PLACEHOLDERS

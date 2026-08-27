@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Reflectis.CreatorKit.Worlds.Core.Editor
 {
-    [CreateAssetMenu(fileName = "AddressablesSceneList", menuName = "Reflectis/CreatorKit/Worlds/Core/AddressablesSceneList")]
+    [CreateAssetMenu(fileName = "AddressablesSceneList", menuName = "Virtuademy/CreatorKit/Worlds/Core/AddressablesSceneList")]
     public class SceneListScriptableObject : ScriptableObject
     {
         [Serializable]

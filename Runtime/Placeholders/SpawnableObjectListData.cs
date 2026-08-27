@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Reflectis.CreatorKit.Worlds.Core
 {
-    [CreateAssetMenu(menuName = "Reflectis/SDK-ObjectSpawner/SpawnableObjectListData", fileName = "SpawnableObjectListData")]
+    [CreateAssetMenu(menuName = "Virtuademy/SDK-ObjectSpawner/SpawnableObjectListData", fileName = "SpawnableObjectListData")]
     public class SpawnableObjectListData : ScriptableObject
     {
         public List<GameObject> spawnableObjectList;
