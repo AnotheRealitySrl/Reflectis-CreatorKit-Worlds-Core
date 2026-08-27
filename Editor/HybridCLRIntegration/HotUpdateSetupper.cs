@@ -781,6 +781,40 @@ $@"{{
             BundleIsCurrent = false;
             AwaitingRecompile = false;
 
+            // 2b) Judge the scripts BEFORE renaming anything, on the assembly Unity has already
+            //     compiled under whatever name the asmdef currently declares.
+            //
+            //     The whitelist judges types, members and IL and never the assembly name, so this
+            //     is the same verdict the renamed build would get — reaching it here spares the
+            //     creator a rename and the domain reload that follows it every time the answer is
+            //     no. It also arrives with file and line from the PDB, on a Console that nothing
+            //     has cleared yet, which is the difference between a verdict and a rumour.
+            //
+            //     A fail-fast, not a replacement. If Unity has not recompiled yet (auto-refresh
+            //     off, or the scripts do not compile at all) this DLL is stale or missing, so a
+            //     pass here proves nothing and the checks after the rename stay exactly as they
+            //     were. Only run when a rename is actually coming: with the name already aligned
+            //     this would verify the very file step 6 is about to verify.
+            string current = HotUpdateDllLocator.ResolveDefaultDllPath(out string currentName);
+
+            if (currentName != expected && !string.IsNullOrEmpty(current) && File.Exists(current))
+            {
+                // Verified without logging, then logged only on a refusal: a pass here and a pass
+                // at step 6 are the same verdict on the same code, and announcing it twice per
+                // build would train the creator to skim past both.
+                VerificationResult precheck = HotUpdateAssemblyVerifier.VerifyFile(current, fetch.Policy);
+                if (!precheck.Passed)
+                {
+                    // One Console entry per violation, each hyperlinked to its file:line.
+                    HotUpdateDllLocator.LogResult(precheck, current);
+
+                    Refuse("[HotUpdateSecurity] The scripts do not satisfy the whitelist — build blocked "
+                           + $"before anything was renamed or recompiled (checked '{currentName}').\n"
+                           + precheck.Summarize());
+                    return false;
+                }
+            }
+
             // 3) The name has to carry the fingerprint of the source before anything is compiled
             //    against it, and an edit since the last publish means it does not yet. Renaming the
             //    asmdef is a script recompilation and a domain reload, which would tear this task
