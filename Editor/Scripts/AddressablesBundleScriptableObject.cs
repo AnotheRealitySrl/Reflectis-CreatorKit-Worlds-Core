@@ -20,14 +20,14 @@ namespace Virtuademy.CreatorKit.Worlds.CoreEditor
         [SerializeField]
         private SceneAsset sceneAsset = null;
 
-        [SerializeField, Obsolete("Now environments thumbnail has to be loaded using Reflectis backoffice!"),
+        [SerializeField, Obsolete("Now environments thumbnail has to be loaded using the Virtuademy backoffice!"),
             RenameAttribute("Thumbnail Asset (Obsolete)")]
         private Texture thumbnailAsset = null;
 
         public string AddressableAssetName => addressableAssetName;
         public SceneAsset SceneAsset => sceneAsset;
 
-        [Obsolete("Now environments thumbnail has to be loaded using Reflectis backoffice!")]
+        [Obsolete("Now environments thumbnail has to be loaded using the Virtuademy backoffice!")]
         public Texture ThumbnailAsset => thumbnailAsset;
     }
 

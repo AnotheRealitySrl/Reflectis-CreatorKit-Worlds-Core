@@ -1,4 +1,4 @@
-namespace Reflectis
+namespace Virtuademy
 {
     public static class AddressablesVariables
     {
