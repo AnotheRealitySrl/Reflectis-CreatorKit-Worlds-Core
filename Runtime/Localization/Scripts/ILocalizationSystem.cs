@@ -1,8 +1,8 @@
-using Reflectis.SDK.Core.SystemFramework;
+using Virtuademy.SDK.Core.SystemFramework;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
-namespace Reflectis.CreatorKit.Worlds.Core.Localization
+namespace Virtuademy.CreatorKit.Worlds.Core.Localization
 {
     public interface ILocalizationSystem : ISystem
     {

@@ -1,13 +1,13 @@
 using Newtonsoft.Json;
 
-using Reflectis.SDK.TenantConfiguration.Editor;
+using Virtuademy.SDK.TenantConfiguration.Editor;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
+namespace Virtuademy.CreatorKit.Worlds.Core.HybridCLR.Editor
 {
     /// <summary>
     /// Downloads the whitelist <c>policy.json</c> from the platform's public GET endpoint —

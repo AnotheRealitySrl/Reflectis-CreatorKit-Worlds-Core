@@ -1,12 +1,12 @@
-using Reflectis.SDK.Core.SystemFramework;
+using Virtuademy.SDK.Core.SystemFramework;
 
 using System.Threading.Tasks;
 
 using UnityEngine;
 
-using static Reflectis.CreatorKit.Worlds.Core.Interaction.IContextualMenuManageable;
+using static Virtuademy.CreatorKit.Worlds.Core.Interaction.IContextualMenuManageable;
 
-namespace Reflectis.CreatorKit.Worlds.Core.Interaction
+namespace Virtuademy.CreatorKit.Worlds.Core.Interaction
 {
     public interface IContextualMenuSystem : ISystem
     {

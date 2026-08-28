@@ -4,7 +4,7 @@ using UnityEditor.AddressableAssets.Settings;
 
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.CoreEditor
+namespace Virtuademy.CreatorKit.Worlds.CoreEditor
 {
     public static class AddressablesBuildScript
     {

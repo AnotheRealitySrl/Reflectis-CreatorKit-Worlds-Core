@@ -4,7 +4,7 @@ using Unity.Properties;
 
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
+namespace Virtuademy.CreatorKit.Worlds.Core.ClientModels
 {
     [Serializable]
     [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.Fields)]

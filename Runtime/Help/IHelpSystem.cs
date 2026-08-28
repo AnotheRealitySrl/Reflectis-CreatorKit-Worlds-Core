@@ -1,11 +1,11 @@
-using Reflectis.SDK.Core.SystemFramework;
+using Virtuademy.SDK.Core.SystemFramework;
 
 using System;
 using System.Threading.Tasks;
 
 using UnityEngine.Events;
 
-namespace Reflectis.CreatorKit.Worlds.Core.Help
+namespace Virtuademy.CreatorKit.Worlds.Core.Help
 {
     public enum HelpState
     {

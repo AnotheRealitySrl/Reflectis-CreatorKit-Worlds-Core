@@ -1,4 +1,4 @@
-using Reflectis.SDK.Core.ApplicationManagement;
+using Virtuademy.SDK.Core.ApplicationManagement;
 
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using UnityEditor;
 
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.Core.Editor
+namespace Virtuademy.CreatorKit.Worlds.Core.Editor
 {
     [CreateAssetMenu(fileName = "AddressablesSceneList", menuName = "Virtuademy/CreatorKit/Worlds/Core/AddressablesSceneList")]
     public class SceneListScriptableObject : ScriptableObject

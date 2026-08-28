@@ -5,7 +5,7 @@ using System.Linq;
 
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
+namespace Virtuademy.CreatorKit.Worlds.Core.HybridCLR.Editor
 {
     /// <summary>
     /// Packs this project's compiled hot-update assembly — one DLL per build target — into

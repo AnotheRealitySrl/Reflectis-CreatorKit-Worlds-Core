@@ -1,6 +1,6 @@
 {
-  "name": "com.anotherealitysrl.reflectis-creatorkit-worlds-core",
-  "displayName": "Reflectis-CreatorKit-Worlds-Core",
+  "name": "com.anotherealitysrl.virtuademy-creatorkit-worlds-core",
+  "displayName": "Virtuademy-CreatorKit-Worlds-Core",
   "version": "8.1.0",
   "unity": "2020.1",
   "description": "Reflectis Creator Kit Worlds Core module",
@@ -10,7 +10,7 @@
   "category": "Unity",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AnotheRealitySrl/Reflectis-CreatorKit-Worlds-Core"
+    "url": "https://github.com/AnotheRealitySrl/Virtuademy-CreatorKit-Worlds-Core"
   },
   "samples": [
     {

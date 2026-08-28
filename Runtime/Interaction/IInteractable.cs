@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Reflectis.CreatorKit.Worlds.Core.Interaction
+namespace Virtuademy.CreatorKit.Worlds.Core.Interaction
 {
     /// <summary>
     /// Common interaface for any interactable entity.

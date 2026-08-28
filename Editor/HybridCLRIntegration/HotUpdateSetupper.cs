@@ -15,7 +15,7 @@ using UnityEditorInternal;
 
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.Core.HybridCLR.Editor
+namespace Virtuademy.CreatorKit.Worlds.Core.HybridCLR.Editor
 {
     public static class HotUpdateSetupper
     {

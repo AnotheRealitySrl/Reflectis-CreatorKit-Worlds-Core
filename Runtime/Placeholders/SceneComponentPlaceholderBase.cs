@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.Core.Placeholders
+namespace Virtuademy.CreatorKit.Worlds.Core.Placeholders
 {
     [RequireComponent(typeof(SceneObjectId))]
     public abstract class SceneComponentPlaceholderBase : MonoBehaviour

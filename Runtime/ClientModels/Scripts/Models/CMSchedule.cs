@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.Core.ClientModels
+namespace Virtuademy.CreatorKit.Worlds.Core.ClientModels
 {
     [Serializable]
     public class CMSchedule

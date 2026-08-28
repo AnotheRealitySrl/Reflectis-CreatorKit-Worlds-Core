@@ -1,4 +1,4 @@
-namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
+namespace Virtuademy.CreatorKit.Worlds.Core.ObjectSpawner
 {
     public interface ISpawnedObjectCallback
     {

@@ -1,9 +1,9 @@
-using Reflectis.SDK.Core.SystemFramework;
+using Virtuademy.SDK.Core.SystemFramework;
 
 using System.Threading.Tasks;
 using UnityEngine.Events;
 
-namespace Reflectis.CreatorKit.Worlds.Core.Interaction
+namespace Virtuademy.CreatorKit.Worlds.Core.Interaction
 {
     public interface IVisualScriptingInteractionSystem : ISystem
     {

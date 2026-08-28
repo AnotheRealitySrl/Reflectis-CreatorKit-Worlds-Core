@@ -1,6 +1,6 @@
 {
-    "name": "Reflectis.CreatorKit.Worlds.CoreHybridCLREditor",
-    "rootNamespace": "Reflectis.CreatorKit.Worlds.CoreHybridCLREditor",
+    "name": "Virtuademy.CreatorKit.Worlds.CoreHybridCLREditor",
+    "rootNamespace": "Virtuademy.CreatorKit.Worlds.CoreHybridCLREditor",
     "references": [
         "GUID:2373f786d14518f44b0f475db77ba4de",
         "GUID:2cf13d4ec281ded458a2543b244c1a5a",

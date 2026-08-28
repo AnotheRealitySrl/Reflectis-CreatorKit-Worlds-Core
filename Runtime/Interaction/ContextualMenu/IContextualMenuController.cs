@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Reflectis.CreatorKit.Worlds.Core.Interaction
+namespace Virtuademy.CreatorKit.Worlds.Core.Interaction
 {
     public interface IContextualMenuController
     {

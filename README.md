@@ -1,4 +1,4 @@
-# Reflectis-SDK-CreatorKit
+# Virtuademy-SDK-CreatorKit
 
 - [Documentation here](Documentation~/index.md)
 - [Changelog here](CHANGELOG.md)

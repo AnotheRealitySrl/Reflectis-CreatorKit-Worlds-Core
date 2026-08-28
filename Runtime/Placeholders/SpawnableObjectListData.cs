@@ -4,7 +4,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.Core
+namespace Virtuademy.CreatorKit.Worlds.Core
 {
     [CreateAssetMenu(menuName = "Virtuademy/SDK-ObjectSpawner/SpawnableObjectListData", fileName = "SpawnableObjectListData")]
     public class SpawnableObjectListData : ScriptableObject

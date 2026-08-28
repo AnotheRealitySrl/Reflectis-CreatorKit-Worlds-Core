@@ -8,9 +8,9 @@ using UnityEngine;
 
 using System.Collections.Generic;
 
-using Reflectis.CreatorKit.Worlds.Core.Placeholders;
+using Virtuademy.CreatorKit.Worlds.Core.Placeholders;
 
-namespace Reflectis.CreatorKit.Worlds.Core.Placeholders
+namespace Virtuademy.CreatorKit.Worlds.Core.Placeholders
 {
     [ExecuteInEditMode]
     [DisallowMultipleComponent]

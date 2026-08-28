@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
-using Reflectis.CreatorKit.Worlds.CoreEditor;
-using Reflectis.SDK.ReflectisApi;
-using Reflectis.SDK.TenantConfiguration;
-using Reflectis.SDK.TenantConfiguration.Editor;
+using Virtuademy.CreatorKit.Worlds.CoreEditor;
+using Virtuademy.SDK.PlatformApi;
+using Virtuademy.SDK.TenantConfiguration;
+using Virtuademy.SDK.TenantConfiguration.Editor;
 using Renci.SshNet;
 using System;
 using System.Collections.Generic;
@@ -24,9 +24,9 @@ using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static Reflectis.CreatorKit.Worlds.Core.Editor.SceneListScriptableObject;
+using static Virtuademy.CreatorKit.Worlds.Core.Editor.SceneListScriptableObject;
 
-namespace Reflectis.CreatorKit.Worlds.Core.Editor
+namespace Virtuademy.CreatorKit.Worlds.Core.Editor
 {
     public class AddressablesManagementWindow : EditorWindow
     {
@@ -57,7 +57,7 @@ namespace Reflectis.CreatorKit.Worlds.Core.Editor
         private const string build_target_variable_name = "BuildTarget";
         private const string build_target_variable_value = "[UnityEditor.EditorUserBuildSettings.activeBuildTarget]";
         private const string player_version_override_variable_name = "PlayerVersionOverride";
-        private const string player_version_override_variable_value = "[Reflectis.CreatorKit.Worlds.CoreEditor.AddressablesBuildScript.PlayerVersionOverride]";
+        private const string player_version_override_variable_value = "[Virtuademy.CreatorKit.Worlds.CoreEditor.AddressablesBuildScript.PlayerVersionOverride]";
 
         private string remoteBuildPath;
         private string remoteLoadPath;

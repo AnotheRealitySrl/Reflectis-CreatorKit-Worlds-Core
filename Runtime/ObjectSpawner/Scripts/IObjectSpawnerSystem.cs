@@ -1,10 +1,10 @@
-using Reflectis.SDK.Core.SystemFramework;
+using Virtuademy.SDK.Core.SystemFramework;
 
 using System.Threading.Tasks;
 
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.Core.ObjectSpawner
+namespace Virtuademy.CreatorKit.Worlds.Core.ObjectSpawner
 {
     public interface IObjectSpawnerSystem : ISystem
     {

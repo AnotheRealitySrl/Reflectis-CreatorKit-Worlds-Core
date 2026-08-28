@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.Core.Placeholders
+namespace Virtuademy.CreatorKit.Worlds.Core.Placeholders
 {
     public class SpawnPoint : MonoBehaviour
     {

@@ -1,12 +1,12 @@
-using Reflectis.CreatorKit.Worlds.Core.ClientModels;
-using Reflectis.SDK.Core.ApplicationManagement;
+using Virtuademy.CreatorKit.Worlds.Core.ClientModels;
+using Virtuademy.SDK.Core.ApplicationManagement;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using UnityEngine;
 
-namespace Reflectis.CreatorKit.Worlds.Core.ApplicationManagement
+namespace Virtuademy.CreatorKit.Worlds.Core.ApplicationManagement
 {
     public interface IReflectisApplicationManager : IApplicationManager
     {
