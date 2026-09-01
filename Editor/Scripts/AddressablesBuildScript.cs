@@ -84,16 +84,21 @@ namespace Virtuademy.CreatorKit.Worlds.CoreEditor
             return BuildAddressableContent();
         }
 
-        public static void BuildAddressablesForAllPlatforms()
+        /// <returns>false if any platform failed; every platform is still attempted.</returns>
+        public static bool BuildAddressablesForAllPlatforms()
         {
+            bool success = true;
+
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
-            BuildAddressables();
+            success &= BuildAddressables();
 
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.WebGL, BuildTarget.WebGL);
-            BuildAddressables();
+            success &= BuildAddressables();
 
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
-            BuildAddressables();
+            success &= BuildAddressables();
+
+            return success;
         }
     }
 }

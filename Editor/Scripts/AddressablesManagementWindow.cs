@@ -36,6 +36,8 @@ namespace Virtuademy.CreatorKit.Worlds.Core.Editor
             FolderMissing,
             BinaryCatalog,
             MissingModule,
+            BuildFailed,
+            StaleOutput,
         }
 
         [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
@@ -2006,15 +2008,20 @@ namespace Virtuademy.CreatorKit.Worlds.Core.Editor
                 }
             }
 
-            // Build for each required platform
+            // Build for each required platform. The timestamp is taken before the first
+            // build so CheckBuildResult can tell catalogs written by this run from those
+            // an earlier run left behind: a build that produces nothing must not pass.
+            DateTime buildStartUtc = DateTime.UtcNow;
+            bool buildSucceeded = true;
+
             foreach (BuildTarget target in allTargets)
             {
                 BuildTargetGroup group = BuildPipeline.GetBuildTargetGroup(target);
                 EditorUserBuildSettings.SwitchActiveBuildTarget(group, target);
-                BuildAddressablesForSelectedPlatform();
+                buildSucceeded &= BuildAddressablesForSelectedPlatform();
             }
 
-            buildResult = CheckBuildResult();
+            buildResult = buildSucceeded ? CheckBuildResult(buildStartUtc) : EBuildError.BuildFailed;
 
             if (buildResult == EBuildError.None)
             {
@@ -2023,24 +2030,27 @@ namespace Virtuademy.CreatorKit.Worlds.Core.Editor
             }
             else
             {
-                Debug.LogError("[AddressablesManagement] Build failed. Check errors above.");
+                Debug.LogError($"[AddressablesManagement] Build failed ({buildResult}). " +
+                               $"Nothing was zipped. Check errors above.");
             }
         }
 
-        private void BuildAddressablesForSelectedPlatform()
+        private bool BuildAddressablesForSelectedPlatform()
         {
             AddressableAssetGroup assetGroup = settings.DefaultGroup;
             foreach (AddressableAssetEntry entry in assetGroup.entries.Where(x => x.IsScene))
                 settings.RemoveAssetEntry(entry.guid);
 
+            bool success = true;
             foreach (var scene in sceneConfigurations.SceneConfigurations)
             {
                 if (scene.IncludeInBuild)
-                    BuildAddressablesForTargetGroup(scene);
+                    success &= BuildAddressablesForTargetGroup(scene);
             }
+            return success;
         }
 
-        private void BuildAddressablesForTargetGroup(SceneConfiguration configuration)
+        private bool BuildAddressablesForTargetGroup(SceneConfiguration configuration)
         {
             AddressableAssetGroup assetGroup = settings.DefaultGroup;
 
@@ -2053,13 +2063,21 @@ namespace Virtuademy.CreatorKit.Worlds.Core.Editor
             settings.OverridePlayerVersion = sceneNameFiltered;
             ConfigureAddressablesSettingsForBuild();
 
-            AddressablesBuildScript.BuildAddressables();
+            bool success = AddressablesBuildScript.BuildAddressables();
+            if (!success)
+                Debug.LogError($"[AddressablesManagement] Addressables build failed for scene " +
+                               $"'{sceneNameFiltered}' on {EditorUserBuildSettings.activeBuildTarget}.");
 
             settings.RemoveAssetEntry(guid);
             settings.OverridePlayerVersion = string.Empty;
+
+            return success;
         }
 
-        private EBuildError CheckBuildResult()
+        /// <param name="buildStartUtc">
+        /// When the build started. Catalogs older than this were not produced by this run.
+        /// </param>
+        private EBuildError CheckBuildResult(DateTime buildStartUtc)
         {
             foreach (var scene in sceneConfigurations.SceneConfigurations)
             {
@@ -2078,11 +2096,27 @@ namespace Virtuademy.CreatorKit.Worlds.Core.Editor
                         return EBuildError.FolderMissing;
                     }
 
-                    bool catalogFileExists = Directory.GetFiles(subfolderPath, "*catalog*.json").Any();
-                    if (!catalogFileExists)
+                    string[] catalogFiles = Directory.GetFiles(subfolderPath, "*catalog*.json");
+                    if (catalogFiles.Length == 0)
                     {
                         Debug.LogError($"Catalog file not found in {subfolderPath}");
                         return EBuildError.BinaryCatalog;
+                    }
+
+                    // A catalog older than the build means this run wrote nothing here and we
+                    // are looking at the previous build's output. Zipping it would deploy stale
+                    // content under a fresh version, so treat it as a failure.
+                    foreach (string catalog in catalogFiles)
+                    {
+                        DateTime writtenUtc = File.GetLastWriteTimeUtc(catalog);
+                        if (writtenUtc < buildStartUtc)
+                        {
+                            Debug.LogError(
+                                $"Stale output in {subfolderPath}: {Path.GetFileName(catalog)} was written " +
+                                $"{writtenUtc:u} but this build started {buildStartUtc:u}. The build produced " +
+                                $"no output for this scene/platform.");
+                            return EBuildError.StaleOutput;
+                        }
                     }
                 }
             }
