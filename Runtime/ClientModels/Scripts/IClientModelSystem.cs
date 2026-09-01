@@ -319,6 +319,15 @@ namespace Virtuademy.CreatorKit.Worlds.Core.ClientModels
 
         Task CreateSessionAssetsAssociation(int eventId, List<CMResource> resources);
 
+        /// <summary>
+        /// Uploads a media file (image / video / any content) to the current world's asset library
+        /// and returns the created <see cref="CMResource"/> (null on failure). The label is derived
+        /// from the file name. An optional thumbnail can be supplied (e.g. the image itself, or a
+        /// video's first frame).
+        /// </summary>
+        Task<CMResource> UploadAsset(byte[] data, string fileName, string mimeType,
+            byte[] thumbnailData = null, string thumbnailMimeType = null);
+
         #endregion
 
         #region Assets folders
