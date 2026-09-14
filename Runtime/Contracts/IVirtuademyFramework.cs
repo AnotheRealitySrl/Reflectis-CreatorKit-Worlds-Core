@@ -4,7 +4,7 @@ using Virtuademy.SDK.Environments.Interaction;
 using Virtuademy.SDK.Environments.Placeholders;
 using Virtuademy.SDK.Core;
 using Virtuademy.SDK.Core.ApplicationManagement;
-using Virtuademy.SDK.ApiData;
+using Virtuademy.ScriptingApi;
 
 
 using System;

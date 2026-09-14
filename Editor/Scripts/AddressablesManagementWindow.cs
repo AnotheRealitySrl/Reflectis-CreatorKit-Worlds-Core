@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using Virtuademy.SDK.Environments.Editor;
-using Virtuademy.SDK.ApiData;
 using Virtuademy.SDK.TenantConfiguration;
 using Renci.SshNet;
 using System;
@@ -27,6 +26,23 @@ using static Virtuademy.SDK.Environments.Editor.SceneListScriptableObject;
 
 namespace Virtuademy.SDK.Environments.Editor
 {
+    /// <summary>
+    /// The two fields this window reads off the platform's world listing.
+    /// </summary>
+    /// <remarks>
+    /// Declared here rather than taken from the platform's own <c>WorldDTO</c>, because that type
+    /// belongs to the HTTP client and lives in the package an application installs and a creator
+    /// does not. Naming it here would put this package — the one every creator installs — a
+    /// reference away from the platform client, which is the coupling the whole package split
+    /// exists to prevent. The window already does its own request and its own deserialisation;
+    /// this is the shape it deserialises into.
+    /// </remarks>
+    internal class PublishableWorld
+    {
+        public int Id { get; set; }
+
+        public string Label { get; set; }
+    }
     public class AddressablesManagementWindow : EditorWindow
     {
         private enum EBuildError
@@ -97,7 +113,7 @@ namespace Virtuademy.SDK.Environments.Editor
         private static string _legacyToken = "";
 
         // Worlds state
-        private List<WorldDTO> availableWorlds = new();
+        private List<PublishableWorld> availableWorlds = new();
         private Dictionary<int, bool> selectedWorlds = new();
 
         // UI references
@@ -341,12 +357,12 @@ namespace Virtuademy.SDK.Environments.Editor
                 }
 
                 string json = await response.Content.ReadAsStringAsync();
-                availableWorlds = JsonConvert.DeserializeObject<List<WorldDTO>>(json) ?? new();
+                availableWorlds = JsonConvert.DeserializeObject<List<PublishableWorld>>(json) ?? new();
                 selectedWorlds.Clear();
 
                 // Filter worlds by user roles
                 worldsLoadingLabel.text = "Checking permissions...";
-                List<WorldDTO> deployableWorlds = new();
+                List<PublishableWorld> deployableWorlds = new();
                 string[] deployRoles = { "TenantManager", "EnvironmentManager", "Owner" };
 
                 foreach (var world in availableWorlds)
@@ -600,7 +616,7 @@ namespace Virtuademy.SDK.Environments.Editor
                 for (int w = 0; w < totalWorlds; w++)
                 {
                     int worldId = worldIds[w];
-                    WorldDTO world = availableWorlds.FirstOrDefault(wd => wd.Id == worldId);
+                    PublishableWorld world = availableWorlds.FirstOrDefault(wd => wd.Id == worldId);
                     string worldLabel = world?.Label ?? worldId.ToString();
 
                     string progressPrefix = $"Deploy ({w + 1}/{totalWorlds}) - World \"{worldLabel}\"";

@@ -1,5 +1,5 @@
 using Virtuademy.SDK.Core;
-using Virtuademy.SDK.ApiData;
+using Virtuademy.ScriptingApi;
 
 using Unity.VisualScripting;
 
