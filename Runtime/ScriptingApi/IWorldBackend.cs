@@ -1,3 +1,5 @@
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.Environments.ScriptingApi
 {
     /// <summary>

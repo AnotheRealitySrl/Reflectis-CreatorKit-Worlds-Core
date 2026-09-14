@@ -1,7 +1,9 @@
 {
     "name": "Virtuademy.Environments.ScriptingApi",
     "rootNamespace": "Virtuademy.Environments.ScriptingApi",
-    "references": [],
+    "references": [
+        "GUID:6aa097c5f04f41c487bfd42ebb060764"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

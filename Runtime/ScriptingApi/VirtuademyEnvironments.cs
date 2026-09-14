@@ -1,3 +1,4 @@
+using Virtuademy.ScriptingApi;
 using System;
 
 namespace Virtuademy.Environments.ScriptingApi
