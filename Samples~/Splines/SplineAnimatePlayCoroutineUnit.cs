@@ -1,5 +1,4 @@
-﻿using Virtuademy.SDK.Core.VisualScripting;
-
+﻿
 using System.Threading.Tasks;
 
 using Unity.Mathematics;
@@ -7,6 +6,9 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 using UnityEngine.Splines;
+
+
+using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting.Splines
 {

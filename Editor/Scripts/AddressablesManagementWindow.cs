@@ -24,6 +24,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using static Virtuademy.SDK.Environments.Editor.SceneListScriptableObject;
 
+
 namespace Virtuademy.SDK.Environments.Editor
 {
     /// <summary>

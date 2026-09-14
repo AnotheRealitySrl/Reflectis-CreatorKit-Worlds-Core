@@ -16,6 +16,8 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+using SPACS.Utilities;
+
 namespace Virtuademy.SDK.TenantConfiguration.Editor
 {
     public class TenantSelectionWindow : EditorWindow

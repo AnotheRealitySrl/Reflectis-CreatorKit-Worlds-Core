@@ -4,6 +4,7 @@ using UnityEngine;
 
 using static Virtuademy.Environments.ScriptingApi.Interaction.IContextualMenuManageable;
 
+
 namespace Virtuademy.Environments.ScriptingApi.Placeholders.Editor
 {
     [CustomEditor(typeof(ContextualMenuPlaceholder))]

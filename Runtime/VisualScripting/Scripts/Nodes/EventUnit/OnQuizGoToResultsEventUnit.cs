@@ -1,7 +1,9 @@
 ﻿using Virtuademy.Environments.ScriptingApi.Placeholders;
-using Virtuademy.SDK.Core.VisualScripting;
 
 using Unity.VisualScripting;
+
+
+using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {

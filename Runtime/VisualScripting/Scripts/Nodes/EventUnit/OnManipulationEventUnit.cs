@@ -1,12 +1,16 @@
 using Virtuademy.Environments.ScriptingApi.Interaction;
 using Virtuademy.Environments.ScriptingApi.Placeholders;
-using Virtuademy.SDK.Core.Utilities;
-using Virtuademy.SDK.Core.VisualScripting;
 
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using static Virtuademy.Environments.ScriptingApi.Interaction.IManipulable;
+
+
+
+using SPACS.VisualScripting;
+
+using SPACS.Utilities;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {

@@ -14,6 +14,8 @@ using UnityEditor;
 
 using UnityEngine;
 
+using SPACS.Utilities;
+
 namespace Virtuademy.SDK.Environments.Editor
 {
     /// <summary>

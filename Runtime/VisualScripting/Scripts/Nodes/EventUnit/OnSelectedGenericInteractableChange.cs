@@ -1,11 +1,13 @@
 ﻿using Virtuademy.Environments.ScriptingApi.Interaction;
-using Virtuademy.SDK.Core.VisualScripting;
 using Unity.VisualScripting;
 
 using System;
 
 using Virtuademy.Environments.ScriptingApi;
 
+
+
+using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {

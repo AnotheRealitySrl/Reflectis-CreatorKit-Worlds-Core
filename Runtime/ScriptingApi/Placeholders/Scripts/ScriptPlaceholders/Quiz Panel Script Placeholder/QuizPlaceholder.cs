@@ -9,13 +9,15 @@ using System.Linq;
 
 using UnityEngine.Events;
 
-using Virtuademy.SDK.Core.Utilities;
 
 
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+
+
+using SPACS.Utilities;
 
 namespace Virtuademy.Environments.ScriptingApi.Placeholders
 {

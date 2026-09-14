@@ -1,5 +1,7 @@
-using Virtuademy.SDK.Core.Editor;
 using UnityEditor;
+
+
+using SPACS.Editor;
 
 namespace Virtuademy.SDK.Environments.Dialogs.Editor
 {

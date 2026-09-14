@@ -4,6 +4,7 @@ using UnityEditor;
 
 using UnityEngine;
 
+
 namespace Virtuademy.Environments.ScriptingApi.Placeholders.Editor
 {
     [CustomEditor(typeof(SceneComponentPlaceholderBase), true)]

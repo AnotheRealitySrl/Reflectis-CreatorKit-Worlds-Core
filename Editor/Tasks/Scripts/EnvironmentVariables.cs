@@ -1,5 +1,7 @@
-using Virtuademy.SDK.Core.Editor;
+using SPACS.Editor;
+
 using UnityEditor;
+
 
 [InitializeOnLoad]
 public class EnvironmentVariables

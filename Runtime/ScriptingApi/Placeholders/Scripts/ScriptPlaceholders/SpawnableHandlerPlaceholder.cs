@@ -9,6 +9,7 @@ using UnityEngine;
 #endif
 
 
+
 namespace Virtuademy.Environments.ScriptingApi.Placeholders
 {
     public class SpawnableHandlerPlaceholder : SceneComponentPlaceholderBase

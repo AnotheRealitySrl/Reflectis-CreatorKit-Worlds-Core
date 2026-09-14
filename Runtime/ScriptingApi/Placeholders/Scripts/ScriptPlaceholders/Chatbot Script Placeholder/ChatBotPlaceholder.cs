@@ -1,7 +1,9 @@
 ﻿using Virtuademy.Environments.ScriptingApi.ChatBot;
-using Virtuademy.SDK.Core.Utilities;
 
 using UnityEngine;
+
+
+using SPACS.Utilities;
 
 namespace Virtuademy.Environments.ScriptingApi.Placeholders
 {

@@ -1,5 +1,4 @@
 ﻿using Virtuademy.SDK.Environments.Analytics;
-using Virtuademy.SDK.Core.VisualScripting;
 
 using System.Threading.Tasks;
 
@@ -8,6 +7,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 using Virtuademy.ScriptingApi;
+
+
+using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Analytics
 {

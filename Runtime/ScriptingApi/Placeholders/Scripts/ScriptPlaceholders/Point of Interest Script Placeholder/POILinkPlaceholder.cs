@@ -1,5 +1,4 @@
-﻿using Virtuademy.SDK.Core.Utilities;
-
+﻿
 using System;
 
 using TMPro;
@@ -8,6 +7,9 @@ using TMPro;
 using UnityEditor;
 
 using UnityEngine;
+
+
+using SPACS.Utilities;
 
 namespace Virtuademy.Environments.ScriptingApi.Placeholders
 {

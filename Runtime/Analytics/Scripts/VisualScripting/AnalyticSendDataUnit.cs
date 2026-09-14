@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
+
 namespace Virtuademy.SDK.Environments.Analytics
 {
     [UnitTitle(UNIT_TITLE)]

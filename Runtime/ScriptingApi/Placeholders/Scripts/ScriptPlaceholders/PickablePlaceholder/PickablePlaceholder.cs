@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using static Virtuademy.Environments.ScriptingApi.Interaction.IManipulable;
 
+
 namespace Virtuademy.Environments.ScriptingApi.Placeholders
 {
     [RequireComponent(typeof(InteractablePlaceholder), typeof(ManipulablePlaceholder))]

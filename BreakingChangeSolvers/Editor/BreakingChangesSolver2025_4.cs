@@ -1,6 +1,5 @@
 #if REFLECTIS_CREATOR_KIT_WORLDS_PLACEHOLDERS
 using Virtuademy.Environments.ScriptingApi.Placeholders;
-using Virtuademy.SDK.Core.Utilities;
 using UnityEngine;
 #endif
 #if REFLECTIS_CREATOR_KIT_WORLDS_TASKS && REFLECTIS_CREATOR_KIT_WORLDS_PLACEHOLDERS
@@ -12,6 +11,9 @@ using Virtuademy.SDK.Environments.VisualScripting;
 using UnityEditor;
 
 using Virtuademy.Environments.ScriptingApi.Interaction;
+
+
+using SPACS.Utilities;
 
 namespace Virtuademy.SDK.Environments.Installer.Editor
 {

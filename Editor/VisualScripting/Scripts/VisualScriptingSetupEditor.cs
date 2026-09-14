@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using Virtuademy.SDK.Core.Editor;
 
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 
 using UnityEditor;
+
+
+using SPACS.Editor;
 
 namespace Virtuademy.SDK.Environments.VisualScripting.Editor
 {

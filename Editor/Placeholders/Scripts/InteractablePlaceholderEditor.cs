@@ -5,6 +5,7 @@ using UnityEngine;
 using static Virtuademy.Environments.ScriptingApi.Interaction.IContextualMenuManageable;
 using static Virtuademy.Environments.ScriptingApi.Interaction.IInteractable;
 
+
 namespace Virtuademy.Environments.ScriptingApi.Placeholders.Editor
 {
     [CustomEditor(typeof(InteractablePlaceholderObsolete))]

@@ -8,6 +8,7 @@ using UnityEditor.SceneManagement;
 #endif
 using UnityEngine;
 
+
 namespace Virtuademy.SDK.Environments
 {
     public class SpawnableObjectPlaceholder : SceneComponentPlaceholderBase

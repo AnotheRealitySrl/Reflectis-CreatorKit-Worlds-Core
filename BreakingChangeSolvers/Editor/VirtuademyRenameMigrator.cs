@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
+
 namespace Virtuademy.SDK.Environments.Installer.Editor
 {
     /// <summary>

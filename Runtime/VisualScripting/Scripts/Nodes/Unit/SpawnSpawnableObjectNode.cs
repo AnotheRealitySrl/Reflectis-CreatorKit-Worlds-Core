@@ -1,6 +1,5 @@
 ﻿using Virtuademy.SDK.Environments;
 using Virtuademy.Environments.ScriptingApi.ObjectSpawner;
-using Virtuademy.SDK.Core.VisualScripting;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
@@ -9,6 +8,9 @@ using UnityEngine;
 using Virtuademy.ScriptingApi;
 
 using Virtuademy.Environments.ScriptingApi;
+
+
+using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {

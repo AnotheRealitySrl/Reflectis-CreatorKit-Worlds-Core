@@ -5,6 +5,7 @@ using UnityEditor;
 
 using UnityEngine;
 
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [CustomEditor(typeof(SyncedObject))]

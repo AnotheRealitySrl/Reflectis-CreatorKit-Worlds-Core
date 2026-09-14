@@ -1,5 +1,3 @@
-using Virtuademy.SDK.Core.Utilities;
-using Virtuademy.SDK.Core.VisualScripting;
 
 using System.Threading.Tasks;
 
@@ -7,6 +5,11 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 using UnityEngine.UI;
+
+
+using SPACS.VisualScripting;
+
+using SPACS.Utilities;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {

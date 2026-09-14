@@ -3,6 +3,7 @@ using Virtuademy.SDK.Tasks;
 using Virtuademy.SDK.Tasks.Detectors;
 using UnityEngine;
 
+
 namespace Virtuademy.SDK.Environments.Tasks
 {
     public class TriggerTaskReflectis : TaskReflectis, ITaskNode<TriggerTaskNode>
