@@ -3,6 +3,26 @@
 ## v10.0.0
 
 ### Changed
+- **The client models left for the application; the package speaks in views.**
+  `IVirtuademyFramework` hands back `UserView`, `SessionView`, `ExperienceView` and
+  `EnvironmentView` from `Virtuademy.ScriptingApi` instead of the `CM*` types, and the nodes that
+  expose them follow. The models themselves — with the members an authored world never reads —
+  now live beside their siblings in the application, so a creator's project no longer carries
+  the platform's notion of a user account.
+
+  `CreateLeaderboardRecord` takes `(string, float)` rather than a client model: the node already
+  had both as ports and built the model only to pass it on.
+
+  The rename migrator gained five entries, on the **full type names**. The namespace is
+  deliberately absent from that table — it still exists, on the application side — so only the
+  five moved names are rewritten. Member names are untouched, which is what lets a rewritten
+  graph resolve its members without a second rule. A graph that reached past this surface — a
+  user's preferences, a session's permissions, an environment's catalogue — has no view to land
+  on and must be re-authored; there is nothing to migrate it to.
+- Removes a dead `using NUnit.Framework;` from `SpawnableObjectListReference`, which pulled the
+  test framework into a package creators install and was used by nothing in the file.
+
+### Changed
 - **The scripting entry point is `VirtuademyEnvironments`, not `World`.** Two things ruled the
   old name out: "Worlds" is leaving the application name — the concept survives on the wire,
   where `WorldDTO` keeps it, but it stops being the word a creator reads on every line — and the

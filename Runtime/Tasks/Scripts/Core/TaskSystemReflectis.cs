@@ -1,5 +1,4 @@
-﻿using Virtuademy.SDK.Environments.ClientModels;
-using Virtuademy.SDK.Tasks;
+﻿using Virtuademy.SDK.Tasks;
 using Virtuademy.SDK.Tasks.UI;
 
 using System.Collections;

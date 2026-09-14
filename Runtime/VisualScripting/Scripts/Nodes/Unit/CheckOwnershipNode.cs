@@ -1,5 +1,4 @@
-﻿using Virtuademy.SDK.Environments.ClientModels;
-
+﻿
 using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting

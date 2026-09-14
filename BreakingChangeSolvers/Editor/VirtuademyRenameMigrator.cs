@@ -117,6 +117,8 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
 
         private static readonly string OldApi = "Virtuademy.SDK.Platform" + "Api";
 
+        private static readonly string OldModels = "Virtuademy.SDK.Environments.Client" + "Models";
+
         private static readonly (string oldValue, string newValue)[] EnvironmentsMap =
         {
             (OldWorlds + ".CoreHybridCLREditor", "Virtuademy.SDK.Environments.HybridCLREditor"),
@@ -137,6 +139,26 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             // reason the tokens above are split: this file must not match its own table.
             (OldApi + ".Wire", "Virtuademy.SDK.ApiData.Wire"),
             (OldApi, "Virtuademy.SDK.ApiData"),
+
+            // The client models split in two on 2026-09-14. What an authored world may see is
+            // now a view in Virtuademy.ScriptingApi; the fuller model kept the CM name and the
+            // ClientModels namespace and went to the application, which a creator does not
+            // install. A graph that reached a CM type through Expose or InvokeMember recorded
+            // its full name, so those names are rewritten onto the view.
+            //
+            // Member names are deliberately untouched: the views carry the same ones the nodes
+            // always read, so a rewritten graph resolves its members without a second rule. A
+            // graph that reached past that surface — a user's preferences, a session's
+            // permissions — has no view to land on and must be re-authored; there is nothing to
+            // migrate it to.
+            //
+            // The namespace alone is NOT in this table, and must not be: it still exists, on
+            // the application side. Only these six full names move.
+            (OldModels + ".CMUser", "Virtuademy.ScriptingApi.UserView"),
+            (OldModels + ".CMSession", "Virtuademy.ScriptingApi.SessionView"),
+            (OldModels + ".CMEnvironment", "Virtuademy.ScriptingApi.EnvironmentView"),
+            (OldModels + ".CMExperience", "Virtuademy.ScriptingApi.ExperienceView"),
+            (OldModels + ".CMTag", "Virtuademy.ScriptingApi.TagView"),
         };
 
         private static readonly string[] TextExtensions =

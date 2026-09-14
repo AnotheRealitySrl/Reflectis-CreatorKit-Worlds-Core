@@ -1,5 +1,4 @@
-﻿using Virtuademy.SDK.Environments.ClientModels;
-using Virtuademy.SDK.Core.VisualScripting;
+﻿using Virtuademy.SDK.Core.VisualScripting;
 using System.Threading.Tasks;
 
 using Unity.VisualScripting;

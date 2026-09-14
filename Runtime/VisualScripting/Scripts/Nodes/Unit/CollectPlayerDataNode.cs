@@ -1,4 +1,4 @@
-using Virtuademy.SDK.Environments.ClientModels;
+using Virtuademy.ScriptingApi;
 
 using System.Collections.Generic;
 
@@ -28,20 +28,20 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         protected override void Definition()
         {
-            CMUser = ValueInput<CMUser>(nameof(CMUser), null).NullMeansSelf();
+            CMUser = ValueInput<UserView>(nameof(CMUser), null).NullMeansSelf();
 
-            ID = ValueOutput(nameof(ID), (flow) => flow.GetValue<CMUser>(CMUser).Id);
+            ID = ValueOutput(nameof(ID), (flow) => flow.GetValue<UserView>(CMUser).Id);
 
-            Name = ValueOutput(nameof(Name), (flow) => flow.GetValue<CMUser>(CMUser).DisplayName);
+            Name = ValueOutput(nameof(Name), (flow) => flow.GetValue<UserView>(CMUser).DisplayName);
 
-            EMail = ValueOutput(nameof(EMail), (flow) => flow.GetValue<CMUser>(CMUser).Email);
+            EMail = ValueOutput(nameof(EMail), (flow) => flow.GetValue<UserView>(CMUser).Email);
 
-            ProfileImageURL = ValueOutput(nameof(ProfileImageURL), (flow) => flow.GetValue<CMUser>(CMUser).Preferences.AvatarConfig.AvatarPng);
+            ProfileImageURL = ValueOutput(nameof(ProfileImageURL), (flow) => flow.GetValue<UserView>(CMUser).ProfileImageUrl);
 
             Roles = ValueOutput(nameof(Roles), (flow) =>
             {
                 List<string> roles = new List<string>();
-                foreach (var role in flow.GetValue<CMUser>(CMUser).Tags)
+                foreach (var role in flow.GetValue<UserView>(CMUser).Tags)
                     roles.Add(role.Label);
 
                 return roles;

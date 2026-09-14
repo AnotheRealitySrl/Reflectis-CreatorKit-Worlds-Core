@@ -1,5 +1,4 @@
 ﻿using Virtuademy.SDK.Environments;
-using Virtuademy.SDK.Environments.ClientModels;
 using Virtuademy.SDK.Environments.ObjectSpawner;
 using Virtuademy.SDK.Core.VisualScripting;
 using System.Collections.Generic;

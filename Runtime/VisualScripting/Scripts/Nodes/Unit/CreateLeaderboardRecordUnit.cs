@@ -1,5 +1,4 @@
-﻿using Virtuademy.SDK.Environments.ClientModels;
-using Unity.VisualScripting;
+﻿using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
@@ -32,11 +31,9 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.CreateLeaderboardRecord(new CMLeaderboardRecord()
-                {
-                    LeaderboardKey = f.GetValue<string>(LeaderboardKey),
-                    Data = f.GetValue<float>(Data)
-                });
+                VirtuademyFramework.Current.CreateLeaderboardRecord(
+                    f.GetValue<string>(LeaderboardKey),
+                    f.GetValue<float>(Data));
 
                 return OutputTrigger;
             });

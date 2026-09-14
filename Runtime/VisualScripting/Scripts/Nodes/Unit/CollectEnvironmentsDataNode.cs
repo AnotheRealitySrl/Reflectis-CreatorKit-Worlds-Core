@@ -1,4 +1,4 @@
-using Virtuademy.SDK.Environments.ClientModels;
+using Virtuademy.ScriptingApi;
 
 using Unity.VisualScripting;
 
@@ -20,22 +20,19 @@ namespace Virtuademy.SDK.Environments.VisualScripting
         public ValueOutput Description { get; private set; }
         [DoNotSerialize]
         public ValueOutput AddressableKey { get; private set; }
-        [DoNotSerialize]
-        public ValueOutput Catalog { get; private set; }
 
         protected override void Definition()
         {
-            CMEnvironment = ValueInput<CMEnvironment>(nameof(CMEnvironment), null).NullMeansSelf();
+            CMEnvironment = ValueInput<EnvironmentView>(nameof(CMEnvironment), null).NullMeansSelf();
 
-            ID = ValueOutput(nameof(ID), (flow) => flow.GetValue<CMEnvironment>(CMEnvironment).ID);
+            ID = ValueOutput(nameof(ID), (flow) => flow.GetValue<EnvironmentView>(CMEnvironment).ID);
 
-            Name = ValueOutput(nameof(Name), (flow) => flow.GetValue<CMEnvironment>(CMEnvironment).Name);
+            Name = ValueOutput(nameof(Name), (flow) => flow.GetValue<EnvironmentView>(CMEnvironment).Name);
 
-            Description = ValueOutput(nameof(Description), (flow) => flow.GetValue<CMEnvironment>(CMEnvironment).Description);
+            Description = ValueOutput(nameof(Description), (flow) => flow.GetValue<EnvironmentView>(CMEnvironment).Description);
 
-            AddressableKey = ValueOutput(nameof(AddressableKey), (flow) => flow.GetValue<CMEnvironment>(CMEnvironment).AddressableKey);
+            AddressableKey = ValueOutput(nameof(AddressableKey), (flow) => flow.GetValue<EnvironmentView>(CMEnvironment).AddressableKey);
 
-            Catalog = ValueOutput(nameof(Catalog), (flow) => flow.GetValue<CMEnvironment>(CMEnvironment).Catalog);
         }
     }
 }

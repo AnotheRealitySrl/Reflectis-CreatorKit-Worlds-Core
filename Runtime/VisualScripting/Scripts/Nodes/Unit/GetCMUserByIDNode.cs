@@ -1,4 +1,4 @@
-﻿using Virtuademy.SDK.Environments.ClientModels;
+﻿using Virtuademy.ScriptingApi;
 using Virtuademy.SDK.Core.VisualScripting;
 
 using System.Collections.Generic;
@@ -23,12 +23,12 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         private List<Flow> runningFlows = new List<Flow>();
 
-        private CMUser cmUserData;
+        private UserView cmUserData;
 
         protected override void Definition()
         {
             UserID = ValueInput<int>(nameof(UserID));
-            CMUser = ValueOutput<CMUser>(nameof(CMUser), f => cmUserData);
+            CMUser = ValueOutput<UserView>(nameof(CMUser), f => cmUserData);
 
             base.Definition();
         }

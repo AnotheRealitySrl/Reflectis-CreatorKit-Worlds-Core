@@ -1,5 +1,4 @@
 ﻿using Virtuademy.SDK.Environments.Analytics;
-using Virtuademy.SDK.Environments.ClientModels;
 using Virtuademy.SDK.Environments.Interaction;
 using Virtuademy.SDK.Environments.Placeholders;
 using Virtuademy.SDK.Core;
@@ -56,10 +55,10 @@ namespace Virtuademy.SDK.Environments
         #region Session, experience and environment
 
         /// <summary>The session this world is running in, or null outside one.</summary>
-        CMSession CurrentSession { get; }
+        SessionView CurrentSession { get; }
 
         /// <summary>The environment of the running experience.</summary>
-        CMEnvironment CurrentEnvironment { get; }
+        EnvironmentView CurrentEnvironment { get; }
 
         /// <summary>The addressable name of the running environment.</summary>
         string CurrentEnvironmentName { get; }
@@ -87,17 +86,17 @@ namespace Virtuademy.SDK.Environments
         /// tenant has none. Used by the scene-change nodes to find out whether a scene exists before
         /// trying to go there.
         /// </summary>
-        Task<CMExperience> FindExperienceByAddressableName(string addressableName);
+        Task<ExperienceView> FindExperienceByAddressableName(string addressableName);
 
         #endregion
 
         #region Users
 
         /// <summary>The local player.</summary>
-        CMUser LocalUser { get; }
+        UserView LocalUser { get; }
 
         /// <summary>Another user by platform id.</summary>
-        Task<CMUser> GetUser(int userId);
+        Task<UserView> GetUser(int userId);
 
         #endregion
 
@@ -113,7 +112,7 @@ namespace Virtuademy.SDK.Environments
         void DeleteMySaveData(string key);
 
         /// <summary>Submits a leaderboard record for the local player.</summary>
-        Task CreateLeaderboardRecord(CMLeaderboardRecord record);
+        Task CreateLeaderboardRecord(string leaderboardKey, float value);
 
         #endregion
 
@@ -324,7 +323,7 @@ namespace Virtuademy.SDK.Environments
         /// <summary>
         /// Leaves this world and joins <paramref name="experience"/>. False when the join fails.
         /// </summary>
-        Task<bool> JoinExperience(CMExperience experience, bool multiplayer);
+        Task<bool> JoinExperience(ExperienceView experience, bool multiplayer);
 
         /// <summary>Leaves this world and returns to the lobby.</summary>
         Task LoadLobby();

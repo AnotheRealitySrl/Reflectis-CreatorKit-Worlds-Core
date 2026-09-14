@@ -1,5 +1,4 @@
-﻿using Virtuademy.SDK.Environments.ClientModels;
-using Virtuademy.SDK.Core.Utilities;
+﻿using Virtuademy.SDK.Core.Utilities;
 
 using UnityEngine;
 using UnityEngine.Events;
