@@ -6,6 +6,8 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Character: Pan")]
@@ -26,9 +28,13 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             base.Definition();
         }
 
-        protected override async Task AwaitableAction(Flow flow)
+        protected override Task AwaitableAction(Flow flow)
         {
-            await VirtuademyFramework.Current.EnterCameraPan(flow.GetValue<Transform>(TargetTransform));
+            TaskCompletionSource<bool> ready = new();
+            IVirtuademyGameplay.Current.Player.PanCameraAround(flow.GetValue<Transform>(TargetTransform),
+                                                               () => ready.TrySetResult(true));
+
+            return ready.Task;
         }
     }
 }

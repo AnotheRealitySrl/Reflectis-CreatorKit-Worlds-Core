@@ -1,6 +1,8 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis CMUser: Get Character Transform")]
@@ -19,7 +21,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         protected override void Definition()
         {
-            CharacterTransform = ValueOutput<Transform>(nameof(CharacterTransform), (flow) => VirtuademyFramework.Current.PlayerTransform);
+            CharacterTransform = ValueOutput<Transform>(nameof(CharacterTransform), (flow) => IVirtuademyGameplay.Current.Player.Root);
         }
     }
 }

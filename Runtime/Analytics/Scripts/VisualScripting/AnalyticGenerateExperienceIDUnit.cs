@@ -7,6 +7,8 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.Analytics
 {
     [UnitTitle(UNIT_TITLE)]
@@ -44,7 +46,11 @@ namespace Virtuademy.SDK.Environments.Analytics
             }
             else
             {
-                await VirtuademyFramework.Current.GenerateExperienceGuid(desiredKey);
+                TaskCompletionSource<bool> minted = new();
+                IVirtuademyFramework.Current.Analytics.GenerateExperienceGuid(
+                    desiredKey, () => minted.TrySetResult(true));
+
+                await minted.Task;
             }
         }
 

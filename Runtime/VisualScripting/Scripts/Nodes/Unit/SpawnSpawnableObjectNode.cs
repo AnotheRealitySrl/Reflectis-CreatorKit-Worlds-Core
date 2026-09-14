@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
+using Virtuademy.ScriptingApi;
+
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis spawnable: Spawn Spawnable Object Node")]
@@ -56,8 +60,9 @@ namespace Virtuademy.SDK.Environments.VisualScripting
                 }
             };
 
-            GameObject go = await VirtuademyFramework.Current.SpawnGeneralContainer(
-                spawnPos, spawnRot, VirtuademyFramework.Current.IsCurrentSessionMultiplayer, data);
+            // The instance was already discarded before this went through the grouped surface.
+            IVirtuademyGameplay.Current.Scene.SpawnContainer(
+                spawnPos, spawnRot, IVirtuademyFramework.Current.Session.IsMultiplayer, data);
         }
     }
 }

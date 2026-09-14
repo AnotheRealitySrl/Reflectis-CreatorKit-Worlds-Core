@@ -50,7 +50,7 @@ namespace Virtuademy.SDK.Environments
     /// only consumed one value out of them.
     /// </para>
     /// </remarks>
-    public interface IVirtuademyFramework
+    public interface ILegacyWorldFramework
     {
         #region Session, experience and environment
 

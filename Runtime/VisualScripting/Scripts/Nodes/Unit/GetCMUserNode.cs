@@ -1,6 +1,8 @@
 ﻿
 using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis CMUser: Get CMUser")]
@@ -16,7 +18,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         protected override void Definition()
         {
-            CMUser = ValueOutput(nameof(CMUser), (f) => VirtuademyFramework.Current.LocalUser);
+            CMUser = ValueOutput(nameof(CMUser), (f) => IVirtuademyFramework.Current.Session.LocalUser);
         }
     }
 }

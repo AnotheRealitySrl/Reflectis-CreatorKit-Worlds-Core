@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.Tasks
 {
     public class TaskSystemReflectis : TaskSystem
@@ -25,7 +27,7 @@ namespace Virtuademy.SDK.Environments.Tasks
             }
             get
             {
-                return _isNetworked && VirtuademyFramework.Current.IsCurrentSessionMultiplayer;
+                return _isNetworked && IVirtuademyFramework.Current.Session.IsMultiplayer;
             }
         }
 

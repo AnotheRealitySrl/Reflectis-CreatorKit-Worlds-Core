@@ -6,6 +6,8 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Camera: FreeCameraPan")]
@@ -52,10 +54,20 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             base.Definition();
         }
 
-        protected override async Task AwaitableAction(Flow flow)
+        protected override Task AwaitableAction(Flow flow)
         {
-            await VirtuademyFramework.Current.EnterCameraPan(flow.GetValue<Transform>(TargetTransform), flow.GetValue<float>(MaxZoom),
-                flow.GetValue<float>(MinZoom), flow.GetValue<float>(MaxYRotation), flow.GetValue<float>(MinYRotation), flow.GetValue<float>(MaxXRotation), flow.GetValue<float>(MinXRotation), true);
+            TaskCompletionSource<bool> ready = new();
+            IVirtuademyGameplay.Current.Player.PanCameraAround(flow.GetValue<Transform>(TargetTransform),
+                                                               flow.GetValue<float>(MaxZoom),
+                                                               flow.GetValue<float>(MinZoom),
+                                                               flow.GetValue<float>(MaxYRotation),
+                                                               flow.GetValue<float>(MinYRotation),
+                                                               flow.GetValue<float>(MaxXRotation),
+                                                               flow.GetValue<float>(MinXRotation),
+                                                               true,
+                                                               () => ready.TrySetResult(true));
+
+            return ready.Task;
         }
     }
 }

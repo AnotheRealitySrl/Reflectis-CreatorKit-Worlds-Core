@@ -1,5 +1,7 @@
 ﻿using Unity.VisualScripting;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Character: Set First Person Camera Mode")]
@@ -19,7 +21,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
         {
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.SetFirstPersonCamera();
+                IVirtuademyGameplay.Current.Player.SetFirstPersonCamera();
                 return OutputTrigger;
             });
 

@@ -3,6 +3,8 @@ using System.Collections;
 
 using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Tutorial: Enable")]
@@ -50,21 +52,18 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             yield return OutputTrigger;
         }
 
-        private async void CallAwaitableMethod(Flow flow)
+        private void CallAwaitableMethod(Flow flow)
         {
-
             if (flow.GetValue<bool>(Enable))
             {
-                await VirtuademyFramework.Current.OpenHelp();
-
-                awaitableMethodRuning = true;
+                IVirtuademyFramework.Current.Help.Open();
             }
             else
             {
-                await VirtuademyFramework.Current.CloseHelp();
-
-                awaitableMethodRuning = true;
+                IVirtuademyFramework.Current.Help.Close();
             }
+
+            awaitableMethodRuning = true;
         }
     }
 }

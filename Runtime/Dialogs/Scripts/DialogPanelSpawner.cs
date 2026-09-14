@@ -1,6 +1,8 @@
 ﻿using Virtuademy.SDK.Dialogs;
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.Dialogs
 {
     public class DialogPanelSpawner : MonoBehaviour
@@ -17,10 +19,14 @@ namespace Virtuademy.SDK.Environments.Dialogs
         public bool showPlayerAvatarContainer;
         public bool showNpcAvatarContainer;
 
-        private async void Awake()
+        private void Awake()
         {
             // Instantiates dialog panel as addressable item.
-            GameObject go = await VirtuademyFramework.Current.SpawnProjectAsset("DialogPanel", this.transform);
+            IVirtuademyGameplay.Current.Scene.SpawnProjectAsset("DialogPanel", this.transform, Configure);
+        }
+
+        private void Configure(GameObject go)
+        {
             DialogPanelControllerGeneric dialogPanelController = go.GetComponent<DialogPanelControllerGeneric>();
             // Applies setting values and initializes dialog panel.
             dialogPanelController.SetSettings(

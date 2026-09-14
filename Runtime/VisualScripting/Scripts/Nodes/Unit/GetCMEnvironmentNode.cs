@@ -1,6 +1,8 @@
 ﻿
 using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis CMEnvironment: Get CMEnvironment")]
@@ -16,7 +18,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         protected override void Definition()
         {
-            CMEnvironment = ValueOutput(nameof(CMEnvironment), (f) => VirtuademyFramework.Current.CurrentEnvironment);
+            CMEnvironment = ValueOutput(nameof(CMEnvironment), (f) => IVirtuademyFramework.Current.Session.Environment);
         }
     }
 }

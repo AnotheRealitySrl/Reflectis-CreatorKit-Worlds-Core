@@ -1,7 +1,9 @@
-﻿using Virtuademy.SDK.Core;
-using Virtuademy.SDK.Core.VisualScripting;
+﻿using Virtuademy.SDK.Core.VisualScripting;
 using Unity.VisualScripting;
-using UnityEngine.Events;
+
+using System;
+
+using Virtuademy.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
@@ -9,7 +11,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
     [UnitSurtitle("Networking")]
     [UnitShortTitle("On Other Player Entered")]
     [UnitCategory("Events\\Reflectis")]
-    public class OnOtherPlayerEnteredEventNode : UnityEventUnit<(int, string), PlayerData>
+    public class OnOtherPlayerEnteredEventNode : ActionEventUnit<(int, string), int, string>
     {
         public static string eventName = "NetworkingOnOtherPlayerEntered";
 
@@ -38,14 +40,15 @@ namespace Virtuademy.SDK.Environments.VisualScripting
         }
 
 
-        protected override UnityEvent<PlayerData> GetEvent(GraphReference reference)
-        {
-            return VirtuademyFramework.Current.OtherPlayerEntered;
-        }
+        protected override void Subscribe(Action<int, string> handler)
+            => IVirtuademyFramework.Current.Session.OtherPlayerEntered += handler;
 
-        protected override (int, string) GetArguments(GraphReference reference, PlayerData playerData)
+        protected override void Unsubscribe(Action<int, string> handler)
+            => IVirtuademyFramework.Current.Session.OtherPlayerEntered -= handler;
+
+        protected override (int, string) GetArguments(GraphReference reference, int userId, string sessionId)
         {
-            return (playerData.UserId, playerData.SessionId);
+            return (userId, sessionId);
         }
     }
 }

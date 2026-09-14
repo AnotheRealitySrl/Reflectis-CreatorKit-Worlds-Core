@@ -1,6 +1,8 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis CMUser: Get Character Head Transform")]
@@ -17,7 +19,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         protected override void Definition()
         {
-            CharacterHeadReference = ValueOutput<Transform>(nameof(CharacterHeadReference), (flow) => VirtuademyFramework.Current.PlayerHeadTransform);
+            CharacterHeadReference = ValueOutput<Transform>(nameof(CharacterHeadReference), (flow) => IVirtuademyGameplay.Current.Player.Head);
         }
     }
 }

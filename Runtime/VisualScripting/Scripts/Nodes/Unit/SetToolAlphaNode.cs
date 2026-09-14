@@ -1,6 +1,8 @@
 ﻿using Virtuademy.SDK.Environments.Placeholders;
 using Unity.VisualScripting;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Tools: Set Alpha")]
@@ -26,7 +28,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.SetInventoryAlpha(f.GetValue<float>(Alpha));
+                IVirtuademyGameplay.Current.Tools.SetInventoryAlpha(f.GetValue<float>(Alpha));
 
                 return OutputTrigger;
             });

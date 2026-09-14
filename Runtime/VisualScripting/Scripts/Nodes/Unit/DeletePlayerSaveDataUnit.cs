@@ -1,5 +1,7 @@
 ﻿using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Player Save Data: Delete Data")]
@@ -26,7 +28,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.DeleteMySaveData(
+                IVirtuademyFramework.Current.SaveData.Delete(
                     f.GetValue<string>(Key));
                 return OutputTrigger;
             });

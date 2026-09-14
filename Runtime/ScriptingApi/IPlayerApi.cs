@@ -115,10 +115,33 @@ namespace Virtuademy.Environments.ScriptingApi
         /// <remarks>Node: <c>Reflectis Character: Pan</c>.</remarks>
         void PanCameraAround(Transform target, Action onReady = null);
 
+        /// <summary>
+        /// The same, with the bounds the free-camera node exposes as ports rather than the
+        /// character controller's defaults.
+        /// </summary>
+        /// <remarks>Node: <c>Reflectis Character: Free Pan</c>.</remarks>
+        void PanCameraAround(Transform target,
+                             float maxZoom,
+                             float minZoom,
+                             float maxYRotation,
+                             float minYRotation,
+                             float maxXRotation,
+                             float minXRotation,
+                             bool cameraInteraction,
+                             Action onReady = null);
+
         /// <summary>Leaves the pan state and hands movement back to the player.</summary>
         /// <remarks>Node: <c>Reflectis Character: Exit Pan</c>.</remarks>
         void ExitCameraPan(Action onDone = null);
 
         #endregion
-    }
+    
+        /// <summary>
+        /// Puts camera and movement back the way the environment was authored, undoing whatever a
+        /// graph did to them. The placeholder that owns the environment's input settings calls this
+        /// on teardown, so a world does not leak a locked camera into the next one.
+        /// </summary>
+        /// <remarks>Node: <c>Set Default Settings</c>.</remarks>
+        void ApplyDefaultInputSettings();
+}
 }

@@ -1,5 +1,7 @@
 ﻿using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Networking: Get Local Player ID")]
@@ -15,7 +17,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         protected override void Definition()
         {
-            SessionId = ValueOutput(nameof(SessionId), (f) => VirtuademyFramework.Current.SessionId);
+            SessionId = ValueOutput(nameof(SessionId), (f) => IVirtuademyFramework.Current.Session.SessionId);
         }
     }
 }

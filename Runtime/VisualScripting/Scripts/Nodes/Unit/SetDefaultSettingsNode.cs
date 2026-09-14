@@ -1,6 +1,8 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Settings: Set default settings")]
@@ -21,7 +23,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
         {
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.ApplyDefaultInputSettings();
+                IVirtuademyGameplay.Current.Player.ApplyDefaultInputSettings();
                 return OutputTrigger;
             });
         

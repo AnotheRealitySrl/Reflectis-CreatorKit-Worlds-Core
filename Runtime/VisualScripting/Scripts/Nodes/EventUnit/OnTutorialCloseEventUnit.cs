@@ -1,6 +1,9 @@
 ﻿using Virtuademy.SDK.Core.VisualScripting;
 using Unity.VisualScripting;
-using UnityEngine.Events;
+
+using Virtuademy.ScriptingApi;
+
+using System;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
@@ -8,7 +11,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
     [UnitSurtitle("Tutorial")]
     [UnitShortTitle("On Tutorial Closed")]
     [UnitCategory("Events\\Reflectis")]
-    public class OnTutorialCloseEventUnit : UnityEventUnit<Null>
+    public class OnTutorialCloseEventUnit : ActionEventUnit<Null>
     {
 
         public static string eventName = "OnTutorialClosed";
@@ -26,16 +29,21 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             return new EventHook("tutorial closed" + this.ToString().Split("EventUnit")[0]);
         }
 
-        protected override UnityEvent GetEvent(GraphReference reference)
+        protected override void Subscribe(Action handler)
         {
-            if (VirtuademyFramework.Current.IsHelpAvailable)
+            if (!IVirtuademyFramework.Current.Help.IsAvailable)
             {
+                return;
             }
-            else
-            {
-                return null;
-            }
-            return VirtuademyFramework.Current.HelpClosed;
+
+            IVirtuademyFramework.Current.Help.Closed += handler;
+        }
+
+        protected override void Unsubscribe(Action handler)
+        {
+            // Unconditional, unlike the subscribe: whether the host has a help panel can change
+            // between the two, and removing a handler that was never added does nothing.
+            IVirtuademyFramework.Current.Help.Closed -= handler;
         }
 
         public override void Uninstantiate(GraphReference instance)

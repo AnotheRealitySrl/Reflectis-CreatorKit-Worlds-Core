@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Scene: Enable Spawned Objects")]
@@ -37,7 +39,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.EnableSpawnedObjects(f.GetValue<bool>(Enable), new List<GameObject>() { f.stack.AsReference().gameObject });
+                IVirtuademyGameplay.Current.Scene.ShowSpawnedObjects(f.GetValue<bool>(Enable), f.stack.AsReference().gameObject);
 
                 return OutputTrigger;
             });

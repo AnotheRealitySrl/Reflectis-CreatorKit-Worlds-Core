@@ -2,6 +2,8 @@
 
 using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Networking: Get current network time")]
@@ -19,7 +21,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         protected override void Definition()
         {
-            NetworkedTime = ValueOutput<double>(nameof(NetworkedTime), f => VirtuademyFramework.Current.SharedNetworkTime);
+            NetworkedTime = ValueOutput<double>(nameof(NetworkedTime), f => IVirtuademyFramework.Current.Session.NetworkTime);
         }
     }
 }

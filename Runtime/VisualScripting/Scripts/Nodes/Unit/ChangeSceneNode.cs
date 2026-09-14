@@ -6,6 +6,8 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Platform: Change Scene")]
@@ -26,21 +28,28 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             base.Definition();
         }
 
-        protected override async Task AwaitableAction(Flow flow)
+        protected override Task AwaitableAction(Flow flow)
         {
+            string key = flow.GetValue<string>(SceneAddressableName);
+            TaskCompletionSource<bool> done = new();
 
-            var experience = await VirtuademyFramework.Current.FindExperienceByAddressableName(flow.GetValue<string>(SceneAddressableName));
+            IVirtuademyFramework.Current.Session.FindExperience(key, experience =>
+            {
+                if (experience == null)
+                {
+                    Debug.LogError($"[Reflectis Creator Kit | Change Scene node] The key specified {key} " +
+                        $"for the environment is not correct or the experience is not flagged as " +
+                        $"public");
+                    done.TrySetResult(false);
 
-            if (experience != null)
-            {
-                await VirtuademyFramework.Current.JoinExperience(experience, true);
-            }
-            else
-            {
-                Debug.LogError($"[Reflectis Creator Kit | Change Scene node] The key specified {flow.GetValue<string>(SceneAddressableName)} " +
-                    $"for the environment is not correct or the experience is not flagged as " +
-                    $"public");
-            }
+                    return;
+                }
+
+                IVirtuademyFramework.Current.Session.JoinExperience(experience, true,
+                                                                   joined => done.TrySetResult(joined));
+            });
+
+            return done.Task;
         }
     }
 }

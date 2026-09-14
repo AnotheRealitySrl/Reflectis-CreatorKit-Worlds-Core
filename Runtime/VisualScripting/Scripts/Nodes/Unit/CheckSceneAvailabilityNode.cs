@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Platform: Check Scene Availability")]
@@ -28,19 +30,18 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             base.Definition();
         }
 
-        protected override async Task AwaitableAction(Flow flow)
+        protected override Task AwaitableAction(Flow flow)
         {
+            TaskCompletionSource<bool> done = new();
 
-            var experience = await VirtuademyFramework.Current.FindExperienceByAddressableName(flow.GetValue<string>(SceneAddressableName));
+            IVirtuademyFramework.Current.Session.FindExperience(flow.GetValue<string>(SceneAddressableName),
+                                                               experience =>
+            {
+                _isAvailable = experience != null;
+                done.TrySetResult(true);
+            });
 
-            if (experience != null)
-            {
-                _isAvailable = true;
-            }
-            else
-            {
-                _isAvailable = false;
-            }
+            return done.Task;
         }
     }
 }

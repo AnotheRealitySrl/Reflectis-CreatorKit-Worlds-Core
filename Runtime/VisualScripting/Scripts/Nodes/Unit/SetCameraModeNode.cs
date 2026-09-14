@@ -7,6 +7,8 @@ using System;
 using System.Reflection;
 using System.Linq;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Camera: Set camera mode")]
@@ -40,11 +42,11 @@ namespace Virtuademy.SDK.Environments.VisualScripting
                     bool constrainRotation = f.GetValue<bool>(ConstrainedRotation);
                     if (f.GetValue<bool>(StaticCamera))
                     {
-                        VirtuademyFramework.Current.UseStaticCameraInput(constrainRotation);
+                        IVirtuademyGameplay.Current.Player.UseStaticCamera(constrainRotation);
                     }
                     else
                     {
-                        VirtuademyFramework.Current.UseFreeCameraInput(constrainRotation);
+                        IVirtuademyGameplay.Current.Player.UseFreeCamera(constrainRotation);
                     }
                     return OutputTrigger;
             });

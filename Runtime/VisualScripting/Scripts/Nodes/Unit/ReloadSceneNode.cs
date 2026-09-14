@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Platform: Reload Scene")]
@@ -29,21 +31,26 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             base.Definition();
         }
 
-        protected override async Task AwaitableAction(Flow flow)
+        protected override Task AwaitableAction(Flow flow)
         {
+            bool multiplayer = IVirtuademyFramework.Current.Session.IsEnvironmentMultiplayer;
+            TaskCompletionSource<bool> done = new();
 
-            var experience = await VirtuademyFramework.Current.FindExperienceByAddressableName(VirtuademyFramework.Current.CurrentEnvironmentName/*, flow.GetValue<bool>(IsTenantEnvironment)*/);
-            var multiplayer = VirtuademyFramework.Current.IsCurrentEnvironmentMultiplayer;
-            if (experience != null)
+            IVirtuademyFramework.Current.Session.FindExperience(
+                IVirtuademyFramework.Current.Session.EnvironmentName, experience =>
             {
-                await VirtuademyFramework.Current.JoinExperience(experience, multiplayer);
-            }
-            /*else
-            {
-                Debug.LogError($"[Reflectis Creator Kit | Change Scene node] The key specified {SceneAddressableName.Name} " +
-                    $"for the environment is not correct or the experience is not flagged as " +
-                    $"public");
-            }*/
+                if (experience == null)
+                {
+                    done.TrySetResult(false);
+
+                    return;
+                }
+
+                IVirtuademyFramework.Current.Session.JoinExperience(experience, multiplayer,
+                                                                   joined => done.TrySetResult(joined));
+            });
+
+            return done.Task;
         }
     }
 }

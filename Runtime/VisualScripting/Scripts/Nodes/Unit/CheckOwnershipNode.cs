@@ -1,6 +1,8 @@
 ﻿
 using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Synced Object: Is Owned Locally")]
@@ -29,7 +31,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             SyncedObject = ValueInput<SyncedObject>(nameof(SyncedObject), null).NullMeansSelf();
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                if (!VirtuademyFramework.Current.IsCurrentSessionMultiplayer
+                if (!IVirtuademyFramework.Current.Session.IsMultiplayer
                 || !f.GetValue<SyncedObject>(SyncedObject).IsNetworked
                 || f.GetValue<SyncedObject>(SyncedObject).OnCheckOwnershipFunction())
                 {

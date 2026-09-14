@@ -1,22 +1,24 @@
 ﻿using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.Placeholders
 {
     public class InputFunctionSetter : MonoBehaviour
     {
         public void SetDefaultInputs()
         {
-            VirtuademyFramework.Current.ApplyDefaultInputSettings();
+            IVirtuademyGameplay.Current.Player.ApplyDefaultInputSettings();
         }
 
         public void SetStaticCamera ()
         {
-            VirtuademyFramework.Current.UseStaticCameraInput(false);
+            IVirtuademyGameplay.Current.Player.UseStaticCamera(false);
         }
 
         public void SetRotationCamera(bool constrainedRotation)
         {
-            VirtuademyFramework.Current.UseDragRotationCameraInput(constrainedRotation);
+            IVirtuademyGameplay.Current.Player.UseDragRotationCamera(constrainedRotation);
         }
     }
 }

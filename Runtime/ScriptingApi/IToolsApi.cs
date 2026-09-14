@@ -16,5 +16,12 @@ namespace Virtuademy.Environments.ScriptingApi
         /// </summary>
         /// <remarks>Node: <c>Reflectis general: Spawn Feedback</c>. WebGL only, as the node says.</remarks>
         void ShowAnswerFeedback(Transform where, bool correct);
-    }
+    
+        /// <summary>
+        /// Closes the contextual menu if one is open. A world calls it before showing something of
+        /// its own in the same place.
+        /// </summary>
+        /// <remarks>Node: <c>Hide Contextual Menu</c>.</remarks>
+        void HideContextualMenu();
+}
 }

@@ -1,5 +1,7 @@
 ﻿using Unity.VisualScripting;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Camera: ChangeCameraSpeed")]
@@ -34,7 +36,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         private ControlOutput Output(Flow flow)
         {
-            VirtuademyFramework.Current.ChangeCameraSpeed(flow.GetValue<float>(XSpeed), flow.GetValue<float>(YSpeed));
+            IVirtuademyGameplay.Current.Player.SetCameraSpeed(flow.GetValue<float>(XSpeed), flow.GetValue<float>(YSpeed));
             return outputTrigger;
         }
     }

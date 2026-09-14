@@ -3,6 +3,8 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Placeholder: Initialize Placeholder")]
@@ -35,7 +37,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.InitializePlaceholders(f.GetValue<GameObject>(Target), f.GetValue<bool>(PlaceholdersInChildren));
+                IVirtuademyGameplay.Current.Scene.InitializePlaceholders(f.GetValue<GameObject>(Target), f.GetValue<bool>(PlaceholdersInChildren));
 
                 return OutputTrigger;
             });

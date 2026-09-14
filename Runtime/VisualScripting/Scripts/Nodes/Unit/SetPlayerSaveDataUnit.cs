@@ -1,5 +1,7 @@
 ﻿using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Player Save Data: Set Data")]
@@ -31,7 +33,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.SetMySaveData(
+                IVirtuademyFramework.Current.SaveData.Set(
                     f.GetValue<string>(Key),
                     f.GetValue<object>(Value));
                 return OutputTrigger;

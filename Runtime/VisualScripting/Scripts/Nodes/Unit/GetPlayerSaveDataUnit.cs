@@ -1,6 +1,8 @@
 ﻿
 using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Player Save Data: Get Data")]
@@ -26,7 +28,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             Data = ValueOutput(nameof(Data),
                 (f) =>
             {
-                return VirtuademyFramework.Current.GetMySaveData(f.GetValue<string>(Key));
+                return IVirtuademyFramework.Current.SaveData.Get(f.GetValue<string>(Key));
             });
         }
     }

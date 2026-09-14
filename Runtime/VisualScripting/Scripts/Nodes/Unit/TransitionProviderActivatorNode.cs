@@ -3,6 +3,8 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Transition Provider: Do Transition")]
@@ -36,7 +38,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.DoTransition(f.GetValue<GameObject>(GameobjectVal), f.GetValue<bool>(Enter));
+                IVirtuademyGameplay.Current.Scene.RunTransition(f.GetValue<GameObject>(GameobjectVal), f.GetValue<bool>(Enter));
 
                 return OutputTrigger;
             });

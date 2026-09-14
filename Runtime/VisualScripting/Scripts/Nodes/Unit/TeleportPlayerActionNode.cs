@@ -5,6 +5,10 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
+using Virtuademy.ScriptingApi;
+
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Character: Teleport")]
@@ -42,11 +46,11 @@ namespace Virtuademy.SDK.Environments.VisualScripting
         {
             runningFlows.Add(flow);
 
-            VirtuademyFramework.Current.FadeToBlack(() =>
-            {
-                VirtuademyFramework.Current.MovePlayer(new Pose(flow.GetValue<Transform>(TransformVal).position, flow.GetValue<Transform>(TransformVal).rotation));
-                VirtuademyFramework.Current.FadeFromBlack(() => runningFlows.Remove(flow));
-            });
+            // The fade sandwich moved behind Teleport: fade out, move while the screen is black,
+            // fade back in, then report. It was here and nowhere else, which is why the grouped
+            // surface has one member where the flat one had three calls.
+            IVirtuademyGameplay.Current.Player.Teleport(flow.GetValue<Transform>(TransformVal),
+                                                        () => runningFlows.Remove(flow));
 
             yield return new WaitUntil(() => !runningFlows.Contains(flow));
 

@@ -1,5 +1,7 @@
 ﻿using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Networking: Set Current Shard Open State")]
@@ -25,14 +27,14 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.SetCurrentShardOpen(f.GetValue<bool>(Open));
+                IVirtuademyFramework.Current.Session.SetShardOpen(f.GetValue<bool>(Open));
                 //if (f.GetValue<bool>(Open))
                 //{
-                //    VirtuademyFramework.Current.SetCurrentShardOpen(true);
+                //    IVirtuademyFramework.Current.Session.SetShardOpen(true);
                 //}
                 //else
                 //{
-                //    VirtuademyFramework.Current.SetCurrentShardOpen(false);
+                //    IVirtuademyFramework.Current.Session.SetShardOpen(false);
                 //}
                 return OutputTrigger;
             });

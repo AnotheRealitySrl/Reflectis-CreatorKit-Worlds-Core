@@ -1,7 +1,9 @@
 ﻿using Virtuademy.SDK.Core.VisualScripting;
 using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.Events;
+
+using Virtuademy.ScriptingApi;
+
+using System;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
@@ -9,7 +11,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
     [UnitSurtitle("Localization")]
     [UnitShortTitle("On Language Changed")]
     [UnitCategory("Events\\Reflectis")]
-    public class OnLanguageChangedEventUnit : UnityEventUnit<string, string>
+    public class OnLanguageChangedEventUnit : ActionEventUnit<string, string>
     {
 
         public static string eventName = "OnLanguageChanged";
@@ -27,10 +29,10 @@ namespace Virtuademy.SDK.Environments.VisualScripting
         {
             base.Definition();
 
-            CurrentLanguage = ValueOutput<string>(nameof(CurrentLanguage), (flow) => VirtuademyFramework.Current.CurrentLanguage);
-            CurrentLanguageCode = ValueOutput<string>(nameof(CurrentLanguageCode), (flow) => VirtuademyFramework.Current.CurrentLanguageCode);
-            PreviousLanguage = ValueOutput<string>(nameof(PreviousLanguage), (flow) => VirtuademyFramework.Current.PreviousLanguage);
-            PreviousLanguageCode = ValueOutput<string>(nameof(PreviousLanguageCode), (flow) => VirtuademyFramework.Current.PreviousLanguageCode);
+            CurrentLanguage = ValueOutput<string>(nameof(CurrentLanguage), (flow) => IVirtuademyFramework.Current.Localization.CurrentLanguage);
+            CurrentLanguageCode = ValueOutput<string>(nameof(CurrentLanguageCode), (flow) => IVirtuademyFramework.Current.Localization.CurrentLanguageCode);
+            PreviousLanguage = ValueOutput<string>(nameof(PreviousLanguage), (flow) => IVirtuademyFramework.Current.Localization.PreviousLanguage);
+            PreviousLanguageCode = ValueOutput<string>(nameof(PreviousLanguageCode), (flow) => IVirtuademyFramework.Current.Localization.PreviousLanguageCode);
         }
 
         public override EventHook GetHook(GraphReference reference)
@@ -53,23 +55,22 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             }*/
 
             //return new EventHook(eventName);
-            Debug.LogError("EventHook, language change...");
             return new EventHook("lANGUAGEChange" + this.ToString().Split("EventUnit")[0]);
-            //return VirtuademyFramework.Current.LanguageChanged;
         }
 
-        protected override UnityEvent<string> GetEvent(GraphReference reference)
+        protected override void Subscribe(Action<string> handler)
         {
-            Debug.LogError("GET EVENT CALLED");
-            if (VirtuademyFramework.Current.IsLocalizationAvailable)
+            if (!IVirtuademyFramework.Current.Localization.IsAvailable)
             {
-                Debug.LogError("The system is not null");
+                return;
             }
-            else
-            {
-                Debug.LogError("NULL");
-            }
-            return VirtuademyFramework.Current.LanguageChanged;
+
+            IVirtuademyFramework.Current.Localization.LanguageChanged += handler;
+        }
+
+        protected override void Unsubscribe(Action<string> handler)
+        {
+            IVirtuademyFramework.Current.Localization.LanguageChanged -= handler;
         }
 
         protected override string GetArguments(GraphReference reference, string data)

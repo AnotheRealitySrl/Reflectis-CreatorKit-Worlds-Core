@@ -33,9 +33,17 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             base.Definition();
         }
 
-        protected async override Task AwaitableAction(Flow flow)
+        protected override Task AwaitableAction(Flow flow)
         {
-            cmUserData = await VirtuademyFramework.Current.GetUser(flow.GetValue<int>(UserID));
+            TaskCompletionSource<bool> found = new();
+
+            IVirtuademyFramework.Current.Session.GetUser(flow.GetValue<int>(UserID), user =>
+            {
+                cmUserData = user;
+                found.TrySetResult(true);
+            });
+
+            return found.Task;
         }
 
     }

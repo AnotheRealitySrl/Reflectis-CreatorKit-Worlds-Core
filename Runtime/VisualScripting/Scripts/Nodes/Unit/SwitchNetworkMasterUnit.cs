@@ -1,5 +1,7 @@
 ﻿using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Network: IsMaster")]
@@ -22,7 +24,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
         {
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                if (VirtuademyFramework.Current.IsMasterClient)
+                if (IVirtuademyFramework.Current.Session.IsMasterClient)
                 {
                     return True;
                 }

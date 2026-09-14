@@ -5,6 +5,8 @@ using UnityEngine;
 
 
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis general: Spawn Feedback (WebGL only)")]
@@ -40,7 +42,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         private ControlOutput Output(Flow flow)
         {
-            VirtuademyFramework.Current.DisplayPickFeedback(flow.GetValue<Transform>(SpawnTransform), flow.GetValue<bool>(Correctness));
+            IVirtuademyGameplay.Current.Tools.ShowAnswerFeedback(flow.GetValue<Transform>(SpawnTransform), flow.GetValue<bool>(Correctness));
             return outputTrigger;
         }
     }

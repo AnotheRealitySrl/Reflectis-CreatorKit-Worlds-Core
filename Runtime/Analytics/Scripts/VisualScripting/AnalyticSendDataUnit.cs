@@ -110,7 +110,7 @@ namespace Virtuademy.SDK.Environments.Analytics
                     }
                     try
                     {
-                        VirtuademyFramework.Current.SendAnalytic(Verb, AnalyticDTO);
+                        IVirtuademyFramework.Current.Analytics.Send(Verb, AnalyticDTO);
                     }
                     catch (Exception exception)
                     {

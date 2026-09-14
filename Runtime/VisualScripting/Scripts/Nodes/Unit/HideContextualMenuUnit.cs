@@ -2,6 +2,8 @@
 
 using Unity.VisualScripting;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis ContextualMenu: Hide")]
@@ -22,7 +24,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
         {
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.HideContextualMenu();
+                IVirtuademyGameplay.Current.Tools.HideContextualMenu();
                 return OutputTrigger;
             });
 

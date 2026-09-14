@@ -1,5 +1,7 @@
 ﻿using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Leaderboard Create Record: Create Record")]
@@ -31,7 +33,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.CreateLeaderboardRecord(
+                IVirtuademyFramework.Current.SaveData.SubmitLeaderboardRecord(
                     f.GetValue<string>(LeaderboardKey),
                     f.GetValue<float>(Data));
 

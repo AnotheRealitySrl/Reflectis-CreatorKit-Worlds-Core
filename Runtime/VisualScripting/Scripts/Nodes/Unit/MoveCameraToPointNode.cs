@@ -6,6 +6,8 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Character: Move camera to point")]
@@ -26,9 +28,13 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             base.Definition();
         }
 
-        protected override async Task AwaitableAction(Flow flow)
+        protected override Task AwaitableAction(Flow flow)
         {
-            await VirtuademyFramework.Current.MoveCameraToPoint(flow.GetValue<Transform>(TargetTransform));
+            TaskCompletionSource<bool> arrived = new();
+            IVirtuademyGameplay.Current.Player.MoveCameraTo(flow.GetValue<Transform>(TargetTransform),
+                                                            () => arrived.TrySetResult(true));
+
+            return arrived.Task;
         }
     }
 }

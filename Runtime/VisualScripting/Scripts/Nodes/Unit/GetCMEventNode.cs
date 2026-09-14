@@ -1,6 +1,8 @@
 ﻿
 using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis CMEvent: Get CMEvent")]
@@ -16,7 +18,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         protected override void Definition()
         {
-            CMEvent = ValueOutput(nameof(CMEvent), (f) => VirtuademyFramework.Current.CurrentSession);
+            CMEvent = ValueOutput(nameof(CMEvent), (f) => IVirtuademyFramework.Current.Session.Details);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis CMUser: Get Character Left Hand")]
@@ -19,7 +21,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         protected override void Definition()
         {
-            CharacterLeftHand = ValueOutput<Transform>(nameof(CharacterLeftHand), (flow) => VirtuademyFramework.Current.PlayerLeftHandTransform);
+            CharacterLeftHand = ValueOutput<Transform>(nameof(CharacterLeftHand), (flow) => IVirtuademyGameplay.Current.Player.LeftHand);
         }
     }
 }

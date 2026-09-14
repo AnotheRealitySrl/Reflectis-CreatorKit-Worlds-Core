@@ -1,6 +1,8 @@
 ﻿using Virtuademy.SDK.Core.ApplicationManagement;
 using Unity.VisualScripting;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
   [UnitTitle("Reflectis Platform: Switch")]
@@ -27,14 +29,22 @@ namespace Virtuademy.SDK.Environments.VisualScripting
     {
       InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
       {
-        switch (VirtuademyFramework.Current.RuntimePlatform)
+        // Three questions rather than a switch on the flags enum: the grouped surface answers
+        // "is this VR" and not "which platform is this", so that the platform list can grow
+        // without every authored graph having to know the new member.
+        if (IVirtuademyFramework.Current.Platform.IsVR)
         {
-          case ESupportedPlatform.VR:
-            return OutputTriggerVR;
-          case ESupportedPlatform.WebGL:
-            return OutputTriggerWebGL;
-          case ESupportedPlatform.Mobile:
-            return OutputTriggerMobile;
+          return OutputTriggerVR;
+        }
+
+        if (IVirtuademyFramework.Current.Platform.IsWebGL)
+        {
+          return OutputTriggerWebGL;
+        }
+
+        if (IVirtuademyFramework.Current.Platform.IsMobile)
+        {
+          return OutputTriggerMobile;
         }
         // Fallback when the platform system has not resolved a platform: mirror
         // PlatformSystem.Init, which reads the build profile's REFLECTIS_* scripting

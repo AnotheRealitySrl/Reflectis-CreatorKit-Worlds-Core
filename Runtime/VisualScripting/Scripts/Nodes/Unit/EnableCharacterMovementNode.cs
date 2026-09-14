@@ -1,5 +1,7 @@
 ﻿using Unity.VisualScripting;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Character: Enable Movement")]
@@ -26,7 +28,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                VirtuademyFramework.Current.EnablePlayerMovement(f.GetValue<bool>(Enable));
+                IVirtuademyGameplay.Current.Player.EnableMovement(f.GetValue<bool>(Enable));
                 return OutputTrigger;
             });
 

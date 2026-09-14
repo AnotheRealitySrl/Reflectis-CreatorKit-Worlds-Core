@@ -4,6 +4,8 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Scene: Fade To Black")]
@@ -32,7 +34,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
         {
             bool fadeDone = false;
 
-            VirtuademyFramework.Current.FadeToBlack(() => fadeDone = true);
+            IVirtuademyFramework.Current.Screen.FadeToBlack(() => fadeDone = true);
 
             yield return new WaitUntil(() => fadeDone == true);
 

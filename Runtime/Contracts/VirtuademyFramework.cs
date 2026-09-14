@@ -3,7 +3,7 @@ using System;
 namespace Virtuademy.SDK.Environments
 {
     /// <summary>
-    /// How an authored world reaches <see cref="IVirtuademyFramework"/>.
+    /// How an authored world reaches <see cref="ILegacyWorldFramework"/>.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -25,7 +25,7 @@ namespace Virtuademy.SDK.Environments
     /// </remarks>
     public static class VirtuademyFramework
     {
-        private static IVirtuademyFramework current;
+        private static ILegacyWorldFramework current;
 
         /// <summary>Whether a host application has installed the framework yet.</summary>
         public static bool IsInstalled => current != null;
@@ -34,7 +34,7 @@ namespace Virtuademy.SDK.Environments
         /// The framework this world is running against.
         /// </summary>
         /// <exception cref="InvalidOperationException">Nothing has installed an implementation.</exception>
-        public static IVirtuademyFramework Current
+        public static ILegacyWorldFramework Current
         {
             get
             {
@@ -53,7 +53,7 @@ namespace Virtuademy.SDK.Environments
         /// <summary>
         /// Registers the host application's implementation. Called once, by the application.
         /// </summary>
-        public static void Install(IVirtuademyFramework framework)
+        public static void Install(ILegacyWorldFramework framework)
         {
             current = framework ?? throw new ArgumentNullException(nameof(framework));
         }

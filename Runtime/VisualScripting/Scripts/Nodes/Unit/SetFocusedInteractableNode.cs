@@ -3,6 +3,8 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis interactable: SetFocusedInteractable")]
@@ -34,7 +36,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         private ControlOutput Output(Flow flow)
         {
-            //VirtuademyFramework.Current.ChangeCameraSpeed(flow.GetValue<ManipulablePlaceholder>(Interactable));
+            //IVirtuademyGameplay.Current.Player.SetCameraSpeed(flow.GetValue<ManipulablePlaceholder>(Interactable));
             return outputTrigger;
         }
     }
