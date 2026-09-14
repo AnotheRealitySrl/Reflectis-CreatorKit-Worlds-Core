@@ -1,11 +1,11 @@
 using System.Runtime.CompilerServices;
 
-// The app installs the implementation and nothing else can, because VirtuademyEnvironments.Install and IWorldBackend
-// are internal to this assembly. An interpreted script references this assembly in full, so a
-// public installer would let one script replace the surface every other script calls.
+// The application installs the implementation and nothing else can, because
+// IVirtuademyGameplay.Install is internal to this assembly. An interpreted script references this
+// assembly in full, so a public installer would let one script replace the surface every other
+// script calls.
 //
-// The named assembly lives in Assets/_Project, not in this package: §1 of the package plan puts the
-// implementations of the Environments contracts in the app, along with SM and the world systems,
-// while the facade ships to creators. A creator installs this surface; they do not install what
-// answers it.
+// The named assembly lives in Assets/_Project, not in this package: the implementations of these
+// contracts belong to the application, along with SM and the world systems, while the surface ships
+// to creators. A creator installs this surface; they do not install what answers it.
 [assembly: InternalsVisibleTo("Virtuademy.Worlds.ScriptingApiBackend")]
