@@ -91,5 +91,39 @@ namespace Virtuademy.Environments.ScriptingApi
         /// synchronous, or be a graph.
         /// </remarks>
         event Action Unloading;
+
+        /// <summary>
+        /// Registers a coroutine the platform runs — and <b>waits for</b> — once the environment
+        /// is ready, before it hands control to the player.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This is the difference between <see cref="Ready"/> and this: that one tells you the
+        /// moment happened, this one lets you hold it. It is what the <c>On Setup</c> node has
+        /// always been able to do — the application awaits every graph flow before continuing —
+        /// and until now a script could not.
+        /// </para>
+        /// <para>
+        /// Register from <c>Awake</c> or <c>Start</c>: by the time this moment arrives the scene's
+        /// objects are up. A step registered after it has passed is not run.
+        /// </para>
+        /// <para>
+        /// Steps run together, not one after another, which is also what the nodes do. <b>A step
+        /// that never finishes holds the loading screen</b>, so the platform gives them a bounded
+        /// time and logs an error naming the ones still running when it gives up.
+        /// </para>
+        /// </remarks>
+        void RunWhenReady(Func<IEnumerator> step);
+
+        /// <summary>
+        /// Registers a coroutine the platform runs — and waits for — before the environment is
+        /// torn down.
+        /// </summary>
+        /// <remarks>
+        /// The counterpart to <see cref="Unloading"/>, and the reason that one carries a warning:
+        /// a plain handler cannot delay the teardown, and this can. Use it for work that must
+        /// finish while the world is still there and is not synchronous.
+        /// </remarks>
+        void RunBeforeUnload(Func<IEnumerator> step);
 }
 }
