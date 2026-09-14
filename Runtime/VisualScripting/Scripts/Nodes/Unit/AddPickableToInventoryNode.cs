@@ -3,6 +3,8 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis inventory: AddPickableToInventoryNode")]
@@ -42,7 +44,11 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         private ControlOutput Output(Flow flow)
         {
-            _addedValue = VirtuademyFramework.Current.AddPickableToInventory(flow.GetValue<PickablePlaceholder>(Pickable));
+            // The port stays typed - this is compiled package code, and a graph author picks a
+            // placeholder, not a bare object. Only the surface call sheds the type.
+            PickablePlaceholder pickable = flow.GetValue<PickablePlaceholder>(Pickable);
+            _addedValue = pickable != null
+                          && IVirtuademyGameplay.Current.Tools.AddPickableToInventory(pickable.gameObject);
             return outputTrigger;
         }
     }

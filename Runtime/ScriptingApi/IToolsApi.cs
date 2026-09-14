@@ -23,5 +23,17 @@ namespace Virtuademy.Environments.ScriptingApi
         /// </summary>
         /// <remarks>Node: <c>Hide Contextual Menu</c>.</remarks>
         void HideContextualMenu();
+
+        /// <summary>
+        /// Puts a pickable into the local player's inventory, and says whether it fitted. False
+        /// when the inventory is full, or when <paramref name="pickable"/> carries no pickable.
+        /// </summary>
+        /// <remarks>
+        /// Takes the object rather than the placeholder component on it. The component's type is
+        /// under <c>Virtuademy.SDK</c>, a namespace the script whitelist denies by prefix, so a
+        /// member naming it would be one no interpreted script could call. Node:
+        /// <c>Reflectis inventory: AddPickableToInventoryNode</c>.
+        /// </remarks>
+        bool AddPickableToInventory(GameObject pickable);
 }
 }
