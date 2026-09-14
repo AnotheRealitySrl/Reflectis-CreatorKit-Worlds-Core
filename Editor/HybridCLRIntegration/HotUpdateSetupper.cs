@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using UnityEditor;
+using UnityEditor.Compilation;
 
 using UnityEditorInternal;
 
@@ -34,6 +35,22 @@ namespace Virtuademy.SDK.Environments.HybridCLR.Editor
 
         const string HOTUPDATE_FOLDER = "Assets/HotUpdate";
         const string ASMDEF_PREFIX = "HotUpdate_";
+
+        /// <summary>
+        /// The two assemblies a hot-update script is allowed to reference, and therefore the two
+        /// the asmdef should carry from the moment it exists.
+        /// </summary>
+        /// <remarks>
+        /// They are not a convenience: the server-side whitelist admits these two and nothing else
+        /// first-party, so an asmdef without them cannot compile a script that reaches the platform
+        /// at all, and one with more than them compiles scripts the publish will reject. A creator
+        /// used to discover the first half by compile error, which named a missing assembly
+        /// reference and left them to guess which.
+        /// </remarks>
+        static readonly string[] SCRIPTING_API_ASSEMBLIES = {
+            "Virtuademy.ScriptingApi",
+            "Virtuademy.Environments.ScriptingApi",
+        };
 
         // HybridCLR ships with its gitee mirrors as the default, which do not resolve outside
         // China. Every fresh Creator Kit project would fail its first install on a DNS error
@@ -342,14 +359,87 @@ namespace Virtuademy.SDK.Environments.HybridCLR.Editor
             }
 
             AlignDeclaredAssemblyName(asmdefPath, assemblyName);
+            EnsureScriptingApiReferences(asmdefPath);
             return true;
         }
+
+        /// <summary>
+        /// Adds whichever of <see cref="SCRIPTING_API_ASSEMBLIES"/> the asmdef does not already
+        /// name. Additive only: a reference the creator added is never removed, because this
+        /// cannot tell an experiment from a mistake and the publish check can.
+        /// </summary>
+        /// <remarks>
+        /// Unity writes a reference either as the assembly name or as "GUID:...", and a project
+        /// set up before this existed has the GUID form, so both are recognised before deciding
+        /// something is missing. What gets written is the GUID when it resolves — matching what
+        /// the inspector would write — and the plain name when it does not, which happens when
+        /// the package is not installed yet and is worth leaving legible rather than failing on.
+        /// </remarks>
+        static void EnsureScriptingApiReferences(string asmdefPath)
+        {
+            try
+            {
+                JObject asmdef = JObject.Parse(File.ReadAllText(asmdefPath));
+                JArray references = asmdef["references"] as JArray;
+                if (references == null)
+                {
+                    references = new JArray();
+                    asmdef["references"] = references;
+                }
+
+                bool changed = false;
+
+                foreach (string assembly in SCRIPTING_API_ASSEMBLIES)
+                {
+                    string guid = GuidOfAssembly(assembly);
+                    bool present = references.Values<string>()
+                        .Any(r => r == assembly || (guid != null && r == "GUID:" + guid));
+
+                    if (present)
+                    {
+                        continue;
+                    }
+
+                    references.Add(guid != null ? "GUID:" + guid : assembly);
+                    changed = true;
+                    Debug.Log($"[Setup] {Path.GetFileName(asmdefPath)}: added the reference to {assembly}.");
+                }
+
+                if (!changed)
+                {
+                    return;
+                }
+
+                File.WriteAllText(asmdefPath, asmdef.ToString(Formatting.Indented));
+                AssetDatabase.ImportAsset(asmdefPath, ImportAssetOptions.ForceUpdate);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[Setup] Could not check the references in {asmdefPath}: {e.Message}");
+            }
+        }
+
+        static string GuidOfAssembly(string assemblyName)
+        {
+            string path = CompilationPipeline.GetAssemblyDefinitionFilePathFromAssemblyName(assemblyName);
+
+            return string.IsNullOrEmpty(path) ? null : AssetDatabase.AssetPathToGUID(path);
+        }
+
+        /// <summary>Renders the seed references for a freshly written asmdef.</summary>
+        static string References(string[] assemblies)
+            => string.Join(", ", assemblies.Select(a =>
+            {
+                string guid = GuidOfAssembly(a);
+
+                return guid != null ? $"\"GUID:{guid}\"" : $"\"{a}\"";
+            }));
 
         static string BuildAsmdefContent(string assemblyName) =>
 $@"{{
     ""name"": ""{assemblyName}"",
     ""rootNamespace"": """",
-    ""references"": [],
+    ""references"": [{References(SCRIPTING_API_ASSEMBLIES)}],
     ""includePlatforms"": [],
     ""excludePlatforms"": [],
     ""allowUnsafeCode"": false,
