@@ -13,7 +13,12 @@ namespace Virtuademy.SDK.Environments.VisualScripting
     [UnitCategory("Events\\Reflectis")]
     public class OnSceneUnloadEventUnit : AwaitableEventUnit<string>
     {
-        public static string eventName = "OnSceneLoad";
+        // "OnSceneLoad" until 2026-09-14, the same string the load node uses, so both node
+        // types registered the same EventHook. Nothing fired through it — the application calls
+        // TriggerAllNodes, which is scoped to one node type and bypasses the bus — so the
+        // collision never showed. It would have, the first time someone raised this event the
+        // way Visual Scripting raises events: On Unload running when the scene loads.
+        public static string eventName = "OnSceneUnload";
 
         public static Dictionary<GraphReference, List<OnSceneUnloadEventUnit>> instances = new Dictionary<GraphReference, List<OnSceneUnloadEventUnit>>();
 
