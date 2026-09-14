@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using UnityEngine.Events;
 
-namespace Virtuademy.SDK.Environments.Interaction
+namespace Virtuademy.Environments.ScriptingApi.Interaction
 {
     public interface IVisualScriptingInteractable : IInteractableBehaviour
     {

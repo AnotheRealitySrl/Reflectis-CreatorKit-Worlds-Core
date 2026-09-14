@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
+using Virtuademy.Environments.ScriptingApi.Interaction;
+
 namespace Virtuademy.SDK.Environments
 {
     /// <summary>

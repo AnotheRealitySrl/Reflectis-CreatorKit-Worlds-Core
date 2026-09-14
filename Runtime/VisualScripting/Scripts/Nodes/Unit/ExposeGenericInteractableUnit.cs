@@ -2,6 +2,8 @@ using Virtuademy.SDK.Environments.Interaction;
 
 using Unity.VisualScripting;
 
+using Virtuademy.Environments.ScriptingApi.Interaction;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis: Expose Visual Scripting Interactable")]

@@ -3,6 +3,8 @@ using Virtuademy.SDK.Core.VisualScripting;
 
 using Unity.VisualScripting;
 
+using Virtuademy.Environments.ScriptingApi.Interaction;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Visual Scripting Interactable: Unselect OnDestroy")]

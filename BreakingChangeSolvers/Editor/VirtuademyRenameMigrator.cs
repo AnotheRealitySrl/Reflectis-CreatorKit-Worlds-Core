@@ -118,6 +118,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         private static readonly string OldApi = "Virtuademy.SDK.Platform" + "Api";
 
         private static readonly string OldModels = "Virtuademy.SDK.Environments.Client" + "Models";
+        private static readonly string OldInteraction = "Virtuademy.SDK.Environments.Inter" + "action";
 
         private static readonly (string oldValue, string newValue)[] EnvironmentsMap =
         {
@@ -153,12 +154,28 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             // migrate it to.
             //
             // The namespace alone is NOT in this table, and must not be: it still exists, on
-            // the application side. Only these six full names move.
+            // the application side. Only these five full names move.
             (OldModels + ".CMUser", "Virtuademy.ScriptingApi.UserView"),
             (OldModels + ".CMSession", "Virtuademy.ScriptingApi.SessionView"),
             (OldModels + ".CMEnvironment", "Virtuademy.ScriptingApi.EnvironmentView"),
             (OldModels + ".CMExperience", "Virtuademy.ScriptingApi.ExperienceView"),
             (OldModels + ".CMTag", "Virtuademy.ScriptingApi.TagView"),
+
+            // The interaction contracts moved on 2026-09-14 for the same reason the models did,
+            // from the other direction: they had to become nameable. Virtuademy.SDK is a denied
+            // namespace prefix in the script whitelist, and a deny by prefix beats every allow,
+            // so a member taking one of these was a member no interpreted script could call.
+            //
+            // As above, the namespace itself is NOT in this table: four more types stay behind
+            // in it. Only these three names move.
+            // Longest first, as with the Wire pair above: ".IInteractable" is a prefix of
+            // ".IInteractableBehaviour", and these are substring replacements.
+            (OldInteraction + ".IVisualScriptingInteractable",
+             "Virtuademy.Environments.ScriptingApi.Interaction.IVisualScriptingInteractable"),
+            (OldInteraction + ".IInteractableBehaviour",
+             "Virtuademy.Environments.ScriptingApi.Interaction.IInteractableBehaviour"),
+            (OldInteraction + ".IInteractable",
+             "Virtuademy.Environments.ScriptingApi.Interaction.IInteractable"),
         };
 
         private static readonly string[] TextExtensions =

@@ -2,6 +2,8 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine.Events;
 
+using Virtuademy.Environments.ScriptingApi.Interaction;
+
 namespace Virtuademy.SDK.Environments.Interaction
 {
     public interface IManipulable : IInteractableBehaviour

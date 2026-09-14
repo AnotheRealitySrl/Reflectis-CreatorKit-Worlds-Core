@@ -1,4 +1,4 @@
-namespace Virtuademy.SDK.Environments.Interaction
+namespace Virtuademy.Environments.ScriptingApi.Interaction
 {
     public interface IInteractableBehaviour
     {

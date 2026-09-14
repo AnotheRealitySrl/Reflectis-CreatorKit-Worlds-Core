@@ -11,6 +11,8 @@ using Virtuademy.SDK.Environments.VisualScripting;
 #endif
 using UnityEditor;
 
+using Virtuademy.Environments.ScriptingApi.Interaction;
+
 namespace Virtuademy.SDK.Environments.Installer.Editor
 {
     public static class BreakingChangesSolver2025_4
@@ -240,7 +242,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
 
             EditorUtility.SetDirty(interactionPlaceholder);
 
-            if (interactable.InteractionModes.HasFlag(Virtuademy.SDK.Environments.Interaction.IInteractable.EInteractableType.ContextualMenuInteractable))
+            if (interactable.InteractionModes.HasFlag(Virtuademy.Environments.ScriptingApi.Interaction.IInteractable.EInteractableType.ContextualMenuInteractable))
             {
                 ContextualMenuPlaceholder contextualMenuPlaceholder = interactable.gameObject.GetOrAddComponent<ContextualMenuPlaceholder>();
                 contextualMenuPlaceholder.ContextualMenuOptions = interactable.ContextualMenuOptions;
@@ -254,7 +256,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 }
             }
 
-            if (interactable.InteractionModes.HasFlag(Virtuademy.SDK.Environments.Interaction.IInteractable.EInteractableType.Manipulable))
+            if (interactable.InteractionModes.HasFlag(Virtuademy.Environments.ScriptingApi.Interaction.IInteractable.EInteractableType.Manipulable))
             {
                 ManipulablePlaceholder manipulablePlaceholder = interactable.gameObject.GetOrAddComponent<ManipulablePlaceholder>();
                 manipulablePlaceholder.ManipulationMode = interactable.ManipulationMode;
@@ -278,7 +280,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 }
             }
 #if REFLECTIS_CREATOR_KIT_WORLDS_VISUAL_SCRIPTING
-            if (interactable.InteractionModes.HasFlag(Virtuademy.SDK.Environments.Interaction.IInteractable.EInteractableType.VisualScriptingInteractable))
+            if (interactable.InteractionModes.HasFlag(Virtuademy.Environments.ScriptingApi.Interaction.IInteractable.EInteractableType.VisualScriptingInteractable))
             {
                 VisualScriptingInteractablePlaceholder vsPlaceholder = interactable.gameObject.GetOrAddComponent<VisualScriptingInteractablePlaceholder>();
                 vsPlaceholder.DesktopAllowedStates = interactable.DesktopAllowedStates;

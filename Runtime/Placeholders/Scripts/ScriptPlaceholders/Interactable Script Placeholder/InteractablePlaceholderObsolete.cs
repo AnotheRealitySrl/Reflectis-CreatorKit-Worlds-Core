@@ -9,9 +9,9 @@ using UnityEngine;
 using UnityEngine.Events;
 
 using static Virtuademy.SDK.Environments.Interaction.IContextualMenuManageable;
-using static Virtuademy.SDK.Environments.Interaction.IInteractable;
+using static Virtuademy.Environments.ScriptingApi.Interaction.IInteractable;
 using static Virtuademy.SDK.Environments.Interaction.IManipulable;
-using static Virtuademy.SDK.Environments.Interaction.IVisualScriptingInteractable;
+using static Virtuademy.Environments.ScriptingApi.Interaction.IVisualScriptingInteractable;
 
 namespace Virtuademy.SDK.Environments.Placeholders
 {

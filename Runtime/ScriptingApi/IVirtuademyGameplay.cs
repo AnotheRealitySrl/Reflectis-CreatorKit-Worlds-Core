@@ -75,5 +75,8 @@ namespace Virtuademy.Environments.ScriptingApi
         /// drive one, giving it back, and hearing when it changed hands.
         /// </summary>
         ISyncApi Sync { get; }
+
+        /// <summary>What the player currently has hold of.</summary>
+        IInteractionApi Interaction { get; }
     }
 }

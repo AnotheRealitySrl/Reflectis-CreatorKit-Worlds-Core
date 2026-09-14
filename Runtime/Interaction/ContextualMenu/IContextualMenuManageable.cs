@@ -1,5 +1,7 @@
 using System;
 
+using Virtuademy.Environments.ScriptingApi.Interaction;
+
 namespace Virtuademy.SDK.Environments.Interaction
 {
     public interface IContextualMenuManageable : IInteractableBehaviour

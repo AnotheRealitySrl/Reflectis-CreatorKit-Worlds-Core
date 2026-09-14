@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Virtuademy.SDK.Environments.Interaction
+namespace Virtuademy.Environments.ScriptingApi.Interaction
 {
     /// <summary>
     /// Common interaface for any interactable entity.

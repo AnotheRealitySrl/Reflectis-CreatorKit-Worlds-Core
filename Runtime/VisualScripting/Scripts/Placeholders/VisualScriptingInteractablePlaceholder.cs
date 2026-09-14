@@ -4,7 +4,7 @@ using System;
 using Unity.VisualScripting;
 
 using UnityEngine;
-using static Virtuademy.SDK.Environments.Interaction.IVisualScriptingInteractable;
+using static Virtuademy.Environments.ScriptingApi.Interaction.IVisualScriptingInteractable;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {

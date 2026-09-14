@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 using static Virtuademy.SDK.Environments.Interaction.IContextualMenuManageable;
-using static Virtuademy.SDK.Environments.Interaction.IInteractable;
+using static Virtuademy.Environments.ScriptingApi.Interaction.IInteractable;
 
 namespace Virtuademy.SDK.Environments.Placeholders.Editor
 {

@@ -1,7 +1,12 @@
 ﻿using Virtuademy.SDK.Environments.Interaction;
 using Virtuademy.SDK.Core.VisualScripting;
 using Unity.VisualScripting;
-using UnityEngine.Events;
+
+using System;
+
+using Virtuademy.Environments.ScriptingApi;
+
+using Virtuademy.Environments.ScriptingApi.Interaction;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
@@ -9,7 +14,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
     [UnitSurtitle("VisualScriptingInteractable")]
     [UnitShortTitle("On Selected Change")]
     [UnitCategory("Events\\Reflectis")]
-    public class OnSelectedVisualScriptingInteractableChange : UnityEventUnit<IVisualScriptingInteractable, IVisualScriptingInteractable>
+    public class OnSelectedVisualScriptingInteractableChange : ActionEventUnit<IVisualScriptingInteractable, IVisualScriptingInteractable>
     {
         [DoNotSerialize]
         public ValueOutput VisualScriptingInteractable { get; private set; }
@@ -32,10 +37,11 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             return new EventHook("VisualScriptingInteractable" + this.ToString().Split("EventUnit")[0]);
         }
 
-        protected override UnityEvent<IVisualScriptingInteractable> GetEvent(GraphReference reference)
-        {
-            return VirtuademyFramework.Current.SelectedInteractableChanged;
-        }
+        protected override void Subscribe(Action<IVisualScriptingInteractable> handler)
+            => IVirtuademyGameplay.Current.Interaction.SelectedChanged += handler;
+
+        protected override void Unsubscribe(Action<IVisualScriptingInteractable> handler)
+            => IVirtuademyGameplay.Current.Interaction.SelectedChanged -= handler;
 
         protected override IVisualScriptingInteractable GetArguments(GraphReference reference, IVisualScriptingInteractable eventData)
         {
