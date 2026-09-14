@@ -3,6 +3,8 @@ using Unity.VisualScripting;
 
 using Virtuademy.ScriptingApi;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Localization: Get translation")]
@@ -27,7 +29,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             Translation = ValueOutput<string>(nameof(Translation), (f) =>
                 {
-                    return IVirtuademyFramework.Current.Localization.Translate(f.GetValue<string>(Key));
+                    return IVirtuademyGameplay.Current.Localization.Translate(f.GetValue<string>(Key));
                 });
         }
     }

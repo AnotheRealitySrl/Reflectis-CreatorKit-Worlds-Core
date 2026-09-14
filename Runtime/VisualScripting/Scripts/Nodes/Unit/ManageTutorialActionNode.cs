@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 
 using Virtuademy.ScriptingApi;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Tutorial: Enable")]
@@ -56,11 +58,11 @@ namespace Virtuademy.SDK.Environments.VisualScripting
         {
             if (flow.GetValue<bool>(Enable))
             {
-                IVirtuademyFramework.Current.Help.Open();
+                IVirtuademyGameplay.Current.Help.Open();
             }
             else
             {
-                IVirtuademyFramework.Current.Help.Close();
+                IVirtuademyGameplay.Current.Help.Close();
             }
 
             awaitableMethodRuning = true;

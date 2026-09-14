@@ -6,6 +6,8 @@ using UnityEngine;
 
 using Virtuademy.ScriptingApi;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Localization: Set Language")]
@@ -32,7 +34,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                IVirtuademyFramework.Current.Localization.SetLanguage(f.GetValue<string>(LanguageChoice));
+                IVirtuademyGameplay.Current.Localization.SetLanguage(f.GetValue<string>(LanguageChoice));
 
                 return OutputTrigger;
             });

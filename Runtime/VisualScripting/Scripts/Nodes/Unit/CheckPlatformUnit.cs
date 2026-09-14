@@ -3,6 +3,8 @@ using Unity.VisualScripting;
 
 using Virtuademy.ScriptingApi;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
   [UnitTitle("Reflectis Platform: Switch")]
@@ -32,17 +34,17 @@ namespace Virtuademy.SDK.Environments.VisualScripting
         // Three questions rather than a switch on the flags enum: the grouped surface answers
         // "is this VR" and not "which platform is this", so that the platform list can grow
         // without every authored graph having to know the new member.
-        if (IVirtuademyFramework.Current.Platform.IsVR)
+        if (IVirtuademyGameplay.Current.Platform.IsVR)
         {
           return OutputTriggerVR;
         }
 
-        if (IVirtuademyFramework.Current.Platform.IsWebGL)
+        if (IVirtuademyGameplay.Current.Platform.IsWebGL)
         {
           return OutputTriggerWebGL;
         }
 
-        if (IVirtuademyFramework.Current.Platform.IsMobile)
+        if (IVirtuademyGameplay.Current.Platform.IsMobile)
         {
           return OutputTriggerMobile;
         }

@@ -119,6 +119,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
 
         private static readonly string OldModels = "Virtuademy.SDK.Environments.Client" + "Models";
         private static readonly string OldInteraction = "Virtuademy.SDK.Environments.Inter" + "action";
+        private static readonly string OldScripting = "Virtuademy.Scripting" + "Api";
 
         private static readonly (string oldValue, string newValue)[] EnvironmentsMap =
         {
@@ -176,6 +177,24 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
              "Virtuademy.Environments.ScriptingApi.Interaction.IInteractableBehaviour"),
             (OldInteraction + ".IInteractable",
              "Virtuademy.Environments.ScriptingApi.Interaction.IInteractable"),
+
+            // Four groups crossed from the shared surface to the world one on 2026-09-14. The line
+            // had been drawn as "what an external application also needs", which nothing enforced
+            // and nothing could: Install is internal to the platform application's own assembly,
+            // so no other host can put an implementation behind either interface. Redrawn as what
+            // only the platform knows against what the player provides, these four are the
+            // player's — the screen it draws, the panels over it, the language, the device.
+            //
+            // As above, the namespace itself is NOT in this table: the views and the analytic
+            // statements stay in it. Only these four names move.
+            (OldScripting + ".ILocalizationApi",
+             "Virtuademy.Environments.ScriptingApi.ILocalizationApi"),
+            (OldScripting + ".IPlatformApi",
+             "Virtuademy.Environments.ScriptingApi.IPlatformApi"),
+            (OldScripting + ".IScreenApi",
+             "Virtuademy.Environments.ScriptingApi.IScreenApi"),
+            (OldScripting + ".IHelpApi",
+             "Virtuademy.Environments.ScriptingApi.IHelpApi"),
         };
 
         private static readonly string[] TextExtensions =

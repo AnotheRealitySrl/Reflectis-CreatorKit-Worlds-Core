@@ -5,21 +5,27 @@ using Virtuademy.ScriptingApi;
 namespace Virtuademy.Environments.ScriptingApi
 {
     /// <summary>
-    /// What only an authored environment can do: the avatar, the world around it, the tools in it,
-    /// and the objects a multiplayer session keeps in step.
+    /// What the Virtuademy player provides: the avatar, the world around it, the screen it is drawn
+    /// on, the panels over it, and the objects a multiplayer session keeps in step.
     /// </summary>
     /// <remarks>
     /// <para>
-    /// <b>The other half of the surface.</b> <see cref="IVirtuademyFramework"/> carries what an
-    /// external app embedded in Virtuademy needs too — session, language, save data, device, screen,
-    /// help. The four groups here have no meaning outside a world: an external app has no avatar
-    /// rig, no placeholders, no spawned objects and no synced ownership. Keeping them apart is what
-    /// lets that app install the contracts package without installing the authoring one.
+    /// <b>The other half of the surface.</b> <see cref="IVirtuademyFramework"/> carries what only
+    /// the platform knows — the session, the saved values, the analytics. Everything here the
+    /// player owns: fading the view, the help panel, the active language, which device this is,
+    /// and the world itself.
+    /// </para>
+    /// <para>
+    /// <b>The device group is here on purpose</b>, though it looks like a platform fact. It exists
+    /// because the whitelist denies <c>UnityEngine.Application</c> and <c>SystemInfo</c> to an
+    /// interpreted script, not because the platform is the only one who could answer — anything
+    /// else already knows its own device. It is an interpreter constraint, and those belong on the
+    /// side that exists to serve the interpreter.
     /// </para>
     /// <para>
     /// <b>Two entry points, not one.</b> A creator writes <c>IVirtuademyGameplay.Current.Player</c>
-    /// and <c>IVirtuademyFramework.Current.Session</c>; the split says which of the two an
-    /// expression depends on, which is the thing a shared surface would hide.
+    /// and <c>IVirtuademyFramework.Current.Session</c>; the split says whether an expression
+    /// depends on the platform or on the player, which is the thing a shared surface would hide.
     /// </para>
     /// <para>
     /// <b>Written to the interpreter's budget</b>, like its sibling: no <c>Task</c>, no generic
@@ -78,5 +84,17 @@ namespace Virtuademy.Environments.ScriptingApi
 
         /// <summary>What the player currently has hold of.</summary>
         IInteractionApi Interaction { get; }
+
+        /// <summary>The active language and the strings authored against it.</summary>
+        ILocalizationApi Localization { get; }
+
+        /// <summary>Fading the view in and out.</summary>
+        IScreenApi Screen { get; }
+
+        /// <summary>The help panel, when the host provides one.</summary>
+        IHelpApi Help { get; }
+
+        /// <summary>Which kind of device this is running on.</summary>
+        IPlatformApi Platform { get; }
     }
 }

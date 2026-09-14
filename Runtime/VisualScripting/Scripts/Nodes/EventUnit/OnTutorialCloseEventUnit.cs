@@ -5,6 +5,8 @@ using Virtuademy.ScriptingApi;
 
 using System;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Tutorial: On Tutorial Closed")]
@@ -31,19 +33,19 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         protected override void Subscribe(Action handler)
         {
-            if (!IVirtuademyFramework.Current.Help.IsAvailable)
+            if (!IVirtuademyGameplay.Current.Help.IsAvailable)
             {
                 return;
             }
 
-            IVirtuademyFramework.Current.Help.Closed += handler;
+            IVirtuademyGameplay.Current.Help.Closed += handler;
         }
 
         protected override void Unsubscribe(Action handler)
         {
             // Unconditional, unlike the subscribe: whether the host has a help panel can change
             // between the two, and removing a handler that was never added does nothing.
-            IVirtuademyFramework.Current.Help.Closed -= handler;
+            IVirtuademyGameplay.Current.Help.Closed -= handler;
         }
 
         public override void Uninstantiate(GraphReference instance)

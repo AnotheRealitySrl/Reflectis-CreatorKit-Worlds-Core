@@ -5,6 +5,8 @@ using Virtuademy.ScriptingApi;
 
 using System;
 
+using Virtuademy.Environments.ScriptingApi;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Localization: On Language Changed")]
@@ -29,10 +31,10 @@ namespace Virtuademy.SDK.Environments.VisualScripting
         {
             base.Definition();
 
-            CurrentLanguage = ValueOutput<string>(nameof(CurrentLanguage), (flow) => IVirtuademyFramework.Current.Localization.CurrentLanguage);
-            CurrentLanguageCode = ValueOutput<string>(nameof(CurrentLanguageCode), (flow) => IVirtuademyFramework.Current.Localization.CurrentLanguageCode);
-            PreviousLanguage = ValueOutput<string>(nameof(PreviousLanguage), (flow) => IVirtuademyFramework.Current.Localization.PreviousLanguage);
-            PreviousLanguageCode = ValueOutput<string>(nameof(PreviousLanguageCode), (flow) => IVirtuademyFramework.Current.Localization.PreviousLanguageCode);
+            CurrentLanguage = ValueOutput<string>(nameof(CurrentLanguage), (flow) => IVirtuademyGameplay.Current.Localization.CurrentLanguage);
+            CurrentLanguageCode = ValueOutput<string>(nameof(CurrentLanguageCode), (flow) => IVirtuademyGameplay.Current.Localization.CurrentLanguageCode);
+            PreviousLanguage = ValueOutput<string>(nameof(PreviousLanguage), (flow) => IVirtuademyGameplay.Current.Localization.PreviousLanguage);
+            PreviousLanguageCode = ValueOutput<string>(nameof(PreviousLanguageCode), (flow) => IVirtuademyGameplay.Current.Localization.PreviousLanguageCode);
         }
 
         public override EventHook GetHook(GraphReference reference)
@@ -60,17 +62,17 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
         protected override void Subscribe(Action<string> handler)
         {
-            if (!IVirtuademyFramework.Current.Localization.IsAvailable)
+            if (!IVirtuademyGameplay.Current.Localization.IsAvailable)
             {
                 return;
             }
 
-            IVirtuademyFramework.Current.Localization.LanguageChanged += handler;
+            IVirtuademyGameplay.Current.Localization.LanguageChanged += handler;
         }
 
         protected override void Unsubscribe(Action<string> handler)
         {
-            IVirtuademyFramework.Current.Localization.LanguageChanged -= handler;
+            IVirtuademyGameplay.Current.Localization.LanguageChanged -= handler;
         }
 
         protected override string GetArguments(GraphReference reference, string data)
