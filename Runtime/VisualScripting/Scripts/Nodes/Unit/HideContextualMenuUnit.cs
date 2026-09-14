@@ -1,4 +1,4 @@
-﻿using Virtuademy.SDK.Environments.Interaction;
+﻿using Virtuademy.Environments.ScriptingApi.Interaction;
 
 using Unity.VisualScripting;
 

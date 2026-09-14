@@ -2,10 +2,10 @@ using UnityEditor;
 
 using UnityEngine;
 
-using static Virtuademy.SDK.Environments.Interaction.IContextualMenuManageable;
+using static Virtuademy.Environments.ScriptingApi.Interaction.IContextualMenuManageable;
 using static Virtuademy.Environments.ScriptingApi.Interaction.IInteractable;
 
-namespace Virtuademy.SDK.Environments.Placeholders.Editor
+namespace Virtuademy.Environments.ScriptingApi.Placeholders.Editor
 {
     [CustomEditor(typeof(InteractablePlaceholderObsolete))]
     public class InteractablePlaceholderEditor : UnityEditor.Editor

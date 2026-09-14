@@ -1,4 +1,4 @@
-using Virtuademy.SDK.Environments.Placeholders;
+using Virtuademy.Environments.ScriptingApi.Placeholders;
 
 using Unity.VisualScripting;
 

@@ -1,6 +1,6 @@
 
-using Virtuademy.SDK.Environments.Interaction;
-using Virtuademy.SDK.Environments.Placeholders;
+using Virtuademy.Environments.ScriptingApi.Interaction;
+using Virtuademy.Environments.ScriptingApi.Placeholders;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;

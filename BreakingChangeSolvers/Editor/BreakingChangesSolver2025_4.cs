@@ -1,5 +1,5 @@
 #if REFLECTIS_CREATOR_KIT_WORLDS_PLACEHOLDERS
-using Virtuademy.SDK.Environments.Placeholders;
+using Virtuademy.Environments.ScriptingApi.Placeholders;
 using Virtuademy.SDK.Core.Utilities;
 using UnityEngine;
 #endif

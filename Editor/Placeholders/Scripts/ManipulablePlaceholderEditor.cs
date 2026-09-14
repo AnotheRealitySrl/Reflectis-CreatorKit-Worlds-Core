@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace Virtuademy.SDK.Environments.Placeholders.Editor
+namespace Virtuademy.Environments.ScriptingApi.Placeholders.Editor
 {
     [CustomEditor(typeof(ManipulablePlaceholder))]
     public class ManipulablePlaceholderEditor : UnityEditor.Editor
@@ -25,7 +25,7 @@ namespace Virtuademy.SDK.Environments.Placeholders.Editor
                 }
             }
 
-            if (interactablePlaceholder.ManipulationMode.HasFlag(Virtuademy.SDK.Environments.Interaction.IManipulable.EManipulationMode.Rotate))
+            if (interactablePlaceholder.ManipulationMode.HasFlag(Virtuademy.Environments.ScriptingApi.Interaction.IManipulable.EManipulationMode.Rotate))
             {
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("gizmosEnabled"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("threshold"));

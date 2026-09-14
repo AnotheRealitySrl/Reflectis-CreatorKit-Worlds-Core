@@ -1,5 +1,5 @@
-using Virtuademy.SDK.Environments.Interaction;
-using Virtuademy.SDK.Environments.Placeholders;
+using Virtuademy.Environments.ScriptingApi.Interaction;
+using Virtuademy.Environments.ScriptingApi.Placeholders;
 using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting

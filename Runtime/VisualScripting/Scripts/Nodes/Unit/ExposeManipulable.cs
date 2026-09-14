@@ -1,8 +1,8 @@
-using Virtuademy.SDK.Environments.Interaction;
+using Virtuademy.Environments.ScriptingApi.Interaction;
 
 using Unity.VisualScripting;
 
-using static Virtuademy.SDK.Environments.Interaction.IManipulable;
+using static Virtuademy.Environments.ScriptingApi.Interaction.IManipulable;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {

@@ -1,4 +1,4 @@
-using Virtuademy.SDK.Environments.Placeholders;
+using Virtuademy.Environments.ScriptingApi.Placeholders;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Virtuademy.SDK.Environments.Placeholders.Editor
+namespace Virtuademy.Environments.ScriptingApi.Placeholders.Editor
 {
     public class SceneObjectsManagementWindow : EditorWindow
     {

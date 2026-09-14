@@ -1,5 +1,5 @@
 ﻿using Virtuademy.SDK.Environments;
-using Virtuademy.SDK.Environments.ObjectSpawner;
+using Virtuademy.Environments.ScriptingApi.ObjectSpawner;
 using Virtuademy.SDK.Core.VisualScripting;
 using System.Collections.Generic;
 using System.Threading.Tasks;

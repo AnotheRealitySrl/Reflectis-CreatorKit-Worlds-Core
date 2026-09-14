@@ -1,5 +1,5 @@
 #if UNITY_EDITOR
-using Virtuademy.SDK.Environments.Placeholders.Editor;
+using Virtuademy.Environments.ScriptingApi.Placeholders.Editor;
 
 using UnityEditor;
 

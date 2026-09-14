@@ -1,12 +1,12 @@
-using Virtuademy.SDK.Environments.Interaction;
-using Virtuademy.SDK.Environments.Placeholders;
+using Virtuademy.Environments.ScriptingApi.Interaction;
+using Virtuademy.Environments.ScriptingApi.Placeholders;
 using Virtuademy.SDK.Core.Utilities;
 using Virtuademy.SDK.Core.VisualScripting;
 
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
-using static Virtuademy.SDK.Environments.Interaction.IManipulable;
+using static Virtuademy.Environments.ScriptingApi.Interaction.IManipulable;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {

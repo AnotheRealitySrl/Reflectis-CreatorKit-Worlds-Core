@@ -1,10 +1,10 @@
-using Virtuademy.SDK.Environments.Placeholders;
+using Virtuademy.Environments.ScriptingApi.Placeholders;
 
 using UnityEditor;
 
 using UnityEngine;
 
-namespace Virtuademy.SDK.Environments.Placeholders.Editor
+namespace Virtuademy.Environments.ScriptingApi.Placeholders.Editor
 {
     [CustomEditor(typeof(SceneComponentPlaceholderBase), true)]
     public class NetworkPlaceholderEditor : UnityEditor.Editor

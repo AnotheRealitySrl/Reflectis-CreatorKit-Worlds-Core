@@ -119,6 +119,8 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
 
         private static readonly string OldModels = "Virtuademy.SDK.Environments.Client" + "Models";
         private static readonly string OldInteraction = "Virtuademy.SDK.Environments.Inter" + "action";
+        private static readonly string OldPlaceholders = "Virtuademy.SDK.Environments.Place" + "holders";
+        private static readonly string OldSpawner = "Virtuademy.SDK.Environments.Object" + "Spawner";
         private static readonly string OldScripting = "Virtuademy.Scripting" + "Api";
 
         private static readonly (string oldValue, string newValue)[] EnvironmentsMap =
@@ -169,14 +171,23 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             //
             // As above, the namespace itself is NOT in this table: four more types stay behind
             // in it. Only these three names move.
-            // Longest first, as with the Wire pair above: ".IInteractable" is a prefix of
-            // ".IInteractableBehaviour", and these are substring replacements.
-            (OldInteraction + ".IVisualScriptingInteractable",
-             "Virtuademy.Environments.ScriptingApi.Interaction.IVisualScriptingInteractable"),
-            (OldInteraction + ".IInteractableBehaviour",
-             "Virtuademy.Environments.ScriptingApi.Interaction.IInteractableBehaviour"),
-            (OldInteraction + ".IInteractable",
-             "Virtuademy.Environments.ScriptingApi.Interaction.IInteractable"),
+            // These were three full type names while four more types stayed in the namespace. On
+            // 2026-09-14 the rest followed, along with every placeholder and the spawner
+            // contracts, so the three namespaces are empty and move whole — one entry each
+            // instead of a hundred type names, and a graph that named any of them is rewritten
+            // whether or not anyone thought to list it.
+            //
+            // What made this safe is that the namespaces are empty *everywhere*, the platform's
+            // own code included. That was not true of the earlier moves, which is why those are
+            // still spelled out one type at a time above.
+            (OldInteraction, "Virtuademy.Environments.ScriptingApi.Interaction"),
+            (OldPlaceholders, "Virtuademy.Environments.ScriptingApi.Placeholders"),
+            (OldSpawner, "Virtuademy.Environments.ScriptingApi.ObjectSpawner"),
+
+            // Not the ChatBot namespace: Virtuademy.SDK.Core.ChatBot still holds IChatBotSystem,
+            // in the framework package, and only this one type left it.
+            ("Virtuademy.SDK.Core.ChatBot.EChatBotVoice",
+             "Virtuademy.Environments.ScriptingApi.ChatBot.EChatBotVoice"),
 
             // Four groups crossed from the shared surface to the world one on 2026-09-14. The line
             // had been drawn as "what an external application also needs", which nothing enforced
