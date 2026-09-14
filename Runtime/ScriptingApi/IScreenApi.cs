@@ -2,6 +2,8 @@ using System;
 
 using Virtuademy.ScriptingApi;
 
+using System.Collections;
+
 namespace Virtuademy.Environments.ScriptingApi
 {
     /// <summary>
@@ -12,10 +14,10 @@ namespace Virtuademy.Environments.ScriptingApi
     {
         /// <summary>Fades the view to black. <paramref name="onDone"/> runs once it is.</summary>
         /// <remarks>Nodes: <c>Reflectis Scene: Fade To Black</c>.</remarks>
-        WorldOperation FadeToBlack(Action onDone = null);
+        IEnumerator FadeToBlack(Action onDone = null);
 
         /// <summary>Fades the view back in. <paramref name="onDone"/> runs once it has.</summary>
         /// <remarks>Nodes: <c>Reflectis Scene: Fade From Black</c>.</remarks>
-        WorldOperation FadeFromBlack(Action onDone = null);
+        IEnumerator FadeFromBlack(Action onDone = null);
     }
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 using Virtuademy.ScriptingApi;
 
+using System.Collections;
+
 namespace Virtuademy.Environments.ScriptingApi
 {
     /// <summary>
@@ -45,7 +47,7 @@ namespace Virtuademy.Environments.ScriptingApi
         /// <paramref name="parent"/>, and hands the instance to <paramref name="onSpawned"/>.
         /// </summary>
         /// <remarks>Used by the dialog panel spawner.</remarks>
-        WorldOperation SpawnProjectAsset(string objectKey, Transform parent, Action<GameObject> onSpawned = null);
+        IEnumerator SpawnProjectAsset(string objectKey, Transform parent, Action<GameObject> onSpawned = null);
 
         /// <summary>
         /// Spawns the platform's general container, the one prefab of the platform's own that a
