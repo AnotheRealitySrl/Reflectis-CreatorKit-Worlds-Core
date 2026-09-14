@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-// The app installs the implementation and nothing else can, because World.Install and IWorldBackend
+// The app installs the implementation and nothing else can, because VirtuademyEnvironments.Install and IWorldBackend
 // are internal to this assembly. An interpreted script references this assembly in full, so a
 // public installer would let one script replace the surface every other script calls.
 //

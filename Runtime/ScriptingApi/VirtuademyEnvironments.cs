@@ -54,7 +54,7 @@ namespace Virtuademy.Environments.ScriptingApi
     /// reference.
     /// </para>
     /// </remarks>
-    public static class World
+    public static class VirtuademyEnvironments
     {
         private static IWorldBackend backend;
 
@@ -117,8 +117,8 @@ namespace Virtuademy.Environments.ScriptingApi
             if (api == null)
             {
                 throw new InvalidOperationException(
-                    $"World.{name} is not available: the Virtuademy world runtime is not present in " +
-                    "this project, or it has not finished starting up. Check World.IsAvailable first " +
+                    $"VirtuademyEnvironments.{name} is not available: the Virtuademy runtime is not present in " +
+                    "this project, or it has not finished starting up. Check VirtuademyEnvironments.IsAvailable first " +
                     "if the script can run outside one.");
             }
 

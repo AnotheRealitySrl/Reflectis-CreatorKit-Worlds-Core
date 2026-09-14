@@ -3,6 +3,26 @@
 ## v10.0.0
 
 ### Changed
+- **The scripting entry point is `VirtuademyEnvironments`, not `World`.** Two things ruled the
+  old name out: "Worlds" is leaving the application name — the concept survives on the wire,
+  where `WorldDTO` keeps it, but it stops being the word a creator reads on every line — and the
+  name carried nothing that said which platform it belonged to.
+
+  Plain `Virtuademy` was the first choice and is ruled out by the compiler, not by taste. Every
+  SDK namespace is rooted at `Virtuademy`, so in `Virtuademy.Player` the namespace wins over the
+  type and the line fails with CS0234 — in a creator script in the global namespace exactly as
+  much as inside the SDK. Reaching it would take
+  `global::Virtuademy.Environments.ScriptingApi.Virtuademy.Player`.
+
+  This is a breaking change for authored scripts, taken now because nothing can break: the facade
+  is two days old and no script has ever reached publication, because the deployed whitelist still
+  named the pre-rename assembly and the deploy path refused every one of them. There is **no
+  migrator entry**, deliberately — `World` is far too common a token to rewrite in a creator
+  project by substitution (three unrelated `World.` call sites in the application prove it), and
+  there is nothing out there to migrate.
+
+  The assembly and the namespace are unchanged, so `policy.json` and the operator overrides need
+  no edit: the whitelist is keyed on those, never on a type name.
 - **`Virtuademy.SDK.PlatformApi` is `Virtuademy.SDK.ApiData`.** The old name said where the types
   came from — a package that no longer exists under that name — rather than what they are. Three
   analytics graphs shipped in this package name two of those types in their serialized `$type`

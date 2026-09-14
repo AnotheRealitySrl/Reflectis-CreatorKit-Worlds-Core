@@ -54,29 +54,29 @@ Three constraints, all discovered from the policy rather than chosen:
 
 ## Shape
 
-`World` is the entry point, with one property per capability group:
+`VirtuademyEnvironments` is the entry point, with one property per capability group:
 
 | Group | What it covers |
 |---|---|
-| `World.Player` | transforms, teleport, movement, avatar visibility, and the camera: first/third person, the three input arrangements, speed, moves and pans |
-| `World.Screen` | fading to black and back |
-| `World.Localization` | current and previous language, translation by key, switching, the change event |
-| `World.Session` | session id, multiplayer, master client, shared clock, environment name, shard state, local user id and name |
-| `World.SaveData` | the local player's saved values, and leaderboard submissions |
-| `World.Platform` | VR, WebGL or mobile |
-| `World.Help` | whether a help panel exists, opening and closing it, the closed event |
-| `World.Scene` | placeholder initialisation, spawned-object visibility, transitions, returning to the lobby |
-| `World.Tools` | tool-inventory opacity, answer feedback |
-| `World.Sync` | ownership of synced objects: asking for it, releasing it, and the three events for gained, lost and refused |
+| `VirtuademyEnvironments.Player` | transforms, teleport, movement, avatar visibility, and the camera: first/third person, the three input arrangements, speed, moves and pans |
+| `VirtuademyEnvironments.Screen` | fading to black and back |
+| `VirtuademyEnvironments.Localization` | current and previous language, translation by key, switching, the change event |
+| `VirtuademyEnvironments.Session` | session id, multiplayer, master client, shared clock, environment name, shard state, local user id and name |
+| `VirtuademyEnvironments.SaveData` | the local player's saved values, and leaderboard submissions |
+| `VirtuademyEnvironments.Platform` | VR, WebGL or mobile |
+| `VirtuademyEnvironments.Help` | whether a help panel exists, opening and closing it, the closed event |
+| `VirtuademyEnvironments.Scene` | placeholder initialisation, spawned-object visibility, transitions, returning to the lobby |
+| `VirtuademyEnvironments.Tools` | tool-inventory opacity, answer feedback |
+| `VirtuademyEnvironments.Sync` | ownership of synced objects: asking for it, releasing it, and the three events for gained, lost and refused |
 
-`World.IsAvailable` says whether the runtime is present; the group properties throw
+`VirtuademyEnvironments.IsAvailable` says whether the runtime is present; the group properties throw
 `InvalidOperationException` with an explanatory message when it is not, rather than returning null.
 
 The implementation lives **outside this package entirely**, in the app:
 `Assets/_Project/ScriptingApi/`, assembly `Virtuademy.Worlds.ScriptingApiBackend`. It installs
 itself before the first scene loads, and **every member of it delegates to
 `IVirtuademyFramework`** — it resolves no system of its own, because the framework is already the
-one place that knows which system answers what. `World.Install` and `IWorldBackend` are `internal` with
+one place that knows which system answers what. `VirtuademyEnvironments.Install` and `IWorldBackend` are `internal` with
 `InternalsVisibleTo` for that one assembly: a script references this assembly in full, so a public
 installer would let one script replace the surface every other script is calling.
 
@@ -116,7 +116,7 @@ therefore fails the same way a graph would — no special grace.
   Completed` is a plain notification and has no such problem, which makes it the obvious next
   member.
 
-- **`World.Sync` reaches the component, not the framework.** Every other group delegates to
+- **`VirtuademyEnvironments.Sync` reaches the component, not the framework.** Every other group delegates to
   `IVirtuademyFramework` for everything. The three ownership operations do not: the nodes behind
   them (`CheckOwnershipNode`, `RequestOwnershipNode`, `ReleaseOwnershipNode`) call the
   `SyncedObject` component and resolve no system, so there is nothing for the framework to decide.
