@@ -1,5 +1,7 @@
 using System;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.Environments.ScriptingApi
 {
     /// <summary>
@@ -10,10 +12,10 @@ namespace Virtuademy.Environments.ScriptingApi
     {
         /// <summary>Fades the view to black. <paramref name="onDone"/> runs once it is.</summary>
         /// <remarks>Nodes: <c>Reflectis Scene: Fade To Black</c>.</remarks>
-        void FadeToBlack(Action onDone = null);
+        WorldOperation FadeToBlack(Action onDone = null);
 
         /// <summary>Fades the view back in. <paramref name="onDone"/> runs once it has.</summary>
         /// <remarks>Nodes: <c>Reflectis Scene: Fade From Black</c>.</remarks>
-        void FadeFromBlack(Action onDone = null);
+        WorldOperation FadeFromBlack(Action onDone = null);
     }
 }

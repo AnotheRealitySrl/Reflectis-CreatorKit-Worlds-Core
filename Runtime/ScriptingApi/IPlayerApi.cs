@@ -2,6 +2,8 @@ using System;
 
 using UnityEngine;
 
+using Virtuademy.ScriptingApi;
+
 namespace Virtuademy.Environments.ScriptingApi
 {
     /// <summary>
@@ -34,13 +36,13 @@ namespace Virtuademy.Environments.ScriptingApi
         /// is not jarring. <paramref name="onArrived"/> runs once the fade has finished.
         /// </summary>
         /// <remarks>Node: <c>Reflectis Character: Teleport</c>.</remarks>
-        void Teleport(Transform destination, Action onArrived = null);
+        WorldOperation Teleport(Transform destination, Action onArrived = null);
 
         /// <summary>
         /// Moves the player to an explicit pose, with the same fade. For destinations a script
         /// computes rather than reads off a scene object.
         /// </summary>
-        void Teleport(Vector3 position, Quaternion rotation, Action onArrived = null);
+        WorldOperation Teleport(Vector3 position, Quaternion rotation, Action onArrived = null);
 
         /// <summary>
         /// Enables or disables the player's own movement input, leaving every other input setting
@@ -106,21 +108,21 @@ namespace Virtuademy.Environments.ScriptingApi
         /// it has stopped.
         /// </summary>
         /// <remarks>Node: <c>Reflectis Character: Move camera to point</c>.</remarks>
-        void MoveCameraTo(Transform target, Action onArrived = null);
+        WorldOperation MoveCameraTo(Transform target, Action onArrived = null);
 
         /// <summary>
         /// Enters the pan state around <paramref name="target"/> — the player looks at a thing and
         /// can orbit it. <see cref="ExitCameraPan"/> gives movement back.
         /// </summary>
         /// <remarks>Node: <c>Reflectis Character: Pan</c>.</remarks>
-        void PanCameraAround(Transform target, Action onReady = null);
+        WorldOperation PanCameraAround(Transform target, Action onReady = null);
 
         /// <summary>
         /// The same, with the bounds the free-camera node exposes as ports rather than the
         /// character controller's defaults.
         /// </summary>
         /// <remarks>Node: <c>Reflectis Character: Free Pan</c>.</remarks>
-        void PanCameraAround(Transform target,
+        WorldOperation PanCameraAround(Transform target,
                              float maxZoom,
                              float minZoom,
                              float maxYRotation,
@@ -132,7 +134,7 @@ namespace Virtuademy.Environments.ScriptingApi
 
         /// <summary>Leaves the pan state and hands movement back to the player.</summary>
         /// <remarks>Node: <c>Reflectis Character: Exit Pan</c>.</remarks>
-        void ExitCameraPan(Action onDone = null);
+        WorldOperation ExitCameraPan(Action onDone = null);
 
         #endregion
     
