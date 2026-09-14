@@ -1,8 +1,8 @@
-using Virtuademy.SDK.Core.VisualScripting;
-using Virtuademy.SDK.Dialogs;
+﻿using Virtuademy.SDK.Core.VisualScripting;
+using SPACS.Dialogs;
 using Unity.VisualScripting;
 using UnityEngine.Events;
-using static Virtuademy.SDK.Dialogs.DialogNode;
+using static SPACS.Dialogs.DialogNode;
 
 namespace Virtuademy.SDK.Environments.Dialogs
 {

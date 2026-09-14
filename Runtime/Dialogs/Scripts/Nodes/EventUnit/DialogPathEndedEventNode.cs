@@ -1,5 +1,5 @@
-using Virtuademy.SDK.Core.VisualScripting;
-using Virtuademy.SDK.Dialogs;
+﻿using Virtuademy.SDK.Core.VisualScripting;
+using SPACS.Dialogs;
 using Unity.VisualScripting;
 using UnityEngine.Events;
 

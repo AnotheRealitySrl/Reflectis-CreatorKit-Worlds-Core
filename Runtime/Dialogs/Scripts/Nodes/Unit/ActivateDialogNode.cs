@@ -1,4 +1,4 @@
-using Virtuademy.SDK.Dialogs;
+﻿using SPACS.Dialogs;
 using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Dialogs

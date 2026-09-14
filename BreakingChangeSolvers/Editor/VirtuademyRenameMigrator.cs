@@ -121,6 +121,8 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         private static readonly string OldInteraction = "Virtuademy.SDK.Environments.Inter" + "action";
         private static readonly string OldPlaceholders = "Virtuademy.SDK.Environments.Place" + "holders";
         private static readonly string OldSpawner = "Virtuademy.SDK.Environments.Object" + "Spawner";
+        private static readonly string OldDialogs = "Virtuademy.SDK.Dia" + "logs";
+        private static readonly string OldGraphs = "Virtuademy.SDK.Gra" + "phs";
         private static readonly string OldScripting = "Virtuademy.Scripting" + "Api";
 
         private static readonly (string oldValue, string newValue)[] EnvironmentsMap =
@@ -183,6 +185,16 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             (OldInteraction, "Virtuademy.Environments.ScriptingApi.Interaction"),
             (OldPlaceholders, "Virtuademy.Environments.ScriptingApi.Placeholders"),
             (OldSpawner, "Virtuademy.Environments.ScriptingApi.ObjectSpawner"),
+
+            // The dialog engine and the graph structure are not the platform's, and moving them
+            // into its surface would have said they were. They were renamed instead, which takes
+            // them out of a denied prefix without coupling two reusable packages to anything:
+            // SPACS.Dialogs and SPACS.Graphs, beside SPACS.Utility.
+            //
+            // Whole namespaces again, and for the same reason as the three above: nothing is left
+            // behind in either.
+            (OldDialogs, "SPACS.Dialogs"),
+            (OldGraphs, "SPACS.Graphs"),
 
             // Not the ChatBot namespace: Virtuademy.SDK.Core.ChatBot still holds IChatBotSystem,
             // in the framework package, and only this one type left it.

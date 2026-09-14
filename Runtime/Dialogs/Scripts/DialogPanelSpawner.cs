@@ -1,4 +1,4 @@
-﻿using Virtuademy.SDK.Dialogs;
+﻿using SPACS.Dialogs;
 using UnityEngine;
 
 using Virtuademy.Environments.ScriptingApi;
