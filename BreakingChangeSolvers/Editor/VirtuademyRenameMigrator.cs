@@ -129,6 +129,10 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         private static readonly string OldScripting = "Virtuademy.Scripting" + "Api";
         private static readonly string OldSyncedObject = "Virtuademy.SDK.Environments.Visual" + "Scripting.SyncedObject";
         private static readonly string OldSyncedVariables = "Virtuademy.SDK.Environments.Visual" + "Scripting.SyncedVariables";
+        private static readonly string OldCoreUtilities = "Virtuademy.SDK.Core.Utili" + "ties";
+        private static readonly string OldCoreVisualScripting = "Virtuademy.SDK.Core.Visual" + "Scripting";
+        private static readonly string OldCoreEditor = "Virtuademy.SDK.Core.Edi" + "tor";
+        private static readonly string OldCreateTypeInstance = "Virtuademy.SDK.Core.CreateType" + "InstanceUnit";
 
         private static readonly (string oldValue, string newValue)[] EnvironmentsMap =
         {
@@ -259,11 +263,39 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         {
             (Boundary(OldSyncedObject), "Virtuademy.Environments.ScriptingApi.Placeholders.SyncedObject"),
             (Boundary(OldSyncedVariables), "Virtuademy.Environments.ScriptingApi.Placeholders.SyncedVariables"),
+
+            // The utilities, the Visual Scripting node bases and the three editor helpers left the
+            // framework package for SPACS-Utility, which references nothing first-party — which is
+            // what lets a creator take a string extension without taking the platform with it.
+            //
+            // Boundary-aware for a reason that is stronger here than anywhere else in this file:
+            // Virtuademy.SDK.Core did not empty. It is still the framework's own namespace, and
+            // about twenty children of it — Avatars, Fade, SystemFramework, Transitions… — stay
+            // exactly where they are. A rule for the bare namespace would move all of them, so
+            // there is none: the one type that left it is named outright below.
+            //
+            // The utilities entry carries a second lookahead because that namespace did not empty
+            // either. Its editor half (IndentDrawer) is still in the framework, and SPACS spells its
+            // own editor namespace SPACS.Editor rather than SPACS.Utilities.Editor, so rewriting it
+            // would invent a namespace that exists nowhere.
+            (Boundary(OldCoreUtilities, @"(?!\.Editor)"), "SPACS.Utilities"),
+            (Boundary(OldCoreVisualScripting), "SPACS.VisualScripting"),
+            (Boundary(OldCoreEditor), "SPACS.Editor"),
+            (Boundary(OldCreateTypeInstance), "SPACS.CreateTypeInstanceUnit"),
         };
 
-        /// <summary>Matches <paramref name="typeName"/> only where an identifier ends.</summary>
-        private static Regex Boundary(string typeName)
-            => new(Regex.Escape(typeName) + "(?![A-Za-z0-9_])", RegexOptions.Compiled);
+        /// <summary>
+        /// Matches <paramref name="typeName"/> only where an identifier ends, plus whatever
+        /// <paramref name="unless"/> excludes.
+        /// </summary>
+        /// <remarks>
+        /// The identifier boundary deliberately allows a dot to follow, because that is how a
+        /// namespace rule reaches the types inside it. When the namespace being renamed still has
+        /// a child that is staying put, that permissiveness is the problem, and <paramref
+        /// name="unless"/> is how the caller says which child.
+        /// </remarks>
+        private static Regex Boundary(string typeName, string unless = "")
+            => new(Regex.Escape(typeName) + unless + "(?![A-Za-z0-9_])", RegexOptions.Compiled);
 
         private static readonly string[] TextExtensions =
         {
