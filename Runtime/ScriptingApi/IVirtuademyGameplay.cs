@@ -76,12 +76,6 @@ namespace Virtuademy.Environments.ScriptingApi
         /// <summary>The player's tools and the feedback they produce.</summary>
         IToolsApi Tools { get; }
 
-        /// <summary>
-        /// Ownership of the objects a multiplayer session keeps in step: asking for the right to
-        /// drive one, giving it back, and hearing when it changed hands.
-        /// </summary>
-        ISyncApi Sync { get; }
-
         /// <summary>What the player currently has hold of.</summary>
         IInteractionApi Interaction { get; }
 

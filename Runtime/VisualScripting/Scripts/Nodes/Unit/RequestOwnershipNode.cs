@@ -1,5 +1,7 @@
 using Unity.VisualScripting;
 
+using Virtuademy.Environments.ScriptingApi.Placeholders;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Synced Object: Try Get Ownership")]
@@ -26,7 +28,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
 
             InputTrigger = ControlInput(nameof(InputTrigger), (f) =>
             {
-                f.GetValue<SyncedObject>(SyncedObject).onRequestOwnershipAction?.Invoke();
+                f.GetValue<SyncedObject>(SyncedObject).RequestOwnership();
                 return OutputTrigger;
             });
 

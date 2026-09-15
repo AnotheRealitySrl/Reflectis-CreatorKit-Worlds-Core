@@ -127,6 +127,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         private static readonly string OldTasks = "Virtuademy.SDK.Ta" + "sks";
         private static readonly string OldDialogsEditor = "Virtuademy.SDK.Dialogs" + "Editor";
         private static readonly string OldScripting = "Virtuademy.Scripting" + "Api";
+        private static readonly string OldSynced = "Virtuademy.SDK.Environments.Visual" + "Scripting.SyncedObject";
 
         private static readonly (string oldValue, string newValue)[] EnvironmentsMap =
         {
@@ -234,6 +235,17 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
              "Virtuademy.Environments.ScriptingApi.IScreenApi"),
             (OldScripting + ".IHelpApi",
              "Virtuademy.Environments.ScriptingApi.IHelpApi"),
+
+            // One type, not the namespace: Virtuademy.SDK.Environments.VisualScripting still holds
+            // the nodes and SyncedVariables, and they stay where they are. SyncedObject left because
+            // a creator drives ownership through it, and it now sits beside the placeholder base it
+            // already inherited from.
+            //
+            // Late in this list on purpose. Entries are applied in order over the whole text, so by
+            // the time this runs a project coming from the CreatorKit spelling has already been
+            // rewritten to Virtuademy.SDK.Environments.* by the rules above, and both spellings land
+            // on the same rule.
+            (OldSynced, "Virtuademy.Environments.ScriptingApi.Placeholders.SyncedObject"),
         };
 
         private static readonly string[] TextExtensions =

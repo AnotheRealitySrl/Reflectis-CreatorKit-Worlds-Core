@@ -97,7 +97,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 982d4b6656cc8ad42b174b929bdfb5f4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Virtuademy.SDK.Environments.VisualScripting::Virtuademy.SDK.Environments.VisualScripting.SyncedObject
+  m_EditorClassIdentifier: Virtuademy.Environments.ScriptingApi::Virtuademy.Environments.ScriptingApi.Placeholders.SyncedObject
   automaticSetup: 1
   <IsNetworked>k__BackingField: 1
   ownershipRequestType: 0
