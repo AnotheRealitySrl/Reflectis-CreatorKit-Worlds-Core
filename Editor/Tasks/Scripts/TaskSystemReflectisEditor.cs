@@ -1,4 +1,4 @@
-﻿using SPACS.TasksEditor;
+﻿using SPACS.Tasks.Editor;
 
 using UnityEditor;
 

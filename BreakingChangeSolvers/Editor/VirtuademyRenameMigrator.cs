@@ -125,6 +125,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         private static readonly string OldDialogs = "Virtuademy.SDK.Dia" + "logs";
         private static readonly string OldGraphs = "Virtuademy.SDK.Gra" + "phs";
         private static readonly string OldTasks = "Virtuademy.SDK.Ta" + "sks";
+        private static readonly string OldDialogsEditor = "Virtuademy.SDK.Dialogs" + "Editor";
         private static readonly string OldScripting = "Virtuademy.Scripting" + "Api";
 
         private static readonly (string oldValue, string newValue)[] EnvironmentsMap =
@@ -195,23 +196,21 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             //
             // Whole namespaces again, and for the same reason as the three above: nothing is left
             // behind in either.
+            // Before the general rule, because these are substring replacements and this one is
+            // longer: the dialogs package spelled its editor namespace as a sibling rather than a
+            // child, so the general rule below would carry that spelling across intact instead of
+            // landing on the nested one it now uses. There was never an assembly by this name —
+            // the asmdef has always been dotted — so the rule is unambiguous.
+            (OldDialogsEditor, "SPACS.Dialogs.Editor"),
+
             (OldDialogs, "SPACS.Dialogs"),
             (OldGraphs, "SPACS.Graphs"),
             (OldTasks, "SPACS.Tasks"),
 
-            // One rule covers the tasks package because the mapping is uniform: SPACS.Tasks,
-            // .Detectors, .UI, .Utils, .XRDetectors, and TasksNetworked / TasksXRKit all fall out
-            // of the same substring. The assembly names land right too, which is what the asmdef
-            // references and the `asm:` fields of a SerializeReference need.
-            //
-            // One thing it deliberately does not cover: the editor namespace is SPACS.TasksEditor,
-            // outside the SPACS.Tasks prefix so that whitelisting the prefix cannot reach editor
-            // types, while the editor *assembly* stays SPACS.Tasks.Editor. A substring rule cannot
-            // tell those two apart. Rewriting `Virtuademy.SDK.Tasks.Editor` to SPACS.Tasks.Editor
-            // is right for an asmdef reference and wrong for a `using`, so a creator who wrote
-            // editor code against our editor namespace gets a compile error naming the type rather
-            // than a silent miss. That is the safe half of the trade, and it is the same shape the
-            // Dialogs entry above already has.
+            // One rule per package, because each mapping is uniform. For tasks that means
+            // SPACS.Tasks, .Detectors, .Editor, .UI, .Utils, .XRDetectors and the TasksNetworked /
+            // TasksXRKit samples all falling out of the same substring — assembly names included,
+            // which is what asmdef references and the `asm:` field of a SerializeReference need.
 
             // Not the ChatBot namespace: Virtuademy.SDK.Core.ChatBot still holds IChatBotSystem,
             // in the framework package, and only this one type left it.
