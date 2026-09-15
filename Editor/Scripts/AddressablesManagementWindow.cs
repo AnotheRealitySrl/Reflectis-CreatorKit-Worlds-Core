@@ -1,5 +1,5 @@
 using Newtonsoft.Json;
-using Virtuademy.SDK.Environments.Editor;
+using Virtuademy.SDK.TenantConfiguration.Editor;
 using Virtuademy.SDK.TenantConfiguration;
 using Renci.SshNet;
 using System;

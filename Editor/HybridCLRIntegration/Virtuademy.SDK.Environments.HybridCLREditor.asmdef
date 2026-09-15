@@ -5,7 +5,8 @@
         "GUID:2373f786d14518f44b0f475db77ba4de",
         "GUID:01470f9b53eba9e4cb6fb8ffb31c0ce9",
         "GUID:d5647bb6580a4a92a6e0f29c3a9707fa",
-        "GUID:5e0f3c6bbd704278a495b65eddabad74"
+        "GUID:5e0f3c6bbd704278a495b65eddabad74",
+        "Virtuademy.SDK.Core.Editor"
     ],
     "includePlatforms": [
         "Editor"
