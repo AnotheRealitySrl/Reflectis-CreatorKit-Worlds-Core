@@ -192,7 +192,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 550293240628359277}
-        m_TargetAssemblyTypeName: Virtuademy.SDK.Tasks.UI.TaskUIManager, Virtuademy.SDK.Tasks
+        m_TargetAssemblyTypeName: SPACS.Tasks.UI.TaskUIManager, SPACS.Tasks
         m_MethodName: DoAfterTaskPrepare
         m_Mode: 1
         m_Arguments:

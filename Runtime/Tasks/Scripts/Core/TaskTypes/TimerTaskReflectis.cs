@@ -1,6 +1,6 @@
 ﻿using SPACS.Graphs;
-using Virtuademy.SDK.Tasks;
-using Virtuademy.SDK.Tasks.Detectors;
+using SPACS.Tasks;
+using SPACS.Tasks.Detectors;
 using UnityEngine;
 
 

@@ -288,7 +288,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 2588566437349556262
-      type: {class: TaskNode, ns: Virtuademy.SDK.Tasks, asm: Virtuademy.SDK.Tasks}
+      type: {class: TaskNode, ns: SPACS.Tasks, asm: SPACS.Tasks}
       data:
         guid: 5fbceaf5-455e-4502-8b3f-4812dba05d59
         name: PressButtonTask
@@ -1654,7 +1654,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1731113464}
-        m_TargetAssemblyTypeName: Virtuademy.SDK.Tasks.Task, Virtuademy.SDK.Tasks
+        m_TargetAssemblyTypeName: SPACS.Tasks.Task, SPACS.Tasks
         m_MethodName: CompleteTask
         m_Mode: 1
         m_Arguments:
@@ -2166,7 +2166,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 2588566437349556271
-      type: {class: TaskNode, ns: Virtuademy.SDK.Tasks, asm: Virtuademy.SDK.Tasks}
+      type: {class: TaskNode, ns: SPACS.Tasks, asm: SPACS.Tasks}
       data:
         guid: 4e50f89e-a43f-4535-8b1e-59937e2dad61
         name: VisualScriptTask
@@ -2308,7 +2308,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 2588566437349556300
-      type: {class: TaskNode, ns: Virtuademy.SDK.Tasks, asm: Virtuademy.SDK.Tasks}
+      type: {class: TaskNode, ns: SPACS.Tasks, asm: SPACS.Tasks}
       data:
         guid: a6dab9a8-3a37-4463-84f4-55464b6b6371
         name: BoxesTask
@@ -2770,7 +2770,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 931979832}
-        m_TargetAssemblyTypeName: Virtuademy.SDK.Tasks.Task, Virtuademy.SDK.Tasks
+        m_TargetAssemblyTypeName: SPACS.Tasks.Task, SPACS.Tasks
         m_MethodName: CompleteTask
         m_Mode: 1
         m_Arguments:
@@ -3594,7 +3594,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1950579960}
-        m_TargetAssemblyTypeName: Virtuademy.SDK.Tasks.Task, Virtuademy.SDK.Tasks
+        m_TargetAssemblyTypeName: SPACS.Tasks.Task, SPACS.Tasks
         m_MethodName: CompleteTask
         m_Mode: 1
         m_Arguments:
@@ -4057,7 +4057,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 2588566437349556229
-      type: {class: TaskNode, ns: Virtuademy.SDK.Tasks, asm: Virtuademy.SDK.Tasks}
+      type: {class: TaskNode, ns: SPACS.Tasks, asm: SPACS.Tasks}
       data:
         guid: ce02729d-ee3d-4b8a-8a03-6dda911c662f
         name: YellowBoxTask
@@ -4375,7 +4375,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 2588566437349556303
-      type: {class: TaskNode, ns: Virtuademy.SDK.Tasks, asm: Virtuademy.SDK.Tasks}
+      type: {class: TaskNode, ns: SPACS.Tasks, asm: SPACS.Tasks}
       data:
         guid: e8f3d0c2-7f29-41f5-8340-0a7a6f85a094
         name: WhiteBoxTask
@@ -4542,7 +4542,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 103944926}
-        m_TargetAssemblyTypeName: Virtuademy.SDK.Tasks.Task, Virtuademy.SDK.Tasks
+        m_TargetAssemblyTypeName: SPACS.Tasks.Task, SPACS.Tasks
         m_MethodName: CompleteTask
         m_Mode: 1
         m_Arguments:
@@ -4995,7 +4995,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 2588566437349556260
-      type: {class: TaskNode, ns: Virtuademy.SDK.Tasks, asm: Virtuademy.SDK.Tasks}
+      type: {class: TaskNode, ns: SPACS.Tasks, asm: SPACS.Tasks}
       data:
         guid: 8e23d9a3-509a-4acc-ba56-202258701dd8
         name: UI Task Node
@@ -11734,7 +11734,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1267861232}
-        m_TargetAssemblyTypeName: Virtuademy.SDK.Tasks.Task, Virtuademy.SDK.Tasks
+        m_TargetAssemblyTypeName: SPACS.Tasks.Task, SPACS.Tasks
         m_MethodName: CompleteTask
         m_Mode: 1
         m_Arguments:
@@ -12199,7 +12199,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 2588566437349556264
-      type: {class: TaskNode, ns: Virtuademy.SDK.Tasks, asm: Virtuademy.SDK.Tasks}
+      type: {class: TaskNode, ns: SPACS.Tasks, asm: SPACS.Tasks}
       data:
         guid: 1d3ccb9c-656c-40e0-9c9a-7c53b83ea5bb
         name: PressSecondButtonTask
@@ -12558,7 +12558,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 618231720}
-        m_TargetAssemblyTypeName: Virtuademy.SDK.Tasks.Task, Virtuademy.SDK.Tasks
+        m_TargetAssemblyTypeName: SPACS.Tasks.Task, SPACS.Tasks
         m_MethodName: CompleteTask
         m_Mode: 1
         m_Arguments:
@@ -12576,7 +12576,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 618231720}
-        m_TargetAssemblyTypeName: Virtuademy.SDK.Tasks.Task, Virtuademy.SDK.Tasks
+        m_TargetAssemblyTypeName: SPACS.Tasks.Task, SPACS.Tasks
         m_MethodName: CompleteTask
         m_Mode: 1
         m_Arguments:
@@ -12981,7 +12981,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 2588566437349556255
-      type: {class: TaskNode, ns: Virtuademy.SDK.Tasks, asm: Virtuademy.SDK.Tasks}
+      type: {class: TaskNode, ns: SPACS.Tasks, asm: SPACS.Tasks}
       data:
         guid: 47dd9a06-5013-418e-97b5-23c419257dea
         name: Animator Task Node
@@ -13227,7 +13227,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 2588566437349556304
-      type: {class: TaskNode, ns: Virtuademy.SDK.Tasks, asm: Virtuademy.SDK.Tasks}
+      type: {class: TaskNode, ns: SPACS.Tasks, asm: SPACS.Tasks}
       data:
         guid: c54a01c5-5b45-428e-92f3-3dd9505fbc65
         name: BlackBoxTask
@@ -13814,7 +13814,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1980960896}
-        m_TargetAssemblyTypeName: Virtuademy.SDK.Tasks.Task, Virtuademy.SDK.Tasks
+        m_TargetAssemblyTypeName: SPACS.Tasks.Task, SPACS.Tasks
         m_MethodName: CompleteTask
         m_Mode: 1
         m_Arguments:
@@ -13893,7 +13893,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 734901651}
-        m_TargetAssemblyTypeName: Virtuademy.SDK.Tasks.Task, Virtuademy.SDK.Tasks
+        m_TargetAssemblyTypeName: SPACS.Tasks.Task, SPACS.Tasks
         m_MethodName: CompleteTask
         m_Mode: 1
         m_Arguments:

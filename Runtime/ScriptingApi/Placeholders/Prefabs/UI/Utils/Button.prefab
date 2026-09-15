@@ -122,7 +122,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Virtuademy.SDK.Tasks.Task, Virtuademy.SDK.Tasks
+        m_TargetAssemblyTypeName: SPACS.Tasks.Task, SPACS.Tasks
         m_MethodName: CompleteTask
         m_Mode: 1
         m_Arguments:

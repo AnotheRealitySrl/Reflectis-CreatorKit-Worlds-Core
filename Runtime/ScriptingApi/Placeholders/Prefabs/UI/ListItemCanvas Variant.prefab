@@ -2083,7 +2083,7 @@ PrefabInstance:
     - target: {fileID: 8292161382050203143, guid: e021b33a9546fa5469d44dc7c7c066da,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: Virtuademy.SDK.Tasks.Task, Virtuademy.SDK.Tasks
+      value: SPACS.Tasks.Task, SPACS.Tasks
       objectReference: {fileID: 0}
     - target: {fileID: 8292161382050203143, guid: e021b33a9546fa5469d44dc7c7c066da,
         type: 3}

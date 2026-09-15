@@ -1,7 +1,7 @@
-using Virtuademy.SDK.Tasks;
+using SPACS.Tasks;
 using System.Collections;
 using UnityEngine;
-using static Virtuademy.SDK.Tasks.TaskNode;
+using static SPACS.Tasks.TaskNode;
 
 namespace Virtuademy.SDK.Environments.Tasks
 {

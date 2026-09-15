@@ -1,4 +1,4 @@
-using Virtuademy.SDK.Tasks;
+using SPACS.Tasks;
 using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Tasks

@@ -1,4 +1,4 @@
-﻿using Virtuademy.SDK.Tasks.Editor;
+﻿using SPACS.TasksEditor;
 
 using UnityEditor;
 

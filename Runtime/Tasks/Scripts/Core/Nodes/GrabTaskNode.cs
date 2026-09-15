@@ -1,4 +1,4 @@
-using Virtuademy.SDK.Tasks;
+using SPACS.Tasks;
 
 namespace Virtuademy.SDK.Environments.Tasks
 {

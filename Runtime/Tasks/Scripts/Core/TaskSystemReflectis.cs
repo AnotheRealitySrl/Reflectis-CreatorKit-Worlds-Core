@@ -1,5 +1,5 @@
-﻿using Virtuademy.SDK.Tasks;
-using Virtuademy.SDK.Tasks.UI;
+﻿using SPACS.Tasks;
+using SPACS.Tasks.UI;
 
 using System.Collections;
 using System.Collections.Generic;
