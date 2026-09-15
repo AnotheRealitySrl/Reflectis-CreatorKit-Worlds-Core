@@ -72,25 +72,6 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             }
         }
 
-        /// <summary>
-        /// Removes the hidden variables component, from the inspector's own context menu.
-        /// </summary>
-        /// <remarks>
-        /// It used to be a <c>[ContextMenu]</c> on the component. It cannot stay there now that
-        /// <c>SyncedObject</c> lives in the scripting assembly: that assembly does not see
-        /// <c>SyncedVariables</c>, and must not — it is the assembly a creator's script may name.
-        /// A CONTEXT menu item in this editor assembly reaches both and reads the same in the
-        /// inspector.
-        /// </remarks>
-        [MenuItem("CONTEXT/SyncedObject/Remove Synced Variables")]
-        private static void RemoveSyncedVariables(MenuCommand command)
-        {
-            if (((SyncedObject)command.context).TryGetComponent(out SyncedVariables variables))
-            {
-                DestroyImmediate(variables);
-            }
-        }
-
         public virtual void DrawFields()
         {
             InitializePropertiesIfNecessary();

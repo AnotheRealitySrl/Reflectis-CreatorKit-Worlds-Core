@@ -3,6 +3,8 @@ using System.Linq;
 
 using Unity.VisualScripting;
 
+using Virtuademy.Environments.ScriptingApi.Placeholders;
+
 namespace Virtuademy.SDK.Environments.VisualScripting.Editor
 {
     public abstract class SyncedVariablesEventNodesWidget<T, U> : UnitWidget<T> where T : SyncedVariableBaseEventUnit<U>

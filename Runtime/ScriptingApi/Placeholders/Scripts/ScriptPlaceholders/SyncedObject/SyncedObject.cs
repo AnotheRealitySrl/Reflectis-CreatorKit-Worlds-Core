@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Unity.VisualScripting;
+
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -122,6 +124,89 @@ namespace Virtuademy.Environments.ScriptingApi.Placeholders
 
         /// <inheritdoc cref="RaiseOwnerChanged"/>
         public void RaiseOwnershipRequestFailed() => OwnershipRequestFailed?.Invoke();
+
+        // ------------------------------------------------------- the variables this object syncs
+
+        /// <summary>
+        /// The current value of a synced variable, or null if this object declares none by that
+        /// name. Values are whatever the graph put in them, so the caller casts.
+        /// </summary>
+        public object GetSyncedVariable(string name) => Find(name)?.DeclarationValue;
+
+        /// <summary>
+        /// Sets a synced variable and lets the change travel to the other clients.
+        /// </summary>
+        /// <remarks>
+        /// Writes through the variables collection rather than the declaration it holds, and that
+        /// is not incidental: the collection is what raises the change notification the platform
+        /// listens to. Assigning the declaration directly would update the value here and tell
+        /// nobody.
+        /// </remarks>
+        public void SetSyncedVariable(string name, object value)
+        {
+            if (Find(name) == null)
+            {
+                return;
+            }
+
+            Variables variables = GetComponentInChildren<Variables>(true);
+
+            if (variables != null)
+            {
+                variables.declarations[name] = value;
+            }
+        }
+
+        /// <summary>
+        /// Whether a synced variable has ever moved off the value it was authored with. False for
+        /// a name this object does not declare, and false for one nobody has touched yet.
+        /// </summary>
+        public bool HasSyncedVariableChanged(string name) => Find(name)?.hasChanged ?? false;
+
+        /// <summary>
+        /// A synced variable took a new value, on this client or another one. Carries the name and
+        /// the value, so a script does not have to read it back.
+        /// </summary>
+        public event Action<string, object> SyncedVariableChanged;
+
+        /// <summary>Platform wiring. Raised wherever the graph's equivalent node is triggered.</summary>
+        public void RaiseSyncedVariableChanged(string name, object value)
+            => SyncedVariableChanged?.Invoke(name, value);
+
+        private SyncedVariables.Data Find(string name)
+        {
+            SyncedVariables variables = GetComponent<SyncedVariables>();
+
+            if (variables == null || variables.variableSettings == null)
+            {
+                return null;
+            }
+
+            foreach (SyncedVariables.Data data in variables.variableSettings)
+            {
+                if (data.name == name)
+                {
+                    return data;
+                }
+            }
+
+            return null;
+        }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// Removes the hidden variables component. Back on the component itself now that both live
+        /// in the same assembly.
+        /// </summary>
+        [ContextMenu("Remove Synced Variables")]
+        private void RemoveSyncedVariables()
+        {
+            if (TryGetComponent(out SyncedVariables variables))
+            {
+                DestroyImmediate(variables);
+            }
+        }
+#endif
 
 #if UNITY_EDITOR
         protected void OnValidate()

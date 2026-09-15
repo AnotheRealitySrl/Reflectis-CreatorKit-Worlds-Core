@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Virtuademy.SDK.Environments.VisualScripting
+namespace Virtuademy.Environments.ScriptingApi.Placeholders
 {
     [AddComponentMenu("")]//For hide from add component menu.
     [DisallowMultipleComponent]

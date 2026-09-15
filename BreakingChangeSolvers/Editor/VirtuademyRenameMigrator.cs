@@ -127,7 +127,8 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         private static readonly string OldTasks = "Virtuademy.SDK.Ta" + "sks";
         private static readonly string OldDialogsEditor = "Virtuademy.SDK.Dialogs" + "Editor";
         private static readonly string OldScripting = "Virtuademy.Scripting" + "Api";
-        private static readonly string OldSynced = "Virtuademy.SDK.Environments.Visual" + "Scripting.SyncedObject";
+        private static readonly string OldSyncedObject = "Virtuademy.SDK.Environments.Visual" + "Scripting.SyncedObject";
+        private static readonly string OldSyncedVariables = "Virtuademy.SDK.Environments.Visual" + "Scripting.SyncedVariables";
 
         private static readonly (string oldValue, string newValue)[] EnvironmentsMap =
         {
@@ -236,17 +237,33 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             (OldScripting + ".IHelpApi",
              "Virtuademy.Environments.ScriptingApi.IHelpApi"),
 
-            // One type, not the namespace: Virtuademy.SDK.Environments.VisualScripting still holds
-            // the nodes and SyncedVariables, and they stay where they are. SyncedObject left because
-            // a creator drives ownership through it, and it now sits beside the placeholder base it
-            // already inherited from.
-            //
-            // Late in this list on purpose. Entries are applied in order over the whole text, so by
-            // the time this runs a project coming from the CreatorKit spelling has already been
-            // rewritten to Virtuademy.SDK.Environments.* by the rules above, and both spellings land
-            // on the same rule.
-            (OldSynced, "Virtuademy.Environments.ScriptingApi.Placeholders.SyncedObject"),
         };
+
+        /// <summary>
+        /// Renames that must stop at a word boundary, applied after <see cref="EnvironmentsMap"/>.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Two types left Virtuademy.SDK.Environments.VisualScripting for the scripting surface;
+        /// the namespace keeps the nodes and everything else. That cannot be expressed as a
+        /// substring: the namespace also holds SyncedVariablesEventNodes and SyncedObjectEditor,
+        /// and a plain replacement of the shorter name rewrites the longer one with it.
+        /// </para>
+        /// <para>
+        /// That is not a cosmetic risk. SyncedVariablesEventNodes is the "On Synced Variable
+        /// Changed" node, and a graph stores its type name verbatim — so the naive rule would send
+        /// every graph using it to a type that does not exist, and the node would come back empty.
+        /// </para>
+        /// </remarks>
+        private static readonly (Regex Rule, string NewValue)[] TypeMap =
+        {
+            (Boundary(OldSyncedObject), "Virtuademy.Environments.ScriptingApi.Placeholders.SyncedObject"),
+            (Boundary(OldSyncedVariables), "Virtuademy.Environments.ScriptingApi.Placeholders.SyncedVariables"),
+        };
+
+        /// <summary>Matches <paramref name="typeName"/> only where an identifier ends.</summary>
+        private static Regex Boundary(string typeName)
+            => new(Regex.Escape(typeName) + "(?![A-Za-z0-9_])", RegexOptions.Compiled);
 
         private static readonly string[] TextExtensions =
         {
@@ -558,6 +575,12 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 text = text.Replace(oldValue, newValue);
             }
 
+            foreach ((Regex rule, string newValue) in TypeMap)
+            {
+                hits += rule.Matches(text).Count;
+                text = rule.Replace(text, newValue);
+            }
+
             return hits;
         }
 
@@ -574,6 +597,11 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             foreach ((string oldValue, string newValue) in EnvironmentsMap)
             {
                 text = text.Replace(oldValue, newValue);
+            }
+
+            foreach ((Regex rule, string newValue) in TypeMap)
+            {
+                text = rule.Replace(text, newValue);
             }
 
             return text;

@@ -6,6 +6,8 @@ using UnityEditor;
 using UnityEngine;
 
 
+using Virtuademy.Environments.ScriptingApi.Placeholders;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [CustomEditor(typeof(SyncedVariables))]

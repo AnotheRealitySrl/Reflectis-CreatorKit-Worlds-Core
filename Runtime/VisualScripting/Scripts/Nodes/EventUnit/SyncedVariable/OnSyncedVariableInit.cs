@@ -1,6 +1,8 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
+using Virtuademy.Environments.ScriptingApi.Placeholders;
+
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
     [UnitTitle("Reflectis Synced Variables: On Synced Variable Init")]
