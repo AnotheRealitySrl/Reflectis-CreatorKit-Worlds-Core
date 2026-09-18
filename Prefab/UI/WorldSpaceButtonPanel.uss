@@ -1,0 +1,37 @@
+.wsb-panel {
+    width: 420px;
+    height: 200px;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background-color: rgba(20, 22, 28, 0.85);
+    border-radius: 16px;
+    right: auto;
+    left: 0;
+    align-content: center;
+}
+
+.wsb-button {
+    padding-left: 32px;
+    padding-right: 32px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    font-size: 28px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(56, 122, 255);
+    border-width: 0;
+    border-radius: 12px;
+    transform-origin: center;
+    transition-property: scale, background-color;
+    transition-duration: 0.12s;
+    transition-timing-function: ease-out;
+}
+
+.wsb-button:hover {
+    scale: 1.2 1.2;
+    background-color: rgb(80, 140, 255);
+}
+
+.wsb-button:active {
+    scale: 1.1 1.1;
+}

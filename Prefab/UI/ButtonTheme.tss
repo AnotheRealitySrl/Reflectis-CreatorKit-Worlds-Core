@@ -1,0 +1,4 @@
+/* Minimal, self-contained theme for the world-space button panel so the PanelSettings needs no
+   reference into Assets/. Control defaults come from Unity's built-in runtime theme; the panel's
+   own look is authored in WorldSpaceButtonPanel.uss. */
+@import url("unity-theme://default");
