@@ -61,6 +61,13 @@
 - Every `using Virtuademy.CreatorKit.Worlds…` in a creator's own scripts breaks, and so does any asmdef that names one of the three assemblies as a string rather than a GUID. The migrator rewrites both.
 - A project that depends on `com.anotherealitysrl.virtuademy-creatorkit-worlds-core` in its `manifest.json` no longer resolves it. Existing registry releases are unaffected: each pins the git repo at a tag, and that tag still carries the old id.
 - Five namespaces the package declares are **not** renamed and are not part of this change: `Virtuademy.SDK.Core`, `...Core.ApplicationManagement`, `...Core.ChatBot`, `...Core.Networking` and `...Core.NetworkingSystem`. Those five types moved here from SDK-Core keeping their original namespaces so consumers' `using` directives kept working, and renaming them now would break the very thing they exist to preserve.
+- **`ManipulablePlaceholder.GizmosEnabled` is now `GizmosDisabled`**, with the serialized field and the inspector row inverted to match. The default for a fresh placeholder is unchanged; a placeholder authored before this carries the old boolean under the old name, so its value is lost on reimport and reads as "gizmos shown". Re-check the box on any placeholder that had gizmos turned off.
+
+### Added
+- **The TMP component under a POI placeholder is the source of truth for its text.** The inspector fields already pushed their value into the TMP on edit; selecting a placeholder now pulls the TMP text back into the serialized field, so the inspector shows what is actually displayed, and the runtime getters read the TMP with the serialized field as fallback. A creator who typed straight into the TMP no longer sees the text reverted.
+
+### Fixed
+- **`PanForcer` now fires on mobile.** The graph's platform switch had `OutputTriggerWebGL` and `OutputTriggerVR` wired and `OutputTriggerMobile` dangling, so a forced pan did nothing on a phone or tablet. Mobile joins the WebGL branch.
 
 ## v9.0.0
 
