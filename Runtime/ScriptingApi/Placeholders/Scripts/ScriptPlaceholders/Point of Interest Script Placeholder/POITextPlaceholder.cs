@@ -50,10 +50,13 @@ namespace Virtuademy.Environments.ScriptingApi.Placeholders
 
         public bool ShowHeader => showHeader;
 
-        public string HeaderText => headerText;
+        /// <summary>The displayed header/body text. The referenced TMPs are the source of truth
+        /// (the inspector fields push into them on edit and are pulled back on selection); the
+        /// serialized fields are only the fallback when the TMP reference is missing.</summary>
+        public string HeaderText => header != null ? header.text : headerText;
         public float HeaderFontSize => headerFontSize;
 
-        public string BodyText => bodyText;
+        public string BodyText => body != null ? body.text : bodyText;
         public float BodyFontSize => bodyFontSize;
 
 

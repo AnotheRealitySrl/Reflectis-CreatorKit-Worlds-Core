@@ -116,7 +116,19 @@ namespace Virtuademy.Environments.ScriptingApi.Placeholders
         public RectTransform NextPage => nextPage;
 
         public ETitleVisibility TitleVisibility => titleVisibility;
-        public string TitleText => titleText;
+
+        /// <summary>The displayed title text. The TMP under <see cref="Title"/> is the source of
+        /// truth (the inspector field pushes into it on edit and is pulled back on selection);
+        /// the serialized field is only the fallback when the TMP is missing.</summary>
+        public string TitleText
+        {
+            get
+            {
+                TMP_Text titleTMP = title != null ? title.GetComponentInChildren<TMP_Text>(true) : null;
+                return titleTMP != null ? titleTMP.text : titleText;
+            }
+        }
+
         public float TitleFontSize => titleFontSize;
 
         public bool BackgroundVisibility => backgroundVisibility;

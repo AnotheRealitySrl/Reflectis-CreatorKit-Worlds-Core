@@ -31,7 +31,19 @@ namespace Virtuademy.Environments.ScriptingApi.Placeholders
         private float fontSize = 1f;
 
         public string Link => link;
-        public string Text => text;
+
+        /// <summary>The displayed link label. The TMP in the placeholder hierarchy is the source
+        /// of truth (the inspector field pushes into it on edit and is pulled back on selection);
+        /// the serialized field is only the fallback when the TMP is missing.</summary>
+        public string Text
+        {
+            get
+            {
+                TMP_Text textTMP = GetComponentInChildren<TMP_Text>(true);
+                return textTMP != null ? textTMP.text : text;
+            }
+        }
+
         public float FontSize => fontSize;
 
 
