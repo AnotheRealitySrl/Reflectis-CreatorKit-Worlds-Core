@@ -27,7 +27,7 @@ namespace Virtuademy.Environments.ScriptingApi.Placeholders.Editor
 
             if (interactablePlaceholder.ManipulationMode.HasFlag(Virtuademy.Environments.ScriptingApi.Interaction.IManipulable.EManipulationMode.Rotate))
             {
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("gizmosEnabled"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("gizmosDisabled"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("threshold"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("freeRotation"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("lockXRotation"));

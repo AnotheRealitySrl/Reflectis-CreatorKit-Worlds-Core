@@ -40,8 +40,8 @@ namespace Virtuademy.Environments.ScriptingApi.Placeholders
         public UnityEvent<EManipulableState> onManipulationStateChange;
 
         [Header("WebGL Only")]
-        [SerializeField, Tooltip("Whether or not to enable rotation and scale gizmos")]
-        private bool gizmosEnabled;
+        [SerializeField, Tooltip("Whether or not to disable rotation and scale gizmos")]
+        private bool gizmosDisabled;
 
         [SerializeField, Tooltip("The force necessary to combine x and y rotation")]
         private float threshold = 0.4f;
@@ -70,7 +70,7 @@ namespace Virtuademy.Environments.ScriptingApi.Placeholders
         public bool RealignAxisZ { get => realignAxisZ; set => realignAxisZ = value; }
         public float RealignDurationTimeInSeconds { get => realignDurationTimeInSeconds; set => realignDurationTimeInSeconds = value; }
         public bool MouseLookAtCamera { get => mouseLookAtCamera; set => mouseLookAtCamera = value; }
-        public bool GizmosEnabled { get => gizmosEnabled; set => gizmosEnabled = value; }
+        public bool GizmosDisabled { get => gizmosDisabled; set => gizmosDisabled = value; }
         public float Threshold { get => threshold; set => threshold = value; }
         public bool FreeRotation { get => freeRotation; set => freeRotation = value; }
         public bool LockXRotation { get => lockXRotation; set => lockXRotation = value; }
