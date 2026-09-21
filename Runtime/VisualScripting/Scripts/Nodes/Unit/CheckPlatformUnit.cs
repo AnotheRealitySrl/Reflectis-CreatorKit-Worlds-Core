@@ -49,13 +49,13 @@ namespace Virtuademy.SDK.Environments.VisualScripting
           return OutputTriggerMobile;
         }
         // Fallback when the platform system has not resolved a platform: mirror
-        // PlatformSystem.Init, which reads the build profile's REFLECTIS_* scripting
+        // PlatformSystem.Init, which reads the build profile's VIRTUADEMY_* scripting
         // defines. The previous fallback keyed off UNITY_ANDROID and returned the VR
         // branch, but that define is also the mobile player's, so a mobile build
         // reaching this point would take VR decisions.
-#if REFLECTIS_VR
+#if VIRTUADEMY_VR
         return OutputTriggerVR;
-#elif REFLECTIS_MOBILE
+#elif VIRTUADEMY_MOBILE
         return OutputTriggerMobile;
 #else
         // ESupportedPlatform has no Desktop entry: the browser build is WebGL.

@@ -1,11 +1,11 @@
-#if REFLECTIS_CREATOR_KIT_WORLDS_PLACEHOLDERS
+#if VIRTUADEMY_ENVIRONMENTS_PLACEHOLDERS
 using Virtuademy.Environments.ScriptingApi.Placeholders;
 using UnityEngine;
 #endif
-#if REFLECTIS_CREATOR_KIT_WORLDS_TASKS && REFLECTIS_CREATOR_KIT_WORLDS_PLACEHOLDERS
+#if VIRTUADEMY_ENVIRONMENTS_TASKS && VIRTUADEMY_ENVIRONMENTS_PLACEHOLDERS
 using Virtuademy.SDK.Environments.Tasks;
 #endif
-#if REFLECTIS_CREATOR_KIT_WORLDS_VISUAL_SCRIPTING && REFLECTIS_CREATOR_KIT_WORLDS_PLACEHOLDERS
+#if VIRTUADEMY_ENVIRONMENTS_VISUAL_SCRIPTING && VIRTUADEMY_ENVIRONMENTS_PLACEHOLDERS
 using Virtuademy.SDK.Environments.VisualScripting;
 #endif
 using UnityEditor;
@@ -22,11 +22,11 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         [MenuItem("Virtuademy/Update routines/v2025.3 -> v2025.4")]
         public static void SolveBreakingChanges()
         {
-#if REFLECTIS_CREATOR_KIT_WORLDS_PLACEHOLDERS
+#if VIRTUADEMY_ENVIRONMENTS_PLACEHOLDERS
             ReplaceInteractablePlaceholder();
 #endif
         }
-#if REFLECTIS_CREATOR_KIT_WORLDS_PLACEHOLDERS
+#if VIRTUADEMY_ENVIRONMENTS_PLACEHOLDERS
         private static void ReplaceInteractablePlaceholder()
         {
             string activeScenePath = "" + UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().path;
@@ -122,7 +122,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
 
         private static bool FixDetector(GameObject prefab)
         {
-#if REFLECTIS_CREATOR_KIT_WORLDS_TASKS
+#if VIRTUADEMY_ENVIRONMENTS_TASKS
             var grabs = prefab.GetComponentsInChildren<ManipulableGrabberDetector>(true);
             var hovers = prefab.GetComponentsInChildren<VisualScriptingInteractableHoverDetector>(true);
             foreach (var grab in grabs)
@@ -151,7 +151,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
 
         private static bool FixDetectorsInScene()
         {
-#if REFLECTIS_CREATOR_KIT_WORLDS_TASKS
+#if VIRTUADEMY_ENVIRONMENTS_TASKS
             GameObject[] gameObjects = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
             bool change = false;
             foreach (GameObject gameObject in gameObjects)
@@ -281,7 +281,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                     UnityEngine.Object.DestroyImmediate(cmp, true);
                 }
             }
-#if REFLECTIS_CREATOR_KIT_WORLDS_VISUAL_SCRIPTING
+#if VIRTUADEMY_ENVIRONMENTS_VISUAL_SCRIPTING
             if (interactable.InteractionModes.HasFlag(Virtuademy.Environments.ScriptingApi.Interaction.IInteractable.EInteractableType.VisualScriptingInteractable))
             {
                 VisualScriptingInteractablePlaceholder vsPlaceholder = interactable.gameObject.GetOrAddComponent<VisualScriptingInteractablePlaceholder>();

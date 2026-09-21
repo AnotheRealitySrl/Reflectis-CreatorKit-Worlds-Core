@@ -306,6 +306,18 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             // skipped the pass lose the two flags — they are rebuilt at the cutover anyway.
             (Identifier("useReflectis" + "Nickname"), "useVirtuademyNickname"),
             (Identifier("useReflectis" + "Avatar"), "useVirtuademyAvatar"),
+
+            // The scripting defines (2026-09-21). Whole identifiers, for the #if lines of a
+            // creator's own scripts; the package's registrars retire the old symbols from
+            // PlayerSettings by themselves when they load.
+            (Identifier("REFLECTIS_CREATOR_KIT_WORLDS_PLACEHOLDERS"), "VIRTUADEMY_ENVIRONMENTS_PLACEHOLDERS"),
+            (Identifier("REFLECTIS_CREATOR_KIT_WORLDS_TASKS"), "VIRTUADEMY_ENVIRONMENTS_TASKS"),
+            (Identifier("REFLECTIS_CREATOR_KIT_WORLDS_VISUAL_SCRIPTING"), "VIRTUADEMY_ENVIRONMENTS_VISUAL_SCRIPTING"),
+            (Identifier("REFLECTIS_CREATOR_KIT_WORLDS_DIALOGS"), "VIRTUADEMY_ENVIRONMENTS_DIALOGS"),
+            (Identifier("REFLECTIS_CREATOR_KIT_WORLDS_ANALYTICS"), "VIRTUADEMY_ENVIRONMENTS_ANALYTICS"),
+            (Identifier("REFLECTIS_DESKTOP"), "VIRTUADEMY_DESKTOP"),
+            (Identifier("REFLECTIS_MOBILE"), "VIRTUADEMY_MOBILE"),
+            (Identifier("REFLECTIS_VR"), "VIRTUADEMY_VR"),
         };
 
         /// <summary>

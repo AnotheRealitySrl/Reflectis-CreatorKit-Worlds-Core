@@ -31,8 +31,16 @@
   Both flags are serialized in a creator's scenes and prefabs and reachable from a graph by member
   name, and the rename migrator carries them: it rewrites the YAML key and the graph member in one
   pass, after which the worlds are rebuilt. A published bundle that skipped the pass reads the two
-  flags as `false`; it is rebuilt at the cutover regardless. Not renamed: the `Reflectis_*`
-  EditorPrefs keys (renaming them would log every editor out once, for nothing).
+  flags as `false`; it is rebuilt at the cutover regardless.
+
+  **The scripting defines follow.** `REFLECTIS_CREATOR_KIT_WORLDS_{PLACEHOLDERS,TASKS,
+  VISUAL_SCRIPTING,DIALOGS,ANALYTICS}` are `VIRTUADEMY_ENVIRONMENTS_*`, and the platform
+  selectors `REFLECTIS_{DESKTOP,MOBILE,VR}` read by `CheckPlatformUnit` are `VIRTUADEMY_*`. The
+  five `[InitializeOnLoad]` registrars that add the module symbols to PlayerSettings now retire
+  the old symbol first, so a project updating the package is left with the new set and no
+  stragglers. The rename migrator rewrites all eight as whole identifiers, for the `#if` lines
+  of a creator's own scripts. A creator project that referenced the old symbols by hand needs
+  either the migrator pass or a manual edit; nothing else in a world depends on them.
 - **The client models left for the application; the package speaks in views.**
   `IVirtuademyFramework` hands back `UserView`, `SessionView`, `ExperienceView` and
   `EnvironmentView` from `Virtuademy.ScriptingApi` instead of the `CM*` types, and the nodes that

@@ -8,9 +8,12 @@ namespace Virtuademy.SDK.Environments.Dialogs.Editor
     [InitializeOnLoad]
     public class ScriptDefineSymbols
     {
-        public const string DIALOGS_SCRIPT_DEFINE_SYMBOL = "REFLECTIS_CREATOR_KIT_WORLDS_DIALOGS";
+        public const string DIALOGS_SCRIPT_DEFINE_SYMBOL = "VIRTUADEMY_ENVIRONMENTS_DIALOGS";
         static ScriptDefineSymbols()
         {
+            // The symbol was REFLECTIS_CREATOR_KIT_WORLDS_* until 2026-09-21; a project updating the package
+            // still carries the old one in its PlayerSettings, so it is retired here, once, before the new one is added.
+            ScriptDefineSymbolsUtilities.RemoveScriptingDefineSymbolFromAllBuildTargetGroups(DIALOGS_SCRIPT_DEFINE_SYMBOL.Replace("VIRTUADEMY_ENVIRONMENTS_", "REFLECTIS_CREATOR_KIT_WORLDS_"));
             ScriptDefineSymbolsUtilities.AddScriptingDefineSymbolToAllBuildTargetGroups(DIALOGS_SCRIPT_DEFINE_SYMBOL);
         }
     }
