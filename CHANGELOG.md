@@ -73,6 +73,12 @@
   returned a bool. Both ports exist now and return what their name says. The sample still assumes
   `com.unity.splines` is installed in the project that imports it; the package does not declare it,
   because the module is optional.
+- **The analytics graphs name the analytics types where they are.** `ExperienceVerbManager`,
+  `SendMultiAnswerQuizData` and `ControlManager_Informative` still recorded `EExperienceOutcome` and
+  `EExperienceScoringType` under `Virtuademy.SDK.ApiData`; the seventeen analytics types left that
+  namespace for `Virtuademy.ScriptingApi` on 2026-09-14, so those enum values deserialized as
+  strings (`fsReflectedConverter expected Object but got String in "Pass"`). Rewritten, and the
+  rename migrator carries the seventeen moves as whole-identifier rules for creator graphs.
 - **The client models left for the application; the package speaks in views.**
   `IVirtuademyFramework` hands back `UserView`, `SessionView`, `ExperienceView` and
   `EnvironmentView` from `Virtuademy.ScriptingApi` instead of the `CM*` types, and the nodes that

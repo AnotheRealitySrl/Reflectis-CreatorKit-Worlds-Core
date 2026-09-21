@@ -324,6 +324,28 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             (Identifier("REFLECTIS_DESKTOP"), "VIRTUADEMY_DESKTOP"),
             (Identifier("REFLECTIS_MOBILE"), "VIRTUADEMY_MOBILE"),
             (Identifier("REFLECTIS_VR"), "VIRTUADEMY_VR"),
+
+            // The seventeen analytics types left Virtuademy.SDK.ApiData for Virtuademy.ScriptingApi on
+            // 2026-09-14; the namespace itself stays (the wire DTOs are still in it), so each type is
+            // named. A graph records enum values by the type's full name, and an unresolved one
+            // deserializes to a string — found in this package's own analytics graphs on 2026-09-21.
+            (Identifier("Virtuademy.SDK.ApiData.AnalyticDTO"), "Virtuademy.ScriptingApi.AnalyticDTO"),
+            (Identifier("Virtuademy.SDK.ApiData.ExperienceAnalyticDTO"), "Virtuademy.ScriptingApi.ExperienceAnalyticDTO"),
+            (Identifier("Virtuademy.SDK.ApiData.ExperienceCompleteDTO"), "Virtuademy.ScriptingApi.ExperienceCompleteDTO"),
+            (Identifier("Virtuademy.SDK.ApiData.ExperienceJoinDTO"), "Virtuademy.ScriptingApi.ExperienceJoinDTO"),
+            (Identifier("Virtuademy.SDK.ApiData.ExperienceStartDTO"), "Virtuademy.ScriptingApi.ExperienceStartDTO"),
+            (Identifier("Virtuademy.SDK.ApiData.ExperienceStepCompleteDTO"), "Virtuademy.ScriptingApi.ExperienceStepCompleteDTO"),
+            (Identifier("Virtuademy.SDK.ApiData.ExperienceStepDTO"), "Virtuademy.ScriptingApi.ExperienceStepDTO"),
+            (Identifier("Virtuademy.SDK.ApiData.ExperienceStepStartDTO"), "Virtuademy.ScriptingApi.ExperienceStepStartDTO"),
+            (Identifier("Virtuademy.SDK.ApiData.ExperienceTranscriptDTO"), "Virtuademy.ScriptingApi.ExperienceTranscriptDTO"),
+            (Identifier("Virtuademy.SDK.ApiData.SettableFieldAttribute"), "Virtuademy.ScriptingApi.SettableFieldAttribute"),
+            (Identifier("Virtuademy.SDK.ApiData.XAPIObject"), "Virtuademy.ScriptingApi.XAPIObject"),
+            (Identifier("Virtuademy.SDK.ApiData.XAPIStatement"), "Virtuademy.ScriptingApi.XAPIStatement"),
+            (Identifier("Virtuademy.SDK.ApiData.XAPIVerb"), "Virtuademy.ScriptingApi.XAPIVerb"),
+            (Identifier("Virtuademy.SDK.ApiData.EAnalyticType"), "Virtuademy.ScriptingApi.EAnalyticType"),
+            (Identifier("Virtuademy.SDK.ApiData.EAnalyticVerb"), "Virtuademy.ScriptingApi.EAnalyticVerb"),
+            (Identifier("Virtuademy.SDK.ApiData.EExperienceOutcome"), "Virtuademy.ScriptingApi.EExperienceOutcome"),
+            (Identifier("Virtuademy.SDK.ApiData.EExperienceScoringType"), "Virtuademy.ScriptingApi.EExperienceScoringType"),
         };
 
         /// <summary>
