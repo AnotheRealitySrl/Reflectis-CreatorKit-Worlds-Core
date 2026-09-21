@@ -9,11 +9,11 @@ namespace Virtuademy
     /// <remarks>
     /// <para>
     /// A world's <c>RemoteLoadPath</c> is a template:
-    /// <c>{Virtuademy.Catalog.BaseUrl}/{Virtuademy.Catalog.WorldId}/[PlayerVersionOverride]/[BuildTarget]</c>.
+    /// <c>{Catalog.BaseUrl}/{Catalog.WorldId}/[PlayerVersionOverride]/[BuildTarget]</c>.
     /// Addressables expands each <c>{name}</c> through <see cref="AddressablesRuntimeProperties"/>,
     /// which looks the name up in its explicit table first and only then tries to read it as a
     /// static property by reflection. <see cref="Publish"/> fills the table, so these names are
-    /// <b>not</b> types: they contain dots for readability, but no class answers to them. That is
+    /// <b>not</b> types and carry no brand: a wire contract, like the Photon prefab keys. That is
     /// the point. Until 2026-09-21 the template named a real type,
     /// <c>Virtuademy.AddressablesVariables</c> (and <c>Reflectis.AddressablesVariables</c> before
     /// the brand rename), which tied every published catalog to a C# identifier and broke every
@@ -29,10 +29,10 @@ namespace Virtuademy
     public static class CatalogVariables
     {
         /// <summary>Runtime variable holding the tenant's content base URL.</summary>
-        public const string BaseUrlName = "Virtuademy.Catalog.BaseUrl";
+        public const string BaseUrlName = "Catalog.BaseUrl";
 
         /// <summary>Runtime variable holding the world id, or <c>Tenant</c> for the tenant catalog.</summary>
-        public const string WorldIdName = "Virtuademy.Catalog.WorldId";
+        public const string WorldIdName = "Catalog.WorldId";
 
         public static string BaseUrl { get; private set; }
         public static string WorldId { get; private set; }

@@ -42,7 +42,7 @@
   of a creator's own scripts. A creator project that referenced the old symbols by hand needs
   either the migrator pass or a manual edit; nothing else in a world depends on them.
 - **A catalog no longer depends on a C# type name.** The `RemoteLoadPath` the publish window
-  writes is now `{Virtuademy.Catalog.BaseUrl}/{Virtuademy.Catalog.WorldId}/…`: two runtime
+  writes is now `{Catalog.BaseUrl}/{Catalog.WorldId}/…`: two runtime
   variables owned by the new `Virtuademy.CatalogVariables`, which the application fills through
   `AddressablesRuntimeProperties.SetPropertyValue` before each catalog loads. The names have dots
   for readability but no class answers to them, on purpose — the previous template named
