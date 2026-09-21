@@ -63,6 +63,16 @@
   published with this version record the new names; worlds published earlier keep loading and
   are listed by the diagnostic until rebuilt. The two compat types are retired once that list is
   empty.
+- **Splines sample: the units answer to their former bare names, and `Expose SplineAnimate` exposes
+  what it says.** The seven units once lived in the global namespace; a graph saved against that
+  spelling records `"$type":"SetSplineAnimateContainerUnit"` and, after the move into
+  `Virtuademy.SDK.Environments.VisualScripting.Splines`, deserialized as `MissingType` — logged as an
+  error, which fails a player build. Each unit carries `[RenamedFrom]` with its bare name, so those
+  graphs come back on load. `ExposeSplineAnimateUnit` also registered its `IsPlaying` port under
+  the key `Duration` and never created `Duration` at all: the node showed a "Duration" port that
+  returned a bool. Both ports exist now and return what their name says. The sample still assumes
+  `com.unity.splines` is installed in the project that imports it; the package does not declare it,
+  because the module is optional.
 - **The client models left for the application; the package speaks in views.**
   `IVirtuademyFramework` hands back `UserView`, `SessionView`, `ExperienceView` and
   `EnvironmentView` from `Virtuademy.ScriptingApi` instead of the `CM*` types, and the nodes that

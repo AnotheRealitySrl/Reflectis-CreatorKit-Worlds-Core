@@ -30,7 +30,8 @@ namespace Virtuademy.SDK.Environments.VisualScripting.Splines
             Container = ValueOutput(nameof(Container), (flow) => flow.GetValue<SplineAnimate>(ObjInput).Container);
             NormalizedTime = ValueOutput(nameof(NormalizedTime), (flow) => flow.GetValue<SplineAnimate>(ObjInput).NormalizedTime);
             ElapsedTime = ValueOutput(nameof(ElapsedTime), (flow) => flow.GetValue<SplineAnimate>(ObjInput).ElapsedTime);
-            IsPlaying = ValueOutput(nameof(Duration), (flow) => flow.GetValue<SplineAnimate>(ObjInput).IsPlaying);
+            Duration = ValueOutput(nameof(Duration), (flow) => flow.GetValue<SplineAnimate>(ObjInput).Duration);
+            IsPlaying = ValueOutput(nameof(IsPlaying), (flow) => flow.GetValue<SplineAnimate>(ObjInput).IsPlaying);
         }
     }
 }
