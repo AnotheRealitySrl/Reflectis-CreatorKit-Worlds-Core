@@ -34,9 +34,29 @@ namespace Virtuademy.BreakingChangeSolvers
     /// refuses is reported and skipped rather than forced, and the source folder is removed only
     /// once it holds nothing.
     /// </para>
+    /// <para>
+    /// This has no menu entry of its own: it is the second half of the v2026.5 -> v2026.6 update
+    /// routine, driven by <c>VirtuademyRenameMigrator</c>, and runs after the text rewrite so the
+    /// paths that pass records are still the ones on disk while it writes.
+    /// </para>
     /// </remarks>
     public static class VirtuademyFolderMigrator
     {
+        /// <summary>What a <see cref="Consolidate"/> pass did, for the caller to report.</summary>
+        public readonly struct Result
+        {
+            public Result(int moved, int refused, int pruned)
+            {
+                Moved = moved;
+                Refused = refused;
+                Pruned = pruned;
+            }
+
+            public int Moved { get; }
+            public int Refused { get; }
+            public int Pruned { get; }
+        }
+
         private const string Root = "Assets/Virtuademy";
 
         /// <summary>Old folder, new folder. Order matters only for readability.</summary>
@@ -66,8 +86,17 @@ namespace Virtuademy.BreakingChangeSolvers
             "Assets/ReflectisSettings",
         };
 
-        [MenuItem("Virtuademy/Update routines/Consolidate the Virtuademy folder")]
-        public static void Run()
+        /// <summary>
+        /// True while the project still carries one of the legacy folders — either with assets
+        /// left to move, or empty and waiting to be pruned.
+        /// </summary>
+        public static bool HasLegacyFolders()
+        {
+            return Moves.Any(m => AssetDatabase.IsValidFolder(m.from))
+                   || Prune.Any(AssetDatabase.IsValidFolder);
+        }
+
+        public static Result Consolidate()
         {
             List<string> moved = new();
             List<string> refused = new();
@@ -137,6 +166,8 @@ namespace Virtuademy.BreakingChangeSolvers
             }
 
             Report(moved, refused, pruned);
+
+            return new Result(moved.Count, refused.Count, pruned.Count);
         }
 
         /// <summary>Assets directly inside <paramref name="folder"/>, subfolders included.</summary>

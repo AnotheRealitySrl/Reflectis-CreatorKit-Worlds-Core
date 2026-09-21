@@ -48,6 +48,16 @@
   the tool on the application on 2026-09-21). The rule now skips those two types and never touches
   a `using` line; instead, a file importing the old namespace gets `using SPACS.Utilities;` added
   beside it, once, so the moved utilities resolve and what stayed keeps resolving.
+- **One update routine for the release, named after it.** The two entries a creator had to find
+  and run in the right order — `Package rename migration` and `Consolidate the Virtuademy folder`
+  — are a single menu item, `Virtuademy/Update routines/v2026.5 -> v2026.6`, matching how every
+  other release's migration is named. One window, two sections, one Apply: the text rewrite runs
+  first and the folder consolidation after it, which is the order that works and not one a
+  creator should have had to know. Each half is still skippable — the file list keeps its
+  per-file checkboxes, the consolidation is a toggle — and either section reports that the
+  project is already migrated rather than disappearing, so a project that needs only one of the
+  two still reaches the button. `VirtuademyFolderMigrator` lost its `[MenuItem]` and is driven by
+  the window.
 - **A catalog no longer depends on a C# type name.** The `RemoteLoadPath` the publish window
   writes is now `{Catalog.BaseUrl}/{Catalog.WorldId}/…`: two runtime
   variables owned by the new `Virtuademy.CatalogVariables`, which the application fills through

@@ -7,15 +7,25 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
+using Virtuademy.BreakingChangeSolvers;
+
 
 namespace Virtuademy.SDK.Environments.Installer.Editor
 {
     /// <summary>
-    /// Project-wide migration for the two renames the packages have been through:
+    /// The v2026.5 -> v2026.6 update routine for a creator project, and the only menu entry it
+    /// needs: one window, one Apply, both steps the release asks for.
+    ///
+    /// Step 1 is project-wide migration for the two renames the packages have been through:
     /// the Reflectis -> Virtuademy brand rename, and the authoring package becoming
     /// Virtuademy-SDK-Environments (namespaces, assembly names, package ids).
-    ///
     /// One pass covers both, in that order, so a project can arrive from either side.
+    ///
+    /// Step 2 is <see cref="VirtuademyFolderMigrator"/>, which gathers what the SDK generates into
+    /// the single Assets/Virtuademy folder. It runs after the rewrite, because the rewrite works
+    /// from the paths the scan recorded and a folder move would invalidate them. Nothing breaks if
+    /// it is skipped — both settings assets are found by type wherever they sit — so it is a
+    /// toggle rather than a step.
     ///
     /// MonoBehaviour references survive the rename on their own (they resolve by GUID), but
     /// every reference stored BY NAME does not: [SerializeReference] payloads in scenes,
@@ -27,7 +37,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
     ///
     /// Recommended flow for a creator project:
     ///   1. Commit / back up the project (the rewrite touches many files).
-    ///   2. Update the SDK / Creator Kit packages to the renamed (Virtuademy) versions.
+    ///   2. Update the SDK packages to their v2026.6 versions.
     ///   3. Run this routine, review the file list, Apply.
     ///   4. Let Unity recompile and reimport, then re-save any still-dirty scenes.
     ///
@@ -78,7 +88,8 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         // in a project where packages are embedded).
         private static readonly string OldBrand = "Reflec" + "tis";
         private const string NewBrand = "Virtuademy";
-        private const string WindowTitle = "Package rename migrator";
+        private const string MenuPath = "Virtuademy/Update routines/v2026.5 -> v2026.6";
+        private const string WindowTitle = "Update v2026.5 -> v2026.6";
 
         // Ordered: specific mappings first, then the generic namespace rule.
         private static readonly (string oldValue, string newValue)[] LiteralMap =
@@ -381,8 +392,10 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         private Vector2 scrollPosition;
         private bool hasScanned;
         private bool deleteLockFile = true;
+        private bool consolidateFolders = true;
+        private bool hasLegacyFolders;
 
-        [MenuItem("Virtuademy/Update routines/Package rename migration")]
+        [MenuItem(MenuPath)]
         public static void Open()
         {
             VirtuademyRenameMigrator window = GetWindow<VirtuademyRenameMigrator>(false, WindowTitle, true);
@@ -423,56 +436,93 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 return;
             }
 
+            int selectedCount = entries.Count(e => e.Selected);
+
+            EditorGUILayout.Space(4);
+            EditorGUILayout.LabelField("1. Renamed packages, namespaces and types", EditorStyles.boldLabel);
+
             if (entries.Count == 0)
             {
                 EditorGUILayout.HelpBox("No outdated reference found. The project is already migrated.", MessageType.Info);
-                return;
             }
-
-            EditorGUILayout.Space(4);
-            EditorGUILayout.LabelField(
-                $"{entries.Count} file(s), {entries.Sum(e => e.Hits)} occurrence(s). " +
-                "Review the list: exclude files whose matches are narrative content rather than type references.",
-                EditorStyles.miniLabel);
-
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-            foreach (Entry entry in entries)
+            else
             {
-                using (new EditorGUILayout.HorizontalScope(EditorStyles.helpBox))
+                EditorGUILayout.LabelField(
+                    $"{entries.Count} file(s), {entries.Sum(e => e.Hits)} occurrence(s). " +
+                    "Review the list: exclude files whose matches are narrative content rather than type references.",
+                    EditorStyles.miniLabel);
+
+                scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+                foreach (Entry entry in entries)
                 {
-                    entry.Selected = EditorGUILayout.Toggle(entry.Selected, GUILayout.Width(18));
-                    EditorGUILayout.LabelField(entry.Path, EditorStyles.boldLabel);
-                    EditorGUILayout.LabelField($"{entry.Hits}", GUILayout.Width(40));
-                    if (GUILayout.Button("Ping", GUILayout.Width(44)))
+                    using (new EditorGUILayout.HorizontalScope(EditorStyles.helpBox))
                     {
-                        UnityEngine.Object asset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(entry.Path);
-                        if (asset != null)
+                        entry.Selected = EditorGUILayout.Toggle(entry.Selected, GUILayout.Width(18));
+                        EditorGUILayout.LabelField(entry.Path, EditorStyles.boldLabel);
+                        EditorGUILayout.LabelField($"{entry.Hits}", GUILayout.Width(40));
+                        if (GUILayout.Button("Ping", GUILayout.Width(44)))
                         {
-                            EditorGUIUtility.PingObject(asset);
+                            UnityEngine.Object asset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(entry.Path);
+                            if (asset != null)
+                            {
+                                EditorGUIUtility.PingObject(asset);
+                            }
                         }
                     }
                 }
-            }
-            EditorGUILayout.EndScrollView();
+                EditorGUILayout.EndScrollView();
 
-            EditorGUILayout.Space(4);
-            deleteLockFile = EditorGUILayout.ToggleLeft(
-                "Delete Packages/packages-lock.json so UPM re-resolves the renamed package ids (recommended)",
-                deleteLockFile);
+                EditorGUILayout.Space(4);
+                deleteLockFile = EditorGUILayout.ToggleLeft(
+                    "Delete Packages/packages-lock.json so UPM re-resolves the renamed package ids (recommended)",
+                    deleteLockFile);
+            }
+
+            EditorGUILayout.Space(8);
+            EditorGUILayout.LabelField("2. Generated folders", EditorStyles.boldLabel);
+
+            if (hasLegacyFolders)
+            {
+                consolidateFolders = EditorGUILayout.ToggleLeft(
+                    "Gather Assets/CreatorKit and Assets/ReflectisSettings into Assets/Virtuademy (recommended)",
+                    consolidateFolders);
+                EditorGUILayout.LabelField(
+                    "Assets keep their GUID, so every reference survives. Nothing breaks if this is skipped.",
+                    EditorStyles.miniLabel);
+            }
+            else
+            {
+                EditorGUILayout.HelpBox("No legacy folder in this project. Nothing to consolidate.", MessageType.Info);
+            }
+
+            EditorGUILayout.Space(8);
+
+            bool renameWork = selectedCount > 0;
+            bool folderWork = hasLegacyFolders && consolidateFolders;
+
+            if (!renameWork && !folderWork)
+            {
+                EditorGUILayout.HelpBox("Nothing selected to apply.", MessageType.Info);
+                EditorGUILayout.Space(4);
+                return;
+            }
 
             EditorGUILayout.HelpBox(
-                "Files are rewritten in place. Make sure the project is committed to version control " +
+                "Files are rewritten and moved in place. Make sure the project is committed to version control " +
                 "(or backed up) before applying.",
                 MessageType.Warning);
 
-            int selectedCount = entries.Count(e => e.Selected);
-            using (new EditorGUI.DisabledScope(selectedCount == 0))
+            string button = renameWork && folderWork
+                ? $"Apply update ({selectedCount} file(s) + folder consolidation)"
+                : renameWork
+                    ? $"Apply rename to {selectedCount} file(s)"
+                    : "Consolidate the Virtuademy folder";
+
+            if (GUILayout.Button(button, GUILayout.Height(30)))
             {
-                if (GUILayout.Button($"Apply rename to {selectedCount} file(s)", GUILayout.Height(30)))
-                {
-                    ApplySelected();
-                }
+                Apply(renameWork, folderWork);
             }
+
             EditorGUILayout.Space(4);
         }
 
@@ -510,18 +560,31 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 EditorUtility.ClearProgressBar();
             }
 
+            hasLegacyFolders = VirtuademyFolderMigrator.HasLegacyFolders();
             hasScanned = true;
             Repaint();
         }
 
-        private void ApplySelected()
+        private void Apply(bool rewriteFiles, bool consolidate)
         {
-            List<Entry> selected = entries.Where(e => e.Selected).ToList();
+            List<Entry> selected = rewriteFiles
+                ? entries.Where(e => e.Selected).ToList()
+                : new List<Entry>();
+
+            string what = rewriteFiles
+                ? $"Rewrite {selected.Count} file(s) in place ({selected.Sum(e => e.Hits)} occurrence(s))"
+                : string.Empty;
+
+            if (consolidate)
+            {
+                what = rewriteFiles
+                    ? what + ", then gather the legacy folders into Assets/Virtuademy"
+                    : "Gather the legacy folders into Assets/Virtuademy";
+            }
 
             if (!EditorUtility.DisplayDialog(
                     WindowTitle,
-                    $"Rewrite {selected.Count} file(s) in place ({selected.Sum(e => e.Hits)} occurrence(s))?\n\n" +
-                    "Make sure the project is committed / backed up first.",
+                    what + "?\n\nMake sure the project is committed / backed up first.",
                     "Apply", "Cancel"))
             {
                 return;
@@ -558,7 +621,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                     }
                 }
 
-                if (deleteLockFile && File.Exists("Packages/packages-lock.json"))
+                if (rewriteFiles && deleteLockFile && File.Exists("Packages/packages-lock.json"))
                 {
                     File.Delete("Packages/packages-lock.json");
                     Debug.Log($"[{WindowTitle}] Deleted Packages/packages-lock.json (will be regenerated by UPM).");
@@ -570,12 +633,33 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             }
 
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            // After the rewrite, never before: the rewrite writes to the paths the scan recorded,
+            // and moving a folder out from under it would send those writes to files that moved.
+            VirtuademyFolderMigrator.Result folders = consolidate
+                ? VirtuademyFolderMigrator.Consolidate()
+                : default;
+
             RebuildVisualScriptingUnits();
+
+            string report = "Done.\n";
+
+            if (rewriteFiles)
+            {
+                report += $"\nRewritten: {changedFiles}\nFailed: {failed}";
+            }
+
+            if (consolidate)
+            {
+                report += $"\nMoved into Assets/Virtuademy: {folders.Moved} asset(s), " +
+                          $"{folders.Pruned} folder(s) removed" +
+                          (folders.Refused > 0 ? $", {folders.Refused} left in place" : string.Empty);
+            }
 
             EditorUtility.DisplayDialog(
                 WindowTitle,
-                $"Done.\n\nRewritten: {changedFiles}\nFailed: {failed}" +
-                (failed > 0 ? "\n\nSee the Console for details." : string.Empty) +
+                report +
+                (failed > 0 || folders.Refused > 0 ? "\n\nSee the Console for details." : string.Empty) +
                 "\n\nUnity will now recompile. Afterwards, open your world scenes once and re-save them " +
                 "so the migrated data is reserialized.",
                 "OK");
