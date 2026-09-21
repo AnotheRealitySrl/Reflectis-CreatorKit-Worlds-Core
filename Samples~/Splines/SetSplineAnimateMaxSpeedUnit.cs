@@ -1,4 +1,5 @@
 ﻿using Unity.VisualScripting;
+using Unity.VisualScripting;
 
 using UnityEngine.Splines;
 
@@ -8,6 +9,8 @@ namespace Virtuademy.SDK.Environments.VisualScripting.Splines
     [UnitSurtitle("SplineAnimate")]
     [UnitShortTitle("Set Max Speed")]
     [UnitCategory("Virtuademy\\Flow")]
+
+    [RenamedFrom("SetSplineAnimateMaxSpeedUnit")]
 
     public class SetSplineAnimateMaxSpeedUnit : Unit
     {

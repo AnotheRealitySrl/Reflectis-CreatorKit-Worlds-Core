@@ -10,6 +10,8 @@ namespace Virtuademy.SDK.Environments.VisualScripting.Splines
     [UnitShortTitle("Set Container")]
     [UnitCategory("Virtuademy\\Flow")]
 
+    [RenamedFrom("SetSplineAnimateContainerUnit")]
+
     public class SetSplineAnimateContainerUnit : Unit
     {
         // Input

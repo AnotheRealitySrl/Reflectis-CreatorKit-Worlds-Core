@@ -1,4 +1,5 @@
 ﻿using Unity.VisualScripting;
+using Unity.VisualScripting;
 
 using UnityEngine;
 using UnityEngine.Splines;
@@ -9,6 +10,8 @@ namespace Virtuademy.SDK.Environments.VisualScripting.Splines
     [UnitSurtitle("Spline")]
     [UnitShortTitle("Get SplineAnimate")]
     [UnitCategory("Virtuademy\\Get")]
+
+    [RenamedFrom("GetSplineAnimateUnit")]
 
     public class GetSplineAnimateUnit : Unit
     {

@@ -16,6 +16,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting.Splines
     [UnitSurtitle("SplineAnimate")]
     [UnitShortTitle("Play Coroutine")]
     [UnitCategory("Virtuademy\\Flow")]
+    [RenamedFrom("SplineAnimatePlayCoroutineUnit")]
     public class SplineAnimatePlayCoroutineUnit : AwaitableUnit
     {
 

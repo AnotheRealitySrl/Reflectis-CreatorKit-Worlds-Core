@@ -8,6 +8,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting.Splines
     [UnitSurtitle("Expose")]
     [UnitShortTitle("SplineContainer")]
     [UnitCategory("Virtuademy\\Expose")]
+    [RenamedFrom("ExposeSplineContainerUnit")]
     public class ExposeSplineContainerUnit : Unit
     {
         [NullMeansSelf]

@@ -1,4 +1,5 @@
 ﻿using Unity.VisualScripting;
+using Unity.VisualScripting;
 
 using UnityEngine.Splines;
 
@@ -8,6 +9,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting.Splines
     [UnitSurtitle("Expose")]
     [UnitShortTitle("SplineAnimate")]
     [UnitCategory("Virtuademy\\Expose")]
+    [RenamedFrom("ExposeSplineAnimateUnit")]
     public class ExposeSplineAnimateUnit : Unit
     {
         [NullMeansSelf]

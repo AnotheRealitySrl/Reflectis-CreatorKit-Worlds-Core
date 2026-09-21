@@ -10,6 +10,8 @@ namespace Virtuademy.SDK.Environments.VisualScripting.Splines
     [UnitShortTitle("Get SplineContainer")]
     [UnitCategory("Virtuademy\\Get")]
 
+    [RenamedFrom("GetSplineContainerUnit")]
+
     public class GetSplineContainerUnit : Unit
     {
         [NullMeansSelf]
