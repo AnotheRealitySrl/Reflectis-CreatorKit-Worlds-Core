@@ -3,10 +3,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis ControlManager: Highlight Item with material")]
+    [UnitTitle("Virtuademy ControlManager: Highlight Item with material")]
     [UnitSurtitle("Control Manager")]
     [UnitShortTitle("Highlight item")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class InformativeItemHighlightNode : Unit
     {
         [DoNotSerialize]

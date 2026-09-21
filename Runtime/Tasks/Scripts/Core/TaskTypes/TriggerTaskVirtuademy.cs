@@ -1,4 +1,5 @@
-﻿using SPACS.Graphs;
+﻿using Unity.VisualScripting;
+using SPACS.Graphs;
 using SPACS.Tasks;
 using SPACS.Tasks.Detectors;
 using UnityEngine;
@@ -6,7 +7,8 @@ using UnityEngine;
 
 namespace Virtuademy.SDK.Environments.Tasks
 {
-    public class TriggerTaskReflectis : TaskReflectis, ITaskNode<TriggerTaskNode>
+    [RenamedFrom("Virtuademy.SDK.Environments.Tasks.TriggerTaskReflectis")]
+    public class TriggerTaskVirtuademy : TaskVirtuademy, ITaskNode<TriggerTaskNode>
     {
         TriggerTaskNode IContainer<TriggerTaskNode>.Value { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 

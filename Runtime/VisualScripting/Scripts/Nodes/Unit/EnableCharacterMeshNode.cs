@@ -4,10 +4,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Character: Enable Mesh")]
+    [UnitTitle("Virtuademy Character: Enable Mesh")]
     [UnitSurtitle("Character")]
     [UnitShortTitle("Enable Mesh")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class EnableCharacterMeshNode : Unit
     {
         [DoNotSerialize]

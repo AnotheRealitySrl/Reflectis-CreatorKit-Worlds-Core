@@ -4,10 +4,10 @@ using UnityEngine.Splines;
 
 namespace Virtuademy.SDK.Environments.VisualScripting.Splines
 {
-    [UnitTitle("Reflectis SplineAnimate: Set Max Speed")]
+    [UnitTitle("Virtuademy SplineAnimate: Set Max Speed")]
     [UnitSurtitle("SplineAnimate")]
     [UnitShortTitle("Set Max Speed")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
 
     public class SetSplineAnimateMaxSpeedUnit : Unit
     {

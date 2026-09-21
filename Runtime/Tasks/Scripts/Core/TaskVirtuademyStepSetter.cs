@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using SPACS.Tasks;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,15 +6,16 @@ using UnityEngine;
 
 namespace Virtuademy.SDK.Environments.Tasks
 {
-    public class TaskReflectisStepSetter : TaskStepSetter
+    [RenamedFrom("Virtuademy.SDK.Environments.Tasks.TaskReflectisStepSetter")]
+    public class TaskVirtuademyStepSetter : TaskStepSetter
     {
         protected ITasksRPCManager rpcManagerInterface;
-        private TaskSystemReflectis systemReflectis;
+        private TaskSystemVirtuademy systemVirtuademy;
 
         private void Start()
         {
-            systemReflectis = GetComponent<TaskSystemReflectis>();
-            if (systemReflectis.isNetworked)
+            systemVirtuademy = GetComponent<TaskSystemVirtuademy>();
+            if (systemVirtuademy.isNetworked)
             {
                 StartCoroutine(WaitForRPCManager());
             }
@@ -24,10 +26,10 @@ namespace Virtuademy.SDK.Environments.Tasks
         {
             while (rpcManagerInterface == null)
             {
-                rpcManagerInterface = systemReflectis.rpcManagerInterface;
+                rpcManagerInterface = systemVirtuademy.rpcManagerInterface;
                 yield return null;
             }
-            rpcManagerInterface = systemReflectis.rpcManagerInterface;
+            rpcManagerInterface = systemVirtuademy.rpcManagerInterface;
             rpcManagerInterface.AddJoinRoomEvent(Init);
         }
 
@@ -36,10 +38,10 @@ namespace Virtuademy.SDK.Environments.Tasks
         private void Init(int id)
         {
             if(id != -1){
-                systemReflectis.Prepare();
+                systemVirtuademy.Prepare();
             }
             //calculate last node
-            var tasks = FindObjectsOfType<TaskReflectis>();
+            var tasks = FindObjectsOfType<TaskVirtuademy>();
             TaskNode targetNode = null;
             foreach (var task in tasks)
             {
@@ -57,7 +59,7 @@ namespace Virtuademy.SDK.Environments.Tasks
             }
 
             // Ordered list of tasks. I assign the state "Complete" until I find the node I want.
-            IReadOnlyCollection<TaskNode> allNodes = systemReflectis.Tasks;
+            IReadOnlyCollection<TaskNode> allNodes = systemVirtuademy.Tasks;
             foreach (TaskNode node in allNodes)
             {
                 if (CompleteTaskRecursive(node, newNode))

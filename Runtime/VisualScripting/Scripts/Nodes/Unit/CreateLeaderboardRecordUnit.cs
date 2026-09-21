@@ -4,10 +4,10 @@ using Virtuademy.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Leaderboard Create Record: Create Record")]
+    [UnitTitle("Virtuademy Leaderboard Create Record: Create Record")]
     [UnitSurtitle("Leaderboard Create Record")]
     [UnitShortTitle("Create Record")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class CreateLeaderboardRecordUnit : Unit
     {
         [DoNotSerialize]

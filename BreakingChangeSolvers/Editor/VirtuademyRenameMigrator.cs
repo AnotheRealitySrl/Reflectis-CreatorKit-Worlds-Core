@@ -282,6 +282,22 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             (Boundary(OldCoreVisualScripting), "SPACS.VisualScripting"),
             (Boundary(OldCoreEditor), "SPACS.Editor"),
             (Boundary(OldCreateTypeInstance), "SPACS.CreateTypeInstanceUnit"),
+
+            // The nine platform-adapter types that kept the old brand in their names through the
+            // wave C rename and lost it on 2026-09-21: the task adapters and the chatbot
+            // placeholder. Bounded on both sides, because a project may spell them bare (with a
+            // using) or fully qualified, and "Task" + brand is the tail of four of the others.
+            // They carry [RenamedFrom] too, so a graph that was not rewritten still deserializes;
+            // this rule is for the creator's own C# and for the text the attribute cannot reach.
+            (Identifier("TaskSystem" + OldBrand + "Editor"), "TaskSystemVirtuademyEditor"),
+            (Identifier("TaskSystem" + OldBrand), "TaskSystemVirtuademy"),
+            (Identifier("Task" + OldBrand + "StepSetter"), "TaskVirtuademyStepSetter"),
+            (Identifier("AnimatorTask" + OldBrand), "AnimatorTaskVirtuademy"),
+            (Identifier("GrabTask" + OldBrand), "GrabTaskVirtuademy"),
+            (Identifier("TimerTask" + OldBrand), "TimerTaskVirtuademy"),
+            (Identifier("TriggerTask" + OldBrand), "TriggerTaskVirtuademy"),
+            (Identifier("Task" + OldBrand), "TaskVirtuademy"),
+            (Identifier(OldBrand + "ChatbotPlaceholder"), "VirtuademyChatbotPlaceholder"),
         };
 
         /// <summary>
@@ -296,6 +312,14 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         /// </remarks>
         private static Regex Boundary(string typeName, string unless = "")
             => new(Regex.Escape(typeName) + unless + "(?![A-Za-z0-9_])", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Matches <paramref name="typeName"/> only as a whole identifier: neither glued to a
+        /// preceding namespace segment's letters nor extended by a suffix. A dot before it is
+        /// fine, which is how the qualified spelling is reached.
+        /// </summary>
+        private static Regex Identifier(string typeName)
+            => new(@"(?<![A-Za-z0-9_])" + Regex.Escape(typeName) + @"(?![A-Za-z0-9_])", RegexOptions.Compiled);
 
         private static readonly string[] TextExtensions =
         {

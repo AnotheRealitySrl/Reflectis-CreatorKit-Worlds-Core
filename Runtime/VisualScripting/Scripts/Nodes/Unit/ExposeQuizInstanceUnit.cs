@@ -4,10 +4,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis: Expose Quiz Instance")]
+    [UnitTitle("Virtuademy: Expose Quiz Instance")]
     [UnitSurtitle("Expose")]
     [UnitShortTitle("Quiz Instance")]
-    [UnitCategory("Reflectis\\Expose")]
+    [UnitCategory("Virtuademy\\Expose")]
     public class ExposeQuizInstanceUnit : Unit
     {
         [NullMeansSelf]

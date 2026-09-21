@@ -10,7 +10,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting.Editor
 
         protected override string DefinedSummary()
         {
-            return "This unit will change the open state of the Reflectis event shard " +
+            return "This unit will change the open state of the Virtuademy event shard " +
                 "where the local player currently is.\n" +
                 "Every event shard starts as open, and it can be closed to prevent " +
                 "more users from entering it (while still allowing the users already " +

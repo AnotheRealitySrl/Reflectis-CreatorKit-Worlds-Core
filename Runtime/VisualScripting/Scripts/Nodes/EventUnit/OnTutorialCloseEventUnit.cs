@@ -11,10 +11,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Tutorial: On Tutorial Closed")]
+    [UnitTitle("Virtuademy Tutorial: On Tutorial Closed")]
     [UnitSurtitle("Tutorial")]
     [UnitShortTitle("On Tutorial Closed")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnTutorialCloseEventUnit : ActionEventUnit<Null>
     {
 

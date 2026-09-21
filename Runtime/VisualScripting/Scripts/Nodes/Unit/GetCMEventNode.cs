@@ -5,10 +5,10 @@ using Virtuademy.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis CMEvent: Get CMEvent")]
+    [UnitTitle("Virtuademy CMEvent: Get CMEvent")]
     [UnitSurtitle("CMEvent")]
     [UnitShortTitle("Get CMEvent")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Virtuademy\\Get")]
     public class GetCMEventNode : Unit
     {
         [NullMeansSelf]

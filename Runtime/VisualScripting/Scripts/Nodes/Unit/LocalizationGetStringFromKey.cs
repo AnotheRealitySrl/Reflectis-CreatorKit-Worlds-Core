@@ -7,10 +7,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Localization: Get translation")]
+    [UnitTitle("Virtuademy Localization: Get translation")]
     [UnitSurtitle("Localization")]
     [UnitShortTitle("Get Translation")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class LocalizationGetStringFromKey : Unit
     {
         [NullMeansSelf]

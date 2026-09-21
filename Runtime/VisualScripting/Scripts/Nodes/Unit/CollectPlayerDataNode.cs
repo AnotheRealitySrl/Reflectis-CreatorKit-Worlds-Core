@@ -9,7 +9,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
     [UnitTitle("Expose: CMUser")]
     [UnitSurtitle("Expose")]
     [UnitShortTitle("CMUser")]
-    [UnitCategory("Reflectis\\Expose")]
+    [UnitCategory("Virtuademy\\Expose")]
     public class CollectPlayerDataNode : Unit
     {
         [DoNotSerialize]

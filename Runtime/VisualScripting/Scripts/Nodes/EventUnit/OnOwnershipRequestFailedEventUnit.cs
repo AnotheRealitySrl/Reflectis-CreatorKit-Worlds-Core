@@ -6,10 +6,10 @@ using Virtuademy.Environments.ScriptingApi.Placeholders;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Synced Object: On Owner Request Failed")]
+    [UnitTitle("Virtuademy Synced Object: On Owner Request Failed")]
     [UnitSurtitle("Synced Object")]
     [UnitShortTitle("On Owner Request Failed")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnOwnershipRequestFailedEventUnit : EventUnit<SyncedObject>
     {
         public static string eventName = "SyncedObjectOnOwnerRequestFailed";

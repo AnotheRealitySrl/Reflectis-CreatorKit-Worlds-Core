@@ -4,10 +4,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis ControlManager: Expose Control Manager")]
+    [UnitTitle("Virtuademy ControlManager: Expose Control Manager")]
     [UnitSurtitle("Expose")]
     [UnitShortTitle("Control Manager Instance")]
-    [UnitCategory("Reflectis\\Expose")]
+    [UnitCategory("Virtuademy\\Expose")]
     public class ExposeControlManagerUnit : Unit
     {
         [NullMeansSelf]

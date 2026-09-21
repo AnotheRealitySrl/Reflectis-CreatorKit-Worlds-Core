@@ -14,14 +14,14 @@ namespace Virtuademy.Environments.ScriptingApi
         bool IsAvailable { get; }
 
         /// <summary>Opens the help panel.</summary>
-        /// <remarks>Node: <c>Reflectis Tutorial: Enable</c>.</remarks>
+        /// <remarks>Node: <c>Virtuademy Tutorial: Enable</c>.</remarks>
         void Open();
 
         /// <summary>Closes it.</summary>
         void Close();
 
         /// <summary>Raised once the panel has finished closing.</summary>
-        /// <remarks>Node: <c>Reflectis Tutorial: On Tutorial Closed</c>.</remarks>
+        /// <remarks>Node: <c>Virtuademy Tutorial: On Tutorial Closed</c>.</remarks>
         event Action Closed;
     }
 }

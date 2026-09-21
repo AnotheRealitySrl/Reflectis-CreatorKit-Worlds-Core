@@ -1,11 +1,13 @@
-﻿using SPACS.Graphs;
+﻿using Unity.VisualScripting;
+using SPACS.Graphs;
 using SPACS.Tasks;
 using UnityEngine;
 
 
 namespace Virtuademy.SDK.Environments.Tasks
 {
-    public class AnimatorTaskReflectis : TaskReflectis, ITaskNode<AnimatorTaskNode>
+    [RenamedFrom("Virtuademy.SDK.Environments.Tasks.AnimatorTaskReflectis")]
+    public class AnimatorTaskVirtuademy : TaskVirtuademy, ITaskNode<AnimatorTaskNode>
     {
         AnimatorTaskNode IContainer<AnimatorTaskNode>.Value { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 

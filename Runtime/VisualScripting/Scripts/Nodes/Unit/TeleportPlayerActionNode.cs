@@ -11,10 +11,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Character: Teleport")]
+    [UnitTitle("Virtuademy Character: Teleport")]
     [UnitSurtitle("Character")]
     [UnitShortTitle("Teleport")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class TeleportPlayerActionNode : Unit
     {
         [DoNotSerialize]

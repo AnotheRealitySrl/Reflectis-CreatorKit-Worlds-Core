@@ -9,10 +9,10 @@ using SPACS.Utilities;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Custom Object: Create")]
-    [UnitSurtitle("Reflectis Custom Object")]
+    [UnitTitle("Virtuademy Custom Object: Create")]
+    [UnitSurtitle("Virtuademy Custom Object")]
     [UnitShortTitle("Create")]
-    [UnitCategory("Reflectis\\Create")]
+    [UnitCategory("Virtuademy\\Create")]
     public class CreateCustomObjectUnit : Unit
     {
         [SerializeAs(nameof(CustomEntriesCount))]

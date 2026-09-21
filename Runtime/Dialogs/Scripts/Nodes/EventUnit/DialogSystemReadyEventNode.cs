@@ -7,10 +7,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Dialogs
 {
-    [UnitTitle("Reflectis Dialogs: Dialog System Ready")]
+    [UnitTitle("Virtuademy Dialogs: Dialog System Ready")]
     [UnitSurtitle("Dialogs")]
     [UnitShortTitle("Dialog System Ready")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class DialogSystemReadyEventNode : UnityEventUnit<DialogSystem>
     {
         public static string eventName = "DialogSystemReady";

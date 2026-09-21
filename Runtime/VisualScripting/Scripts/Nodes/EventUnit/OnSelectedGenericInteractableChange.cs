@@ -11,10 +11,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Visual Scripting Interactable: On Selected Change")]
+    [UnitTitle("Virtuademy Visual Scripting Interactable: On Selected Change")]
     [UnitSurtitle("VisualScriptingInteractable")]
     [UnitShortTitle("On Selected Change")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnSelectedVisualScriptingInteractableChange : ActionEventUnit<IVisualScriptingInteractable, IVisualScriptingInteractable>
     {
         [DoNotSerialize]

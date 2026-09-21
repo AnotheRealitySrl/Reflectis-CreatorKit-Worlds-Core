@@ -7,10 +7,10 @@ using SPACS;
 
 namespace Virtuademy.SDK.Environments.Analytics
 {
-    [UnitTitle("Reflectis Create:" + nameof(XAPIStatement))]
+    [UnitTitle("Virtuademy Create:" + nameof(XAPIStatement))]
     [UnitSurtitle(nameof(XAPIStatement))]
     [UnitShortTitle("Create")]
-    [UnitCategory("Reflectis\\Create")]
+    [UnitCategory("Virtuademy\\Create")]
     public class CreateXAPIStatementUnit : CreateTypeInstanceUnit<XAPIStatement>
     {
 

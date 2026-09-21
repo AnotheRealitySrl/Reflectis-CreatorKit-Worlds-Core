@@ -5,10 +5,10 @@ using Virtuademy.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Player Save Data: Get Data")]
+    [UnitTitle("Virtuademy Player Save Data: Get Data")]
     [UnitSurtitle("Player Save Data")]
     [UnitShortTitle("Get Player Save Data")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Virtuademy\\Get")]
     public class GetPlayerSaveDataUnit : Unit
     {
         [NullMeansSelf]

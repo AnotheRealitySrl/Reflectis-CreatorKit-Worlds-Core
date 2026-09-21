@@ -7,10 +7,10 @@ using UnityEngine;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis GameObject: Get Interactable")]
+    [UnitTitle("Virtuademy GameObject: Get Interactable")]
     [UnitSurtitle("GameObject")]
     [UnitShortTitle("Get Interactable")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Virtuademy\\Get")]
     public class GetInteractableUnit : Unit
     {
         [NullMeansSelf]

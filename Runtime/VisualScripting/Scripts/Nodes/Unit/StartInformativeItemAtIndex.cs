@@ -3,10 +3,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis ControlManager: Start Informative Item at index")]
+    [UnitTitle("Virtuademy ControlManager: Start Informative Item at index")]
     [UnitSurtitle("Control Manager")]
     [UnitShortTitle("StartInformativeItemAtIndex")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class StartInformativeItemAtIndex : Unit
     {
         [DoNotSerialize]

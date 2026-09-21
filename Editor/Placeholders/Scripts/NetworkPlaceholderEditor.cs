@@ -28,7 +28,7 @@ namespace Virtuademy.Environments.ScriptingApi.Placeholders.Editor
 
                 if (placeholder.UniqueID == 0)
                 {
-                    EditorGUILayout.HelpBox("This network placeholder has a null ID. Go to Reflectis > Network placeholders management to assign the IDs of all components", MessageType.Error);
+                    EditorGUILayout.HelpBox("This network placeholder has a null ID. Go to Virtuademy > Network placeholders management to assign the IDs of all components", MessageType.Error);
                 }
             }
         }

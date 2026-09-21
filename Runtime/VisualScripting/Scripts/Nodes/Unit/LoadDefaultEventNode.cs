@@ -10,10 +10,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Platform: Load Lobby")]
+    [UnitTitle("Virtuademy Platform: Load Lobby")]
     [UnitSurtitle("Platform")]
     [UnitShortTitle("Load Lobby")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class LoadDefaultEventNode : AwaitableUnit
     {
         protected override Task AwaitableAction(Flow flow)

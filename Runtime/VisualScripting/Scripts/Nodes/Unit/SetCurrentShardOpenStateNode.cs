@@ -4,10 +4,10 @@ using Virtuademy.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Networking: Set Current Shard Open State")]
+    [UnitTitle("Virtuademy Networking: Set Current Shard Open State")]
     [UnitSurtitle("Networking")]
     [UnitShortTitle("Set Current Shard Open State")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SetCurrentShardOpenStateNode : Unit
     {
         [DoNotSerialize]

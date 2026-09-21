@@ -4,10 +4,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Manipulable: Release Manipulable")]
+    [UnitTitle("Virtuademy Manipulable: Release Manipulable")]
     [UnitSurtitle("Manipulable")]
     [UnitShortTitle("Release Manipulable")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class ReleaseManipulableUnit : Unit
     {
         [DoNotSerialize]

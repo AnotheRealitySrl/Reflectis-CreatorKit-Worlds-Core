@@ -9,10 +9,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Localization: Get Localization Data")]
+    [UnitTitle("Virtuademy Localization: Get Localization Data")]
     [UnitSurtitle("LocalizationData")]
     [UnitShortTitle("Get LocalizationData")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Virtuademy\\Get")]
     public class GetLocalizationData : Unit
     {
         public ValueOutput CurrentLanguage { get; private set; }

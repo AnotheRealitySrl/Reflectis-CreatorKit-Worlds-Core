@@ -7,10 +7,10 @@ using Virtuademy.Environments.ScriptingApi.Placeholders;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Synced Object: Is Owned Locally")]
+    [UnitTitle("Virtuademy Synced Object: Is Owned Locally")]
     [UnitSurtitle("Synced Object")]
     [UnitShortTitle("Is Owned Locally")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class CheckOwnershipNode : Unit
     {
         [DoNotSerialize]

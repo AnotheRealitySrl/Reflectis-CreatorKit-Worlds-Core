@@ -18,28 +18,28 @@ namespace Virtuademy.Environments.ScriptingApi
         /// Resolves the placeholders on <paramref name="target"/> — turning the authored stand-ins
         /// into the real thing — optionally on its children too.
         /// </summary>
-        /// <remarks>Node: <c>Reflectis Placeholder: Initialize Placeholder</c>.</remarks>
+        /// <remarks>Node: <c>Virtuademy Placeholder: Initialize Placeholder</c>.</remarks>
         void InitializePlaceholders(GameObject target, bool includeChildren = false);
 
         /// <summary>
         /// Shows or hides the objects spawned into the world. <paramref name="except"/> is left
         /// alone, which is how a script keeps the object it is attached to visible.
         /// </summary>
-        /// <remarks>Node: <c>Reflectis Scene: Enable Spawned Objects</c>.</remarks>
+        /// <remarks>Node: <c>Virtuademy Scene: Enable Spawned Objects</c>.</remarks>
         void ShowSpawnedObjects(bool visible, GameObject except = null);
 
         /// <summary>
         /// Runs the transition an object provides, entering it or leaving it. Which component
         /// provides a transition is the application's business.
         /// </summary>
-        /// <remarks>Node: <c>Reflectis Transition Provider: Do Transition</c>.</remarks>
+        /// <remarks>Node: <c>Virtuademy Transition Provider: Do Transition</c>.</remarks>
         void RunTransition(GameObject target, bool enter);
 
         /// <summary>
         /// Leaves this world and returns to the lobby. Nothing after this call is guaranteed to
         /// run: the scene is on its way out.
         /// </summary>
-        /// <remarks>Node: <c>Reflectis Platform: Load Lobby</c>.</remarks>
+        /// <remarks>Node: <c>Virtuademy Platform: Load Lobby</c>.</remarks>
         void ReturnToLobby();
     
         /// <summary>
@@ -66,7 +66,7 @@ namespace Virtuademy.Environments.ScriptingApi
         /// </summary>
         /// <remarks>
         /// <para>
-        /// This is the moment the <c>Reflectis Scene: On Setup</c> node fires, not the earlier
+        /// This is the moment the <c>Virtuademy Scene: On Setup</c> node fires, not the earlier
         /// <c>On Load</c> one. That earlier moment is real but it is before the placeholders
         /// exist, which is almost never what a script that says "when the scene is ready" means,
         /// so it is not published here under a name that would mislead.

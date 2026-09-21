@@ -1,4 +1,5 @@
-﻿using SPACS.Tasks;
+﻿using Unity.VisualScripting;
+using SPACS.Tasks;
 using SPACS.Tasks.UI;
 
 using System.Collections;
@@ -10,10 +11,11 @@ using Virtuademy.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.Tasks
 {
-    public class TaskSystemReflectis : TaskSystem
+    [RenamedFrom("Virtuademy.SDK.Environments.Tasks.TaskSystemReflectis")]
+    public class TaskSystemVirtuademy : TaskSystem
     {
         public ITasksRPCManager rpcManagerInterface { get; private set; }
-        //public static TaskSystemReflectis Instance { get; private set; }
+        //public static TaskSystemVirtuademy Instance { get; private set; }
 
         public TaskUIManager taskUIManager;
         private int initializedTaskDescriptions = 0;

@@ -12,10 +12,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Camera: FreeCameraPan")]
+    [UnitTitle("Virtuademy Camera: FreeCameraPan")]
     [UnitSurtitle("Camera")]
     [UnitShortTitle("FreeCameraPan")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class FreeCameraPanNode : AwaitableUnit
     {
         [NullMeansSelf]

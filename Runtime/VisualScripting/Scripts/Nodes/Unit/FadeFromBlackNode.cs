@@ -10,10 +10,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Scene: Fade From Black")]
+    [UnitTitle("Virtuademy Scene: Fade From Black")]
     [UnitSurtitle("Scene")]
     [UnitShortTitle("Fade From Black")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class FadeFromBlackNode : Unit
     {
         [DoNotSerialize]

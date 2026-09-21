@@ -9,10 +9,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Tutorial: Enable")]
+    [UnitTitle("Virtuademy Tutorial: Enable")]
     [UnitSurtitle("Tutorial")]
     [UnitShortTitle("Enable")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class ManageTutorialActionNode : Unit
     {
         [DoNotSerialize]

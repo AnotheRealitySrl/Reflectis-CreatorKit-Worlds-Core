@@ -2,10 +2,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Visual Scripting Interactable: On Select Enter")]
+    [UnitTitle("Virtuademy Visual Scripting Interactable: On Select Enter")]
     [UnitSurtitle("Visual Scripting Interactable")]
     [UnitShortTitle("On Select Enter")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class SelectEnterEventUnit : VisualScriptingInteractableEventUnit
     {
 

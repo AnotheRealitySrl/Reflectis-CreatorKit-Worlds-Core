@@ -4,10 +4,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Character: Set First Person Camera Mode")]
+    [UnitTitle("Virtuademy Character: Set First Person Camera Mode")]
     [UnitSurtitle("Character")]
     [UnitShortTitle("Set First Person Mode")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SetFirstPersonCameraModeNode : Unit
     {
         [DoNotSerialize]

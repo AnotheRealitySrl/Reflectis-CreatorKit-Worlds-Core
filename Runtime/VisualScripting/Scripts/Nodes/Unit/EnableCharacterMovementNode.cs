@@ -4,10 +4,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Character: Enable Movement")]
+    [UnitTitle("Virtuademy Character: Enable Movement")]
     [UnitSurtitle("Character")]
     [UnitShortTitle("Enable Movement")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class EnableCharacterMovementNode : Unit
     {
         [DoNotSerialize]

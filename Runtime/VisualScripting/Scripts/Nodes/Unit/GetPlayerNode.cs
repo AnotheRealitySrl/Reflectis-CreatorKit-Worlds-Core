@@ -5,10 +5,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis CMUser: Get Character Transform")]
+    [UnitTitle("Virtuademy CMUser: Get Character Transform")]
     [UnitSurtitle("Character Transform")]
     [UnitShortTitle("Get Character Transform")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Virtuademy\\Get")]
     public class GetPlayerNode : Unit
     {
 

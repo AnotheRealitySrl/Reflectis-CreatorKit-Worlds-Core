@@ -14,12 +14,12 @@ using SPACS.VisualScripting;
 namespace Virtuademy.SDK.Environments.Analytics
 {
     [UnitTitle(UNIT_TITLE)]
-    [UnitSurtitle("Reflectis Analytic")]
+    [UnitSurtitle("Virtuademy Analytic")]
     [UnitShortTitle("Generate ExperienceID")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class AnalyticGenerateExperienceIDUnit : AwaitableUnit
     {
-        public const string UNIT_TITLE = "Reflectis Analytic: Generate ExperienceID";
+        public const string UNIT_TITLE = "Virtuademy Analytic: Generate ExperienceID";
 
         private const int MAX_KEY_LENGTH = 15;
 

@@ -12,10 +12,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Character: Move camera to point")]
+    [UnitTitle("Virtuademy Character: Move camera to point")]
     [UnitSurtitle("Character")]
     [UnitShortTitle("Move camera")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class MoveCameraToPointNode : AwaitableUnit
     {
         [NullMeansSelf]

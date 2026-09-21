@@ -6,10 +6,10 @@ using Virtuademy.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Networking: Get current network time")]
+    [UnitTitle("Virtuademy Networking: Get current network time")]
     [UnitSurtitle("NetworkTime")]
     [UnitShortTitle("Get Network Time")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Virtuademy\\Get")]
     public class GetCurrentNetworkTime : Unit
     {
         [NullMeansSelf]

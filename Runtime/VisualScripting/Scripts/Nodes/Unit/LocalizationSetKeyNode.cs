@@ -4,10 +4,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Localization: Set Key")]
+    [UnitTitle("Virtuademy Localization: Set Key")]
     [UnitSurtitle("Localization")]
     [UnitShortTitle("Set Key")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class LocalizationSetKeyNode : Unit
     {
         [DoNotSerialize]

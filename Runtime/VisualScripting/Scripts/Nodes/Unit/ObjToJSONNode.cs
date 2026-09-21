@@ -5,10 +5,10 @@ using UnityEngine;
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
 
-    [UnitTitle("Reflectis JSON: Serialize")]
+    [UnitTitle("Virtuademy JSON: Serialize")]
     [UnitSurtitle("JSON")]
     [UnitShortTitle("Serialize")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
 
     public class ObjToJSONNode : Unit
     {

@@ -6,10 +6,10 @@ using static Virtuademy.Environments.ScriptingApi.Interaction.IManipulable;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis: Expose Manipulable")]
+    [UnitTitle("Virtuademy: Expose Manipulable")]
     [UnitSurtitle("Expose")]
     [UnitShortTitle("Manipulable")]
-    [UnitCategory("Reflectis\\Expose")]
+    [UnitCategory("Virtuademy\\Expose")]
     public class ExposeManipulable : Unit
     {
         [NullMeansSelf]

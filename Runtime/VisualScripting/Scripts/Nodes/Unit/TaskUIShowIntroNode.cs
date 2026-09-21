@@ -4,10 +4,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Task: Show Introduction")]
+    [UnitTitle("Virtuademy Task: Show Introduction")]
     [UnitSurtitle("Tasks")]
     [UnitShortTitle("Show introduction")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class TaskUIShowIntroNode : Unit
     {
         [DoNotSerialize]

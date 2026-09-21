@@ -6,10 +6,10 @@ using Virtuademy.Environments.ScriptingApi.Placeholders;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Synced Object: On Owner Lost")]
+    [UnitTitle("Virtuademy Synced Object: On Owner Lost")]
     [UnitSurtitle("Synced Object")]
     [UnitShortTitle("On Owner Lost")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
 
     //This node is called only by the user that lost the ownership, not by everyone
     public class OnOwnershipLostEventUnit : EventUnit<SyncedObject>

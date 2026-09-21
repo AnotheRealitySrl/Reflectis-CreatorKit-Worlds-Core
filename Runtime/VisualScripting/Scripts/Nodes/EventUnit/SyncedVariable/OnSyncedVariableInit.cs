@@ -5,10 +5,10 @@ using Virtuademy.Environments.ScriptingApi.Placeholders;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Synced Variables: On Synced Variable Init")]
+    [UnitTitle("Virtuademy Synced Variables: On Synced Variable Init")]
     [UnitSurtitle("Synced Variables Init")]
     [UnitShortTitle("On Synced Variable Init")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     ///this unit is always called during the first deserialization, it will start a flow and will comunicate if the value of
     ///the variable was changed or not
     ///it differs from OnSyncedVariableInitEventUnit

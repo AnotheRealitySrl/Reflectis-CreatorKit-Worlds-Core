@@ -3,10 +3,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis ControlManager: End Informative Item")]
+    [UnitTitle("Virtuademy ControlManager: End Informative Item")]
     [UnitSurtitle("Control Manager")]
     [UnitShortTitle("EndInformativeItem")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class EndInformativeItemNode : Unit
     {
         [DoNotSerialize]

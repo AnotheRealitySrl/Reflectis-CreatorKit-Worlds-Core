@@ -5,10 +5,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Settings: Set default settings")]
+    [UnitTitle("Virtuademy Settings: Set default settings")]
     [UnitSurtitle("SetDefaultSettings")]
     [UnitShortTitle("Set Default Settings")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SetDefaultSettingsNode : Unit
     {
 

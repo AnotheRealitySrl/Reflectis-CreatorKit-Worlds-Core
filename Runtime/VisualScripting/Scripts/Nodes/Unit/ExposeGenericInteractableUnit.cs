@@ -5,10 +5,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis: Expose Visual Scripting Interactable")]
+    [UnitTitle("Virtuademy: Expose Visual Scripting Interactable")]
     [UnitSurtitle("Expose")]
     [UnitShortTitle("Visual Scripting Interactable")]
-    [UnitCategory("Reflectis\\Expose")]
+    [UnitCategory("Virtuademy\\Expose")]
     public class ExposeVisualScriptingInteractableUnit : Unit
     {
         [NullMeansSelf]

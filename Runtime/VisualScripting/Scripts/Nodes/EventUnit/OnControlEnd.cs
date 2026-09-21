@@ -7,10 +7,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis ControlManager: On Control End")]
+    [UnitTitle("Virtuademy ControlManager: On Control End")]
     [UnitSurtitle("Control Manager")]
     [UnitShortTitle("On Control End")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnControlEnd : UnityEventUnit<ControlManager>
     {
         protected override bool register => true;

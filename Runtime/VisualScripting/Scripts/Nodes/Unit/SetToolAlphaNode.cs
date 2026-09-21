@@ -5,10 +5,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Tools: Set Alpha")]
+    [UnitTitle("Virtuademy Tools: Set Alpha")]
     [UnitSurtitle("SetAlpha")]
     [UnitShortTitle("Set Alpha")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SetToolAlphaNode : Unit
     {
         [DoNotSerialize]

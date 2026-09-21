@@ -3,10 +3,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis ControlManager: Select Informative Item")]
+    [UnitTitle("Virtuademy ControlManager: Select Informative Item")]
     [UnitSurtitle("Control Manager")]
     [UnitShortTitle("SelectInformativeItem")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SelectInformativeItemNode : Unit
     {
         [DoNotSerialize]

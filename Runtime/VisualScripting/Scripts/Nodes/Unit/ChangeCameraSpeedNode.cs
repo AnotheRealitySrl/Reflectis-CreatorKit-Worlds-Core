@@ -4,10 +4,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Camera: ChangeCameraSpeed")]
+    [UnitTitle("Virtuademy Camera: ChangeCameraSpeed")]
     [UnitSurtitle("Camera")]
     [UnitShortTitle("ChangeCameraSpeed")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class ChangeCameraSpeedNode : Unit
     {
         [NullMeansSelf]

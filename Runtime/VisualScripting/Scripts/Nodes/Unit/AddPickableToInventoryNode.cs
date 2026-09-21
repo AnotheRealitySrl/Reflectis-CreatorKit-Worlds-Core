@@ -7,10 +7,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis inventory: AddPickableToInventoryNode")]
+    [UnitTitle("Virtuademy inventory: AddPickableToInventoryNode")]
     [UnitSurtitle("Inventory")]
     [UnitShortTitle("AddPickableToInventoryNode")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class AddPickableToInventoryNode : Unit
     {
         [NullMeansSelf]

@@ -11,10 +11,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Localization: On Language Changed")]
+    [UnitTitle("Virtuademy Localization: On Language Changed")]
     [UnitSurtitle("Localization")]
     [UnitShortTitle("On Language Changed")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnLanguageChangedEventUnit : ActionEventUnit<string, string>
     {
 

@@ -6,10 +6,10 @@ using Virtuademy.Environments.ScriptingApi.Placeholders;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Synced Object: On Owner Changed")]
+    [UnitTitle("Virtuademy Synced Object: On Owner Changed")]
     [UnitSurtitle("Synced Object")]
     [UnitShortTitle("On Owner Changed")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnOwnerChangedEventUnit : EventUnit<SyncedObject>
     {
         public static string eventName = "SyncedObjectOnOwnerChanged";

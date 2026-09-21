@@ -11,10 +11,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Platform: Check Scene Availability")]
+    [UnitTitle("Virtuademy Platform: Check Scene Availability")]
     [UnitSurtitle("Platform")]
     [UnitShortTitle("Check Scene Availability")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class CheckSceneAvailabilityNode : AwaitableUnit
     {
         [NullMeansSelf]

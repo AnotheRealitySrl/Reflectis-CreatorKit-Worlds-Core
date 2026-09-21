@@ -2,10 +2,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Scene: On Setup Completed")]
+    [UnitTitle("Virtuademy Scene: On Setup Completed")]
     [UnitSurtitle("Scene")]
     [UnitShortTitle("On Setup Completed")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnSceneSetupCompletedEventNode : EventUnit<string>
     {
         public static string EventName => "OnSceneSetupCompletedEvent";

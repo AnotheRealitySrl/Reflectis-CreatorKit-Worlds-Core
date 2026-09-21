@@ -7,10 +7,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Placeholder: Initialize Placeholder")]
+    [UnitTitle("Virtuademy Placeholder: Initialize Placeholder")]
     [UnitSurtitle("Placeholder")]
     [UnitShortTitle("Initialize Placeholder")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class InitializePlaceholderNode : Unit
     {
         [DoNotSerialize]

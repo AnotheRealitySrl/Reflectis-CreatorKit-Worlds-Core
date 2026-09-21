@@ -14,7 +14,7 @@ using UnityObject = UnityEngine.Object;
 namespace Virtuademy.SDK.Environments.VisualScripting.Editor
 {
   /// <summary>
-  /// Project-wide update routine for <see cref="CheckPlatformUnit"/> ("Reflectis Platform: Switch").
+  /// Project-wide update routine for <see cref="CheckPlatformUnit"/> ("Virtuademy Platform: Switch").
   /// Scans every graph asset, prefab and scene under Assets/ for occurrences of the node,
   /// lists them in a window (toggle to select, button to focus the asset/graph), and lets the
   /// user copy the WebGL control connection onto the newly added Mobile port for all

@@ -7,7 +7,7 @@ namespace Virtuademy.Environments.ScriptingApi
     /// Three booleans rather than an enum. The platform has one — <c>ESupportedPlatform</c> — but it
     /// belongs to the authoring package and cannot cross this boundary, and declaring a second enum
     /// here would be two lists to keep in step for the sake of three values.
-    /// <para>Node: <c>Reflectis Platform: Switch</c>, which branches on the same three.</para>
+    /// <para>Node: <c>Virtuademy Platform: Switch</c>, which branches on the same three.</para>
     /// </remarks>
     public interface IPlatformApi
     {

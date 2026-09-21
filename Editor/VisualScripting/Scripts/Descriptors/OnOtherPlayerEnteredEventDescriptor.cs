@@ -13,9 +13,9 @@ namespace Virtuademy.SDK.Environments.VisualScripting.Editor
 
         protected override string DefinedSummary()
         {
-            return "This event will be triggered when a player enters the Reflectis event where the local " +
+            return "This event will be triggered when a player enters the Virtuademy event where the local " +
                 "player currently is.\n" +
-                "It won't be triggered by the local player upon entering a Reflectis event.";
+                "It won't be triggered by the local player upon entering a Virtuademy event.";
         }
 
         protected override void DefinedPort(IUnitPort port, UnitPortDescription description)
@@ -25,7 +25,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting.Editor
             switch (port.key)
             {
                 case "UserId":
-                    description.summary = "Unique identifier for the player's Reflectis profile.";
+                    description.summary = "Unique identifier for the player's Virtuademy profile.";
                     break;
                 case "PlayerId":
                     description.summary = "Identifier assigned to the player for the current shard.";

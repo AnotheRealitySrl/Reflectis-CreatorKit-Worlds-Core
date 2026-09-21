@@ -6,10 +6,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis ContextualMenu: Hide")]
+    [UnitTitle("Virtuademy ContextualMenu: Hide")]
     [UnitSurtitle("ContextualMenu")]
     [UnitShortTitle("Hide")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
 
     public class HideContextualMenuUnit : Unit
     {

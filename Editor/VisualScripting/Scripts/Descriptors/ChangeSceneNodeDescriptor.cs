@@ -10,7 +10,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting.Editor
         protected override string DefinedSummary()
         {
             return "This unit requires a coroutine flow to run properly. This unit will " +
-                "load a static Reflectis event.";
+                "load a static Virtuademy event.";
         }
 
         protected override void DefinedPort(IUnitPort port, UnitPortDescription description)

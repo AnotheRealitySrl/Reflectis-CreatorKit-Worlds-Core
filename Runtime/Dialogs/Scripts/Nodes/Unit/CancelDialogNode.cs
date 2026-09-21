@@ -3,10 +3,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Dialogs
 {
-    [UnitTitle("Reflectis Dialogs: Cancel Dialog")]
+    [UnitTitle("Virtuademy Dialogs: Cancel Dialog")]
     [UnitSurtitle("Dialogs")]
     [UnitShortTitle("Cancel Dialog")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class CancelDialogNode : Unit
     {
         [DoNotSerialize]

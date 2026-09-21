@@ -4,10 +4,10 @@ using Virtuademy.Environments.ScriptingApi.Placeholders;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Synced Object: Try Get Ownership")]
+    [UnitTitle("Virtuademy Synced Object: Try Get Ownership")]
     [UnitSurtitle("Synced Object")]
     [UnitShortTitle("Try Get Ownership")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class RequestOwnershipNode : Unit
     {
         [DoNotSerialize]

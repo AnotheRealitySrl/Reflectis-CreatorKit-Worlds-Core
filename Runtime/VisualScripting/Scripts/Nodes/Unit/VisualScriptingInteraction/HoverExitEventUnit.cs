@@ -2,10 +2,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Visual Scripting Interactable: On Hover Exit")]
+    [UnitTitle("Virtuademy Visual Scripting Interactable: On Hover Exit")]
     [UnitSurtitle("Visual Scripting Interactable")]
     [UnitShortTitle("On Hover Exit")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class HoverExitEventUnit : VisualScriptingInteractableEventUnit
     {
 

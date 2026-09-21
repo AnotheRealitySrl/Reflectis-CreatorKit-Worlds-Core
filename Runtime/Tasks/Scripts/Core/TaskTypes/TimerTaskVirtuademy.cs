@@ -1,13 +1,16 @@
-﻿using SPACS.Graphs;
+﻿using Unity.VisualScripting;
+using SPACS.Graphs;
 using SPACS.Tasks;
+using SPACS.Tasks.Detectors;
 using UnityEngine;
 
 
 namespace Virtuademy.SDK.Environments.Tasks
 {
-    public class GrabTaskReflectis : TaskReflectis, ITaskNode<GrabTaskNode>
+    [RenamedFrom("Virtuademy.SDK.Environments.Tasks.TimerTaskReflectis")]
+    public class TimerTaskVirtuademy : TaskVirtuademy, ITaskNode<TimerTaskNode>
     {
-        GrabTaskNode IContainer<GrabTaskNode>.Value { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        TimerTaskNode IContainer<TimerTaskNode>.Value { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         ///////////////////////////////////////////////////////////////////////////
         /*private void Awake()
@@ -19,10 +22,10 @@ namespace Virtuademy.SDK.Environments.Tasks
         public override void AddDetector()
         {
             base.AddDetector();
-            GameObject go = new GameObject("ManipulableDetector");
+            GameObject go = new GameObject("TimerDetector");
             go.transform.SetParent(gameObject.transform);
             go.AddComponent<TaskReactor>();
-            go.AddComponent<ManipulableGrabberDetector>().enabled = false;
+            go.AddComponent<TimerDetector>().enabled = false;
         }
     }
 }

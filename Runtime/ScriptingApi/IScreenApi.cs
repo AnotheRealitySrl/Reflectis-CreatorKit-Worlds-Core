@@ -13,11 +13,11 @@ namespace Virtuademy.Environments.ScriptingApi
     public interface IScreenApi
     {
         /// <summary>Fades the view to black. <paramref name="onDone"/> runs once it is.</summary>
-        /// <remarks>Nodes: <c>Reflectis Scene: Fade To Black</c>.</remarks>
+        /// <remarks>Nodes: <c>Virtuademy Scene: Fade To Black</c>.</remarks>
         IEnumerator FadeToBlack(Action onDone = null);
 
         /// <summary>Fades the view back in. <paramref name="onDone"/> runs once it has.</summary>
-        /// <remarks>Nodes: <c>Reflectis Scene: Fade From Black</c>.</remarks>
+        /// <remarks>Nodes: <c>Virtuademy Scene: Fade From Black</c>.</remarks>
         IEnumerator FadeFromBlack(Action onDone = null);
     }
 }

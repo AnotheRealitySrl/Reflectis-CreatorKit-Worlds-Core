@@ -7,10 +7,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Video: On Video Played")]
+    [UnitTitle("Virtuademy Video: On Video Played")]
     [UnitSurtitle("BigScreen")]
     [UnitShortTitle("On Video Played")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
 
     public class OnVideoPlayedEventUnit : UnityEventUnit<BigScreenPlaceholder>
     {

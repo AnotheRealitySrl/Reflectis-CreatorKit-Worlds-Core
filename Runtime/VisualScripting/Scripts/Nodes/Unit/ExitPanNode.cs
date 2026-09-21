@@ -10,10 +10,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Character: Exit Pan")]
+    [UnitTitle("Virtuademy Character: Exit Pan")]
     [UnitSurtitle("Character")]
     [UnitShortTitle("Exit Pan")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class ExitPanNode : AwaitableUnit
     {
         protected override Task AwaitableAction(Flow flow)

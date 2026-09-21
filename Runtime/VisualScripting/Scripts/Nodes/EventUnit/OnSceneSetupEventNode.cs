@@ -9,10 +9,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Scene: On Setup")]
+    [UnitTitle("Virtuademy Scene: On Setup")]
     [UnitSurtitle("Scene")]
     [UnitShortTitle("On Setup")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnSceneSetupEventNode : AwaitableEventUnit<string>
     {
         public static string eventName = "OnSceneSetup";

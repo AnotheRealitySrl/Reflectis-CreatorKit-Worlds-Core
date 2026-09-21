@@ -7,7 +7,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
     [UnitTitle("Expose: CMEnvironment")]
     [UnitSurtitle("Expose")]
     [UnitShortTitle("CMEnvironment")]
-    [UnitCategory("Reflectis\\Expose")]
+    [UnitCategory("Virtuademy\\Expose")]
     public class CollectEnvironmentsDataNode : Unit
     {
         [DoNotSerialize]

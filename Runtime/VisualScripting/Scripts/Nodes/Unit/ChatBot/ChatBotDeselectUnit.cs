@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis ChatBot: ChatBot Deselect")]
+    [UnitTitle("Virtuademy ChatBot: ChatBot Deselect")]
     [UnitSurtitle("ChatBot")]
     [UnitShortTitle("ChatBot Deselect")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class ChatBotDeselectUnit : Unit
     {
         [DoNotSerialize]

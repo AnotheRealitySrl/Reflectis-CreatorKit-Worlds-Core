@@ -10,7 +10,7 @@ namespace Virtuademy.Environments.ScriptingApi
     public interface ILocalizationApi
     {
         /// <summary>The language currently in use, by name.</summary>
-        /// <remarks>Node: <c>Reflectis Localization: Get Localization Data</c>.</remarks>
+        /// <remarks>Node: <c>Virtuademy Localization: Get Localization Data</c>.</remarks>
         string CurrentLanguage { get; }
 
         /// <summary>The language currently in use, as its code.</summary>
@@ -27,7 +27,7 @@ namespace Virtuademy.Environments.ScriptingApi
         string PreviousLanguageCode { get; }
 
         /// <summary>Every language the host offers, as display names.</summary>
-        /// <remarks>Node: <c>Reflectis Localization: Get Localization Data</c>.</remarks>
+        /// <remarks>Node: <c>Virtuademy Localization: Get Localization Data</c>.</remarks>
         List<string> AvailableLanguages { get; }
 
         /// <summary>
@@ -35,21 +35,21 @@ namespace Virtuademy.Environments.ScriptingApi
         /// key itself when nothing is authored for it, which is what makes a missing string visible
         /// in the world instead of silently empty.
         /// </summary>
-        /// <remarks>Node: <c>Reflectis Localization: Get translation</c>.</remarks>
+        /// <remarks>Node: <c>Virtuademy Localization: Get translation</c>.</remarks>
         string Translate(string key);
 
         /// <summary>
         /// Switches the language for the whole application, not only for this world. The set of
         /// languages a tenant offers is configured server-side, so a value outside it is ignored.
         /// </summary>
-        /// <remarks>Node: <c>Reflectis Localization: Set Language</c>.</remarks>
+        /// <remarks>Node: <c>Virtuademy Localization: Set Language</c>.</remarks>
         void SetLanguage(string language);
 
         /// <summary>
         /// Raised after the language changes, carrying the new language. Subscribe to re-read
         /// anything a script has already translated and cached.
         /// </summary>
-        /// <remarks>Node: <c>Reflectis Localization: On Language Changed</c>.</remarks>
+        /// <remarks>Node: <c>Virtuademy Localization: On Language Changed</c>.</remarks>
         event Action<string> LanguageChanged;
     
         /// <summary>
@@ -57,7 +57,7 @@ namespace Virtuademy.Environments.ScriptingApi
         /// straight from the editor, where <see cref="Translate"/> hands the key back unchanged.
         /// </summary>
         /// <remarks>
-        /// Node: <c>Reflectis Localization: On Language Changed</c>, which subscribes only when this
+        /// Node: <c>Virtuademy Localization: On Language Changed</c>, which subscribes only when this
         /// is true.
         /// </remarks>
         bool IsAvailable { get; }

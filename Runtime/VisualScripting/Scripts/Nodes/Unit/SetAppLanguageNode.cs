@@ -10,10 +10,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Localization: Set Language")]
+    [UnitTitle("Virtuademy Localization: Set Language")]
     [UnitSurtitle("SetLanguage")]
     [UnitShortTitle("Set Language")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SetAppLanguageNode : Unit
     {
         [NullMeansSelf]

@@ -7,10 +7,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis interactable: SetFocusedInteractable")]
+    [UnitTitle("Virtuademy interactable: SetFocusedInteractable")]
     [UnitSurtitle("Interactable")]
     [UnitShortTitle("SetFocusedInteractable")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SetFocusedInteractableNode : Unit
     {
         [NullMeansSelf]

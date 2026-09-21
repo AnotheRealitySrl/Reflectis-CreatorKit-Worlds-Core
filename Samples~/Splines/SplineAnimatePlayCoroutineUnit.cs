@@ -12,10 +12,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting.Splines
 {
-    [UnitTitle("Reflectis SplineAnimate: Play Coroutine")]
+    [UnitTitle("Virtuademy SplineAnimate: Play Coroutine")]
     [UnitSurtitle("SplineAnimate")]
     [UnitShortTitle("Play Coroutine")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SplineAnimatePlayCoroutineUnit : AwaitableUnit
     {
 

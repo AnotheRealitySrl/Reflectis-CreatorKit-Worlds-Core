@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: -1375608435097398409}
   - component: {fileID: 6309293663274844616}
   m_Layer: 0
-  m_Name: ReflectisChatBotPlaceholder
+  m_Name: VirtuademyChatBotPlaceholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

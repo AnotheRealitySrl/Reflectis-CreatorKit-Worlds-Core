@@ -5,10 +5,10 @@ using UnityEngine.Splines;
 
 namespace Virtuademy.SDK.Environments.VisualScripting.Splines
 {
-    [UnitTitle("Reflectis Spline: Get SplineAnimate")]
+    [UnitTitle("Virtuademy Spline: Get SplineAnimate")]
     [UnitSurtitle("Spline")]
     [UnitShortTitle("Get SplineAnimate")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Virtuademy\\Get")]
 
     public class GetSplineAnimateUnit : Unit
     {

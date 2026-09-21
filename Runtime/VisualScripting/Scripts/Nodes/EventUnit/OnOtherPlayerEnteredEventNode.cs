@@ -9,10 +9,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Networking: On Other Player Entered")]
+    [UnitTitle("Virtuademy Networking: On Other Player Entered")]
     [UnitSurtitle("Networking")]
     [UnitShortTitle("On Other Player Entered")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnOtherPlayerEnteredEventNode : ActionEventUnit<(int, string), int, string>
     {
         public static string eventName = "NetworkingOnOtherPlayerEntered";

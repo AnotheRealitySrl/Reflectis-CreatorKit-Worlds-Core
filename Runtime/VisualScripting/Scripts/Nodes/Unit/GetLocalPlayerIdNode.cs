@@ -4,10 +4,10 @@ using Virtuademy.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Networking: Get Local Player ID")]
+    [UnitTitle("Virtuademy Networking: Get Local Player ID")]
     [UnitSurtitle("Networking")]
     [UnitShortTitle("Get Local Player ID")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Virtuademy\\Get")]
     public class GetLocalPlayerIdNode : Unit
     {
         [NullMeansSelf]

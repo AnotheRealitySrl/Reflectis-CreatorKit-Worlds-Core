@@ -9,10 +9,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Scene: On Unload")]
+    [UnitTitle("Virtuademy Scene: On Unload")]
     [UnitSurtitle("Scene")]
     [UnitShortTitle("On Unload")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnSceneUnloadEventUnit : AwaitableEventUnit<string>
     {
         // "OnSceneLoad" until 2026-09-14, the same string the load node uses, so both node

@@ -3,10 +3,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Dialogs
 {
-    [UnitTitle("Reflectis Dialogs: Set Dialog")]
+    [UnitTitle("Virtuademy Dialogs: Set Dialog")]
     [UnitSurtitle("Dialogs")]
     [UnitShortTitle("Set Dialog")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SetDialogNode : Unit
     {
         [DoNotSerialize]

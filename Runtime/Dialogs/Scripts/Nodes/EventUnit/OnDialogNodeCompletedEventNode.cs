@@ -7,10 +7,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Dialogs
 {
-    [UnitTitle("Reflectis Dialogs: On Dialog Node Complete")]
+    [UnitTitle("Virtuademy Dialogs: On Dialog Node Complete")]
     [UnitSurtitle("Dialogs")]
     [UnitShortTitle("On Dialog Node Complete")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnDialogNodeCompletedEventNode : UnityEventUnit<Null>
     {
         public static string eventName = "OnDialogNodeCompleted";

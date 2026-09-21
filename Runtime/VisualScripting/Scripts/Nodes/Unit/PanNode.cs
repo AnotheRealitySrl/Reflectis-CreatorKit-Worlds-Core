@@ -12,10 +12,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Character: Pan")]
+    [UnitTitle("Virtuademy Character: Pan")]
     [UnitSurtitle("Character")]
     [UnitShortTitle("Pan")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class PanNode : AwaitableUnit
     {
         [NullMeansSelf]

@@ -4,10 +4,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Scene: Enable Other Players")]
+    [UnitTitle("Virtuademy Scene: Enable Other Players")]
     [UnitSurtitle("Scene")]
     [UnitShortTitle("Enable Other Players")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class EnableOtherCharactersNode : Unit
     {
         [DoNotSerialize]

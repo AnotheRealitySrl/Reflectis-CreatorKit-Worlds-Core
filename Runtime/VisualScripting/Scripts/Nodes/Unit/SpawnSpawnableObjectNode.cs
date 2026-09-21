@@ -14,10 +14,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis spawnable: Spawn Spawnable Object Node")]
+    [UnitTitle("Virtuademy spawnable: Spawn Spawnable Object Node")]
     [UnitSurtitle("Spawnable")]
     [UnitShortTitle("SpawnSpawnableObjectNode")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SpawnSpawnableObjectNode : AwaitableUnit
     {
         [NullMeansSelf]

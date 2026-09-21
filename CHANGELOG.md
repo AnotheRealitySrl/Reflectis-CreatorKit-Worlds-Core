@@ -3,6 +3,30 @@
 ## v10.0.0
 
 ### Changed
+- **The last nine types named after the old brand are renamed, and the nodes stop saying it.**
+  `TaskReflectis`, `TaskSystemReflectis`, `TaskReflectisStepSetter`, the four task adapters
+  (`Animator`/`Grab`/`Timer`/`TriggerTaskReflectis`), `TaskSystemReflectisEditor` and
+  `ReflectisChatbotPlaceholder` become their `Virtuademy` spellings (`TaskVirtuademy`,
+  `TaskSystemVirtuademy`, `VirtuademyChatbotPlaceholder`, …); the prefab
+  `ReflectisChatBotPlaceholder` follows. The 2026-08 brand rename had kept class names on purpose,
+  as wire symbols: a published bundle records a component by class and assembly, and a graph
+  records a type by its full name. Both are true, and both are why the rename lands **now** — every
+  published world already has to be rebuilt at the cutover for the assembly rename, so the class
+  rename rides the same rebuild and costs nothing extra; done later it would force a second one.
+
+  Script GUIDs are preserved (file rename, same `.meta`), so scenes and prefabs need nothing. Each
+  runtime type carries `[RenamedFrom]` with its previous full name, so a graph that still records
+  it deserializes; the rename migrator gained the nine names as whole-identifier rules for the
+  creator's own C# and for text the attribute cannot reach.
+
+  Every Visual Scripting node title, surtitle and category drops the old brand:
+  `Virtuademy\Flow`, `Virtuademy\Get`, `Virtuademy\Expose`, `Virtuademy\Create`,
+  `Events\Virtuademy`, `Virtuademy Scene: On Load`, and so on. Categories and titles are
+  metadata, not identity — a graph references the unit type — so nothing breaks, but the fuzzy
+  finder needs **Regenerate Nodes** once. The `<remarks>` on the scripting-API interfaces that
+  quote node names follow. Not renamed: `useReflectisNickname` / `useReflectisAvatar` on
+  `DialogPanelSpawner` (public, serialized, reachable from a graph by member name), and the
+  `Reflectis_*` EditorPrefs keys (renaming them would log every editor out once, for nothing).
 - **The client models left for the application; the package speaks in views.**
   `IVirtuademyFramework` hands back `UserView`, `SessionView`, `ExperienceView` and
   `EnvironmentView` from `Virtuademy.ScriptingApi` instead of the `CM*` types, and the nodes that

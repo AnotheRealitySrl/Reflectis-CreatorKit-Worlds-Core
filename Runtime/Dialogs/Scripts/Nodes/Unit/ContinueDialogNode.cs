@@ -3,10 +3,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Dialogs
 {
-    [UnitTitle("Reflectis Dialogs: Continue Dialog")]
+    [UnitTitle("Virtuademy Dialogs: Continue Dialog")]
     [UnitSurtitle("Dialogs")]
     [UnitShortTitle("Continue Dialog")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class ContinueDialogNode : Unit
     {
         [DoNotSerialize]

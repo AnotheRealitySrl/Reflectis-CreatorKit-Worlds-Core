@@ -10,10 +10,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Platform: Reload Scene")]
+    [UnitTitle("Virtuademy Platform: Reload Scene")]
     [UnitSurtitle("Platform")]
     [UnitShortTitle("Reload Scene")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class ReloadSceneNode : AwaitableUnit
     {
         //[NullMeansSelf]

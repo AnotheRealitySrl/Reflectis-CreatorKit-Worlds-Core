@@ -5,10 +5,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis CMUser: Get Character Right Hand")]
+    [UnitTitle("Virtuademy CMUser: Get Character Right Hand")]
     [UnitSurtitle("Character Right Hand")]
     [UnitShortTitle("Get Character Right Hand")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Virtuademy\\Get")]
     public class GetRightHandTransformNode : Unit
     {
 

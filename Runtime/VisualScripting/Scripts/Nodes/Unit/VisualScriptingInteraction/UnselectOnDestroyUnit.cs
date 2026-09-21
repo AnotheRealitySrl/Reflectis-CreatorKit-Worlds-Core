@@ -8,10 +8,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Visual Scripting Interactable: Unselect OnDestroy")]
+    [UnitTitle("Virtuademy Visual Scripting Interactable: Unselect OnDestroy")]
     [UnitSurtitle("Visual Scripting Interactable")]
     [UnitShortTitle("Unselect OnDestroy")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class UnselectOnDestroyUnit : AwaitableEventUnit<IVisualScriptingInteractable>
     {
         public override EventHook GetHook(GraphReference reference)

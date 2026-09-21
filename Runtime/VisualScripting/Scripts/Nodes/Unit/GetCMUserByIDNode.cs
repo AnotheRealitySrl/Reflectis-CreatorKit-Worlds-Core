@@ -10,10 +10,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis CMUser: Get CMUserByID")]
+    [UnitTitle("Virtuademy CMUser: Get CMUserByID")]
     [UnitSurtitle("CMUserByID")]
     [UnitShortTitle("Get CMUserByID")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Virtuademy\\Get")]
     public class GetCMUserByIDNode : AwaitableUnit
     {
         [NullMeansSelf]

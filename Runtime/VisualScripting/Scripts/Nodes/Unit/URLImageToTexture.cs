@@ -13,10 +13,10 @@ using SPACS.Utilities;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis image: Set sprite from URL")]
+    [UnitTitle("Virtuademy image: Set sprite from URL")]
     [UnitSurtitle("Image")]
     [UnitShortTitle("Set sprite from URL")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class URLImageToTexture : AwaitableUnit
     {
 

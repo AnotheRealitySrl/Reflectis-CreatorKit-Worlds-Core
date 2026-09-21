@@ -7,7 +7,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
     [UnitTitle("Expose: CMEvent")]
     [UnitSurtitle("Expose")]
     [UnitShortTitle("CMEvent")]
-    [UnitCategory("Reflectis\\Expose")]
+    [UnitCategory("Virtuademy\\Expose")]
     public class CollectEventDataNode : Unit
     {
         [DoNotSerialize]

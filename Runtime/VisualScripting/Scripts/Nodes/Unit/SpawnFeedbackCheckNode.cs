@@ -9,10 +9,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis general: Spawn Feedback (WebGL only)")]
+    [UnitTitle("Virtuademy general: Spawn Feedback (WebGL only)")]
     [UnitSurtitle("General")]
     [UnitShortTitle("SpawnFeedback (WebGL only)")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SpawnFeedbackCheckNode : Unit
     {
         [NullMeansSelf]

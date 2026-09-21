@@ -6,10 +6,10 @@ using SPACS.Utilities;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Field: Create")]
-    [UnitSurtitle("Reflectis Field")]
+    [UnitTitle("Virtuademy Field: Create")]
+    [UnitSurtitle("Virtuademy Field")]
     [UnitShortTitle("Create")]
-    [UnitCategory("Reflectis\\Create")]
+    [UnitCategory("Virtuademy\\Create")]
     public class CreateFieldUnit : Unit
     {
         [DoNotSerialize]

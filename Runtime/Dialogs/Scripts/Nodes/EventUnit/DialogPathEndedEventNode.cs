@@ -7,10 +7,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Dialogs
 {
-    [UnitTitle("Reflectis Dialogs: Dialog Path Ended")]
+    [UnitTitle("Virtuademy Dialogs: Dialog Path Ended")]
     [UnitSurtitle("Dialogs")]
     [UnitShortTitle("Dialog Path Ended")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class DialogPathEndedEventNode : UnityEventUnit<Null>
     {
         public static string eventName = "DialogPathEnded";

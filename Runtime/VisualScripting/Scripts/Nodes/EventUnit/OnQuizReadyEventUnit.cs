@@ -7,10 +7,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Quiz: On Quiz Ready")]
+    [UnitTitle("Virtuademy Quiz: On Quiz Ready")]
     [UnitSurtitle("Quiz")]
     [UnitShortTitle("On Quiz Ready")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnQuizReadyEventUnit : AwaitableEventUnit<QuizPlaceholder>
     {
         [DoNotSerialize]

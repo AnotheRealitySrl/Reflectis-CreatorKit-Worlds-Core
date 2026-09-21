@@ -4,10 +4,10 @@ using Virtuademy.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Network: IsMaster")]
-    [UnitSurtitle("Reflectis Network")]
+    [UnitTitle("Virtuademy Network: IsMaster")]
+    [UnitSurtitle("Virtuademy Network")]
     [UnitShortTitle("Is Master")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SwitchNetworkMasterUnit : Unit
     {
         [DoNotSerialize]

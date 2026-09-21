@@ -7,10 +7,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-  [UnitTitle("Reflectis Platform: Switch")]
+  [UnitTitle("Virtuademy Platform: Switch")]
   [UnitSurtitle("Platform")]
   [UnitShortTitle("Switch")]
-  [UnitCategory("Reflectis\\Flow")]
+  [UnitCategory("Virtuademy\\Flow")]
   public class CheckPlatformUnit : Unit
   {
     [DoNotSerialize]
@@ -74,10 +74,10 @@ namespace Virtuademy.SDK.Environments.VisualScripting
   }
 
   //Better way to implement this, we should deprecate the old node and find a way to fix existing graphs before updateing
-  //[UnitTitle("Reflectis Platform: Switch")]
+  //[UnitTitle("Virtuademy Platform: Switch")]
   //[UnitSurtitle("Platform")]
   //[UnitShortTitle("Switch")]
-  //[UnitCategory("Reflectis\\Flow")]
+  //[UnitCategory("Virtuademy\\Flow")]
   //public class CheckPlatformUnit : Unit
   //{
   //    [DoNotSerialize]

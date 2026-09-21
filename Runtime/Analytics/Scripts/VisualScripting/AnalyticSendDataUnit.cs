@@ -13,13 +13,13 @@ using UnityEngine;
 namespace Virtuademy.SDK.Environments.Analytics
 {
     [UnitTitle(UNIT_TITLE)]
-    [UnitSurtitle("Reflectis Analytic")]
+    [UnitSurtitle("Virtuademy Analytic")]
     [UnitShortTitle("Send Data")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class AnalyticSendDataUnit : Unit
     {
 
-        public const string UNIT_TITLE = "Reflectis Analytic: Send Data";
+        public const string UNIT_TITLE = "Virtuademy Analytic: Send Data";
 
         [SerializeAs(nameof(Verb))]
         private EAnalyticVerb verb = EAnalyticVerb.ExpStart;

@@ -2,10 +2,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Visual Scripting Interactable: On Interact")]
+    [UnitTitle("Virtuademy Visual Scripting Interactable: On Interact")]
     [UnitSurtitle("Visual Scripting Interactable")]
     [UnitShortTitle("On Interact")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class InteractEventUnit : VisualScriptingInteractableEventUnit
     {
 

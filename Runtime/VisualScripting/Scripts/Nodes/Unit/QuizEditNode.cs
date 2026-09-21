@@ -4,10 +4,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Quiz: Edit")]
+    [UnitTitle("Virtuademy Quiz: Edit")]
     [UnitSurtitle("Quiz")]
     [UnitShortTitle("Edit")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class QuizEditNode : Unit
     {
         [DoNotSerialize]

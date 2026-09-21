@@ -14,9 +14,9 @@ using SPACS.Utilities;
 namespace Virtuademy.SDK.Environments.Analytics
 {
     [UnitTitle(UNIT_TITLE)]
-    [UnitSurtitle("Reflectis Analytic")]
+    [UnitSurtitle("Virtuademy Analytic")]
     [UnitShortTitle("Create Displayable Data")]
-    [UnitCategory("Reflectis\\Create")]
+    [UnitCategory("Virtuademy\\Create")]
     public class AnalyticCreateDisplayableDataUnit : Unit
     {
 
@@ -31,7 +31,7 @@ namespace Virtuademy.SDK.Environments.Analytics
             set => displayableType = value;
         }
 
-        public const string UNIT_TITLE = "Reflectis Analytic: Create Displayable Data";
+        public const string UNIT_TITLE = "Virtuademy Analytic: Create Displayable Data";
 
 
         [DoNotSerialize]

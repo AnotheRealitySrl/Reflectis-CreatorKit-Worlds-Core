@@ -4,10 +4,10 @@ using Virtuademy.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Player Save Data: Set Data")]
+    [UnitTitle("Virtuademy Player Save Data: Set Data")]
     [UnitSurtitle("Player Save Data")]
     [UnitShortTitle("Set Player Save Data")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SetPlayerSaveDataUnit : Unit
     {
         [DoNotSerialize]

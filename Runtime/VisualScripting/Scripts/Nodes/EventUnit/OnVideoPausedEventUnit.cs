@@ -7,10 +7,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Video: On Video Paused")]
+    [UnitTitle("Virtuademy Video: On Video Paused")]
     [UnitSurtitle("BigScreen")]
     [UnitShortTitle("On Video Paused")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnVideoPausedEventUnit : UnityEventUnit<BigScreenPlaceholder>
     {
         protected override bool register => true;

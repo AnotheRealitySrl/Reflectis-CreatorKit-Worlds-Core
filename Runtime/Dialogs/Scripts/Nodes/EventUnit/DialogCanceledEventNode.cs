@@ -7,10 +7,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Dialogs
 {
-    [UnitTitle("Reflectis Dialogs: Dialog Canceled")]
+    [UnitTitle("Virtuademy Dialogs: Dialog Canceled")]
     [UnitSurtitle("Dialogs")]
     [UnitShortTitle("Dialog Canceled")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class DialogCanceledEventNode : UnityEventUnit<Null>
     {
         public static string eventName = "DialogCanceled";

@@ -7,10 +7,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Transition Provider: Do Transition")]
+    [UnitTitle("Virtuademy Transition Provider: Do Transition")]
     [UnitSurtitle("Transition Provider")]
     [UnitShortTitle("Do Transition")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class TransitionProviderActivatorNode : Unit
     {
         [DoNotSerialize]

@@ -4,10 +4,10 @@ using UnityEngine.Splines;
 
 namespace Virtuademy.SDK.Environments.VisualScripting.Splines
 {
-    [UnitTitle("Reflectis: Expose SplineAnimate")]
+    [UnitTitle("Virtuademy: Expose SplineAnimate")]
     [UnitSurtitle("Expose")]
     [UnitShortTitle("SplineAnimate")]
-    [UnitCategory("Reflectis\\Expose")]
+    [UnitCategory("Virtuademy\\Expose")]
     public class ExposeSplineAnimateUnit : Unit
     {
         [NullMeansSelf]

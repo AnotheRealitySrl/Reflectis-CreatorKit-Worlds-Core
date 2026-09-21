@@ -9,10 +9,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Scene: Enable Spawned Objects")]
+    [UnitTitle("Virtuademy Scene: Enable Spawned Objects")]
     [UnitSurtitle("Scene")]
     [UnitShortTitle("Enable Spawned Objects")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class EnableSpawnedObjectsNode : Unit
     {
         [DoNotSerialize]

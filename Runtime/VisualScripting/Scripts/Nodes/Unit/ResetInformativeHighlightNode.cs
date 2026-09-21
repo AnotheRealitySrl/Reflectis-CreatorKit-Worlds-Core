@@ -3,10 +3,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis ControlManager: Reset Highlight Item")]
+    [UnitTitle("Virtuademy ControlManager: Reset Highlight Item")]
     [UnitSurtitle("Control Manager")]
     [UnitShortTitle("Reset Highlight")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class ResetInformativeHighlightNode : Unit
     {
         [DoNotSerialize]

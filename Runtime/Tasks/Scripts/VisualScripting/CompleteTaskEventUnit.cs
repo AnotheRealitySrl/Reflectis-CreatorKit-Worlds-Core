@@ -3,10 +3,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Tasks
 {
-    [UnitTitle("Reflectis Tasks: CompleteTask")]
+    [UnitTitle("Virtuademy Tasks: CompleteTask")]
     [UnitSurtitle("Tasks")]
     [UnitShortTitle("CompleteTask")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class CompleteTaskEventUnit : Unit
     {
         [DoNotSerialize]

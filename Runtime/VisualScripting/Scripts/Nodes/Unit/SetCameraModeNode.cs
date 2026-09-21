@@ -11,10 +11,10 @@ using Virtuademy.Environments.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Camera: Set camera mode")]
+    [UnitTitle("Virtuademy Camera: Set camera mode")]
     [UnitSurtitle("SetCameraMode")]
     [UnitShortTitle("Set Camera Mode")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class SetCameraModeNode : Unit
     {
         [NullMeansSelf]

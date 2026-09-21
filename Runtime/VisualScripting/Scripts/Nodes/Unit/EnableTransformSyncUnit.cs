@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Transform: EnableSync")]
+    [UnitTitle("Virtuademy Transform: EnableSync")]
     [UnitSurtitle("Transform")]
     [UnitShortTitle("EnableSync")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     [TypeIcon(typeof(UnityEngine.Transform))]
 
     public class EnableTransformSyncUnit : Unit

@@ -7,11 +7,11 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Tasks
 {
-    [UnitTitle("Reflectis Tasks: On Task System Ready")]
+    [UnitTitle("Virtuademy Tasks: On Task System Ready")]
     [UnitSurtitle("Tasks")]
     [UnitShortTitle("On Task System Ready")]
-    [UnitCategory("Events\\Reflectis")]
-    public class OnTaskSystemReadyEventUnit : UnityEventUnit<TaskSystemReflectis>
+    [UnitCategory("Events\\Virtuademy")]
+    public class OnTaskSystemReadyEventUnit : UnityEventUnit<TaskSystemVirtuademy>
     {
         protected override bool register => true;
 
@@ -31,7 +31,7 @@ namespace Virtuademy.SDK.Environments.Tasks
 
         protected override UnityEvent GetEvent(GraphReference reference)
         {
-            var taskSystemReference = Flow.New(reference).GetValue<TaskSystemReflectis>(TaskSystemReference);
+            var taskSystemReference = Flow.New(reference).GetValue<TaskSystemVirtuademy>(TaskSystemReference);
             if (taskSystemReference == null)
             {
                 return new UnityEvent();
@@ -42,9 +42,9 @@ namespace Virtuademy.SDK.Environments.Tasks
             }
         }
 
-        protected override TaskSystemReflectis GetArguments(GraphReference reference)
+        protected override TaskSystemVirtuademy GetArguments(GraphReference reference)
         {
-            return Flow.New(reference).GetValue<TaskSystemReflectis>(TaskSystemReference);
+            return Flow.New(reference).GetValue<TaskSystemVirtuademy>(TaskSystemReference);
         }
     }
 }

@@ -7,10 +7,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.Tasks
 {
-    [UnitTitle("Reflectis Tasks: On Task Completed")]
+    [UnitTitle("Virtuademy Tasks: On Task Completed")]
     [UnitSurtitle("Tasks")]
     [UnitShortTitle("On Task Completed")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnTaskCompletedEventUnit : UnityEventUnit<Task, bool>
     {
         protected override bool register => true;

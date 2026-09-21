@@ -4,10 +4,10 @@ using Virtuademy.Environments.ScriptingApi.Placeholders;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Synced Variables: On Synced Variable Changed")]
+    [UnitTitle("Virtuademy Synced Variables: On Synced Variable Changed")]
     [UnitSurtitle("Synced Variables")]
     [UnitShortTitle("On Synced Variable Changed")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class SyncedVariablesEventNodes : SyncedVariableBaseEventUnit<(string, object)>
     {
         public static string eventName = "SyncedVariablesOnVariableChanged";

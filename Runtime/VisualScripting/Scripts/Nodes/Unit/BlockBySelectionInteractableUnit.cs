@@ -5,10 +5,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Interactable: BlockInteractionBySelection")]
+    [UnitTitle("Virtuademy Interactable: BlockInteractionBySelection")]
     [UnitSurtitle("Interactable")]
     [UnitShortTitle("BlockInteractionBySelection")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class BlockBySelectionInteractableUnit : Unit
     {
         [DoNotSerialize]

@@ -8,13 +8,13 @@ namespace Virtuademy.Environments.ScriptingApi
     public interface IToolsApi
     {
         /// <summary>Sets the opacity of the tool inventory, 0 to 1.</summary>
-        /// <remarks>Node: <c>Reflectis Tools: Set Alpha</c>.</remarks>
+        /// <remarks>Node: <c>Virtuademy Tools: Set Alpha</c>.</remarks>
         void SetInventoryAlpha(float alpha);
 
         /// <summary>
         /// Spawns the right-or-wrong feedback at a point — the tick or the cross a quiz shows.
         /// </summary>
-        /// <remarks>Node: <c>Reflectis general: Spawn Feedback</c>. WebGL only, as the node says.</remarks>
+        /// <remarks>Node: <c>Virtuademy general: Spawn Feedback</c>. WebGL only, as the node says.</remarks>
         void ShowAnswerFeedback(Transform where, bool correct);
     
         /// <summary>
@@ -32,7 +32,7 @@ namespace Virtuademy.Environments.ScriptingApi
         /// Takes the object rather than the placeholder component on it. The component's type is
         /// under <c>Virtuademy.SDK</c>, a namespace the script whitelist denies by prefix, so a
         /// member naming it would be one no interpreted script could call. Node:
-        /// <c>Reflectis inventory: AddPickableToInventoryNode</c>.
+        /// <c>Virtuademy inventory: AddPickableToInventoryNode</c>.
         /// </remarks>
         bool AddPickableToInventory(GameObject pickable);
 }

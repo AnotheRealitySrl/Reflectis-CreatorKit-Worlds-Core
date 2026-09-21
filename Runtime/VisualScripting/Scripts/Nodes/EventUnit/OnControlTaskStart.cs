@@ -7,10 +7,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 { 
-    [UnitTitle("Reflectis ControlManager: On Informative Item Started")]
+    [UnitTitle("Virtuademy ControlManager: On Informative Item Started")]
     [UnitSurtitle("Control Manager")]
     [UnitShortTitle("On Informative Item Started")]
-    [UnitCategory("Events\\Reflectis")]
+    [UnitCategory("Events\\Virtuademy")]
     public class OnControlTaskStart : UnityEventUnit<InformativeItem_Abstract>
     {
         protected override bool register => true;

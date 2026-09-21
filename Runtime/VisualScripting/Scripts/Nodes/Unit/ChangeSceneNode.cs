@@ -12,10 +12,10 @@ using SPACS.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis Platform: Change Scene")]
+    [UnitTitle("Virtuademy Platform: Change Scene")]
     [UnitSurtitle("Platform")]
     [UnitShortTitle("Change Scene")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class ChangeSceneNode : AwaitableUnit
     {
         [NullMeansSelf]
@@ -39,7 +39,7 @@ namespace Virtuademy.SDK.Environments.VisualScripting
             {
                 if (experience == null)
                 {
-                    Debug.LogError($"[Reflectis Creator Kit | Change Scene node] The key specified {key} " +
+                    Debug.LogError($"[Virtuademy Environments | Change Scene node] The key specified {key} " +
                         $"for the environment is not correct or the experience is not flagged as " +
                         $"public");
                     done.TrySetResult(false);

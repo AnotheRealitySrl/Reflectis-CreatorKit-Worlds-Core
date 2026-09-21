@@ -20,7 +20,7 @@ namespace Virtuademy.Environments.ScriptingApi
         /// selecting anything else.
         /// </summary>
         /// <remarks>
-        /// Node: <c>Reflectis Visual Scripting Interactable: On Selected Change</c>.
+        /// Node: <c>Virtuademy Visual Scripting Interactable: On Selected Change</c>.
         /// </remarks>
         event Action<IVisualScriptingInteractable> SelectedChanged;
     }

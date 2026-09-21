@@ -5,10 +5,10 @@ using Virtuademy.ScriptingApi;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis CMEnvironment: Get CMEnvironment")]
+    [UnitTitle("Virtuademy CMEnvironment: Get CMEnvironment")]
     [UnitSurtitle("CMEnvironment")]
     [UnitShortTitle("Get CMEnvironment")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Virtuademy\\Get")]
     public class GetCMEnvironmentNode : Unit
     {
         [NullMeansSelf]

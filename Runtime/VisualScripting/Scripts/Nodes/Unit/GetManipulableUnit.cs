@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis GameObject: Get Manipulable")]
+    [UnitTitle("Virtuademy GameObject: Get Manipulable")]
     [UnitSurtitle("GameObject")]
     [UnitShortTitle("Get Manipulable")]
-    [UnitCategory("Reflectis\\Get")]
+    [UnitCategory("Virtuademy\\Get")]
     public class GetManipulableUnit : Unit
     {
         [NullMeansSelf]

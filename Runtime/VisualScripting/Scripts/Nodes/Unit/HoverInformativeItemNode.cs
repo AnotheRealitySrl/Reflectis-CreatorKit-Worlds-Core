@@ -3,10 +3,10 @@ using Unity.VisualScripting;
 
 namespace Virtuademy.SDK.Environments.VisualScripting
 {
-    [UnitTitle("Reflectis ControlManager: Hover Informative Item")]
+    [UnitTitle("Virtuademy ControlManager: Hover Informative Item")]
     [UnitSurtitle("Control Manager")]
     [UnitShortTitle("HoverInformativeItem")]
-    [UnitCategory("Reflectis\\Flow")]
+    [UnitCategory("Virtuademy\\Flow")]
     public class HoverInformativeItem : Unit
     {
         [DoNotSerialize]
