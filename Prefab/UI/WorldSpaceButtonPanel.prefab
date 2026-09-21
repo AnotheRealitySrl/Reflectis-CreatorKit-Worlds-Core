@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9108132280271641530}
   - component: {fileID: 7433631522474917470}
   - component: {fileID: 6512016655842968991}
+  - component: {fileID: 5307874231954111943}
   m_Layer: 5
   m_Name: WorldSpaceButtonPanel
   m_TagString: Untagged
@@ -75,3 +76,18 @@ MonoBehaviour:
     onClick:
       m_PersistentCalls:
         m_Calls: []
+--- !u!114 &5307874231954111943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6448684081170628408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7e4c2a9f1d34e6a8c5b0f2d3a9e1c74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Reflectis.CreatorKit.Worlds.Placeholders.WorldSpaceUIDocumentRebuilder
+  document: {fileID: 7433631522474917470}
+  binder: {fileID: 6512016655842968991}
+  rebuildOnEnable: 1
