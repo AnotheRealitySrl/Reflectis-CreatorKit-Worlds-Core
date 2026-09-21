@@ -41,6 +41,21 @@
   stragglers. The rename migrator rewrites all eight as whole identifiers, for the `#if` lines
   of a creator's own scripts. A creator project that referenced the old symbols by hand needs
   either the migrator pass or a manual edit; nothing else in a world depends on them.
+- **A catalog no longer depends on a C# type name.** The `RemoteLoadPath` the publish window
+  writes is now `{Virtuademy.Catalog.BaseUrl}/{Virtuademy.Catalog.WorldId}/…`: two runtime
+  variables owned by the new `Virtuademy.CatalogVariables`, which the application fills through
+  `AddressablesRuntimeProperties.SetPropertyValue` before each catalog loads. The names have dots
+  for readability but no class answers to them, on purpose — the previous template named
+  `Virtuademy.AddressablesVariables` (and `Reflectis.AddressablesVariables` before the brand
+  rename), and every move of that identifier broke every world published before it.
+
+  Both old types stay, `[Obsolete]` and getter-only: Addressables reaches them by reflection
+  exactly when a legacy catalog loads, and their getters record the hit in
+  `Virtuademy.LegacyCatalogProbe`. The application reads the probe after the load and reports a
+  `LegacyAddressablesCatalog` diagnostic naming the world; the load itself is unchanged. Worlds
+  published with this version record the new names; worlds published earlier keep loading and
+  are listed by the diagnostic until rebuilt. The two compat types are retired once that list is
+  empty.
 - **The client models left for the application; the package speaks in views.**
   `IVirtuademyFramework` hands back `UserView`, `SessionView`, `ExperienceView` and
   `EnvironmentView` from `Virtuademy.ScriptingApi` instead of the `CM*` types, and the nodes that

@@ -1348,12 +1348,11 @@ namespace Virtuademy.SDK.Environments.Editor
                 BuildtimeVariable(player_version_override_variable_name),
                 BuildtimeVariable(build_target_variable_name));
 
-            var addressablesVariables = typeof(AddressablesVariables).GetProperties();
-            string baseUrl = addressablesVariables[0].Name;
-            string worldId = addressablesVariables[1].Name;
+            // The load path names its two runtime variables by CatalogVariables' constants, which are
+            // deliberately not C# types: a catalog must not depend on an identifier that can move.
             remoteLoadPath = string.Join('/',
-                RuntimeVariable($"{typeof(AddressablesVariables)}.{baseUrl}"),
-                RuntimeVariable($"{typeof(AddressablesVariables)}.{worldId}"),
+                RuntimeVariable(CatalogVariables.BaseUrlName),
+                RuntimeVariable(CatalogVariables.WorldIdName),
                 BuildtimeVariable(player_version_override_variable_name),
                 BuildtimeVariable(build_target_variable_name));
         }
