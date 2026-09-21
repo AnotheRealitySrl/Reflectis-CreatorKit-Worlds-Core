@@ -41,6 +41,13 @@
   stragglers. The rename migrator rewrites all eight as whole identifiers, for the `#if` lines
   of a creator's own scripts. A creator project that referenced the old symbols by hand needs
   either the migrator pass or a manual edit; nothing else in a world depends on them.
+- **The rename migrator no longer takes `JwtToken` away.** Its `Virtuademy.SDK.Core.Utilities ->
+  SPACS.Utilities` rule assumed that namespace had emptied except for an editor drawer; it had not —
+  `JwtToken` and `HmacCredential` still live there, in Virtuademy-SDK-Core — so a plain rewrite of
+  `using Virtuademy.SDK.Core.Utilities;` broke every file that names them (CS0246, found running
+  the tool on the application on 2026-09-21). The rule now skips those two types and never touches
+  a `using` line; instead, a file importing the old namespace gets `using SPACS.Utilities;` added
+  beside it, once, so the moved utilities resolve and what stayed keeps resolving.
 - **A catalog no longer depends on a C# type name.** The `RemoteLoadPath` the publish window
   writes is now `{Catalog.BaseUrl}/{Catalog.WorldId}/…`: two runtime
   variables owned by the new `Virtuademy.CatalogVariables`, which the application fills through

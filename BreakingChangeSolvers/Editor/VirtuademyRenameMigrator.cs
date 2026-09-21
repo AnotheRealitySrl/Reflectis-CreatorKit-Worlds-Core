@@ -274,11 +274,17 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             // exactly where they are. A rule for the bare namespace would move all of them, so
             // there is none: the one type that left it is named outright below.
             //
-            // The utilities entry carries a second lookahead because that namespace did not empty
-            // either. Its editor half (IndentDrawer) is still in the framework, and SPACS spells its
-            // own editor namespace SPACS.Editor rather than SPACS.Utilities.Editor, so rewriting it
-            // would invent a namespace that exists nowhere.
-            (Boundary(OldCoreUtilities, @"(?!\.Editor)"), "SPACS.Utilities"),
+            // The utilities entry is the one rule that must not touch a `using` line, and must skip
+            // three names: that namespace did not empty. Its editor half (IndentDrawer) is still in
+            // the framework — and SPACS spells its own editor namespace SPACS.Editor rather than
+            // SPACS.Utilities.Editor, so rewriting it would invent a namespace that exists nowhere —
+            // and two runtime types, JwtToken and HmacCredential, still live in it inside
+            // Virtuademy-SDK-Core. A plain rewrite of `using Virtuademy.SDK.Core.Utilities;` therefore
+            // takes JwtToken away from every file that names it (found the hard way on 2026-09-21,
+            // running this tool on the application). The `using` line is left alone and
+            // SupplementUtilitiesUsing adds `using SPACS.Utilities;` beside it instead, so the moved
+            // utilities keep resolving without losing what stayed.
+            (new Regex(@"(?<!using\s)" + Regex.Escape(OldCoreUtilities) + @"(?!\.(Editor|JwtToken|HmacCredential))(?![A-Za-z0-9_])", RegexOptions.Compiled), "SPACS.Utilities"),
             (Boundary(OldCoreVisualScripting), "SPACS.VisualScripting"),
             (Boundary(OldCoreEditor), "SPACS.Editor"),
             (Boundary(OldCreateTypeInstance), "SPACS.CreateTypeInstanceUnit"),
@@ -657,6 +663,9 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 text = rule.Replace(text, newValue);
             }
 
+            text = SupplementUtilitiesUsing(text, out int supplemented);
+            hits += supplemented;
+
             return hits;
         }
 
@@ -680,7 +689,31 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 text = rule.Replace(text, newValue);
             }
 
+            text = SupplementUtilitiesUsing(text, out _);
+
             return text;
+        }
+
+        /// <summary>
+        /// A file that imports the old utilities namespace gets <c>using SPACS.Utilities;</c> added
+        /// beside it, once: the moved extension methods resolve again, and whatever still lives in
+        /// the old namespace (JwtToken, HmacCredential) keeps resolving too. Idempotent — a file that
+        /// already imports SPACS.Utilities is left alone.
+        /// </summary>
+        private static string SupplementUtilitiesUsing(string text, out int hits)
+        {
+            hits = 0;
+            string oldUsing = "using " + OldCoreUtilities + ";";
+            if (!text.Contains(oldUsing) || text.Contains("using SPACS.Utilities;"))
+            {
+                return text;
+            }
+
+            int index = text.IndexOf(oldUsing, StringComparison.Ordinal);
+            string newline = index >= 2 && text[index - 2] == '\r' && text[index - 1] == '\n' ? "\r\n" : "\n";
+
+            hits = 1;
+            return text.Insert(index + oldUsing.Length, newline + "using SPACS.Utilities;");
         }
 
         /// <summary>Rebuilds the Visual Scripting node library so the renamed unit types are
