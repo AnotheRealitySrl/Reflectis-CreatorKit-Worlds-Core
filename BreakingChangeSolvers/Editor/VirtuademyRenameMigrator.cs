@@ -298,6 +298,14 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             (Identifier("TriggerTask" + OldBrand), "TriggerTaskVirtuademy"),
             (Identifier("Task" + OldBrand), "TaskVirtuademy"),
             (Identifier(OldBrand + "ChatbotPlaceholder"), "VirtuademyChatbotPlaceholder"),
+
+            // Two serialized fields of DialogPanelSpawner (2026-09-21). Deliberately WITHOUT
+            // [FormerlySerializedAs] / [RenamedFrom] on the fields: a creator project takes the
+            // rename through this pass, which rewrites the YAML key in every scene and prefab and
+            // the member name in every graph, and then rebuilds its worlds. Published bundles that
+            // skipped the pass lose the two flags — they are rebuilt at the cutover anyway.
+            (Identifier("useReflectis" + "Nickname"), "useVirtuademyNickname"),
+            (Identifier("useReflectis" + "Avatar"), "useVirtuademyAvatar"),
         };
 
         /// <summary>

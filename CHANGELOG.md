@@ -24,9 +24,15 @@
   `Events\Virtuademy`, `Virtuademy Scene: On Load`, and so on. Categories and titles are
   metadata, not identity — a graph references the unit type — so nothing breaks, but the fuzzy
   finder needs **Regenerate Nodes** once. The `<remarks>` on the scripting-API interfaces that
-  quote node names follow. Not renamed: `useReflectisNickname` / `useReflectisAvatar` on
-  `DialogPanelSpawner` (public, serialized, reachable from a graph by member name), and the
-  `Reflectis_*` EditorPrefs keys (renaming them would log every editor out once, for nothing).
+  quote node names follow.
+
+  `DialogPanelSpawner.useReflectisNickname` / `useReflectisAvatar` become `useVirtuademyNickname`
+  / `useVirtuademyAvatar` — **without** `[FormerlySerializedAs]` or `[RenamedFrom]`, by choice.
+  Both flags are serialized in a creator's scenes and prefabs and reachable from a graph by member
+  name, and the rename migrator carries them: it rewrites the YAML key and the graph member in one
+  pass, after which the worlds are rebuilt. A published bundle that skipped the pass reads the two
+  flags as `false`; it is rebuilt at the cutover regardless. Not renamed: the `Reflectis_*`
+  EditorPrefs keys (renaming them would log every editor out once, for nothing).
 - **The client models left for the application; the package speaks in views.**
   `IVirtuademyFramework` hands back `UserView`, `SessionView`, `ExperienceView` and
   `EnvironmentView` from `Virtuademy.ScriptingApi` instead of the `CM*` types, and the nodes that

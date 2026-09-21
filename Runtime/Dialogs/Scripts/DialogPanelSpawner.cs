@@ -13,9 +13,9 @@ namespace Virtuademy.SDK.Environments.Dialogs
         public bool quickSkip;
         public int skipSpeedup;
         public bool showPlayerNickname;
-        public bool useReflectisNickname;
+        public bool useVirtuademyNickname;
         public bool showNpcNickname;
-        public bool useReflectisAvatar;
+        public bool useVirtuademyAvatar;
         public bool showPlayerAvatarContainer;
         public bool showNpcAvatarContainer;
 
@@ -39,8 +39,8 @@ namespace Virtuademy.SDK.Environments.Dialogs
                 showNpcNickname,
                 showPlayerAvatarContainer,
                 showNpcAvatarContainer,
-                useReflectisNickname,
-                useReflectisAvatar);
+                useVirtuademyNickname,
+                useVirtuademyAvatar);
             dialogPanelController.Init();
         }
 

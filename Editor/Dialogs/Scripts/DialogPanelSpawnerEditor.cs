@@ -17,12 +17,12 @@ namespace Virtuademy.SDK.Environments.Dialogs.Editor
             SerializedProperty showPlayerNickname = serializedObject.FindProperty("showPlayerNickname");
             EditorGUILayout.PropertyField(showPlayerNickname, new GUIContent("Show player nickname"));
             if (showPlayerNickname.boolValue)
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("useReflectisNickname"), new GUIContent("Use Virtuademy nickname"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("useVirtuademyNickname"), new GUIContent("Use Virtuademy nickname"));
 
             SerializedProperty showPlayerAvatarContainer = serializedObject.FindProperty("showPlayerAvatarContainer");
             EditorGUILayout.PropertyField(showPlayerAvatarContainer, new GUIContent("Show player avatar"));
             if (showPlayerAvatarContainer.boolValue)
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("useReflectisAvatar"), new GUIContent("Use Virtuademy avatar"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("useVirtuademyAvatar"), new GUIContent("Use Virtuademy avatar"));
 
             EditorGUILayout.LabelField("Npc panel settings", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("showNpcNickname"), new GUIContent("Show npc nickname"));
