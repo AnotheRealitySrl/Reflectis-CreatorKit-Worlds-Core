@@ -23,7 +23,7 @@ namespace Virtuademy.SDK.Environments.HybridCLR.Editor
         // Only the path is fixed; the host is resolved from the logged-in tenant.
         private const string PolicyPath = "/scripts/hybrid-clr/policy?api-version=2";
 
-        private const string CacheKey = "Reflectis_HotUpdatePolicyCachedJson";
+        private const string CacheKey = "Virtuademy_HotUpdatePolicyCachedJson";
 
         public enum SourceKind { Fresh, Cached, None }
 

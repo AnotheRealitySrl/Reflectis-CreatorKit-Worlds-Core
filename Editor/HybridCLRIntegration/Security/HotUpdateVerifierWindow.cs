@@ -17,7 +17,7 @@ namespace Virtuademy.SDK.Environments.HybridCLR.Editor
     /// </summary>
     public sealed class HotUpdateVerifierWindow : EditorWindow
     {
-        private const string EditorTokenPrefKey = "Reflectis_EditorLogin_Token";
+        private const string EditorTokenPrefKey = "Virtuademy_EditorLogin_Token";
 
         private enum Source { Auto, StandaloneWindows64, Android, WebGL, Browse }
 

@@ -763,7 +763,7 @@ $@"{{
         // ============================================================
         // Keyed by project GUID because EditorPrefs is global to the machine: a bare key would
         // have two Creator Kit projects reading each other's marker.
-        const string FINGERPRINT_KEY_PREFIX = "Reflectis_HotUpdate_PublishFingerprint_";
+        const string FINGERPRINT_KEY_PREFIX = "Virtuademy_HotUpdate_PublishFingerprint_";
 
         static string FingerprintKey => FINGERPRINT_KEY_PREFIX + PlayerSettings.productGUID;
 

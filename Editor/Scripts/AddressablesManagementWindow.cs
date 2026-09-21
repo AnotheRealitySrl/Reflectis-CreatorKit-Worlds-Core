@@ -447,7 +447,7 @@ namespace Virtuademy.SDK.Environments.Editor
             }
         }
 
-        private const string SELECTED_WORLDS_KEY = "Reflectis_AddressablesManagement_SelectedWorlds";
+        private const string SELECTED_WORLDS_KEY = "Virtuademy_AddressablesManagement_SelectedWorlds";
 
         private List<int> GetSelectedWorldIds()
         {
@@ -1803,7 +1803,7 @@ namespace Virtuademy.SDK.Environments.Editor
         // A deploy interrupted by the hot-update assembly's rename, waiting for the recompilation
         // that follows it. SessionState and not EditorPrefs: this must survive a domain reload and
         // nothing else — an editor that restarts should not silently start deploying.
-        private const string ResumeKey = "Reflectis_AddressablesDeploy_ResumeAfterRecompile";
+        private const string ResumeKey = "Virtuademy_AddressablesDeploy_ResumeAfterRecompile";
         private const string ResumeWorlds = "worlds:";
         private const string ResumeTenant = "tenant";
         private const string ResumeBuild = "build";
