@@ -6,7 +6,6 @@
         "SPACS.Utility",
         "Unity.TextMeshPro",
         "Unity.InputSystem",
-        "Unity.VisualScripting",
         "Unity.VisualScripting.Core",
         "Unity.VisualScripting.Flow"
     ],
