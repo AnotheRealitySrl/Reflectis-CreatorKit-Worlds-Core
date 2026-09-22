@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="WorldSpaceButtonPanel.uss" />
+    <!-- The panel itself is not a control: keep it picking-mode="Ignore" so only the Button is
+         pickable (the "only controls are pickable" rule for world-space UI Toolkit). -->
+    <ui:VisualElement name="panel" class="wsb-panel" picking-mode="Ignore">
+        <!-- The Button is a real control (default picking-mode). Author hover/feedback in the USS. -->
+        <ui:Button name="button" text="Button" class="wsb-button" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,138 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6629358073859048592
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6448684081170628408, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: m_Name
+      value: 360_WorldSpaceButton_SkyboxTeleport
+      objectReference: {fileID: 0}
+    - target: {fileID: 6512016655842968991, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: buttons.Array.data[0].onClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6512016655842968991, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: buttons.Array.data[0].onClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6512016655842968991, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: buttons.Array.data[0].onClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 8261697912119146307}
+    - target: {fileID: 6512016655842968991, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: buttons.Array.data[0].onClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6512016655842968991, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: buttons.Array.data[0].onClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TriggerUnityEvent
+      objectReference: {fileID: 0}
+    - target: {fileID: 6512016655842968991, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: buttons.Array.data[0].onClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Unity.VisualScripting.ScriptMachine, Unity.VisualScripting.Flow
+      objectReference: {fileID: 0}
+    - target: {fileID: 6512016655842968991, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: buttons.Array.data[0].onClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: UnityEvent_ChangeSkybox
+      objectReference: {fileID: 0}
+    - target: {fileID: 6512016655842968991, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: buttons.Array.data[0].onClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7433631522474917470, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: sourceAsset
+      value: 
+      objectReference: {fileID: 9197481963319205126, guid: 4aec0c66373392741b54d4c2559e6736, type: 3}
+    - target: {fileID: 9108132280271641530, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108132280271641530, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108132280271641530, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108132280271641530, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108132280271641530, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108132280271641530, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108132280271641530, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108132280271641530, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108132280271641530, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108132280271641530, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6448684081170628408, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1427924409853246568}
+    - targetCorrespondingSourceObject: {fileID: 6448684081170628408, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8261697912119146307}
+  m_SourcePrefab: {fileID: 100100000, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+--- !u!1 &395861612610239400 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6448684081170628408, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+  m_PrefabInstance: {fileID: 6629358073859048592}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1427924409853246568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395861612610239400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e741851cba3ad425c91ecf922cc6b379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.VisualScripting.Core::Unity.VisualScripting.Variables
+  _data:
+    _json: '{"declarations":{"Kind":"Object","collection":{"$content":[{"name":"SkyboxManager","value":null,"typeHandle":{"Identification":"UnityEngine.GameObject,
+      UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"index","value":{"$content":0,"$type":"System.Int32"},"typeHandle":{"Identification":"System.Int32,
+      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
+    _objectReferences: []
+--- !u!114 &8261697912119146307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395861612610239400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2fe5546f775c47d2820aa5e8a715f53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.VisualScripting.Flow::Unity.VisualScripting.ScriptMachine
+  _data:
+    _json: '{"nest":{"source":"Embed","macro":null,"embed":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":0.0,"y":0.0},"zoom":1.0,"elements":[{"coroutine":false,"defaultValues":{"name":{"$content":"UnityEvent_ChangeSkybox","$type":"System.String"}},"position":{"x":-426.0,"y":-135.0},"guid":"58de7b91-5c6f-44eb-bcea-86841b52cc70","$version":"A","$type":"Unity.VisualScripting.BoltUnityEvent","$id":"10"},{"argumentCount":1,"defaultValues":{"name":{"$content":"ChangeSkybox","$type":"System.String"},"target":null},"position":{"x":-73.0,"y":-153.0},"guid":"001da4d7-1585-445f-be8d-339b0c20c96d","$version":"A","$type":"Unity.VisualScripting.TriggerCustomEvent","$id":"12"},{"specifyFallback":false,"kind":"Object","defaultValues":{"name":{"$content":"SkyboxManager","$type":"System.String"},"object":null},"position":{"x":-275.0,"y":50.0},"guid":"82aa4c56-97fd-4616-be9a-4f2f6634cd62","$version":"A","$type":"Unity.VisualScripting.GetVariable","$id":"14"},{"specifyFallback":false,"kind":"Object","defaultValues":{"name":{"$content":"index","$type":"System.String"},"object":null},"position":{"x":-239.0,"y":183.0},"guid":"bc2d0cb5-d1c1-4a88-be51-9d7ebcfdf188","$version":"A","$type":"Unity.VisualScripting.GetVariable","$id":"16"},{"sourceUnit":{"$ref":"10"},"sourceKey":"trigger","destinationUnit":{"$ref":"12"},"destinationKey":"enter","guid":"88f85dd0-1cbd-4480-82b8-0ff06969f1dd","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"14"},"sourceKey":"value","destinationUnit":{"$ref":"12"},"destinationKey":"target","guid":"42b59f50-646d-43fd-a958-772fb14a490d","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"16"},"sourceKey":"value","destinationUnit":{"$ref":"12"},"destinationKey":"argument_0","guid":"bf5b5d97-1182-43de-820e-0f460d46a793","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}}}'
+    _objectReferences: []

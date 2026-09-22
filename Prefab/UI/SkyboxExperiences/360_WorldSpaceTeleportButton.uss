@@ -1,0 +1,107 @@
+/* Fills the panel and centres the button on both axes. */
+.tp-root {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.tp-button {
+    width: 100px;
+    height: 100px;
+    background-color: rgba(0, 0, 0, 0);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.tp-button:hover {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.tp-button:active {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.tp-button:focus {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.tp-ring {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(255, 255, 255);
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 50px;
+}
+
+.tp-slot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.tp-disc {
+    background-color: rgb(58, 127, 255);
+    border-top-left-radius: 39px;
+    border-top-right-radius: 39px;
+    border-bottom-right-radius: 39px;
+    border-bottom-left-radius: 39px;
+    transform-origin: center;
+    transition-property: scale;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-out;
+    width: 65px;
+    height: 65px;
+}
+
+.tp-arrow {
+    background-image: url("project://database/Assets/_Graphics/Environments/Factory/Sprites/Spritesheet.png?fileID=541126889&guid=3a2a53b581da33c45ac2007fbac27667&type=3#Spritesheet_Arrow");
+    -unity-background-scale-mode: scale-to-fit;
+    rotate: -90deg;
+    transform-origin: center;
+    transition-property: scale;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-out;
+    height: 35px;
+    width: 48px;
+}
+
+.tp-arrow-white {
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    scale: 1 1;
+}
+
+.tp-arrow-blue {
+    -unity-background-image-tint-color: rgb(58, 127, 255);
+    scale: 0 0;
+}
+
+.tp-button:hover .tp-disc {
+    scale: 0 0;
+}
+
+.tp-button:hover .tp-arrow-white {
+    scale: 0 0;
+}
+
+.tp-button:hover .tp-arrow-blue {
+    scale: 1.1 1.1;
+}
