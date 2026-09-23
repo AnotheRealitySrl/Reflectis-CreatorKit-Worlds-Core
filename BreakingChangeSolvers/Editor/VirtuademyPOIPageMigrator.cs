@@ -44,7 +44,8 @@ namespace Virtuademy.BreakingChangeSolvers
     /// </para>
     /// <para>
     /// This has no menu entry of its own: it is part of the v2026.5 -> v2026.6 update routine,
-    /// driven by <c>VirtuademyRenameMigrator</c>. Idempotent: a second run finds nothing.
+    /// driven by <c>VirtuademyRenameMigrator</c>, and the files it changes are re-saved by
+    /// <c>VirtuademyUpdateResave</c> once the editor has settled. Idempotent: a second run finds nothing.
     /// </para>
     /// </remarks>
     public static class VirtuademyPOIPageMigrator
@@ -107,9 +108,10 @@ namespace Virtuademy.BreakingChangeSolvers
             return entries;
         }
 
-        /// <summary>Rewrites the given files in place; returns how many changed. Re-reads each
-        /// file, so it is safe to run after another pass has rewritten the same files.</summary>
-        public static int Apply(IEnumerable<Entry> entries, out int failed)
+        /// <summary>Rewrites the given files in place; returns how many changed, and adds their paths
+        /// to <paramref name="changedPaths"/> when given. Re-reads each file, so it is safe to run
+        /// after another pass has rewritten the same files.</summary>
+        public static int Apply(IEnumerable<Entry> entries, out int failed, ICollection<string> changedPaths = null)
         {
             bool removeDeadHooks = HookScriptIsMissing();
             int changed = 0;
@@ -130,6 +132,7 @@ namespace Virtuademy.BreakingChangeSolvers
                     {
                         File.WriteAllText(entry.Path, migrated, new UTF8Encoding(false));
                         changed++;
+                        changedPaths?.Add(entry.Path);
                     }
                 }
                 catch (Exception e)

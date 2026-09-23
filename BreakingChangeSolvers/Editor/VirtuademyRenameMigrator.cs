@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using Virtuademy.BreakingChangeSolvers;
 
@@ -45,7 +47,13 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
     ///   1. Commit / back up the project (the rewrite touches many files).
     ///   2. Update the SDK packages to their v2026.6 versions.
     ///   3. Run this routine, review the file list, Apply.
-    ///   4. Let Unity recompile and reimport, then re-save any still-dirty scenes.
+    ///   4. Let Unity recompile and reimport. The scenes, prefabs and assets the routine changed are
+    ///      then re-saved by <see cref="VirtuademyUpdateResave"/> without being opened; files it
+    ///      did not change are left alone. Only the files it reports need a manual check and save.
+    ///
+    /// The re-save exists so that nobody has to save by hand at the wrong moment, which is what the
+    /// rest of this comment is about — and it still describes what to do with a file the re-save
+    /// put back because it would not have come out whole.
     ///
     /// Expect a wall of Visual Scripting deserialization errors on the FIRST open after this
     /// runs, and do not save anything until they stop. A graph records each unit by namespace and
@@ -410,6 +418,9 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
 
         private static readonly string[] YamlExtensions = { ".unity", ".prefab", ".asset" };
 
+        /// <summary>What recompiles when rewritten, so the re-save has to wait for the next domain.</summary>
+        private static readonly string[] CodeExtensions = { ".cs", ".asmdef", ".asmref" };
+
         private readonly List<Entry> entries = new();
         private Vector2 scrollPosition;
         private bool hasScanned;
@@ -418,6 +429,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         private bool hasLegacyFolders;
         private List<VirtuademyPOIPageMigrator.Entry> poiPageEntries = new();
         private bool migratePOIPages = true;
+        private bool wasResavePending;
 
         [MenuItem(MenuPath)]
         public static void Open()
@@ -453,6 +465,8 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                     }
                 }
             }
+
+            DrawPendingResave();
 
             if (!hasScanned)
             {
@@ -580,6 +594,52 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             EditorGUILayout.Space(4);
         }
 
+        /// <summary>The re-save runs by itself; this says what it is waiting for, and offers to run it
+        /// once nothing stands in the way — for when the wait never ends on its own.</summary>
+        private static void DrawPendingResave()
+        {
+            if (!VirtuademyUpdateResave.IsPending)
+            {
+                return;
+            }
+
+            if (VirtuademyUpdateResave.IsWaitingForReload || EditorApplication.isCompiling)
+            {
+                EditorGUILayout.HelpBox(
+                    "The files changed by the update will be re-saved once Unity has recompiled. Do not save them by hand.",
+                    MessageType.Info);
+                return;
+            }
+
+            if (EditorUtility.scriptCompilationFailed)
+            {
+                EditorGUILayout.HelpBox(
+                    "The files changed by the update are waiting to be re-saved, and will be after the compile errors are fixed.",
+                    MessageType.Warning);
+                return;
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                EditorGUILayout.HelpBox("The files changed by the update are waiting to be re-saved.", MessageType.Info);
+                if (GUILayout.Button("Re-save now", GUILayout.Width(100), GUILayout.Height(38)))
+                {
+                    VirtuademyUpdateResave.Run();
+                }
+            }
+        }
+
+        private void OnInspectorUpdate()
+        {
+            // While pending, and once more when it stops being, so the box goes away.
+            bool pending = VirtuademyUpdateResave.IsPending;
+            if (pending || wasResavePending)
+            {
+                Repaint();
+            }
+            wasResavePending = pending;
+        }
+
         #endregion
 
         #region Scan / apply
@@ -651,7 +711,31 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 return;
             }
 
+            // A scene open while its file is rewritten under it comes back as a "modified externally"
+            // prompt, and a later save of it would write the old content back over the rewrite. Close
+            // it first; the re-save opens it again when it is done.
+            HashSet<string> toRewrite = new(
+                selected.Select(e => e.Path).Concat(migratePages ? poiPageEntries.Select(e => e.Path) : Enumerable.Empty<string>()),
+                StringComparer.OrdinalIgnoreCase);
+            List<string> openScenes = Enumerable.Range(0, SceneManager.sceneCount)
+                .Select(SceneManager.GetSceneAt)
+                .Where(s => !string.IsNullOrEmpty(s.path))
+                .Select(s => s.path)
+                .ToList();
+            List<string> reopenScenes = new();
+            if (openScenes.Any(toRewrite.Contains))
+            {
+                if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                {
+                    return;
+                }
+                reopenScenes = openScenes;
+                EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            }
+
             int changedFiles = 0, failed = 0, changedPages = 0, failedPages = 0;
+            List<string> changedPaths = new();
+            bool lockDeleted = false;
 
             try
             {
@@ -673,6 +757,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                         {
                             File.WriteAllText(entry.Path, rewritten, new UTF8Encoding(HasUtf8Bom(entry.Path)));
                             changedFiles++;
+                            changedPaths.Add(entry.Path);
                         }
                     }
                     catch (Exception e)
@@ -687,12 +772,13 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 if (migratePages)
                 {
                     EditorUtility.DisplayProgressBar(WindowTitle, "POI page markers", 1f);
-                    changedPages = VirtuademyPOIPageMigrator.Apply(poiPageEntries, out failedPages);
+                    changedPages = VirtuademyPOIPageMigrator.Apply(poiPageEntries, out failedPages, changedPaths);
                 }
 
                 if (rewriteFiles && deleteLockFile && File.Exists("Packages/packages-lock.json"))
                 {
                     File.Delete("Packages/packages-lock.json");
+                    lockDeleted = true;
                     Debug.Log($"[{WindowTitle}] Deleted Packages/packages-lock.json (will be regenerated by UPM).");
                 }
             }
@@ -702,6 +788,24 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             }
 
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            if (lockDeleted)
+            {
+                // Explicitly, rather than trusting the refresh to notice: the re-save waits for the
+                // lock file to come back, and only a resolve writes it.
+                UnityEditor.PackageManager.Client.Resolve();
+            }
+
+            // After the refresh, which is what gives a rewritten file its place in the AssetDatabase
+            // under the path the scan saw; before the folder move, which changes that path. The re-save
+            // records GUIDs, so the move does not lose it.
+            List<string> toResave = changedPaths
+                .Where(p => YamlExtensions.Contains(Path.GetExtension(p).ToLowerInvariant()))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            bool codeChanged = changedPaths.Any(p =>
+                CodeExtensions.Contains(Path.GetExtension(p).ToLowerInvariant()));
+            VirtuademyUpdateResave.Schedule(toResave, reopenScenes, lockDeleted, codeChanged);
 
             // After the rewrite, never before: the rewrite writes to the paths the scan recorded,
             // and moving a folder out from under it would send those writes to files that moved.
@@ -735,8 +839,11 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 WindowTitle,
                 report +
                 (failed > 0 || failedPages > 0 || folders.Refused > 0 ? "\n\nSee the Console for details." : string.Empty) +
-                "\n\nUnity will now recompile. Afterwards, open your world scenes once and re-save them " +
-                "so the migrated data is reserialized.",
+                (toResave.Count > 0
+                    ? $"\n\nUnity will now recompile. Afterwards the {toResave.Count} scene(s), prefab(s) and asset(s) " +
+                      "changed by the update are re-saved automatically, without opening them; you will get a report. " +
+                      "Do not save them by hand before that."
+                    : "\n\nUnity will now recompile."),
                 "OK");
 
             ScanProject();

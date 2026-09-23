@@ -58,6 +58,17 @@
   project is already migrated rather than disappearing, so a project that needs only one of the
   two still reaches the button. `VirtuademyFolderMigrator` lost its `[MenuItem]` and is driven by
   the window.
+- **The update routine re-saves what it changed, so the creator does not have to.** The last manual
+  step — open every world scene and save it, so the migrated data is written back the way Unity
+  writes it — is gone. The routine records the scenes, prefabs and assets it rewrote, by GUID so the
+  folder consolidation cannot lose them, and `VirtuademyUpdateResave` re-serializes exactly those,
+  with `AssetDatabase.ForceReserializeAssets` and no scene opened. Files the routine did not change
+  are not touched. It waits for the moment a save is safe: the next domain reload when scripts or
+  assembly definitions were rewritten, the package lock written again when it was deleted, no
+  compile errors. Each file is reimported first and re-saved alone, and put back byte for byte when
+  its re-serialization logs an error, gains a Visual Scripting `MissingType` or loses graph content;
+  those are listed in the Console for a manual check. Scenes open in the editor are closed before
+  the rewrite and reopened after the re-save.
 - **A catalog no longer depends on a C# type name.** The `RemoteLoadPath` the publish window
   writes is now `{Catalog.BaseUrl}/{Catalog.WorldId}/…`: two runtime
   variables owned by the new `Virtuademy.CatalogVariables`, which the application fills through
