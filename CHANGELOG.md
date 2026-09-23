@@ -153,6 +153,19 @@
 - **The TMP component under a POI placeholder is the source of truth for its text.** The inspector fields already pushed their value into the TMP on edit; selecting a placeholder now pulls the TMP text back into the serialized field, so the inspector shows what is actually displayed, and the runtime getters read the TMP with the serialized field as fallback. A creator who typed straight into the TMP no longer sees the text reverted.
 
 ### Fixed
+- **POIs published from a creator project are no longer empty.** A POI finds its pages by a marker
+  under its "Pages" container, and the marker was the framework's `GenericHookComponent` (id
+  `POIPage`). Once the authoring packages stopped installing the framework, that component was a
+  missing script in every creator project, so a world published from one carried no marker, the
+  POI found no page, and its panel came up empty. Pages are now marked with the new
+  `POIPagePlaceholder`, and `POIBase` uses it. The two other hooks the package placed —
+  `PanTransform` on the POI and on the Mirror, `TeleportTarget` on the Mirror — were never read by
+  anything and are removed. **The v2026.5 -> v2026.6 update routine gained a step for it**, "POI
+  page markers": it swaps the old marker for the new one in every scene and prefab of the project
+  (pages duplicated under "Pages", unpacked POIs, copies of the prefab), keeping each component's
+  fileID, and removes the other dead hooks when the framework is not installed. Worlds with POIs
+  must be republished after the routine runs; the platform also reads the old marker, and falls
+  back to the container's direct children, so worlds already published keep working meanwhile.
 - **`PanForcer` now fires on mobile.** The graph's platform switch had `OutputTriggerWebGL` and `OutputTriggerVR` wired and `OutputTriggerMobile` dangling, so a forced pan did nothing on a phone or tablet. Mobile joins the WebGL branch.
 
 ## v9.0.0

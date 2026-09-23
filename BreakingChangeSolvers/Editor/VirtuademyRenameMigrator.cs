@@ -14,14 +14,20 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
 {
     /// <summary>
     /// The v2026.5 -> v2026.6 update routine for a creator project, and the only menu entry it
-    /// needs: one window, one Apply, both steps the release asks for.
+    /// needs: one window, one Apply, all three steps the release asks for.
     ///
     /// Step 1 is project-wide migration for the two renames the packages have been through:
     /// the Reflectis -> Virtuademy brand rename, and the authoring package becoming
     /// Virtuademy-SDK-Environments (namespaces, assembly names, package ids).
     /// One pass covers both, in that order, so a project can arrive from either side.
     ///
-    /// Step 2 is <see cref="VirtuademyFolderMigrator"/>, which gathers what the SDK generates into
+    /// Step 2 is <see cref="VirtuademyPOIPageMigrator"/>, which swaps the framework's
+    /// GenericHookComponent for <c>POIPagePlaceholder</c> as the page marker of every POI. A creator
+    /// project no longer has the framework, so without this pass the marker is a missing script
+    /// and every POI in a world published from the project comes up empty. It runs right after the
+    /// rename rewrite and re-reads each file, so the two passes can touch the same scene.
+    ///
+    /// Step 3 is <see cref="VirtuademyFolderMigrator"/>, which gathers what the SDK generates into
     /// the single Assets/Virtuademy folder. It runs after the rewrite, because the rewrite works
     /// from the paths the scan recorded and a folder move would invalidate them. Nothing breaks if
     /// it is skipped — both settings assets are found by type wherever they sit — so it is a
@@ -394,6 +400,8 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         private bool deleteLockFile = true;
         private bool consolidateFolders = true;
         private bool hasLegacyFolders;
+        private List<VirtuademyPOIPageMigrator.Entry> poiPageEntries = new();
+        private bool migratePOIPages = true;
 
         [MenuItem(MenuPath)]
         public static void Open()
@@ -479,7 +487,28 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             }
 
             EditorGUILayout.Space(8);
-            EditorGUILayout.LabelField("2. Generated folders", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("2. POI page markers", EditorStyles.boldLabel);
+
+            if (poiPageEntries.Count > 0)
+            {
+                int pages = poiPageEntries.Sum(e => e.Pages);
+                int deadHooks = poiPageEntries.Sum(e => e.DeadHooks);
+                migratePOIPages = EditorGUILayout.ToggleLeft(
+                    $"Replace the POI page marker in {poiPageEntries.Count} file(s): {pages} page(s)" +
+                    (deadHooks > 0 ? $", {deadHooks} unused missing-script hook(s) removed" : string.Empty) +
+                    " (required)",
+                    migratePOIPages);
+                EditorGUILayout.LabelField(
+                    "Without this, every POI in a world published from this project shows an empty panel.",
+                    EditorStyles.miniLabel);
+            }
+            else
+            {
+                EditorGUILayout.HelpBox("No POI page uses the old marker. Nothing to migrate.", MessageType.Info);
+            }
+
+            EditorGUILayout.Space(8);
+            EditorGUILayout.LabelField("3. Generated folders", EditorStyles.boldLabel);
 
             if (hasLegacyFolders)
             {
@@ -498,9 +527,10 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             EditorGUILayout.Space(8);
 
             bool renameWork = selectedCount > 0;
+            bool pageWork = poiPageEntries.Count > 0 && migratePOIPages;
             bool folderWork = hasLegacyFolders && consolidateFolders;
 
-            if (!renameWork && !folderWork)
+            if (!renameWork && !pageWork && !folderWork)
             {
                 EditorGUILayout.HelpBox("Nothing selected to apply.", MessageType.Info);
                 EditorGUILayout.Space(4);
@@ -512,15 +542,23 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 "(or backed up) before applying.",
                 MessageType.Warning);
 
-            string button = renameWork && folderWork
-                ? $"Apply update ({selectedCount} file(s) + folder consolidation)"
-                : renameWork
-                    ? $"Apply rename to {selectedCount} file(s)"
-                    : "Consolidate the Virtuademy folder";
-
-            if (GUILayout.Button(button, GUILayout.Height(30)))
+            List<string> steps = new();
+            if (renameWork)
             {
-                Apply(renameWork, folderWork);
+                steps.Add($"rename in {selectedCount} file(s)");
+            }
+            if (pageWork)
+            {
+                steps.Add($"POI pages in {poiPageEntries.Count} file(s)");
+            }
+            if (folderWork)
+            {
+                steps.Add("folder consolidation");
+            }
+
+            if (GUILayout.Button($"Apply update ({string.Join(" + ", steps)})", GUILayout.Height(30)))
+            {
+                Apply(renameWork, pageWork, folderWork);
             }
 
             EditorGUILayout.Space(4);
@@ -560,27 +598,34 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 EditorUtility.ClearProgressBar();
             }
 
+            poiPageEntries = VirtuademyPOIPageMigrator.Scan();
             hasLegacyFolders = VirtuademyFolderMigrator.HasLegacyFolders();
             hasScanned = true;
             Repaint();
         }
 
-        private void Apply(bool rewriteFiles, bool consolidate)
+        private void Apply(bool rewriteFiles, bool migratePages, bool consolidate)
         {
             List<Entry> selected = rewriteFiles
                 ? entries.Where(e => e.Selected).ToList()
                 : new List<Entry>();
 
-            string what = rewriteFiles
-                ? $"Rewrite {selected.Count} file(s) in place ({selected.Sum(e => e.Hits)} occurrence(s))"
-                : string.Empty;
-
+            List<string> steps = new();
+            if (rewriteFiles)
+            {
+                steps.Add($"rewrite {selected.Count} file(s) in place ({selected.Sum(e => e.Hits)} occurrence(s))");
+            }
+            if (migratePages)
+            {
+                steps.Add($"replace the POI page marker in {poiPageEntries.Count} file(s)");
+            }
             if (consolidate)
             {
-                what = rewriteFiles
-                    ? what + ", then gather the legacy folders into Assets/Virtuademy"
-                    : "Gather the legacy folders into Assets/Virtuademy";
+                steps.Add("gather the legacy folders into Assets/Virtuademy");
             }
+
+            string what = string.Join(", then ", steps);
+            what = char.ToUpperInvariant(what[0]) + what.Substring(1);
 
             if (!EditorUtility.DisplayDialog(
                     WindowTitle,
@@ -590,7 +635,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 return;
             }
 
-            int changedFiles = 0, failed = 0;
+            int changedFiles = 0, failed = 0, changedPages = 0, failedPages = 0;
 
             try
             {
@@ -621,6 +666,14 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                     }
                 }
 
+                // After the rename, which may have rewritten the same scenes: the page pass re-reads
+                // every file it touches, so it works on what the rename left.
+                if (migratePages)
+                {
+                    EditorUtility.DisplayProgressBar(WindowTitle, "POI page markers", 1f);
+                    changedPages = VirtuademyPOIPageMigrator.Apply(poiPageEntries, out failedPages);
+                }
+
                 if (rewriteFiles && deleteLockFile && File.Exists("Packages/packages-lock.json"))
                 {
                     File.Delete("Packages/packages-lock.json");
@@ -649,6 +702,12 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
                 report += $"\nRewritten: {changedFiles}\nFailed: {failed}";
             }
 
+            if (migratePages)
+            {
+                report += $"\nPOI page markers replaced in: {changedPages} file(s)" +
+                          (failedPages > 0 ? $", {failedPages} failed" : string.Empty);
+            }
+
             if (consolidate)
             {
                 report += $"\nMoved into Assets/Virtuademy: {folders.Moved} asset(s), " +
@@ -659,7 +718,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             EditorUtility.DisplayDialog(
                 WindowTitle,
                 report +
-                (failed > 0 || folders.Refused > 0 ? "\n\nSee the Console for details." : string.Empty) +
+                (failed > 0 || failedPages > 0 || folders.Refused > 0 ? "\n\nSee the Console for details." : string.Empty) +
                 "\n\nUnity will now recompile. Afterwards, open your world scenes once and re-save them " +
                 "so the migrated data is reserialized.",
                 "OK");
