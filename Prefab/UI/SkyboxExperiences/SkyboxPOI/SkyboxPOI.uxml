@@ -1,0 +1,25 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.anotherealitysrl.virtuademy-sdk-environments/Prefab/UI/SkyboxExperiences/SkyboxPOI/SkyboxPOI.uss?fileID=7433441132597879392&amp;guid=1cef23fe95634e8a934816f8da9903d7&amp;type=3#SkyboxPOI" />
+    <!-- Root is not a control: picking-mode="Ignore" so only the icon Button is pickable
+         (the "only controls are pickable" rule for world-space UI Toolkit). The icon is anchored at
+         the bottom (justify-content: flex-end) so it does not move when the panel shows/hides. -->
+    <ui:VisualElement name="root" picking-mode="Ignore" class="poi-root">
+
+        <!-- Info popup. Hidden by default; WorldSpacePOIToggle flips its display on icon click. -->
+        <ui:VisualElement name="panel" picking-mode="Ignore" class="poi-panel">
+            <ui:VisualElement name="media" picking-mode="Ignore" class="poi-media">
+                <ui:Label text="MEDIA" picking-mode="Ignore" class="poi-media-label" />
+            </ui:VisualElement>
+            <ui:VisualElement name="text" picking-mode="Ignore" class="poi-text">
+                <ui:Label text="AULA 1" picking-mode="Ignore" class="poi-title" />
+                <ui:Label text="L'immagine mostra una delle due ampie e luminose aule della sede di Verona, pensate per lo svolgimento delle lezioni teoriche in un ambiente ordinato, accogliente e funzionale. Ogni aula è attrezzata con una LIM, ampi tavoli di lavoro e PC portatili a disposizione di ciascuna studentessa e di ciascuno studente, così da favorire una didattica partecipata, l'uso consapevole degli strumenti digitali e un'esperienza di apprendimento efficace." picking-mode="Ignore" class="poi-body" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- The clickable POI marker: a circle with a dot in the middle. Enlarges on hover (USS). -->
+        <ui:Button name="icon" text="" class="poi-icon">
+            <ui:VisualElement name="dot" picking-mode="Ignore" class="poi-dot" />
+        </ui:Button>
+
+    </ui:VisualElement>
+</ui:UXML>

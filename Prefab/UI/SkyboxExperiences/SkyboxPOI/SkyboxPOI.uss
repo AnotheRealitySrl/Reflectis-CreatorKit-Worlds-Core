@@ -1,0 +1,95 @@
+/* SkyboxPOI — world-space UI Toolkit point-of-interest.
+   A circular icon (circle + centre dot) toggles an info panel. Only the icon hover-enlarge is USS;
+   the open/close is driven by WorldSpacePOIToggle (it flips .poi-panel's display). */
+
+.poi-root {
+    flex-grow: 1;
+    align-items: center;
+    /* Keep the icon anchored at the bottom so it does not move when the panel shows/hides. */
+    justify-content: flex-end;
+    /* Poppins Regular (.ttf, environments) as base font; title overrides to Bold below. */
+    -unity-font-definition: url("project://database/Packages/com.anotherealitysrl.virtuademy-sdk-environments/Runtime/ScriptingApi/Placeholders/Fonts/Poppins-Regular.ttf?fileID=12800000&guid=e77099ee2358c6c40bc8f4dc48c8b53c&type=3#Poppins-Regular");
+}
+
+/* ---- Info popup (hidden by default; the toggle script shows it) ---- */
+.poi-panel {
+    display: none;
+    flex-direction: row;
+    align-items: flex-start;
+    max-width: 560px;
+    padding: 24px;
+    margin-bottom: 24px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 24px;
+}
+
+.poi-media {
+    width: 200px;
+    height: 300px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    margin-right: 24px;
+    background-color: rgb(232, 233, 235);
+    border-radius: 16px;
+}
+
+.poi-media-label {
+    font-size: 18px;
+    color: rgb(70, 74, 80);
+    -unity-font-style: bold;
+}
+
+.poi-text {
+    flex-direction: column;
+    flex-shrink: 1;
+    max-width: 290px;
+}
+
+.poi-title {
+    font-size: 30px;
+    color: rgb(56, 122, 255);
+    /* Poppins Bold (.ttf, environments). */
+    -unity-font-definition: url("project://database/Packages/com.anotherealitysrl.virtuademy-sdk-environments/Runtime/ScriptingApi/Placeholders/Fonts/Poppins-Bold.ttf?fileID=12800000&guid=e171a80107dfead489c1a91386e3118a&type=3#Poppins-Bold");
+    margin-bottom: 10px;
+}
+
+.poi-body {
+    font-size: 16px;
+    color: rgb(28, 32, 40);
+    white-space: normal;
+    -unity-text-align: upper-left;
+}
+
+/* ---- POI icon (circle + centre dot), always visible ---- */
+.poi-icon {
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    background-color: rgba(20, 22, 28, 0.6);
+    border-width: 3px;
+    border-color: rgb(255, 255, 255);
+    border-radius: 27px;
+    transform-origin: center;
+    transition-property: scale;
+    transition-duration: 0.12s;
+    transition-timing-function: ease-out;
+}
+
+/* Hover enlarges the ICON only (not the panel). */
+.poi-icon:hover {
+    scale: 1.1 1.1;
+    background-color: rgba(20, 22, 28, 0.6);
+    border-color: rgb(255, 255, 255);
+}
+
+.poi-dot {
+    width: 16px;
+    height: 16px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 8px;
+}
