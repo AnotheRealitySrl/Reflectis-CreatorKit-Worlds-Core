@@ -21,10 +21,17 @@
     margin-right: 0;
     margin-top: 0;
     margin-bottom: 0;
+    /* Smoothly lift on hover and settle back down when the pointer leaves. */
+    translate: 0 0;
+    transition-property: translate;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-out;
 }
 
 .tp-button:hover {
     background-color: rgba(0, 0, 0, 0);
+    /* Nudge the whole button up a little; negative Y is up in UI Toolkit. */
+    translate: 0 -10px;
 }
 
 .tp-button:active {
