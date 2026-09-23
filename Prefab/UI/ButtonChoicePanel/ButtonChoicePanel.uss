@@ -87,6 +87,9 @@
 
 .bcp-thumb {
     height: 96px;
+    /* flex-shrink:0 keeps the image the same size on every card, even when the
+       description below wraps to two lines. */
+    flex-shrink: 0;
     border-radius: 8px;
     margin-bottom: 10px;
     background-color: rgb(206, 211, 217);
@@ -101,6 +104,9 @@
     -unity-text-align: upper-left;
     letter-spacing: 1px;
     margin-bottom: 4px;
+    /* Fixed vertical block so the tag sits at the same height on every card. */
+    height: 20px;
+    flex-shrink: 0;
 }
 
 .bcp-name {
@@ -108,5 +114,9 @@
     color: rgb(28, 32, 40);
     white-space: normal;
     -unity-text-align: upper-left;
+    /* Reserve two lines on every card so single- and double-line descriptions
+       all occupy the same height and stay aligned (like the mockup). */
+    height: 40px;
+    flex-shrink: 0;
     -unity-font-definition: url("project://database/Packages/com.anotherealitysrl.virtuademy-sdk-environments/Runtime/ScriptingApi/Placeholders/Fonts/Poppins-Regular.ttf?fileID=12800000&guid=e77099ee2358c6c40bc8f4dc48c8b53c&type=3#Poppins-Regular");
 }
