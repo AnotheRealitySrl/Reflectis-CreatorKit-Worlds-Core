@@ -1,10 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Packages/com.anotherealitysrl.virtuademy-sdk-environments/Prefab/UI/ButtonChoicePanel/ButtonChoicePanel.uss?fileID=7433441132597879392&amp;guid=9fd2636b2bf749be89f0cb5e54197787&amp;type=3#ButtonChoicePanel"/>
-    <ui:VisualElement name="panel" picking-mode="Ignore" class="bcp-panel" style="border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px;">
+    <ui:VisualElement name="panel" picking-mode="Ignore" class="bcp-panel" style="border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; background-color: rgba(0, 0, 0, 0.902);">
         <ui:VisualElement name="header" picking-mode="Ignore" class="bcp-header">
-            <ui:Label text="BENVENUTI ALL&apos;ISTITUTO" picking-mode="Ignore" class="bcp-welcome"/>
-            <ui:Label text="IIS STEFANI-BENTEGODI" picking-mode="Ignore" class="bcp-title"/>
-            <ui:Label text="Scegli l&apos;ambiente che vuoi visitare:" picking-mode="Ignore" class="bcp-subtitle"/>
+            <ui:Label text="BENVENUTI ALL&apos;ISTITUTO" picking-mode="Ignore" class="bcp-welcome" style="margin-bottom: -5px;"/>
+            <ui:Label text="IIS STEFANI-BENTEGODI" picking-mode="Ignore" class="bcp-title" style="margin-bottom: -5px; margin-top: 0;"/>
+            <ui:Label text="Scegli l&apos;ambiente che vuoi visitare:" picking-mode="Ignore" name="Label" class="bcp-subtitle" style="margin-top: 0;"/>
         </ui:VisualElement>
         <ui:ScrollView name="cards" mode="Horizontal" horizontal-scroller-visibility="Auto" vertical-scroller-visibility="Hidden" class="bcp-scroll">
             <ui:Button name="button-0" text="" class="bcp-card">
@@ -14,7 +14,7 @@
             </ui:Button>
             <ui:Button name="button-1" text="" class="bcp-card">
                 <ui:VisualElement name="thumb" picking-mode="Ignore" class="bcp-thumb"/>
-                <ui:Label text="LABORATORIO" picking-mode="Ignore" class="bcp-tag" style="-unity-font-definition: url(&quot;project://database/Assets/_Project/Fonts/POPPINS-EXTRABOLD.TTF?fileID=12800000&amp;guid=01bafca482d62ab4b98c6b6a21080b18&amp;type=3#POPPINS-EXTRABOLD&quot;);"/>
+                <ui:Label text="LABORATORIO" picking-mode="Ignore" class="bcp-tag"/>
                 <ui:Label text="Microvinificazione" picking-mode="Ignore" class="bcp-name" style="font-size: 15px;"/>
             </ui:Button>
             <ui:Button name="button-2" text="" class="bcp-card">

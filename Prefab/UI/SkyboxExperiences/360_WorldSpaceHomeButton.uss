@@ -1,14 +1,3 @@
-/* Circular world-space "home" button that expands into a pill on hover.
-
-   Rest:  a 100x100 circle — white fill, thick blue ring, blue icon centred.
-   Hover: the shape widens into a pill, the blue ring becomes a thin outline and the
-          "Torna alla Hall" label fades/slides in next to the icon.
-   Un-hover reverses it. Everything is animated via USS transitions; no C# needed.
-
-   NOTE: the icon is a placeholder using 'Spritesheet_Arrow' (pointing left = "back").
-   Swap the background-image URL in .home-icon for a dedicated exit/home sprite. */
-
-/* Fills the panel and centres the button on both axes. */
 .home-root {
     flex-grow: 1;
     align-items: center;
@@ -48,17 +37,16 @@
     transition-timing-function: ease-out;
 }
 
-/* Blue icon (blue-tinted sprite). */
 .home-icon {
     flex-shrink: 0;
     width: 46px;
     height: 46px;
-    background-image: url("project://database/Assets/_Graphics/Environments/Factory/Sprites/Spritesheet.png?fileID=541126889&guid=3a2a53b581da33c45ac2007fbac27667&type=3#Spritesheet_Arrow");
     -unity-background-scale-mode: scale-to-fit;
     -unity-background-image-tint-color: rgb(58, 127, 255);
+    background-image: url("project://database/Packages/com.anotherealitysrl.virtuademy-sdk-environments/Graphics/Arrow.png?fileID=2800000&guid=ae15ed0187d59aa42a5d7544288be705&type=3#Arrow");
+    rotate: 180deg;
 }
 
-/* Label is collapsed at rest and revealed on hover. */
 .home-label {
     flex-shrink: 0;
     width: 0;
@@ -75,7 +63,6 @@
     transition-timing-function: ease-out;
 }
 
-/* Keep the fill white and the ring blue whatever the runtime theme wants on hover/active/focus. */
 .home-button:hover,
 .home-button:active,
 .home-button:focus {
@@ -86,7 +73,6 @@
     border-bottom-color: rgb(58, 127, 255);
 }
 
-/* Hover: widen into a pill and thin out the ring. */
 .home-button:hover {
     width: 400px;
     border-left-width: 8px;
@@ -95,7 +81,6 @@
     border-bottom-width: 8px;
 }
 
-/* Hover: reveal the label beside the icon. */
 .home-button:hover .home-label {
     width: 250px;
     margin-left: 14px;
