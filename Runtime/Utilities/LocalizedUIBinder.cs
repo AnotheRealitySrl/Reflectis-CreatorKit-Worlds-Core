@@ -64,6 +64,13 @@ namespace Virtuademy.SDK.Environments.Utilities
 
         public IReadOnlyList<LocalizedElementBinding> Bindings => bindings;
 
+        /// <summary>
+        /// Prepended to every key this binder writes (e.g. "Key/gimmi/Title" → "External/CreatorKit/Key/gimmi/Title"),
+        /// the same namespacing the LocalizationPlaceholder keys get. Set by the host application at boot;
+        /// empty in creator projects, so creators author and preview their keys as written.
+        /// </summary>
+        public static string KeyPrefix { get; set; } = string.Empty;
+
         private void OnEnable()
         {
             if (TryApply())
@@ -156,9 +163,28 @@ namespace Virtuademy.SDK.Environments.Utilities
                     BindingFlags.Public | BindingFlags.Instance);
                 if (prop != null && prop.CanWrite && prop.PropertyType == typeof(string))
                 {
-                    prop.SetValue(element, slot.value);
+                    prop.SetValue(element, WithPrefix(slot.value));
                 }
             }
+        }
+
+        // Applies KeyPrefix to a key, or to each key of a comma-separated list (locKeyChoices).
+        // Keys that already carry the prefix are left as they are.
+        private static string WithPrefix(string value)
+        {
+            if (string.IsNullOrEmpty(KeyPrefix))
+            {
+                return value;
+            }
+            string[] keys = value.Split(',');
+            for (int i = 0; i < keys.Length; i++)
+            {
+                string key = keys[i].Trim();
+                keys[i] = key.Length == 0 || key.StartsWith(KeyPrefix, StringComparison.Ordinal)
+                    ? key
+                    : KeyPrefix + key;
+            }
+            return string.Join(",", keys);
         }
     }
 }
