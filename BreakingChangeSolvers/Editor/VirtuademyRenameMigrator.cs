@@ -133,6 +133,20 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         private static readonly string OldWorldsPackage = "Virtuademy-Creator" + "Kit-Worlds-Core";
         private static readonly string OldWorldsId = "virtuademy-creator" + "kit-worlds-core";
 
+        // The installer took the same name on 2026-09-23: its package id, its repository and its
+        // namespace. The namespace needs no entry of its own — the brand rule turns it into the
+        // old-worlds prefix, and OldWorlds below carries it the rest of the way. The id and the
+        // repository do need one, because the old-worlds package entries end in "-Core".
+        //
+        // The id is the one that matters. It is the manifest KEY of the installer's git
+        // dependency, and a key that is not the name in the package's package.json is expected to
+        // make UPM reject it — so a project that re-resolves the renamed installer under its old
+        // key would stop resolving (not yet observed on a real project, 2026-09-23). Rewriting the
+        // key and the URL together, with the lock deleted as this tool already does, is what lets
+        // the next resolve land on the renamed installer.
+        private static readonly string OldSetupPackage = "Virtuademy-Creator" + "Kit-Worlds-Setup";
+        private static readonly string OldSetupId = "virtuademy-creator" + "kit-worlds-setup";
+
         private static readonly string OldApi = "Virtuademy.SDK.Platform" + "Api";
 
         private static readonly string OldModels = "Virtuademy.SDK.Environments.Client" + "Models";
@@ -159,6 +173,8 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             (OldWorlds, "Virtuademy.SDK.Environments"),
             (OldWorldsPackage, "Virtuademy-SDK-Environments"),
             (OldWorldsId, "virtuademy-sdk-environments"),
+            (OldSetupPackage, "Virtuademy-SDK-Environments-Setup"),
+            (OldSetupId, "virtuademy-sdk-environments-setup"),
 
             // PlatformApi named a package that no longer exists: it became
             // Virtuademy-SDK-Library on 2026-09-10, and the DTOs it was named after moved to the
