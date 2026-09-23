@@ -1,11 +1,15 @@
 {
-    "name": "Virtuademy.SDK.Environments.I2Loc",
-    "rootNamespace": "Virtuademy.LocalizedComponents",
+    "name": "Virtuademy.SDK.Environments.I2Loc.Editor",
+    "rootNamespace": "Virtuademy.SDK.Environments.Utilities.Editor.I2Loc",
     "references": [
         "Virtuademy.SDK.Environments",
-        "I2.Loc"
+        "Virtuademy.SDK.Environments.Editor",
+        "I2.Loc",
+        "I2.Loc.Editor"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
