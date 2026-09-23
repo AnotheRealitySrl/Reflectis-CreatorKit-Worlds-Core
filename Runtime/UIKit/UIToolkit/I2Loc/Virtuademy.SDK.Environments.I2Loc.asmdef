@@ -2,6 +2,7 @@
     "name": "Virtuademy.SDK.Environments.I2Loc",
     "rootNamespace": "Virtuademy.LocalizedComponents",
     "references": [
+        "Virtuademy.SDK.Environments",
         "I2.Loc"
     ],
     "includePlatforms": [],

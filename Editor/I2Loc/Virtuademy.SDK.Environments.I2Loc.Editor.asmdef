@@ -4,7 +4,8 @@
     "references": [
         "Virtuademy.SDK.Environments",
         "Virtuademy.SDK.Environments.Editor",
-        "I2.Loc"
+        "I2.Loc",
+        "I2.Loc.Editor"
     ],
     "includePlatforms": [
         "Editor"
