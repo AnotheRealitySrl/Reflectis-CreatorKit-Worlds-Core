@@ -6,18 +6,18 @@ using System.Collections.Generic;
 
 using I2.Loc;
 
-using Reflectis.CreatorKit.Worlds.Placeholders;
-using Reflectis.CreatorKit.Worlds.Placeholders.EditorTools;
+using Virtuademy.SDK.Environments.Utilities;
+using Virtuademy.SDK.Environments.Utilities.Editor;
 
 using UnityEditor;
 
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Reflectis.CreatorKit.Worlds.Placeholders.EditorTools.I2Loc
+namespace Virtuademy.SDK.Environments.Utilities.Editor.I2Loc
 {
     [CustomEditor(typeof(LocalizedUIBinder))]
-    public class LocalizedUIBinderEditorI2 : Editor
+    public class LocalizedUIBinderEditorI2 : UnityEditor.Editor
     {
         private const string NoneOption = "(nessuna)";
 

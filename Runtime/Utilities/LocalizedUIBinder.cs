@@ -6,7 +6,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Reflectis.CreatorKit.Worlds.Placeholders
+namespace Virtuademy.SDK.Environments.Utilities
 {
     /// <summary>
     /// Per-instance authoring surface for the localized UI Toolkit elements

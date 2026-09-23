@@ -7,10 +7,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Reflectis.CreatorKit.Worlds.Placeholders.EditorTools
+namespace Virtuademy.SDK.Environments.Utilities.Editor
 {
     [CustomEditor(typeof(LocalizedUIBinder))]
-    public class LocalizedUIBinderEditor : Editor
+    public class LocalizedUIBinderEditor : UnityEditor.Editor
     {
         private SerializedProperty documentProp;
         private SerializedProperty bindingsProp;

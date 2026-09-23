@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 
 using Object = UnityEngine.Object;
 
-namespace Reflectis.CreatorKit.Worlds.Placeholders.EditorTools
+namespace Virtuademy.SDK.Environments.Utilities.Editor
 {
     /// <summary>
     /// Shared, I2-agnostic logic behind the <c>LocalizedUIBinder</c> inspector: it scans a UXML for the

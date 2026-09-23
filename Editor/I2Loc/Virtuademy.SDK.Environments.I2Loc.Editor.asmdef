@@ -1,6 +1,6 @@
 {
     "name": "Virtuademy.SDK.Environments.I2Loc.Editor",
-    "rootNamespace": "Reflectis.CreatorKit.Worlds.Placeholders.EditorTools.I2Loc",
+    "rootNamespace": "Virtuademy.SDK.Environments.Utilities.Editor.I2Loc",
     "references": [
         "Virtuademy.SDK.Environments",
         "Virtuademy.SDK.Environments.Editor",
