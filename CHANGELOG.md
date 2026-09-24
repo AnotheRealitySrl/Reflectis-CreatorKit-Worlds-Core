@@ -1,5 +1,15 @@
 # Release notes
 
+## Unreleased
+
+### Added
+- **Environment census window** (`Virtuademy / Environment census`). For every scene in the
+  project's AddressablesSceneList it asks the Application API where an environment with the same
+  name is already published — which worlds, whether at tenant level — and lists the environments
+  the API knows that no scene of this project produces. Read-only, CSV export. First step of the
+  2026.6 republish campaign: every world built with the Reflectis SDK is rebuilt with this one,
+  and duplicates across worlds are the candidates to move to tenant level before rebuilding.
+
 ## v10.0.0
 
 ### Changed
