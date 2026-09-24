@@ -53,7 +53,7 @@ namespace Virtuademy.SDK.Environments.HybridCLR.Editor
         };
 
         // HybridCLR ships with its gitee mirrors as the default, which do not resolve outside
-        // China. Every fresh Creator Kit project would fail its first install on a DNS error
+        // China. Every fresh creator project would fail its first install on a DNS error
         // that says nothing about the cause, so the known defaults are swapped for the GitHub
         // originals. A URL the team deliberately changed (a private mirror, say) is left alone.
         const string GITEE_HYBRIDCLR = "https://gitee.com/focus-creative-games/hybridclr";
@@ -62,7 +62,7 @@ namespace Virtuademy.SDK.Environments.HybridCLR.Editor
         const string GITHUB_IL2CPP_PLUS = "https://github.com/focus-creative-games/il2cpp_plus";
 
         /// <summary>
-        /// Session flag raised by the Creator Kit setup window before it installs HybridCLR, so
+        /// Session flag raised by the setup window (Virtuademy/Setup/Setup project) before it installs HybridCLR, so
         /// that <see cref="OnReloadAfterInstall"/> can finish the job on the domain reload that
         /// follows the package import. Must stay in sync with the window's own copy of the key.
         /// </summary>
@@ -576,7 +576,7 @@ $@"{{
             if (asmdefPath == null || !File.Exists(asmdefPath))
             {
                 return $"the hot-update assembly definition is missing ({HOTUPDATE_FOLDER}). " +
-                       "Open the Creator Kit setup window and configure the interpreter.";
+                       "Open Virtuademy/Setup/Setup project and configure the interpreter.";
             }
 
             // Shape, not currency: the name carries a digest of the source, so the one on disk
@@ -762,7 +762,7 @@ $@"{{
         //  PUBLISH FINGERPRINT — skip work that would change nothing
         // ============================================================
         // Keyed by project GUID because EditorPrefs is global to the machine: a bare key would
-        // have two Creator Kit projects reading each other's marker.
+        // have two creator projects reading each other's marker.
         const string FINGERPRINT_KEY_PREFIX = "Virtuademy_HotUpdate_PublishFingerprint_";
 
         static string FingerprintKey => FINGERPRINT_KEY_PREFIX + PlayerSettings.productGUID;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Reflectis.CreatorKit.Worlds.Placeholders
+namespace Virtuademy.SDK.Environments.Utilities
 {
     /// <summary>
     /// Assigns images to UI Toolkit elements of a world-space panel, looked up by their UXML

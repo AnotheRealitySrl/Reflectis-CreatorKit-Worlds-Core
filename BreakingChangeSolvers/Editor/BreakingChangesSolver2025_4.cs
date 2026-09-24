@@ -117,7 +117,7 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             {
                 UnityEditor.SceneManagement.EditorSceneManager.OpenScene(activeScenePath, UnityEditor.SceneManagement.OpenSceneMode.Single);
             }
-            EditorUtility.DisplayDialog("Success", "Creator kit update completed!", "OK");
+            EditorUtility.DisplayDialog("Success", "Update completed!", "OK");
         }
 
         private static bool FixDetector(GameObject prefab)

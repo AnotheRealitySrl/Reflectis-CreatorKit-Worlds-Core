@@ -907,7 +907,7 @@ namespace Virtuademy.SDK.Environments.Editor
         /// <summary>
         /// Uploads this project's interpreted assembly and links it to the scenes just
         /// published. Runs ONCE per world, after the scenes: the assembly belongs to the
-        /// Creator Kit project, so every scene of this build shares it.
+        /// creator project, so every scene of this build shares it.
         ///
         /// Reached by reflection like the verifier, so this window stays free of the
         /// HYBRIDCLR_INSTALLED-gated assembly. No HybridCLR installed means no interpreted

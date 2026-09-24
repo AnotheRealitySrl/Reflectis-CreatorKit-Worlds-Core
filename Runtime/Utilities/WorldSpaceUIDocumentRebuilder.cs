@@ -7,10 +7,10 @@ using UnityEngine.UIElements;
 
 using Virtuademy.SDK.Environments.VisualScripting;
 
-namespace Reflectis.CreatorKit.Worlds.Placeholders
+namespace Virtuademy.SDK.Environments.Utilities
 {
     /// <summary>
-    /// Forces a world-space <see cref="UIDocument"/> to rebuild its visual tree once the Reflectis
+    /// Forces a world-space <see cref="UIDocument"/> to rebuild its visual tree once the platform
     /// scene setup has completed.
     ///
     /// When a panel prefab is streamed in through Addressables, the <see cref="UIDocument"/> can
@@ -22,7 +22,7 @@ namespace Reflectis.CreatorKit.Worlds.Placeholders
     ///
     /// The trigger is the Visual Scripting event <c>OnSceneSetupCompletedEvent</c> that
     /// <c>AppManager</c> broadcasts on the <see cref="EventBus"/> once the scene is ready — the same
-    /// event the "Reflectis Scene: On Setup Completed" node listens to — so no reference to the
+    /// event the "Virtuademy Scene: On Setup Completed" node listens to — so no reference to the
     /// application assembly is needed.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]

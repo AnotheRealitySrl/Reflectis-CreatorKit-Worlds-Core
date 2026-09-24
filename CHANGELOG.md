@@ -3,6 +3,28 @@
 ## Unreleased
 
 ### Changed
+### Changed
+- **The graph, task and dialog engines are `SPACS-Graphs`, `SPACS-Tasks` and `SPACS-Dialogs`**
+  (ids `com.anotherealitysrl.spacs-{graphs,tasks,dialogs}` 3.0.0, were
+  `virtuademy-sdk-{graphs,tasks,dialogs}`), and this package's dependencies follow. The
+  `Virtuademy-SDK-*` prefix is kept for the SDK proper — Core, Environments, Library; what carries
+  no platform is `SPACS-*`. Their assemblies and namespaces were already `SPACS.*`, so nothing a
+  published world or a graph records changes.
+- **The package rename migrator carries the three ids and repository names.** A manifest key
+  `virtuademy-sdk-graphs` (a project on the develop channel) or `reflectis-sdk-graphs` (a 2026.5
+  project, through the brand rule first) lands on `spacs-graphs`, and the same for tasks and dialogs.
+  The key is what matters: UPM rejects a git dependency whose key is not the id in the fetched
+  `package.json`.
+- **Four world-space UI helpers leave the old namespace.** `WorldSpaceButtonBinder`,
+  `WorldSpacePanelImageBinder`, `WorldSpacePOIToggle` and `WorldSpaceUIDocumentRebuilder` were
+  declared in `Reflectis.CreatorKit.Worlds.Placeholders`, which no other type uses; they are in
+  `Virtuademy.SDK.Environments.Utilities`, beside the other utilities, and the inspector of the
+  first in `...Utilities.Editor`. No `[RenamedFrom]`: the four were never released, prefabs
+  reference them by script GUID, and no graph names them.
+- The HybridCLR verifier's menu root (its entries are commented out) is `Virtuademy/Security/`,
+  and editor messages and comments stop calling the project and the setup window "Creator Kit".
+- `Documentation~/index.md` replaces the one-line stub `index.md.txt`, which still said
+  `Virtuademy-SDK-CreatorKit` and was not the file the README links to.
 - **The scene list of the Addressables management window is a registry of the project's scenes.**
   Every `.unity` under `Assets/` is listed (packages excluded), each with its own "Include in build"
   and platforms; new scenes appear on their own, unticked, deleted ones disappear, the settings of

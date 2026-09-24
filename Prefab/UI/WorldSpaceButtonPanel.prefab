@@ -69,7 +69,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 153a2e6a3ca80fe4eb3aa8cc981c3d37, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Reflectis.CreatorKit.Worlds.Placeholders::Reflectis.CreatorKit.Worlds.Placeholders.WorldSpaceButtonBinder
+  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Virtuademy.SDK.Environments.Utilities.WorldSpaceButtonBinder
   document: {fileID: 7433631522474917470}
   buttons:
   - buttonName: button
@@ -87,7 +87,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7e4c2a9f1d34e6a8c5b0f2d3a9e1c74, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Reflectis.CreatorKit.Worlds.Placeholders.WorldSpaceUIDocumentRebuilder
+  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Virtuademy.SDK.Environments.Utilities.WorldSpaceUIDocumentRebuilder
   document: {fileID: 7433631522474917470}
   binder: {fileID: 6512016655842968991}
   rebuildOnEnable: 1

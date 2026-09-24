@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
 
-namespace Reflectis.CreatorKit.Worlds.Placeholders
+namespace Virtuademy.SDK.Environments.Utilities
 {
     /// <summary>
     /// Ready-made bridge for a world-space UI Toolkit button panel. Every UI Toolkit
@@ -19,7 +19,7 @@ namespace Reflectis.CreatorKit.Worlds.Placeholders
     /// Click and hover are delivered by Unity's native world-space UI Toolkit picking (the built-in
     /// <c>WorldDocumentRaycaster</c> plus the scene's EventSystem/input module), which works the same
     /// on VR (XR ray), WebGL desktop (mouse) and Mobile (touch). No XR Interaction Toolkit and no
-    /// Reflectis interaction system are referenced here, so the prefab works everywhere from a single
+    /// platform interaction system are referenced here, so the prefab works everywhere from a single
     /// asset with no extra packages. On Mobile there is no hover concept, so a <c>:hover</c> effect
     /// simply does not show there — a tap still fires the click.
     /// </summary>

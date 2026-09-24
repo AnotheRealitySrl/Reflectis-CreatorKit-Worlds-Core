@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Reflectis.CreatorKit.Worlds.Placeholders;
+using Virtuademy.SDK.Environments.Utilities;
 
 using UnityEditor;
 
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Reflectis.CreatorKit.Worlds.Placeholders.EditorTools
+namespace Virtuademy.SDK.Environments.Utilities.Editor
 {
     /// <summary>
     /// Custom inspector for <see cref="WorldSpaceButtonBinder"/>. Instead of asking the author to type
@@ -22,7 +22,7 @@ namespace Reflectis.CreatorKit.Worlds.Placeholders.EditorTools
     /// entries are cleaned up on their own.
     /// </summary>
     [CustomEditor(typeof(WorldSpaceButtonBinder))]
-    public class WorldSpaceButtonBinderEditor : Editor
+    public class WorldSpaceButtonBinderEditor : UnityEditor.Editor
     {
         private SerializedProperty documentProp;
         private SerializedProperty buttonsProp;
