@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Changed
+- **The scene list of the Addressables management window is a registry of the project's scenes.**
+  Every `.unity` under `Assets/` is listed (packages excluded), each with its own "Include in build"
+  and platforms; new scenes appear on their own, unticked, deleted ones disappear, the settings of
+  the scenes already listed are kept (the entry follows the scene through renames and moves). The
+  add/remove buttons are gone, replaced by a search box and the filters "Only in build" and "Only
+  not published". Nothing is published because it was added by hand, nothing is forgotten because
+  it was not.
+
 ### Added
 - **Each scene of the Addressables management window says where it is already published.** Under
   every entry of the scene list: "Published in Showroom, Academy", "Published at tenant level",

@@ -2,6 +2,7 @@ using Virtuademy.SDK.Core.ApplicationManagement;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using UnityEditor;
@@ -21,6 +22,15 @@ namespace Virtuademy.SDK.Environments.Editor
             [SerializeField] private SceneAsset scene;
             [SerializeField] private bool includeInBuild = true;
             [SerializeField] private ESupportedPlatform supportedPlatforms = ESupportedPlatform.VR | ESupportedPlatform.WebGL;
+
+            public SceneConfiguration() { }
+
+            /// <summary>The entry the registry creates for a scene it has not seen yet: not in the build until someone ticks it.</summary>
+            public SceneConfiguration(SceneAsset scene)
+            {
+                this.scene = scene;
+                includeInBuild = false;
+            }
 
             public SceneAsset Scene { get => scene; set => scene = value; }
             public bool IncludeInBuild { get => includeInBuild; set => includeInBuild = value; }
@@ -65,6 +75,41 @@ namespace Virtuademy.SDK.Environments.Editor
         [SerializeField] private List<SceneConfiguration> sceneConfigurations;
 
         public List<SceneConfiguration> SceneConfigurations => sceneConfigurations;
+
+        /// <summary>
+        /// Makes the list mirror the scenes of the project — every <c>.unity</c> under <c>Assets/</c>, packages
+        /// excluded — so nothing gets published because it was added by hand, and nothing is forgotten because
+        /// it was not. Scenes that appeared are added <b>not included in the build</b>; entries whose scene is
+        /// gone are dropped; duplicates collapse to the first; the order is by scene name. The settings of
+        /// the scenes already listed (include in build, platforms) are kept: an entry holds the
+        /// <see cref="SceneAsset"/> reference, which follows renames and moves. Returns true when the asset
+        /// changed and should be saved.
+        /// </summary>
+        public bool SyncWithProject()
+        {
+            sceneConfigurations ??= new List<SceneConfiguration>();
+
+            HashSet<SceneAsset> present = new();
+            foreach (string guid in AssetDatabase.FindAssets("t:SceneAsset", new[] { "Assets" }))
+            {
+                SceneAsset scene = AssetDatabase.LoadAssetAtPath<SceneAsset>(AssetDatabase.GUIDToAssetPath(guid));
+                if (scene != null) present.Add(scene);
+            }
+
+            int before = sceneConfigurations.Count;
+            HashSet<SceneAsset> seen = new();
+            sceneConfigurations.RemoveAll(c => c.Scene == null || !present.Contains(c.Scene) || !seen.Add(c.Scene));
+            foreach (SceneAsset scene in present.Where(sc => !seen.Contains(sc)))
+            {
+                sceneConfigurations.Add(new SceneConfiguration(scene));
+            }
+
+            List<SceneConfiguration> ordered = sceneConfigurations.OrderBy(c => c.Scene.name, StringComparer.OrdinalIgnoreCase).ToList();
+            bool changed = before != sceneConfigurations.Count || !ordered.SequenceEqual(sceneConfigurations);
+            sceneConfigurations.Clear();
+            sceneConfigurations.AddRange(ordered);
+            return changed;
+        }
 
     }
 }

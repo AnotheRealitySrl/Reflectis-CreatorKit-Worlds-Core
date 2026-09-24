@@ -135,6 +135,12 @@ namespace Virtuademy.SDK.Environments.Editor
 
         // Platform module warnings
         private VisualElement platformWarningsContainer;
+        private SerializedObject sceneSerializedObject;
+        private VisualElement sceneListContainer;
+        private TextField sceneSearchField;
+        private Toggle onlyInBuildToggle;
+        private Toggle onlyNotPublishedToggle;
+        private Label sceneCountLabel;
 
         // Deploy error log
         private VisualElement deployErrorsContainer;
@@ -156,6 +162,7 @@ namespace Virtuademy.SDK.Environments.Editor
         {
             SaveAsset(sceneConfigurations);
             EditorLoginState.OnLoginStateChanged -= OnLoginStateChanged;
+            PublishedEnvironmentsIndex.Changed -= OnPublishedIndexChanged;
         }
 
         private void OnFocus()
@@ -163,6 +170,9 @@ namespace Virtuademy.SDK.Environments.Editor
             // Refresh warnings whenever the window regains focus (e.g. after the user
             // installs a module via Unity Hub and returns to the editor).
             RefreshPlatformWarnings();
+
+            // Scenes created, deleted or moved while the window was in the background.
+            SyncSceneRegistry();
 
             // The session label ages on its own (the token expires while the window sits idle),
             // so re-render it here. Without reloading the worlds: that is a network round trip
@@ -1322,6 +1332,99 @@ namespace Virtuademy.SDK.Environments.Editor
 
         #endregion
 
+        #region Scene registry
+
+        /// <summary>
+        /// The scene list: every scene of the project, each with its settings (drawn by
+        /// <see cref="SceneConfigurationDrawer"/>, which also says where the scene is already published),
+        /// behind a search box and two filters. Entries are not added or removed by hand any more:
+        /// <see cref="SceneListScriptableObject.SyncWithProject"/> keeps the list equal to the project.
+        /// </summary>
+        private void BuildSceneRegistryUi(VisualElement container)
+        {
+            container.Clear();
+
+            VisualElement toolbar = new() { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 4 } };
+            sceneSearchField = new TextField { style = { flexGrow = 1, marginRight = 6 } };
+            sceneSearchField.textEdition.placeholder = "Search scenes…";
+            sceneSearchField.RegisterValueChangedCallback(_ => RebuildSceneList());
+            onlyInBuildToggle = new Toggle("Only in build") { style = { marginRight = 6 } };
+            onlyInBuildToggle.RegisterValueChangedCallback(_ => RebuildSceneList());
+            onlyNotPublishedToggle = new Toggle("Only not published") { style = { marginRight = 6 } };
+            onlyNotPublishedToggle.RegisterValueChangedCallback(_ => RebuildSceneList());
+            sceneCountLabel = new Label { style = { unityTextAlign = TextAnchor.MiddleRight, opacity = 0.8f } };
+            toolbar.Add(sceneSearchField);
+            toolbar.Add(onlyInBuildToggle);
+            toolbar.Add(onlyNotPublishedToggle);
+            toolbar.Add(sceneCountLabel);
+            container.Add(toolbar);
+
+            Label hint = new("Every scene of the project is listed; tick \"Include in build\" on the ones to publish. New scenes appear here on their own, unticked.")
+            {
+                style = { whiteSpace = WhiteSpace.Normal, fontSize = 11, opacity = 0.75f, marginBottom = 4 }
+            };
+            container.Add(hint);
+
+            sceneListContainer = new ScrollView { style = { maxHeight = 360 } };
+            container.Add(sceneListContainer);
+
+            PublishedEnvironmentsIndex.Changed -= OnPublishedIndexChanged;
+            PublishedEnvironmentsIndex.Changed += OnPublishedIndexChanged;
+            RebuildSceneList();
+        }
+
+        private void OnPublishedIndexChanged()
+        {
+            // The rows refresh their own "Published in" line; only the filter needs the list rebuilt.
+            if (onlyNotPublishedToggle != null && onlyNotPublishedToggle.value)
+                RebuildSceneList();
+        }
+
+        private void RebuildSceneList()
+        {
+            if (sceneListContainer == null || sceneSerializedObject == null) return;
+            sceneSerializedObject.Update();
+            sceneListContainer.Clear();
+
+            SerializedProperty list = sceneSerializedObject.FindProperty("sceneConfigurations");
+            List<SceneConfiguration> configs = sceneConfigurations.SceneConfigurations ?? new List<SceneConfiguration>();
+            string search = sceneSearchField?.value?.Trim() ?? string.Empty;
+            bool onlyInBuild = onlyInBuildToggle?.value ?? false;
+            bool onlyNotPublished = onlyNotPublishedToggle?.value ?? false;
+
+            int shown = 0;
+            for (int i = 0; i < list.arraySize && i < configs.Count; i++)
+            {
+                SceneConfiguration cfg = configs[i];
+                if (cfg.Scene == null) continue;
+                if (search.Length > 0 && cfg.Scene.name.IndexOf(search, StringComparison.OrdinalIgnoreCase) < 0) continue;
+                if (onlyInBuild && !cfg.IncludeInBuild) continue;
+                if (onlyNotPublished && PublishedEnvironmentsIndex.HasData
+                    && PublishedEnvironmentsIndex.Get(PublishedEnvironmentsIndex.Key(cfg.Scene.name)).Count > 0) continue;
+
+                PropertyField row = new(list.GetArrayElementAtIndex(i));
+                row.Bind(sceneSerializedObject);
+                // Refresh platform warnings whenever a property changes (e.g. toggling a platform flag)
+                row.RegisterCallback<SerializedPropertyChangeEvent>(_ => RefreshPlatformWarnings());
+                sceneListContainer.Add(row);
+                shown++;
+            }
+
+            sceneCountLabel.text = shown == configs.Count ? $"{configs.Count} scenes" : $"{shown} of {configs.Count} scenes";
+        }
+
+        /// <summary>Mirrors the project's scenes into the list and redraws it when something changed.</summary>
+        private void SyncSceneRegistry()
+        {
+            if (sceneConfigurations == null) return;
+            if (!sceneConfigurations.SyncWithProject()) return;
+            SaveAsset(sceneConfigurations);
+            RebuildSceneList();
+            RefreshPlatformWarnings();
+        }
+
+        #endregion
+
         #region Settings Loading
 
         private void LoadSettings()
@@ -1338,6 +1441,10 @@ namespace Virtuademy.SDK.Environments.Editor
                 AssetDatabase.CreateAsset(sceneConfigurations, settingsAssetPath);
                 AssetDatabase.SaveAssets();
             }
+
+            // The list is a registry of the project's scenes (see SceneListScriptableObject.SyncWithProject).
+            if (sceneConfigurations.SyncWithProject())
+                SaveAsset(sceneConfigurations);
 
             settings = AddressablesBuildScript.GetSettingsObject(AddressablesBuildScript.settings_asset);
 
@@ -1364,21 +1471,12 @@ namespace Virtuademy.SDK.Environments.Editor
 
         private void AddDataBindings()
         {
-            SerializedObject serializedObject = new(sceneConfigurations);
-            SerializedProperty property = serializedObject.GetIterator();
-            property.NextVisible(true);
+            sceneSerializedObject = new SerializedObject(sceneConfigurations);
 
             VisualElement sceneConfigContainer = root.Q<VisualElement>("scene-configuration-scriptable");
-            while (property.NextVisible(false))
-            {
-                PropertyField propertyField = new(property);
-                propertyField.Bind(serializedObject);
-                // Refresh platform warnings whenever a property changes (e.g. toggling a platform flag)
-                propertyField.RegisterCallback<SerializedPropertyChangeEvent>(_ => RefreshPlatformWarnings());
-                sceneConfigContainer.Add(propertyField);
-            }
+            BuildSceneRegistryUi(sceneConfigContainer);
 
-            serializedObject.ApplyModifiedProperties();
+            sceneSerializedObject.ApplyModifiedProperties();
 
             // Platform module warnings — injected just below the scene configuration block
             platformWarningsContainer = new VisualElement();
