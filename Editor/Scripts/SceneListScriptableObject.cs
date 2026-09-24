@@ -74,6 +74,16 @@ namespace Virtuademy.SDK.Environments.Editor
 
         [SerializeField] private List<SceneConfiguration> sceneConfigurations;
 
+        [Tooltip("Folders whose scenes are not the project's own and never appear in the list: imported package samples, third-party assets, plugins. Paths relative to the project, one folder per entry.")]
+        [SerializeField] private List<string> excludedFolders = new(DefaultExcludedFolders);
+
+        /// <summary>Where package samples and third-party assets usually land; the starting value of <see cref="excludedFolders"/>.</summary>
+        public static readonly string[] DefaultExcludedFolders =
+        {
+            "Assets/Samples", "Assets/Plugins", "Assets/_ThirdParty", "Assets/ThirdParty", "Assets/Third Party",
+            "Assets/StreamingAssets", "Assets/TextMesh Pro"
+        };
+
         public List<SceneConfiguration> SceneConfigurations => sceneConfigurations;
 
         /// <summary>
@@ -93,7 +103,7 @@ namespace Virtuademy.SDK.Environments.Editor
             foreach (string guid in AssetDatabase.FindAssets("t:SceneAsset", new[] { "Assets" }))
             {
                 string path = AssetDatabase.GUIDToAssetPath(guid);
-                if (IsPackageScene(path)) continue;
+                if (IsExcluded(path)) continue;
                 SceneAsset scene = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
                 if (scene != null) present.Add(scene);
             }
@@ -114,16 +124,21 @@ namespace Virtuademy.SDK.Environments.Editor
         }
 
         /// <summary>
-        /// A scene that belongs to a package rather than to the project: under <c>Assets/Samples/</c>
-        /// (where the Package Manager imports a package's samples), inside a package Unity resolves
-        /// (an embedded or local package), or in a folder that carries a <c>package.json</c> — a package
-        /// dropped under <c>Assets/</c> by hand. These are demos, not environments to publish.
+        /// A scene that is not the project's own: under one of <see cref="excludedFolders"/> (package
+        /// samples, third-party assets, plugins), inside a package Unity resolves (an embedded or local
+        /// package), or in a folder that carries a <c>package.json</c> — a package dropped under
+        /// <c>Assets/</c> by hand. These are demos, not environments to publish.
         /// </summary>
-        private static bool IsPackageScene(string assetPath)
+        private bool IsExcluded(string assetPath)
         {
             if (string.IsNullOrEmpty(assetPath)) return true;
             string normalized = assetPath.Replace('\\', '/');
-            if (normalized.StartsWith("Assets/Samples/", StringComparison.OrdinalIgnoreCase)) return true;
+            foreach (string excluded in excludedFolders ?? new List<string>())
+            {
+                if (string.IsNullOrWhiteSpace(excluded)) continue;
+                string prefix = excluded.Trim().Replace('\\', '/').TrimEnd('/') + "/";
+                if (normalized.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) return true;
+            }
             if (UnityEditor.PackageManager.PackageInfo.FindForAssetPath(normalized) != null) return true;
 
             string folder = System.IO.Path.GetDirectoryName(normalized)?.Replace('\\', '/');

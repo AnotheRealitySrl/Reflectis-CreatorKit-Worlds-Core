@@ -9,13 +9,16 @@
   the scenes already listed are kept (the entry follows the scene through renames and moves). The
   add/remove buttons are gone, replaced by a search box, an "Only in build" filter and a
   publication filter (all / published / not published). Nothing is published because it was added
-  by hand, nothing is forgotten because it was not. Scenes that belong to a package are left out:
-  under `Assets/Samples/`, inside an embedded or local package, or in a folder carrying a
-  `package.json`.
+  by hand, nothing is forgotten because it was not. Scenes that are not the project's own are left
+  out: under one of the excluded folders (package samples, third-party assets, plugins — the list
+  starts at `Assets/Samples`, `Assets/Plugins`, `Assets/_ThirdParty`, `Assets/ThirdParty`,
+  `Assets/Third Party`, `Assets/StreamingAssets`, `Assets/TextMesh Pro` and is edited from the
+  "Excluded folders" foldout under the list), inside an embedded or local package, or in a folder
+  carrying a `package.json`.
 - **Every selected world says what the build does to it.** Under each ticked world (and under
   "Deploy to tenant"): the scenes that overwrite an environment already published with that name,
-  in orange; the ones that arrive as new environments, in green; the environments already there that
-  this build leaves on their old build, in grey. It follows "Include in build" as you tick.
+  in orange, and the ones that arrive as new environments, in green. It follows "Include in build"
+  as you tick.
 
 ### Added
 - **Each scene of the Addressables management window says where it is already published.** Under

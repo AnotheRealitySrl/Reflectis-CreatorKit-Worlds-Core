@@ -1385,6 +1385,15 @@ namespace Virtuademy.SDK.Environments.Editor
             sceneListContainer = new ScrollView { style = { maxHeight = 360 } };
             container.Add(sceneListContainer);
 
+            // The folders whose scenes never make the list (package samples, third-party assets, plugins).
+            Foldout excluded = new() { text = "Excluded folders", value = false, style = { marginTop = 4 } };
+            excluded.tooltip = "Scenes under these folders are not the project's own and are left out of the list. Edit to fit the project.";
+            PropertyField excludedField = new(sceneSerializedObject.FindProperty("excludedFolders"), string.Empty);
+            excludedField.Bind(sceneSerializedObject);
+            excludedField.RegisterCallback<SerializedPropertyChangeEvent>(_ => SyncSceneRegistry());
+            excluded.Add(excludedField);
+            container.Add(excluded);
+
             PublishedEnvironmentsIndex.Changed -= OnPublishedIndexChanged;
             PublishedEnvironmentsIndex.Changed += OnPublishedIndexChanged;
             RebuildSceneList();
@@ -1455,7 +1464,7 @@ namespace Virtuademy.SDK.Environments.Editor
 
         private static readonly Color preview_new_color = new(0.42f, 0.78f, 0.45f);
         private static readonly Color preview_update_color = new(0.95f, 0.66f, 0.28f);
-        private static readonly Color preview_kept_color = new(0.62f, 0.62f, 0.62f);
+        private static readonly Color preview_note_color = new(0.62f, 0.62f, 0.62f);
 
         private static VisualElement NewDeployPreview()
         {
@@ -1464,9 +1473,8 @@ namespace Virtuademy.SDK.Environments.Editor
 
         /// <summary>
         /// Under every selected world (and the tenant section): what the current "Include in build"
-        /// selection does there — the scenes that arrive as new environments (green), the ones that
-        /// overwrite an environment already published with that name (orange), and the environments
-        /// already there that this build does not touch (grey, still on their old build).
+        /// selection does there — the scenes that arrive as new environments (green) and the ones that
+        /// overwrite an environment already published with that name (orange).
         /// </summary>
         private void RefreshDeployPreviews()
         {
@@ -1491,31 +1499,25 @@ namespace Virtuademy.SDK.Environments.Editor
 
             if (built.Count == 0)
             {
-                target.Add(PreviewLine("Nothing is included in the build.", preview_kept_color));
+                target.Add(PreviewLine("Nothing is included in the build.", preview_note_color));
                 return;
             }
             if (!PublishedEnvironmentsIndex.HasData)
             {
                 target.Add(PreviewLine(PublishedEnvironmentsIndex.IsLoading
                     ? "Checking what is already published…"
-                    : $"{built.Count} scene(s) in the build; what is already published could not be read.", preview_kept_color));
+                    : $"{built.Count} scene(s) in the build; what is already published could not be read.", preview_note_color));
                 return;
             }
 
             List<string> updated = new(), added = new();
-            HashSet<string> builtKeys = new(StringComparer.OrdinalIgnoreCase);
             foreach (SceneConfiguration cfg in built)
             {
-                string key = cfg.SceneNameFiltered;
-                builtKeys.Add(key);
-                (PublishedEnvironmentsIndex.IsPublishedIn(key, worldId) ? updated : added).Add(cfg.Scene.name);
+                (PublishedEnvironmentsIndex.IsPublishedIn(cfg.SceneNameFiltered, worldId) ? updated : added).Add(cfg.Scene.name);
             }
-            List<string> kept = PublishedEnvironmentsIndex.PublishedIn(worldId)
-                .Where(e => !builtKeys.Contains(e.Key)).Select(e => e.Label).OrderBy(l => l).ToList();
 
             if (updated.Count > 0) target.Add(PreviewLine($"Updated ({updated.Count}): {string.Join(", ", updated)}", preview_update_color));
             if (added.Count > 0) target.Add(PreviewLine($"New ({added.Count}): {string.Join(", ", added)}", preview_new_color));
-            if (kept.Count > 0) target.Add(PreviewLine($"Not in this build, kept as published ({kept.Count}): {string.Join(", ", kept)}", preview_kept_color));
         }
 
         private static Label PreviewLine(string text, Color color)
