@@ -92,7 +92,9 @@ namespace Virtuademy.SDK.Environments.Editor
             HashSet<SceneAsset> present = new();
             foreach (string guid in AssetDatabase.FindAssets("t:SceneAsset", new[] { "Assets" }))
             {
-                SceneAsset scene = AssetDatabase.LoadAssetAtPath<SceneAsset>(AssetDatabase.GUIDToAssetPath(guid));
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                if (IsPackageScene(path)) continue;
+                SceneAsset scene = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
                 if (scene != null) present.Add(scene);
             }
 
@@ -109,6 +111,28 @@ namespace Virtuademy.SDK.Environments.Editor
             sceneConfigurations.Clear();
             sceneConfigurations.AddRange(ordered);
             return changed;
+        }
+
+        /// <summary>
+        /// A scene that belongs to a package rather than to the project: under <c>Assets/Samples/</c>
+        /// (where the Package Manager imports a package's samples), inside a package Unity resolves
+        /// (an embedded or local package), or in a folder that carries a <c>package.json</c> — a package
+        /// dropped under <c>Assets/</c> by hand. These are demos, not environments to publish.
+        /// </summary>
+        private static bool IsPackageScene(string assetPath)
+        {
+            if (string.IsNullOrEmpty(assetPath)) return true;
+            string normalized = assetPath.Replace('\\', '/');
+            if (normalized.StartsWith("Assets/Samples/", StringComparison.OrdinalIgnoreCase)) return true;
+            if (UnityEditor.PackageManager.PackageInfo.FindForAssetPath(normalized) != null) return true;
+
+            string folder = System.IO.Path.GetDirectoryName(normalized)?.Replace('\\', '/');
+            while (!string.IsNullOrEmpty(folder) && folder.Length > "Assets".Length)
+            {
+                if (System.IO.File.Exists(System.IO.Path.Combine(folder, "package.json"))) return true;
+                folder = System.IO.Path.GetDirectoryName(folder)?.Replace('\\', '/');
+            }
+            return false;
         }
 
     }

@@ -139,8 +139,10 @@ namespace Virtuademy.SDK.Environments.Editor
         private VisualElement sceneListContainer;
         private TextField sceneSearchField;
         private Toggle onlyInBuildToggle;
-        private Toggle onlyNotPublishedToggle;
+        private DropdownField publicationFilter;
         private Label sceneCountLabel;
+        private readonly Dictionary<int, VisualElement> worldDeployPreviews = new();
+        private VisualElement tenantDeployPreview;
 
         // Deploy error log
         private VisualElement deployErrorsContainer;
@@ -237,6 +239,9 @@ namespace Virtuademy.SDK.Environments.Editor
 
             tenantDeployButton.clicked += OnTenantDeployClicked;
             tenantBuildAndDeployButton.clicked += OnTenantBuildAndDeployClicked;
+
+            tenantDeployPreview = new VisualElement { style = { marginBottom = 4, marginLeft = 8, marginRight = 8 } };
+            tenantDeploySection.Insert(tenantDeploySection.IndexOf(root.Q<VisualElement>("tenant-deploy-buttons")), tenantDeployPreview);
 
             InitDeployErrorsContainer();
 
@@ -414,6 +419,7 @@ namespace Virtuademy.SDK.Environments.Editor
                 worldsLoadingLabel.style.display = DisplayStyle.None;
 
                 HashSet<int> savedSelection = LoadSelectedWorldIds();
+                worldDeployPreviews.Clear();
 
                 if (availableWorlds.Count == 1)
                 {
@@ -427,6 +433,7 @@ namespace Virtuademy.SDK.Environments.Editor
                     worldLabel.style.marginTop = 4;
                     worldLabel.style.marginBottom = 4;
                     worldsList.Add(worldLabel);
+                    worldsList.Add(worldDeployPreviews[world.Id] = NewDeployPreview());
                 }
                 else
                 {
@@ -441,14 +448,20 @@ namespace Virtuademy.SDK.Environments.Editor
                             value = wasSelected
                         };
                         int worldId = world.Id;
+                        VisualElement preview = NewDeployPreview();
+                        preview.style.display = wasSelected ? DisplayStyle.Flex : DisplayStyle.None;
                         toggle.RegisterValueChangedCallback(evt =>
                         {
                             selectedWorlds[worldId] = evt.newValue;
                             SaveSelectedWorldIds();
+                            preview.style.display = evt.newValue ? DisplayStyle.Flex : DisplayStyle.None;
+                            RefreshDeployPreviews();
                         });
                         worldsList.Add(toggle);
+                        worldsList.Add(worldDeployPreviews[worldId] = preview);
                     }
                 }
+                RefreshDeployPreviews();
 
                 deployButton.SetEnabled(true);
                 buildAndDeployButton.SetEnabled(true);
@@ -1350,12 +1363,16 @@ namespace Virtuademy.SDK.Environments.Editor
             sceneSearchField.RegisterValueChangedCallback(_ => RebuildSceneList());
             onlyInBuildToggle = new Toggle("Only in build") { style = { marginRight = 6 } };
             onlyInBuildToggle.RegisterValueChangedCallback(_ => RebuildSceneList());
-            onlyNotPublishedToggle = new Toggle("Only not published") { style = { marginRight = 6 } };
-            onlyNotPublishedToggle.RegisterValueChangedCallback(_ => RebuildSceneList());
+            publicationFilter = new DropdownField(new List<string> { publication_all, publication_published, publication_not_published }, 0)
+            {
+                tooltip = "Published: an environment with the scene's name exists in one of your worlds or at tenant level.",
+                style = { marginRight = 6, minWidth = 120 }
+            };
+            publicationFilter.RegisterValueChangedCallback(_ => RebuildSceneList());
             sceneCountLabel = new Label { style = { unityTextAlign = TextAnchor.MiddleRight, opacity = 0.8f } };
             toolbar.Add(sceneSearchField);
             toolbar.Add(onlyInBuildToggle);
-            toolbar.Add(onlyNotPublishedToggle);
+            toolbar.Add(publicationFilter);
             toolbar.Add(sceneCountLabel);
             container.Add(toolbar);
 
@@ -1376,8 +1393,9 @@ namespace Virtuademy.SDK.Environments.Editor
         private void OnPublishedIndexChanged()
         {
             // The rows refresh their own "Published in" line; only the filter needs the list rebuilt.
-            if (onlyNotPublishedToggle != null && onlyNotPublishedToggle.value)
+            if (publicationFilter != null && publicationFilter.value != publication_all)
                 RebuildSceneList();
+            RefreshDeployPreviews();
         }
 
         private void RebuildSceneList()
@@ -1390,7 +1408,7 @@ namespace Virtuademy.SDK.Environments.Editor
             List<SceneConfiguration> configs = sceneConfigurations.SceneConfigurations ?? new List<SceneConfiguration>();
             string search = sceneSearchField?.value?.Trim() ?? string.Empty;
             bool onlyInBuild = onlyInBuildToggle?.value ?? false;
-            bool onlyNotPublished = onlyNotPublishedToggle?.value ?? false;
+            string publication = publicationFilter?.value ?? publication_all;
 
             int shown = 0;
             for (int i = 0; i < list.arraySize && i < configs.Count; i++)
@@ -1399,13 +1417,16 @@ namespace Virtuademy.SDK.Environments.Editor
                 if (cfg.Scene == null) continue;
                 if (search.Length > 0 && cfg.Scene.name.IndexOf(search, StringComparison.OrdinalIgnoreCase) < 0) continue;
                 if (onlyInBuild && !cfg.IncludeInBuild) continue;
-                if (onlyNotPublished && PublishedEnvironmentsIndex.HasData
-                    && PublishedEnvironmentsIndex.Get(PublishedEnvironmentsIndex.Key(cfg.Scene.name)).Count > 0) continue;
+                if (publication != publication_all && PublishedEnvironmentsIndex.HasData)
+                {
+                    bool published = PublishedEnvironmentsIndex.Get(PublishedEnvironmentsIndex.Key(cfg.Scene.name)).Count > 0;
+                    if (published != (publication == publication_published)) continue;
+                }
 
                 PropertyField row = new(list.GetArrayElementAtIndex(i));
                 row.Bind(sceneSerializedObject);
                 // Refresh platform warnings whenever a property changes (e.g. toggling a platform flag)
-                row.RegisterCallback<SerializedPropertyChangeEvent>(_ => RefreshPlatformWarnings());
+                row.RegisterCallback<SerializedPropertyChangeEvent>(_ => { RefreshPlatformWarnings(); RefreshDeployPreviews(); });
                 sceneListContainer.Add(row);
                 shown++;
             }
@@ -1421,6 +1442,85 @@ namespace Virtuademy.SDK.Environments.Editor
             SaveAsset(sceneConfigurations);
             RebuildSceneList();
             RefreshPlatformWarnings();
+            RefreshDeployPreviews();
+        }
+
+        #endregion
+
+        #region Deploy preview
+
+        private const string publication_all = "All";
+        private const string publication_published = "Published";
+        private const string publication_not_published = "Not published";
+
+        private static readonly Color preview_new_color = new(0.42f, 0.78f, 0.45f);
+        private static readonly Color preview_update_color = new(0.95f, 0.66f, 0.28f);
+        private static readonly Color preview_kept_color = new(0.62f, 0.62f, 0.62f);
+
+        private static VisualElement NewDeployPreview()
+        {
+            return new VisualElement { style = { marginLeft = 22, marginBottom = 4 } };
+        }
+
+        /// <summary>
+        /// Under every selected world (and the tenant section): what the current "Include in build"
+        /// selection does there — the scenes that arrive as new environments (green), the ones that
+        /// overwrite an environment already published with that name (orange), and the environments
+        /// already there that this build does not touch (grey, still on their old build).
+        /// </summary>
+        private void RefreshDeployPreviews()
+        {
+            foreach (KeyValuePair<int, VisualElement> pair in worldDeployPreviews)
+            {
+                if (selectedWorlds.TryGetValue(pair.Key, out bool selected) && selected)
+                    FillDeployPreview(pair.Value, pair.Key);
+                else
+                    pair.Value.Clear();
+            }
+            if (tenantDeployPreview != null)
+                FillDeployPreview(tenantDeployPreview, null);
+        }
+
+        private void FillDeployPreview(VisualElement target, int? worldId)
+        {
+            target.Clear();
+            if (sceneConfigurations?.SceneConfigurations == null) return;
+
+            List<SceneConfiguration> built = sceneConfigurations.SceneConfigurations
+                .Where(c => c.Scene != null && c.IncludeInBuild).ToList();
+
+            if (built.Count == 0)
+            {
+                target.Add(PreviewLine("Nothing is included in the build.", preview_kept_color));
+                return;
+            }
+            if (!PublishedEnvironmentsIndex.HasData)
+            {
+                target.Add(PreviewLine(PublishedEnvironmentsIndex.IsLoading
+                    ? "Checking what is already published…"
+                    : $"{built.Count} scene(s) in the build; what is already published could not be read.", preview_kept_color));
+                return;
+            }
+
+            List<string> updated = new(), added = new();
+            HashSet<string> builtKeys = new(StringComparer.OrdinalIgnoreCase);
+            foreach (SceneConfiguration cfg in built)
+            {
+                string key = cfg.SceneNameFiltered;
+                builtKeys.Add(key);
+                (PublishedEnvironmentsIndex.IsPublishedIn(key, worldId) ? updated : added).Add(cfg.Scene.name);
+            }
+            List<string> kept = PublishedEnvironmentsIndex.PublishedIn(worldId)
+                .Where(e => !builtKeys.Contains(e.Key)).Select(e => e.Label).OrderBy(l => l).ToList();
+
+            if (updated.Count > 0) target.Add(PreviewLine($"Updated ({updated.Count}): {string.Join(", ", updated)}", preview_update_color));
+            if (added.Count > 0) target.Add(PreviewLine($"New ({added.Count}): {string.Join(", ", added)}", preview_new_color));
+            if (kept.Count > 0) target.Add(PreviewLine($"Not in this build, kept as published ({kept.Count}): {string.Join(", ", kept)}", preview_kept_color));
+        }
+
+        private static Label PreviewLine(string text, Color color)
+        {
+            return new Label(text) { style = { color = color, fontSize = 11, whiteSpace = WhiteSpace.Normal, marginBottom = 1 } };
         }
 
         #endregion

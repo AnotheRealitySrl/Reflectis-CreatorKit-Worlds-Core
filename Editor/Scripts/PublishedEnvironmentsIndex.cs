@@ -29,6 +29,7 @@ namespace Virtuademy.SDK.Environments.Editor
             public int? WorldId;
             public string WorldLabel;
             public bool Tenant;
+            public string EnvironmentLabel;
             public string Catalog;
             public string Status;
             public DateTime LastUpdate;
@@ -112,6 +113,22 @@ namespace Virtuademy.SDK.Environments.Editor
             }
         }
 
+        /// <summary>Whether an environment with this name exists in the given world (or at tenant level when <paramref name="worldId"/> is null).</summary>
+        public static bool IsPublishedIn(string key, int? worldId)
+        {
+            return Get(key).Any(e => worldId == null ? e.Tenant : (!e.Tenant && e.WorldId == worldId));
+        }
+
+        /// <summary>The environments published in the given world (or at tenant level), as (key, label) pairs, one per name.</summary>
+        public static IEnumerable<(string Key, string Label)> PublishedIn(int? worldId)
+        {
+            foreach (KeyValuePair<string, List<Entry>> pair in index)
+            {
+                Entry match = pair.Value.FirstOrDefault(e => worldId == null ? e.Tenant : (!e.Tenant && e.WorldId == worldId));
+                if (match != null) yield return (pair.Key, match.EnvironmentLabel ?? pair.Key);
+            }
+        }
+
         public static void Clear()
         {
             index = new Dictionary<string, List<Entry>>(StringComparer.OrdinalIgnoreCase);
@@ -153,7 +170,7 @@ namespace Virtuademy.SDK.Environments.Editor
             entries.Add(new Entry
             {
                 WorldId = world?.Id, WorldLabel = world?.Label, Tenant = world == null,
-                Catalog = env.Catalog, Status = env.Status, LastUpdate = env.LastUpdate
+                EnvironmentLabel = env.Label, Catalog = env.Catalog, Status = env.Status, LastUpdate = env.LastUpdate
             });
         }
 
