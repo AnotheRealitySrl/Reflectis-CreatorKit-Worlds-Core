@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,35 +8,42 @@ using UnityEngine.UIElements;
 namespace Reflectis.CreatorKit.Worlds.Placeholders
 {
     /// <summary>
-    /// Assigns a list of images to the thumbnail elements of a world-space UI Toolkit panel, in
-    /// document order, without touching the shared UXML/USS. This is the UI Toolkit equivalent of
-    /// "swap the sprite reference on the instance" in uGUI: the images are serialized per-instance on
-    /// this component and pushed into the visual tree at runtime.
+    /// Assigns images to UI Toolkit elements of a world-space panel, looked up by their UXML
+    /// <c>name</c> — the same model as <see cref="WorldSpaceButtonBinder"/> (clicks by name) and
+    /// <c>LocalizedUIBinder</c> (localization keys by name). Each entry pairs an element name with a
+    /// <see cref="Sprite"/>, which is pushed into that element's <c>background-image</c> at runtime, so
+    /// the shared UXML/USS is never touched and the same panel asset can show different images per
+    /// instance. This is the UI Toolkit equivalent of "swap the sprite reference on the instance" in
+    /// uGUI.
     ///
-    /// It targets every <see cref="VisualElement"/> that carries <see cref="ThumbClassName"/> (default
-    /// <c>bcp-thumb</c>) and sets its <c>background-image</c>. The i-th element gets the i-th image;
-    /// extra images or extra elements are simply ignored. Missing (null) entries are skipped, so a
-    /// card keeps its USS placeholder.
+    /// Because the lookup is <c>root.Q(name)</c> (the first match), give each target element a UNIQUE
+    /// name in the UXML — e.g. rename the four ButtonChoicePanel thumbnails <c>thumb-0 … thumb-3</c> and
+    /// add one entry per name to show four different images.
     ///
-    /// Companion to <see cref="WorldSpaceButtonBinder"/> (which binds clicks by name). Kept independent
-    /// so you can use either, both, or neither. It re-applies automatically if the panel is rebuilt at
-    /// runtime (e.g. by <see cref="WorldSpaceUIDocumentRebuilder"/>), because the rebuild replaces the
-    /// visual tree and any image set on the old elements would otherwise be lost.
+    /// Empty (null) sprites are skipped, so the element keeps whatever the USS authored. Re-applies
+    /// automatically if the panel is rebuilt at runtime (e.g. by
+    /// <see cref="WorldSpaceUIDocumentRebuilder"/>), which replaces the visual tree.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public class WorldSpacePanelImageBinder : MonoBehaviour
     {
+        [Serializable]
+        public class ImageBinding
+        {
+            [Tooltip("The 'name' of the element in the UXML to assign the image to.")]
+            public string elementName = "thumb";
+
+            [Tooltip("The image assigned to that element's background-image. Import it as Sprite (2D and UI).")]
+            public Sprite image;
+        }
+
         [SerializeField, Tooltip("UIDocument that renders the panel. If empty, the first UIDocument on " +
             "this object or its children is used.")]
         private UIDocument document;
 
-        [SerializeField, Tooltip("USS class of the elements that receive an image. Cards created from " +
-            "ButtonChoicePanel use 'bcp-thumb'.")]
-        private string thumbClassName = "bcp-thumb";
-
-        [SerializeField, Tooltip("One image per thumbnail, in the same order the cards appear in the " +
-            "UXML (button-0, button-1, ...). Import the textures as Sprite (2D and UI).")]
-        private List<Sprite> images = new();
+        [SerializeField, Tooltip("One entry per element you want to set an image on. Reference each " +
+            "element by the 'name' it has in the UXML (names must be unique).")]
+        private List<ImageBinding> images = new() { new ImageBinding() };
 
         // Maximum number of frames to wait for the UIDocument to build its visual tree.
         private const int MaxApplyFrames = 120;
@@ -44,11 +52,8 @@ namespace Reflectis.CreatorKit.Worlds.Placeholders
         private VisualElement watched;
         private bool applied;
 
-        /// <summary>The USS class the binder looks for (read-only, for callers/tests).</summary>
-        public string ThumbClassName => thumbClassName;
-
-        /// <summary>The images assigned to the thumbnails, in order.</summary>
-        public IReadOnlyList<Sprite> Images => images;
+        /// <summary>The image bindings, in order.</summary>
+        public IReadOnlyList<ImageBinding> Images => images;
 
         private void OnEnable()
         {
@@ -72,16 +77,26 @@ namespace Reflectis.CreatorKit.Worlds.Placeholders
         }
 
         /// <summary>
-        /// Replaces the images at runtime and pushes them to the panel immediately. Handy from a
-        /// UnityEvent or a Visual Scripting graph when the content changes.
+        /// Sets (or adds) the image for a named element and pushes it to the panel immediately. Handy
+        /// from a UnityEvent or a Visual Scripting graph when the content changes at runtime.
         /// </summary>
-        public void SetImages(IEnumerable<Sprite> newImages)
+        public void SetImage(string elementName, Sprite image)
         {
-            images = new List<Sprite>(newImages);
+            if (string.IsNullOrEmpty(elementName))
+            {
+                return;
+            }
+            ImageBinding binding = images.Find(b => b != null && b.elementName == elementName);
+            if (binding == null)
+            {
+                binding = new ImageBinding { elementName = elementName };
+                images.Add(binding);
+            }
+            binding.image = image;
             Apply();
         }
 
-        /// <summary>Forces a re-apply against the current visual tree.</summary>
+        /// <summary>Forces a re-apply of every binding against the current visual tree.</summary>
         public void Apply()
         {
             applied = false;
@@ -131,25 +146,35 @@ namespace Reflectis.CreatorKit.Worlds.Placeholders
                 return false;
             }
 
-            List<VisualElement> thumbs = root.Query<VisualElement>(className: thumbClassName).ToList();
-            if (thumbs.Count == 0)
+            VisualElement firstBound = null;
+            foreach (ImageBinding binding in images)
             {
-                // Tree exists but the cards are not in yet (or the class name is wrong); retry.
-                return false;
-            }
-
-            int count = Mathf.Min(thumbs.Count, images.Count);
-            for (int i = 0; i < count; i++)
-            {
-                if (images[i] == null)
+                if (binding == null || string.IsNullOrEmpty(binding.elementName))
                 {
                     continue;
                 }
-                thumbs[i].style.backgroundImage = new StyleBackground(images[i]);
+                VisualElement element = root.Q<VisualElement>(binding.elementName);
+                if (element == null)
+                {
+                    Debug.LogWarning($"[{nameof(WorldSpacePanelImageBinder)}] Element " +
+                        $"'{binding.elementName}' not found in the document on '{name}'.", this);
+                    continue;
+                }
+                firstBound ??= element;
+                if (binding.image != null)
+                {
+                    element.style.backgroundImage = new StyleBackground(binding.image);
+                }
+            }
+
+            if (firstBound == null)
+            {
+                // Tree exists but none of the named elements are in yet; retry.
+                return false;
             }
 
             // Re-apply automatically if the tree gets rebuilt (the elements detach from the panel).
-            Watch(thumbs[0]);
+            Watch(firstBound);
 
             applied = true;
             return true;
@@ -163,19 +188,19 @@ namespace Reflectis.CreatorKit.Worlds.Placeholders
             }
             Unwatch();
             watched = element;
-            watched.RegisterCallback<DetachFromPanelEvent>(OnThumbDetached);
+            watched.RegisterCallback<DetachFromPanelEvent>(OnElementDetached);
         }
 
         private void Unwatch()
         {
             if (watched != null)
             {
-                watched.UnregisterCallback<DetachFromPanelEvent>(OnThumbDetached);
+                watched.UnregisterCallback<DetachFromPanelEvent>(OnElementDetached);
                 watched = null;
             }
         }
 
-        private void OnThumbDetached(DetachFromPanelEvent _)
+        private void OnElementDetached(DetachFromPanelEvent _)
         {
             // The visual tree was torn down (e.g. a rebuild). Re-bind against the fresh tree.
             Unwatch();
