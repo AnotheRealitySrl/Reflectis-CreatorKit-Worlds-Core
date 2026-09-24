@@ -330,6 +330,16 @@ namespace Virtuademy.SDK.Environments.Editor
                 tenantDeploySection.style.display = DisplayStyle.None;
                 availableWorlds.Clear();
                 selectedWorlds.Clear();
+                worldDeployPreviews.Clear();
+
+                // Where the scenes are published belongs to the session that just ended: drop it, and
+                // with it the per-world filter choices it fed.
+                PublishedEnvironmentsIndex.Clear();
+                if (publicationFilter != null && publicationFilter.value != publication_all)
+                {
+                    publicationFilter.SetValueWithoutNotify(publication_all);
+                    RebuildSceneList();
+                }
             }
         }
 
@@ -1365,10 +1375,12 @@ namespace Virtuademy.SDK.Environments.Editor
             onlyInBuildToggle.RegisterValueChangedCallback(_ => RebuildSceneList());
             publicationFilter = new DropdownField(new List<string> { publication_all, publication_published, publication_not_published }, 0)
             {
-                tooltip = "Published: an environment with the scene's name exists in one of your worlds or at tenant level.",
+                tooltip = "Published: an environment with the scene's name exists in one of your worlds or at tenant level.\n" +
+                          "A world (or Tenant level): only the scenes published there.",
                 style = { marginRight = 6, minWidth = 120 }
             };
             publicationFilter.RegisterValueChangedCallback(_ => RebuildSceneList());
+            RefreshPublicationFilterChoices();
             sceneCountLabel = new Label { style = { unityTextAlign = TextAnchor.MiddleRight, opacity = 0.8f } };
             toolbar.Add(sceneSearchField);
             toolbar.Add(onlyInBuildToggle);
@@ -1402,9 +1414,64 @@ namespace Virtuademy.SDK.Environments.Editor
         private void OnPublishedIndexChanged()
         {
             // The rows refresh their own "Published in" line; only the filter needs the list rebuilt.
-            if (publicationFilter != null && publicationFilter.value != publication_all)
+            // Checked before the refresh too: a place filter that disappears falls back to All, and the list must follow.
+            bool wasFiltered = publicationFilter != null && publicationFilter.value != publication_all;
+            RefreshPublicationFilterChoices();
+            if (wasFiltered || (publicationFilter != null && publicationFilter.value != publication_all))
                 RebuildSceneList();
             RefreshDeployPreviews();
+        }
+
+        /// <summary>
+        /// All / Published / Not published, then one entry per world the index knows about (every
+        /// world the account can see, not only the deployable ones) and Tenant level when readable.
+        /// Each place carries, in brackets, how many of the project's scenes are published there — the
+        /// number of rows the filter would show. Keeps the current choice when it still exists (by
+        /// place, since its text changes with the count), falls back to All otherwise.
+        /// </summary>
+        private void RefreshPublicationFilterChoices()
+        {
+            if (publicationFilter == null) return;
+
+            string current = publicationFilter.value;
+            bool currentIsPlace = publicationPlaceChoices.TryGetValue(current ?? string.Empty, out int? currentPlace);
+
+            publicationPlaceChoices.Clear();
+            List<string> choices = new() { publication_all, publication_published, publication_not_published };
+
+            List<string> sceneKeys = (sceneConfigurations?.SceneConfigurations ?? new List<SceneConfiguration>())
+                .Where(c => c.Scene != null)
+                .Select(c => PublishedEnvironmentsIndex.Key(c.Scene.name))
+                .ToList();
+            int CountIn(int? place) => sceneKeys.Count(k => PublishedEnvironmentsIndex.IsPublishedIn(k, place));
+
+            if (PublishedEnvironmentsIndex.HasData && !PublishedEnvironmentsIndex.TenantUnknown)
+            {
+                string tenantChoice = $"{publication_tenant} ({CountIn(null)})";
+                choices.Add(tenantChoice);
+                publicationPlaceChoices[tenantChoice] = null;
+            }
+
+            // Without data (logged out, first load in progress) there is nothing to filter a world on.
+            IReadOnlyList<(int Id, string Label)> worlds = PublishedEnvironmentsIndex.HasData
+                ? PublishedEnvironmentsIndex.Worlds
+                : Array.Empty<(int, string)>();
+            HashSet<string> duplicateLabels = new(worlds.GroupBy(w => w.Label).Where(g => g.Count() > 1).Select(g => g.Key));
+            foreach ((int id, string label) in worlds.OrderBy(w => w.Label, StringComparer.OrdinalIgnoreCase))
+            {
+                // The dropdown shows its value as text, so two worlds with the same name need the id to tell them apart.
+                string worldName = duplicateLabels.Contains(label) ? $"{label} [ID: {id}]" : label;
+                string choice = $"{publication_world_prefix}{worldName} ({CountIn(id)})";
+                if (publicationPlaceChoices.ContainsKey(choice)) continue;
+                choices.Add(choice);
+                publicationPlaceChoices[choice] = id;
+            }
+
+            string next = currentIsPlace
+                ? publicationPlaceChoices.FirstOrDefault(p => p.Value == currentPlace).Key ?? publication_all
+                : choices.Contains(current) ? current : publication_all;
+            publicationFilter.choices = choices;
+            publicationFilter.SetValueWithoutNotify(next);
         }
 
         private void RebuildSceneList()
@@ -1428,8 +1495,16 @@ namespace Virtuademy.SDK.Environments.Editor
                 if (onlyInBuild && !cfg.IncludeInBuild) continue;
                 if (publication != publication_all && PublishedEnvironmentsIndex.HasData)
                 {
-                    bool published = PublishedEnvironmentsIndex.Get(PublishedEnvironmentsIndex.Key(cfg.Scene.name)).Count > 0;
-                    if (published != (publication == publication_published)) continue;
+                    string key = PublishedEnvironmentsIndex.Key(cfg.Scene.name);
+                    if (publicationPlaceChoices.TryGetValue(publication, out int? placeId))
+                    {
+                        if (!PublishedEnvironmentsIndex.IsPublishedIn(key, placeId)) continue;
+                    }
+                    else
+                    {
+                        bool published = PublishedEnvironmentsIndex.Get(key).Count > 0;
+                        if (published != (publication == publication_published)) continue;
+                    }
                 }
 
                 PropertyField row = new(list.GetArrayElementAtIndex(i));
@@ -1449,6 +1524,7 @@ namespace Virtuademy.SDK.Environments.Editor
             if (sceneConfigurations == null) return;
             if (!sceneConfigurations.SyncWithProject()) return;
             SaveAsset(sceneConfigurations);
+            RefreshPublicationFilterChoices();   // the per-world counts are over the project's scenes
             RebuildSceneList();
             RefreshPlatformWarnings();
             RefreshDeployPreviews();
@@ -1461,6 +1537,11 @@ namespace Virtuademy.SDK.Environments.Editor
         private const string publication_all = "All";
         private const string publication_published = "Published";
         private const string publication_not_published = "Not published";
+        private const string publication_tenant = "Tenant level";
+        private const string publication_world_prefix = "World: ";
+
+        /// <summary>Filter choices that point at one place: a world id, or null for tenant level.</summary>
+        private readonly Dictionary<string, int?> publicationPlaceChoices = new();
 
         private static readonly Color preview_new_color = new(0.42f, 0.78f, 0.45f);
         private static readonly Color preview_update_color = new(0.95f, 0.66f, 0.28f);

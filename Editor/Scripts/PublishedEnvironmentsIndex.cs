@@ -45,6 +45,8 @@ namespace Virtuademy.SDK.Environments.Editor
         private static readonly Regex filter = new(@"[^a-z0-9]", RegexOptions.Compiled);
         private static Dictionary<string, List<Entry>> index = new(StringComparer.OrdinalIgnoreCase);
         private static List<(int Id, string Label)> lastWorlds = new();
+        /// <summary>Bumped by <see cref="Clear"/>, so a refresh that started before it drops its results.</summary>
+        private static int generation;
 
         /// <summary>Raised on the main thread when the index has been (re)built or cleared.</summary>
         public static event Action Changed;
@@ -53,6 +55,9 @@ namespace Virtuademy.SDK.Environments.Editor
         public static bool HasData { get; private set; }
         /// <summary>True when the account could not read the tenant-level environments (TenantManager role).</summary>
         public static bool TenantUnknown { get; private set; }
+
+        /// <summary>The worlds the index was built for, in the order the API listed them.</summary>
+        public static IReadOnlyList<(int Id, string Label)> Worlds => lastWorlds;
 
         public static string Key(string sceneName) => sceneName == null ? null : filter.Replace(sceneName.ToLowerInvariant(), string.Empty);
 
@@ -75,6 +80,7 @@ namespace Virtuademy.SDK.Environments.Editor
             string apiUrl = EditorApiEndpoint.ApplicationApiUrl;
             if (string.IsNullOrEmpty(apiUrl)) return;
 
+            int started = generation;
             IsLoading = true;
             Changed?.Invoke();
             Dictionary<string, List<Entry>> next = new(StringComparer.OrdinalIgnoreCase);
@@ -83,6 +89,7 @@ namespace Virtuademy.SDK.Environments.Editor
                 foreach ((int id, string label) in lastWorlds)
                 {
                     List<EnvironmentDto> envs = await GetAsync<List<EnvironmentDto>>($"{apiUrl}/worlds/{id}/environments?api-version={api_version}");
+                    if (started != generation) return;
                     if (envs == null) continue;
                     foreach (EnvironmentDto env in envs)
                     {
@@ -92,6 +99,10 @@ namespace Virtuademy.SDK.Environments.Editor
                 }
 
                 List<EnvironmentDto> tenantEnvs = await GetAsync<List<EnvironmentDto>>($"{apiUrl}/tenants/environments?api-version={api_version}");
+
+                // Cleared (logout) while the requests were in flight: what came back belongs to the old session.
+                if (started != generation) return;
+
                 TenantUnknown = tenantEnvs == null;
                 if (tenantEnvs != null)
                 {
@@ -103,12 +114,17 @@ namespace Virtuademy.SDK.Environments.Editor
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[AddressablesManagement] Could not read where the environments are published: {ex.Message}");
+                if (started == generation)
+                    Debug.LogWarning($"[AddressablesManagement] Could not read where the environments are published: {ex.Message}");
             }
             finally
             {
-                IsLoading = false;
-                Changed?.Invoke();
+                // A Clear in between already reset the state and may have let a newer refresh start.
+                if (started == generation)
+                {
+                    IsLoading = false;
+                    Changed?.Invoke();
+                }
             }
         }
 
@@ -118,10 +134,15 @@ namespace Virtuademy.SDK.Environments.Editor
             return Get(key).Any(e => worldId == null ? e.Tenant : (!e.Tenant && e.WorldId == worldId));
         }
 
+        /// <summary>Forgets everything from the current session (logout): the index, the worlds, any refresh in flight.</summary>
         public static void Clear()
         {
+            generation++;
             index = new Dictionary<string, List<Entry>>(StringComparer.OrdinalIgnoreCase);
+            lastWorlds = new List<(int, string)>();
             HasData = false;
+            IsLoading = false;
+            TenantUnknown = false;
             Changed?.Invoke();
         }
 

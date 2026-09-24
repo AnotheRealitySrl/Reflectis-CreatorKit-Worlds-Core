@@ -3,7 +3,6 @@
 ## Unreleased
 
 ### Changed
-### Changed
 - **The graph, task and dialog engines are `SPACS-Graphs`, `SPACS-Tasks` and `SPACS-Dialogs`**
   (ids `com.anotherealitysrl.spacs-{graphs,tasks,dialogs}` 3.0.0, were
   `virtuademy-sdk-{graphs,tasks,dialogs}`), and this package's dependencies follow. The
@@ -50,6 +49,17 @@
   again after every deploy. Groundwork for the 2026.6 republish campaign (ADR 0021: every world
   built with the Reflectis SDK is rebuilt with this one): a scene published in several worlds is
   the candidate to move to tenant level before rebuilding.
+- **The publication filter narrows to one world.** After All / Published / Not published, the
+  dropdown lists "Tenant level" (when the account can read it) and one "World: …" per world the
+  account can see, each with the number of the project's scenes published there — "World:
+  Showroom (3)". A tenant environment shared to a world counts as tenant level, as in the
+  "Published in" line.
+
+### Fixed
+- **Logging out forgets where the scenes are published.** The per-world choices, their counts, the
+  "Published in" lines and an active publication filter stayed from the ended session; they are
+  cleared now, and a refresh still in flight at logout drops its results instead of bringing them
+  back.
 
 ## v10.0.0
 
