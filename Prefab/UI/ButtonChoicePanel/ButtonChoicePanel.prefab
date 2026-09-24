@@ -48,5 +48,118 @@ PrefabInstance:
     - {fileID: 5307874231954111943, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6448684081170628408, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3845679265191445673}
+    - targetCorrespondingSourceObject: {fileID: 6448684081170628408, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2023443531753726789}
   m_SourcePrefab: {fileID: 100100000, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+--- !u!114 &806598816710786034 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7433631522474917470, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+  m_PrefabInstance: {fileID: 7788990011223344556}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3847860946763299476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+--- !u!1 &3847860946763299476 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6448684081170628408, guid: eae15ee45ce92b240abbaed60d8dcdab, type: 3}
+  m_PrefabInstance: {fileID: 7788990011223344556}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3845679265191445673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3847860946763299476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96bd39391626406f8335fa88038bf3f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Reflectis.CreatorKit.Worlds.Placeholders.WorldSpacePanelImageBinder
+  document: {fileID: 806598816710786034}
+  images:
+  - elementName: thumb
+    image: {fileID: 0}
+  - elementName: thumb_2
+    image: {fileID: 0}
+  - elementName: thumb_3
+    image: {fileID: 0}
+  - elementName: thumb_4
+    image: {fileID: 0}
+--- !u!114 &2023443531753726789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3847860946763299476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0feaf23c896e13c49bcfcbf06e11b899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Virtuademy.SDK.Environments.Utilities.LocalizedUIBinder
+  document: {fileID: 806598816710786034}
+  bindings:
+  - elementName: Welcome
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 
+  - elementName: Title
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 
+  - elementName: Subtitle
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 
+  - elementName: Title_FirstCard
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 
+  - elementName: Description_FirstCard
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 
+  - elementName: Title_SecondCard
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 
+  - elementName: Description_SecondCard
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 
+  - elementName: Title_ThirdCard
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 
+  - elementName: Description_ThirdCard
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 
+  - elementName: Title_FourthCard
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 
+  - elementName: Description_FourthCard
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 

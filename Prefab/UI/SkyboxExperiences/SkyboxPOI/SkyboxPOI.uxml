@@ -2,12 +2,10 @@
     <Style src="project://database/Packages/com.anotherealitysrl.virtuademy-sdk-environments/Prefab/UI/SkyboxExperiences/SkyboxPOI/SkyboxPOI.uss?fileID=7433441132597879392&amp;guid=1cef23fe95634e8a934816f8da9903d7&amp;type=3#SkyboxPOI"/>
     <ui:VisualElement name="root" picking-mode="Ignore" class="poi-root">
         <ui:VisualElement name="panel" picking-mode="Ignore" class="poi-panel" style="display: none;">
-            <ui:VisualElement name="media" picking-mode="Ignore" class="poi-media" style="width: 240px;">
-                <ui:Label text="MEDIA" picking-mode="Ignore" class="poi-media-label"/>
-            </ui:VisualElement>
+            <ui:VisualElement name="media" picking-mode="Ignore" class="poi-media" style="width: 240px;"/>
             <ui:VisualElement name="text" picking-mode="Ignore" class="poi-text">
-                <ui:Label text="AULA 1" picking-mode="Ignore" class="poi-title" style="padding-top: 0; padding-bottom: 0; margin-bottom: 0; margin-top: 0; font-size: 22px;"/>
-                <ui:Label text="L&apos;immagine mostra una delle due ampie e luminose aule della sede di Verona, pensate per lo svolgimento delle lezioni teoriche in un ambiente ordinato, accogliente e funzionale. Ogni aula è attrezzata con una LIM, ampi tavoli di lavoro e PC portatili a disposizione di ciascuna studentessa e di ciascuno studente, così da favorire una didattica partecipata, l&apos;uso consapevole degli strumenti digitali e un&apos;esperienza di apprendimento efficace." picking-mode="Ignore" class="poi-body" style="font-size: 14px; height: 261px; margin-top: 0; padding-top: 0; width: 252px; letter-spacing: -3px; word-spacing: 0; -unity-paragraph-spacing: -3px;"/>
+                <Virtuademy.LocalizedComponents.LocalizedLabel text="AULA 1" picking-mode="Ignore" name="Title" class="poi-title" style="padding-top: 0; padding-bottom: 0; margin-bottom: 0; margin-top: 0; font-size: 22px;"/>
+                <Virtuademy.LocalizedComponents.LocalizedLabel text="L&apos;immagine mostra una delle due ampie e luminose aule della sede di Verona, pensate per lo svolgimento delle lezioni teoriche in un ambiente ordinato, accogliente e funzionale. Ogni aula è attrezzata con una LIM, ampi tavoli di lavoro e PC portatili a disposizione di ciascuna studentessa e di ciascuno studente, così da favorire una didattica partecipata, l&apos;uso consapevole degli strumenti digitali e un&apos;esperienza di apprendimento efficace." picking-mode="Ignore" name="Description" class="poi-body" style="font-size: 14px; height: 261px; margin-top: 0; padding-top: 0; width: 252px; letter-spacing: -3px; word-spacing: 0; -unity-paragraph-spacing: -3px;"/>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:Button name="icon" text="" class="poi-icon">

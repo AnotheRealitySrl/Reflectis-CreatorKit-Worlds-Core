@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 1500000000000000003}
   - component: {fileID: 1500000000000000004}
   - component: {fileID: 1500000000000000005}
+  - component: {fileID: 2622905604701327849}
+  - component: {fileID: 1625472766691961665}
   m_Layer: 5
   m_Name: SkyboxPOI
   m_TagString: Untagged
@@ -44,12 +46,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
   m_PanelSettings: {fileID: 11400000, guid: 3443c7831aae7b547abd689ce276cb03, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 6d1758ccf09e47fe8a7538068a905da8,
-    type: 3}
+  sourceAsset: {fileID: 9197481963319205126, guid: 6d1758ccf09e47fe8a7538068a905da8, type: 3}
   m_SortingOrder: 0
   m_Position: 0
   m_WorldSpaceSizeMode: 1
@@ -68,7 +69,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7e4c2a9f1d34e6a8c5b0f2d3a9e1c74, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Virtuademy.SDK.Environments::Reflectis.CreatorKit.Worlds.Placeholders.WorldSpaceUIDocumentRebuilder
   document: {fileID: 1500000000000000003}
   binder: {fileID: 0}
@@ -83,7 +84,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4cd1136a8214f68aa5998dfaf186b11, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Virtuademy.SDK.Environments::Reflectis.CreatorKit.Worlds.Placeholders.WorldSpacePOIToggle
   document: {fileID: 1500000000000000003}
   iconName: icon
@@ -95,3 +96,43 @@ MonoBehaviour:
   onClose:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2622905604701327849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0feaf23c896e13c49bcfcbf06e11b899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Virtuademy.SDK.Environments.Utilities.LocalizedUIBinder
+  document: {fileID: 0}
+  bindings:
+  - elementName: Title
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 
+  - elementName: Description
+    elementType: LocalizedLabel
+    slots:
+    - attribute: locKey
+      value: 
+--- !u!114 &1625472766691961665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96bd39391626406f8335fa88038bf3f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Reflectis.CreatorKit.Worlds.Placeholders.WorldSpacePanelImageBinder
+  document: {fileID: 1500000000000000003}
+  images:
+  - elementName: media
+    image: {fileID: 0}
