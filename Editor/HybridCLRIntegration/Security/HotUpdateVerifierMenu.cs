@@ -13,7 +13,7 @@ namespace Virtuademy.SDK.Environments.HybridCLR.Editor
     /// </summary>
     public static class HotUpdateVerifierMenu
     {
-        private const string MenuRoot = "Virtuademy Worlds/Creator Kit/Security/";
+        private const string MenuRoot = "Virtuademy/Security/";
 
         //[MenuItem(MenuRoot + "Verify HotUpdate Script DLL (auto → Console)")]
         public static async void VerifyAuto()

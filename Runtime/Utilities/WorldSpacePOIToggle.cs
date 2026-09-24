@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
 
-namespace Reflectis.CreatorKit.Worlds.Placeholders
+namespace Virtuademy.SDK.Environments.Utilities
 {
     /// <summary>
     /// Turns a world-space UI Toolkit panel into a point-of-interest (POI) popup: a clickable icon

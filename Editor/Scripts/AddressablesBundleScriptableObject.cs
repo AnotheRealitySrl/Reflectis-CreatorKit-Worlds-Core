@@ -96,7 +96,7 @@ namespace Virtuademy.SDK.Environments.Editor
 
         internal void Setup()
         {
-            // Warning: This method works well only if the Creator Kit and Virtuademy Addressable Groups Setup has been done correctly!
+            // Warning: This method works well only if the project setup and the Virtuademy Addressable Groups setup have been done correctly!
             Debug.Log("Clicked setup for bundle \"" + bundleName + "\".");
 
             AddressableAssetSettings settings = AddressablesBuildScript.GetSettingsObject(AddressablesBuildScript.settings_asset);

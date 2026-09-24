@@ -70,7 +70,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7e4c2a9f1d34e6a8c5b0f2d3a9e1c74, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Reflectis.CreatorKit.Worlds.Placeholders.WorldSpaceUIDocumentRebuilder
+  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Virtuademy.SDK.Environments.Utilities.WorldSpaceUIDocumentRebuilder
   document: {fileID: 1500000000000000003}
   binder: {fileID: 0}
   rebuildOnEnable: 1
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4cd1136a8214f68aa5998dfaf186b11, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Reflectis.CreatorKit.Worlds.Placeholders.WorldSpacePOIToggle
+  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Virtuademy.SDK.Environments.Utilities.WorldSpacePOIToggle
   document: {fileID: 1500000000000000003}
   iconName: icon
   panelName: panel
@@ -131,7 +131,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96bd39391626406f8335fa88038bf3f9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Reflectis.CreatorKit.Worlds.Placeholders.WorldSpacePanelImageBinder
+  m_EditorClassIdentifier: Virtuademy.SDK.Environments::Virtuademy.SDK.Environments.Utilities.WorldSpacePanelImageBinder
   document: {fileID: 1500000000000000003}
   images:
   - elementName: media

@@ -155,6 +155,13 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
         private static readonly string OldSetupPackage = "Virtuademy-Creator" + "Kit-Worlds-Setup";
         private static readonly string OldSetupId = "virtuademy-creator" + "kit-worlds-setup";
 
+        private static readonly string OldGraphsPackage = "Virtuademy-SDK-Gra" + "phs";
+        private static readonly string OldTasksPackage = "Virtuademy-SDK-Ta" + "sks";
+        private static readonly string OldDialogsPackage = "Virtuademy-SDK-Dia" + "logs";
+        private static readonly string OldGraphsId = "virtuademy-sdk-gra" + "phs";
+        private static readonly string OldTasksId = "virtuademy-sdk-ta" + "sks";
+        private static readonly string OldDialogsId = "virtuademy-sdk-dia" + "logs";
+
         private static readonly string OldApi = "Virtuademy.SDK.Platform" + "Api";
 
         private static readonly string OldModels = "Virtuademy.SDK.Environments.Client" + "Models";
@@ -183,6 +190,22 @@ namespace Virtuademy.SDK.Environments.Installer.Editor
             (OldWorldsId, "virtuademy-sdk-environments"),
             (OldSetupPackage, "Virtuademy-SDK-Environments-Setup"),
             (OldSetupId, "virtuademy-sdk-environments-setup"),
+
+            // The three packages that carry no platform left the SDK prefix on 2026-09-24:
+            // Virtuademy-SDK-{Graphs,Tasks,Dialogs} are SPACS-{Graphs,Tasks,Dialogs}, beside
+            // SPACS-Utility. Package id and repository only — their assemblies and namespaces were
+            // already SPACS.*, which is what the three namespace rules further down land on.
+            //
+            // The ids are the entries that matter, for the reason the installer's are: each is
+            // the manifest KEY of a git dependency, and a key that is not the name in the fetched
+            // package.json makes UPM reject the package. A project on the old brand reaches these
+            // through the brand rule first, so one pass carries both hops.
+            (OldGraphsPackage, "SPACS-Graphs"),
+            (OldTasksPackage, "SPACS-Tasks"),
+            (OldDialogsPackage, "SPACS-Dialogs"),
+            (OldGraphsId, "spacs-graphs"),
+            (OldTasksId, "spacs-tasks"),
+            (OldDialogsId, "spacs-dialogs"),
 
             // PlatformApi named a package that no longer exists: it became
             // Virtuademy-SDK-Library on 2026-09-10, and the DTOs it was named after moved to the
