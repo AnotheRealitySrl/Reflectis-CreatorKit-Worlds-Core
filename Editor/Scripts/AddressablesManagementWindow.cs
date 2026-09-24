@@ -135,6 +135,14 @@ namespace Virtuademy.SDK.Environments.Editor
 
         // Platform module warnings
         private VisualElement platformWarningsContainer;
+        private SerializedObject sceneSerializedObject;
+        private VisualElement sceneListContainer;
+        private TextField sceneSearchField;
+        private Toggle onlyInBuildToggle;
+        private DropdownField publicationFilter;
+        private Label sceneCountLabel;
+        private readonly Dictionary<int, VisualElement> worldDeployPreviews = new();
+        private VisualElement tenantDeployPreview;
 
         // Deploy error log
         private VisualElement deployErrorsContainer;
@@ -156,6 +164,7 @@ namespace Virtuademy.SDK.Environments.Editor
         {
             SaveAsset(sceneConfigurations);
             EditorLoginState.OnLoginStateChanged -= OnLoginStateChanged;
+            PublishedEnvironmentsIndex.Changed -= OnPublishedIndexChanged;
         }
 
         private void OnFocus()
@@ -163,6 +172,9 @@ namespace Virtuademy.SDK.Environments.Editor
             // Refresh warnings whenever the window regains focus (e.g. after the user
             // installs a module via Unity Hub and returns to the editor).
             RefreshPlatformWarnings();
+
+            // Scenes created, deleted or moved while the window was in the background.
+            SyncSceneRegistry();
 
             // The session label ages on its own (the token expires while the window sits idle),
             // so re-render it here. Without reloading the worlds: that is a network round trip
@@ -227,6 +239,9 @@ namespace Virtuademy.SDK.Environments.Editor
 
             tenantDeployButton.clicked += OnTenantDeployClicked;
             tenantBuildAndDeployButton.clicked += OnTenantBuildAndDeployClicked;
+
+            tenantDeployPreview = new VisualElement { style = { marginBottom = 4, marginLeft = 8, marginRight = 8 } };
+            tenantDeploySection.Insert(tenantDeploySection.IndexOf(root.Q<VisualElement>("tenant-deploy-buttons")), tenantDeployPreview);
 
             InitDeployErrorsContainer();
 
@@ -359,6 +374,9 @@ namespace Virtuademy.SDK.Environments.Editor
 
                 string json = await response.Content.ReadAsStringAsync();
                 availableWorlds = JsonConvert.DeserializeObject<List<PublishableWorld>>(json) ?? new();
+                // Where every scene is already published, shown under each scene by SceneConfigurationDrawer:
+                // computed on ALL the worlds the account can see, before the deploy-role filter below.
+                _ = PublishedEnvironmentsIndex.RefreshAsync(availableWorlds.Select(w => (w.Id, w.Label)));
                 selectedWorlds.Clear();
 
                 // Filter worlds by user roles
@@ -401,6 +419,7 @@ namespace Virtuademy.SDK.Environments.Editor
                 worldsLoadingLabel.style.display = DisplayStyle.None;
 
                 HashSet<int> savedSelection = LoadSelectedWorldIds();
+                worldDeployPreviews.Clear();
 
                 if (availableWorlds.Count == 1)
                 {
@@ -414,6 +433,7 @@ namespace Virtuademy.SDK.Environments.Editor
                     worldLabel.style.marginTop = 4;
                     worldLabel.style.marginBottom = 4;
                     worldsList.Add(worldLabel);
+                    worldsList.Add(worldDeployPreviews[world.Id] = NewDeployPreview());
                 }
                 else
                 {
@@ -428,14 +448,20 @@ namespace Virtuademy.SDK.Environments.Editor
                             value = wasSelected
                         };
                         int worldId = world.Id;
+                        VisualElement preview = NewDeployPreview();
+                        preview.style.display = wasSelected ? DisplayStyle.Flex : DisplayStyle.None;
                         toggle.RegisterValueChangedCallback(evt =>
                         {
                             selectedWorlds[worldId] = evt.newValue;
                             SaveSelectedWorldIds();
+                            preview.style.display = evt.newValue ? DisplayStyle.Flex : DisplayStyle.None;
+                            RefreshDeployPreviews();
                         });
                         worldsList.Add(toggle);
+                        worldsList.Add(worldDeployPreviews[worldId] = preview);
                     }
                 }
+                RefreshDeployPreviews();
 
                 deployButton.SetEnabled(true);
                 buildAndDeployButton.SetEnabled(true);
@@ -694,6 +720,7 @@ namespace Virtuademy.SDK.Environments.Editor
             }
 
             Debug.Log("[AddressablesManagement] All world deploys completed.");
+            _ = PublishedEnvironmentsIndex.RefreshAsync();
         }
 
         private void SetDeployButtonsEnabled(bool enabled)
@@ -874,6 +901,7 @@ namespace Virtuademy.SDK.Environments.Editor
             }
 
             Debug.Log("[AddressablesManagement] Tenant deploy completed.");
+            _ = PublishedEnvironmentsIndex.RefreshAsync();
         }
 
         /// <summary>
@@ -1317,6 +1345,188 @@ namespace Virtuademy.SDK.Environments.Editor
 
         #endregion
 
+        #region Scene registry
+
+        /// <summary>
+        /// The scene list: every scene of the project, each with its settings (drawn by
+        /// <see cref="SceneConfigurationDrawer"/>, which also says where the scene is already published),
+        /// behind a search box and two filters. Entries are not added or removed by hand any more:
+        /// <see cref="SceneListScriptableObject.SyncWithProject"/> keeps the list equal to the project.
+        /// </summary>
+        private void BuildSceneRegistryUi(VisualElement container)
+        {
+            container.Clear();
+
+            VisualElement toolbar = new() { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 4 } };
+            sceneSearchField = new TextField { style = { flexGrow = 1, marginRight = 6 } };
+            sceneSearchField.textEdition.placeholder = "Search scenes…";
+            sceneSearchField.RegisterValueChangedCallback(_ => RebuildSceneList());
+            onlyInBuildToggle = new Toggle("Only in build") { style = { marginRight = 6 } };
+            onlyInBuildToggle.RegisterValueChangedCallback(_ => RebuildSceneList());
+            publicationFilter = new DropdownField(new List<string> { publication_all, publication_published, publication_not_published }, 0)
+            {
+                tooltip = "Published: an environment with the scene's name exists in one of your worlds or at tenant level.",
+                style = { marginRight = 6, minWidth = 120 }
+            };
+            publicationFilter.RegisterValueChangedCallback(_ => RebuildSceneList());
+            sceneCountLabel = new Label { style = { unityTextAlign = TextAnchor.MiddleRight, opacity = 0.8f } };
+            toolbar.Add(sceneSearchField);
+            toolbar.Add(onlyInBuildToggle);
+            toolbar.Add(publicationFilter);
+            toolbar.Add(sceneCountLabel);
+            container.Add(toolbar);
+
+            Label hint = new("Every scene of the project is listed; tick \"Include in build\" on the ones to publish. New scenes appear here on their own, unticked.")
+            {
+                style = { whiteSpace = WhiteSpace.Normal, fontSize = 11, opacity = 0.75f, marginBottom = 4 }
+            };
+            container.Add(hint);
+
+            sceneListContainer = new ScrollView { style = { maxHeight = 360 } };
+            container.Add(sceneListContainer);
+
+            // The folders whose scenes never make the list (package samples, third-party assets, plugins).
+            Foldout excluded = new() { text = "Excluded folders", value = false, style = { marginTop = 4 } };
+            excluded.tooltip = "Scenes under these folders are not the project's own and are left out of the list. Edit to fit the project.";
+            PropertyField excludedField = new(sceneSerializedObject.FindProperty("excludedFolders"), string.Empty);
+            excludedField.Bind(sceneSerializedObject);
+            excludedField.RegisterCallback<SerializedPropertyChangeEvent>(_ => SyncSceneRegistry());
+            excluded.Add(excludedField);
+            container.Add(excluded);
+
+            PublishedEnvironmentsIndex.Changed -= OnPublishedIndexChanged;
+            PublishedEnvironmentsIndex.Changed += OnPublishedIndexChanged;
+            RebuildSceneList();
+        }
+
+        private void OnPublishedIndexChanged()
+        {
+            // The rows refresh their own "Published in" line; only the filter needs the list rebuilt.
+            if (publicationFilter != null && publicationFilter.value != publication_all)
+                RebuildSceneList();
+            RefreshDeployPreviews();
+        }
+
+        private void RebuildSceneList()
+        {
+            if (sceneListContainer == null || sceneSerializedObject == null) return;
+            sceneSerializedObject.Update();
+            sceneListContainer.Clear();
+
+            SerializedProperty list = sceneSerializedObject.FindProperty("sceneConfigurations");
+            List<SceneConfiguration> configs = sceneConfigurations.SceneConfigurations ?? new List<SceneConfiguration>();
+            string search = sceneSearchField?.value?.Trim() ?? string.Empty;
+            bool onlyInBuild = onlyInBuildToggle?.value ?? false;
+            string publication = publicationFilter?.value ?? publication_all;
+
+            int shown = 0;
+            for (int i = 0; i < list.arraySize && i < configs.Count; i++)
+            {
+                SceneConfiguration cfg = configs[i];
+                if (cfg.Scene == null) continue;
+                if (search.Length > 0 && cfg.Scene.name.IndexOf(search, StringComparison.OrdinalIgnoreCase) < 0) continue;
+                if (onlyInBuild && !cfg.IncludeInBuild) continue;
+                if (publication != publication_all && PublishedEnvironmentsIndex.HasData)
+                {
+                    bool published = PublishedEnvironmentsIndex.Get(PublishedEnvironmentsIndex.Key(cfg.Scene.name)).Count > 0;
+                    if (published != (publication == publication_published)) continue;
+                }
+
+                PropertyField row = new(list.GetArrayElementAtIndex(i));
+                row.Bind(sceneSerializedObject);
+                // Refresh platform warnings whenever a property changes (e.g. toggling a platform flag)
+                row.RegisterCallback<SerializedPropertyChangeEvent>(_ => { RefreshPlatformWarnings(); RefreshDeployPreviews(); });
+                sceneListContainer.Add(row);
+                shown++;
+            }
+
+            sceneCountLabel.text = shown == configs.Count ? $"{configs.Count} scenes" : $"{shown} of {configs.Count} scenes";
+        }
+
+        /// <summary>Mirrors the project's scenes into the list and redraws it when something changed.</summary>
+        private void SyncSceneRegistry()
+        {
+            if (sceneConfigurations == null) return;
+            if (!sceneConfigurations.SyncWithProject()) return;
+            SaveAsset(sceneConfigurations);
+            RebuildSceneList();
+            RefreshPlatformWarnings();
+            RefreshDeployPreviews();
+        }
+
+        #endregion
+
+        #region Deploy preview
+
+        private const string publication_all = "All";
+        private const string publication_published = "Published";
+        private const string publication_not_published = "Not published";
+
+        private static readonly Color preview_new_color = new(0.42f, 0.78f, 0.45f);
+        private static readonly Color preview_update_color = new(0.95f, 0.66f, 0.28f);
+        private static readonly Color preview_note_color = new(0.62f, 0.62f, 0.62f);
+
+        private static VisualElement NewDeployPreview()
+        {
+            return new VisualElement { style = { marginLeft = 22, marginBottom = 4 } };
+        }
+
+        /// <summary>
+        /// Under every selected world (and the tenant section): what the current "Include in build"
+        /// selection does there — the scenes that arrive as new environments (green) and the ones that
+        /// overwrite an environment already published with that name (orange).
+        /// </summary>
+        private void RefreshDeployPreviews()
+        {
+            foreach (KeyValuePair<int, VisualElement> pair in worldDeployPreviews)
+            {
+                if (selectedWorlds.TryGetValue(pair.Key, out bool selected) && selected)
+                    FillDeployPreview(pair.Value, pair.Key);
+                else
+                    pair.Value.Clear();
+            }
+            if (tenantDeployPreview != null)
+                FillDeployPreview(tenantDeployPreview, null);
+        }
+
+        private void FillDeployPreview(VisualElement target, int? worldId)
+        {
+            target.Clear();
+            if (sceneConfigurations?.SceneConfigurations == null) return;
+
+            List<SceneConfiguration> built = sceneConfigurations.SceneConfigurations
+                .Where(c => c.Scene != null && c.IncludeInBuild).ToList();
+
+            if (built.Count == 0)
+            {
+                target.Add(PreviewLine("Nothing is included in the build.", preview_note_color));
+                return;
+            }
+            if (!PublishedEnvironmentsIndex.HasData)
+            {
+                target.Add(PreviewLine(PublishedEnvironmentsIndex.IsLoading
+                    ? "Checking what is already published…"
+                    : $"{built.Count} scene(s) in the build; what is already published could not be read.", preview_note_color));
+                return;
+            }
+
+            List<string> updated = new(), added = new();
+            foreach (SceneConfiguration cfg in built)
+            {
+                (PublishedEnvironmentsIndex.IsPublishedIn(cfg.SceneNameFiltered, worldId) ? updated : added).Add(cfg.Scene.name);
+            }
+
+            if (updated.Count > 0) target.Add(PreviewLine($"Updated ({updated.Count}): {string.Join(", ", updated)}", preview_update_color));
+            if (added.Count > 0) target.Add(PreviewLine($"New ({added.Count}): {string.Join(", ", added)}", preview_new_color));
+        }
+
+        private static Label PreviewLine(string text, Color color)
+        {
+            return new Label(text) { style = { color = color, fontSize = 11, whiteSpace = WhiteSpace.Normal, marginBottom = 1 } };
+        }
+
+        #endregion
+
         #region Settings Loading
 
         private void LoadSettings()
@@ -1333,6 +1543,10 @@ namespace Virtuademy.SDK.Environments.Editor
                 AssetDatabase.CreateAsset(sceneConfigurations, settingsAssetPath);
                 AssetDatabase.SaveAssets();
             }
+
+            // The list is a registry of the project's scenes (see SceneListScriptableObject.SyncWithProject).
+            if (sceneConfigurations.SyncWithProject())
+                SaveAsset(sceneConfigurations);
 
             settings = AddressablesBuildScript.GetSettingsObject(AddressablesBuildScript.settings_asset);
 
@@ -1359,21 +1573,12 @@ namespace Virtuademy.SDK.Environments.Editor
 
         private void AddDataBindings()
         {
-            SerializedObject serializedObject = new(sceneConfigurations);
-            SerializedProperty property = serializedObject.GetIterator();
-            property.NextVisible(true);
+            sceneSerializedObject = new SerializedObject(sceneConfigurations);
 
             VisualElement sceneConfigContainer = root.Q<VisualElement>("scene-configuration-scriptable");
-            while (property.NextVisible(false))
-            {
-                PropertyField propertyField = new(property);
-                propertyField.Bind(serializedObject);
-                // Refresh platform warnings whenever a property changes (e.g. toggling a platform flag)
-                propertyField.RegisterCallback<SerializedPropertyChangeEvent>(_ => RefreshPlatformWarnings());
-                sceneConfigContainer.Add(propertyField);
-            }
+            BuildSceneRegistryUi(sceneConfigContainer);
 
-            serializedObject.ApplyModifiedProperties();
+            sceneSerializedObject.ApplyModifiedProperties();
 
             // Platform module warnings — injected just below the scene configuration block
             platformWarningsContainer = new VisualElement();
