@@ -202,17 +202,32 @@ namespace Reflectis.CreatorKit.Worlds.Placeholders
 
         private void OnElementDetached(DetachFromPanelEvent _)
         {
-            // The visual tree was torn down (e.g. a rebuild). Re-bind against the fresh tree.
             Unwatch();
             applied = false;
-            if (isActiveAndEnabled)
+
+            // The tree also detaches when this object is disabled or destroyed — not only on a rebuild.
+            // During SetActive(false) the detach runs synchronously while isActiveAndEnabled can still
+            // read true, yet StartCoroutine already sees the GameObject as inactive and errors. So gate
+            // on gameObject.activeInHierarchy — the exact native flag StartCoroutine tests — plus the
+            // component's own enabled flag.
+            if (!enabled || !gameObject.activeInHierarchy)
             {
-                if (applyRoutine != null)
-                {
-                    StopCoroutine(applyRoutine);
-                }
-                applyRoutine = StartCoroutine(ApplyWhenReady());
+                return;
             }
+            // Extra guard for the destroy path: only a genuine rebuild keeps the root on a live panel.
+            IPanel panel = document != null && document.rootVisualElement != null
+                ? document.rootVisualElement.panel
+                : null;
+            if (panel == null)
+            {
+                return;
+            }
+
+            if (applyRoutine != null)
+            {
+                StopCoroutine(applyRoutine);
+            }
+            applyRoutine = StartCoroutine(ApplyWhenReady());
         }
     }
 }
