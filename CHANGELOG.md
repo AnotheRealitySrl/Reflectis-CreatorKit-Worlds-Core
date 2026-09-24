@@ -60,6 +60,14 @@
   "Published in" lines and an active publication filter stayed from the ended session; they are
   cleared now, and a refresh still in flight at logout drops its results instead of bringing them
   back.
+- **The `v2025.3 -> v2025.4` update routine no longer hangs or aborts.** It processes only the
+  prefabs and scenes that use `InteractablePlaceholderObsolete` or the detectors, once each and in
+  dependency order (nested prefabs and variant bases first), instead of every prefab and scene three
+  times with source prefabs reloaded per instance. Obsolete components added on model (`.fbx`)
+  instances are migrated on the instance instead of throwing, inherited components are left to
+  their source prefab, read-only package prefabs are skipped. The progress bar is cancelable, a
+  failing asset is reported at the end instead of stopping the routine, and unsaved scenes are
+  offered for saving before it starts.
 
 ## v10.0.0
 
