@@ -359,6 +359,9 @@ namespace Virtuademy.SDK.Environments.Editor
 
                 string json = await response.Content.ReadAsStringAsync();
                 availableWorlds = JsonConvert.DeserializeObject<List<PublishableWorld>>(json) ?? new();
+                // Where every scene is already published, shown under each scene by SceneConfigurationDrawer:
+                // computed on ALL the worlds the account can see, before the deploy-role filter below.
+                _ = PublishedEnvironmentsIndex.RefreshAsync(availableWorlds.Select(w => (w.Id, w.Label)));
                 selectedWorlds.Clear();
 
                 // Filter worlds by user roles
@@ -694,6 +697,7 @@ namespace Virtuademy.SDK.Environments.Editor
             }
 
             Debug.Log("[AddressablesManagement] All world deploys completed.");
+            _ = PublishedEnvironmentsIndex.RefreshAsync();
         }
 
         private void SetDeployButtonsEnabled(bool enabled)
@@ -874,6 +878,7 @@ namespace Virtuademy.SDK.Environments.Editor
             }
 
             Debug.Log("[AddressablesManagement] Tenant deploy completed.");
+            _ = PublishedEnvironmentsIndex.RefreshAsync();
         }
 
         /// <summary>

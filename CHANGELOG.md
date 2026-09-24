@@ -3,12 +3,13 @@
 ## Unreleased
 
 ### Added
-- **Environment census window** (`Virtuademy / Environment census`). For every scene in the
-  project's AddressablesSceneList it asks the Application API where an environment with the same
-  name is already published — which worlds, whether at tenant level — and lists the environments
-  the API knows that no scene of this project produces. Read-only, CSV export. First step of the
-  2026.6 republish campaign: every world built with the Reflectis SDK is rebuilt with this one,
-  and duplicates across worlds are the candidates to move to tenant level before rebuilding.
+- **Each scene of the Addressables management window says where it is already published.** Under
+  every entry of the scene list: "Published in Showroom, Academy", "Published at tenant level",
+  "Not published yet" — with catalog, status and last update in the tooltip. The window reads it
+  from the Application API right after loading the worlds (all the worlds the account can see) and
+  again after every deploy. Groundwork for the 2026.6 republish campaign (ADR 0021: every world
+  built with the Reflectis SDK is rebuilt with this one): a scene published in several worlds is
+  the candidate to move to tenant level before rebuilding.
 
 ## v10.0.0
 
