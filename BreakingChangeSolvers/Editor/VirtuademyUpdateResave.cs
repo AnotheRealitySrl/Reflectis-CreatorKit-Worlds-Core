@@ -36,9 +36,10 @@ namespace Virtuademy.BreakingChangeSolvers
     /// <item>after the next domain reload, when the rewrite touched scripts or assembly definitions
     /// (those always recompile, and until they do the old domain is the wrong one to save from);</item>
     /// <item>otherwise in the current domain, once the editor has been idle for a few seconds;</item>
-    /// <item>in both cases only once <c>Packages/packages-lock.json</c> exists again, if the routine
-    /// deleted it, and never while compilation has failed — it then waits for the next successful
-    /// compilation.</item>
+    /// <item>in both cases only once the Package Manager has resolved again, if the routine unpinned
+    /// packages in <c>Packages/packages-lock.json</c> — every git package of ours the manifest names
+    /// is back in the lock (<see cref="VirtuademyPackageLock.OurGitPackagesResolved"/>) — and never
+    /// while compilation has failed — it then waits for the next successful compilation.</item>
     /// </list>
     /// <para>
     /// <b>How</b>: every file is reimported first (a Visual Scripting failure can be cached in the
@@ -55,7 +56,6 @@ namespace Virtuademy.BreakingChangeSolvers
     {
         private const string LogTag = "[Update v2026.5 -> v2026.6]";
         private const string PendingPath = "Library/Virtuademy/update-resave-pending.json";
-        private const string LockPath = "Packages/packages-lock.json";
         private const string MissingTypeToken = "Unity.VisualScripting.MissingType";
         private const string GraphTypeToken = "$type";
         private const double IdleSeconds = 3;
@@ -98,7 +98,7 @@ namespace Virtuademy.BreakingChangeSolvers
         /// </summary>
         /// <param name="paths">The scenes, prefabs and assets the rewrite changed.</param>
         /// <param name="reopenScenes">Scenes to open again once the re-save is done.</param>
-        /// <param name="waitForLockFile">The package lock was deleted: wait until UPM has resolved again.</param>
+        /// <param name="waitForLockFile">Packages were unpinned in the lock: wait until UPM has resolved them again.</param>
         /// <param name="waitForReload">The rewrite changed code: wait for the next domain.</param>
         public static void Schedule(IEnumerable<string> paths, IEnumerable<string> reopenScenes,
                                     bool waitForLockFile, bool waitForReload)
@@ -153,7 +153,9 @@ namespace Virtuademy.BreakingChangeSolvers
             }
 
             double now = EditorApplication.timeSinceStartup;
-            bool lockReady = !pending.WaitForLockFile || File.Exists(LockPath);
+            // Also covers a pending file written by the previous version of the routine, which deleted
+            // the lock: a missing lock is not resolved yet.
+            bool lockReady = !pending.WaitForLockFile || VirtuademyPackageLock.OurGitPackagesResolved();
             bool busy = EditorApplication.isCompiling || EditorApplication.isUpdating
                         || EditorApplication.isPlayingOrWillChangePlaymode;
 

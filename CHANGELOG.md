@@ -56,6 +56,17 @@
   "Published in" line.
 
 ### Fixed
+- **The v2026.5 -> v2026.6 update routine no longer unpins third-party git packages.** It used to
+  delete `Packages/packages-lock.json` so that the renamed packages were looked up again, and that
+  also released every other git dependency from the commit it was pinned to. One with no `#ref` then
+  resolved to whatever its repository's default branch is today — on a creator project,
+  `https://github.com/mob-sakai/UIEffect.git`, whose `main` keeps `package.json` under
+  `Packages/src`, so UPM stopped with "Repository does not contain a package manifest". The routine
+  now removes from the lock only the entries of our own git packages (ids starting with
+  `com.anotherealitysrl.virtuademy`, `.reflectis` or `.spacs`), the same rule as the setup window's
+  re-resolve button; every other entry keeps its pinned commit or version. The re-save step that
+  used to wait for the lock file to reappear now waits until every git package of ours the manifest
+  names is back in it, which also covers a re-save scheduled by the previous version.
 - **Logging out forgets where the scenes are published.** The per-world choices, their counts, the
   "Published in" lines and an active publication filter stayed from the ended session; they are
   cleared now, and a refresh still in flight at logout drops its results instead of bringing them
